@@ -1,0 +1,19 @@
+{
+  "created": "The ability has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following ability?",
+    "success": "The ability has been deleted.",
+    "title": "Delete ability"
+  },
+  "editTitle": "Edit ability",
+  "empty": "This list is empty.",
+  "newTitle": "Create ability",
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "title": "Abilities",
+  "updated": "The ability has been updated."
+}

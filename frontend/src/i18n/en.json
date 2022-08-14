@@ -1,0 +1,60 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "save": "Save"
+  },
+  "copyright": "© PokéGame {version} 2022.",
+  "count": "Count",
+  "description": {
+    "label": "Description",
+    "placeholder": "Enter a description"
+  },
+  "errorToast": {
+    "body": "An unexpected error occurred. Please try again later or contact our support team.",
+    "title": "Error!"
+  },
+  "gameData": "Game data",
+  "locale": {
+    "label": "Locale",
+    "placeholder": "Select a locale"
+  },
+  "metadata": "Metadata",
+  "name": {
+    "label": "Name",
+    "placeholder": "Enter a name"
+  },
+  "no": "No",
+  "notFound": {
+    "help": "The requested page could not be found.",
+    "lead": "Page Not Found",
+    "link": "Go to Home"
+  },
+  "notes": {
+    "label": "Label",
+    "placeholder": "Type notes about this element"
+  },
+  "reference": {
+    "label": "Reference",
+    "placeholder": "Place the link to the reference"
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "Enter something to search"
+  },
+  "sort": {
+    "desc": "Descending",
+    "label": "Sort",
+    "placeholder": "Select a sort option"
+  },
+  "statusDetail": {
+    "by": "by",
+    "createdAt": "Created on {date}",
+    "updatedAt": "Last updated on {date}"
+  },
+  "success": "Success!",
+  "updated": "Updated",
+  "yes": "Yes"
+}
