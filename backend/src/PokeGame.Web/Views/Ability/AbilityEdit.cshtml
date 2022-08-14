@@ -1,0 +1,17 @@
+﻿@using PokeGame.Core.Abilities.Models;
+
+@model AbilityModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create ability";
+}
+
+@if (Model == null)
+{
+  <ability-edit></ability-edit>
+}
+else
+{
+  <ability-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></ability-edit>
+}

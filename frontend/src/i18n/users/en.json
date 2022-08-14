@@ -1,0 +1,71 @@
+{
+  "createdAt": "Created on",
+  "email": {
+    "confirmed": "Confirmed",
+    "label": "Email Address",
+    "placeholder": "Enter your email address"
+  },
+  "firstName": {
+    "label": "First Name",
+    "placeholder": "Enter your first name"
+  },
+  "fullName": "Name",
+  "information": {
+    "authentication": "Authentication Information",
+    "personal": "Personal Information"
+  },
+  "lastName": {
+    "label": "Last Name",
+    "placeholder": "Enter your last name"
+  },
+  "password": {
+    "changeFailed": "Password change failed!",
+    "changed": "Your password has been changed.",
+    "changedAt": "Last changed on",
+    "confirm": {
+      "label": "Password Confirmation",
+      "placeholder": "Enter the same password again"
+    },
+    "current": {
+      "label": "Current Password",
+      "placeholder": "Enter your current password"
+    },
+    "invalidCredentials": "Please check you provided your correct current password.",
+    "label": "Password",
+    "new": {
+      "label": "New Password",
+      "placeholder": "Enter a new password"
+    },
+    "placeholder": "Enter your password",
+    "submit": "Change password"
+  },
+  "phone": {
+    "confirmed": "Confirmed",
+    "label": "Phone Number",
+    "placeholder": "Enter a phone number"
+  },
+  "picture": {
+    "label": "Picture URL",
+    "placeholder": "Paste the picture URL of the user"
+  },
+  "profile": {
+    "title": "Profile",
+    "updated": "Your profile has been updated."
+  },
+  "signIn": {
+    "accountIsDisabled": "Your account is disabled.",
+    "failed": "Sign in failed!",
+    "invalidCredentials": "Please check you provided the correct email address/username and password.",
+    "recoverPassword": "I forgot my password",
+    "remember": "Remember me",
+    "submit": "Sign in",
+    "title": "Sign In"
+  },
+  "signOut": "Sign Out",
+  "signedInAt": "Last signed-in on",
+  "updatedAt": "Last updated on",
+  "username": {
+    "label": "Username",
+    "placeholder": "Enter your username"
+  }
+}
