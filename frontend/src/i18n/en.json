@@ -33,8 +33,8 @@
     "link": "Go to Home"
   },
   "notes": {
-    "label": "Label",
-    "placeholder": "Type notes about this element"
+    "label": "Notes",
+    "placeholder": "Type some notes about this element"
   },
   "reference": {
     "label": "Reference",
@@ -55,6 +55,30 @@
     "updatedAt": "Last updated on {date}"
   },
   "success": "Success!",
+  "type": {
+    "label": "Type",
+    "options": {
+      "Bug": "Bug",
+      "Dark": "Dark",
+      "Dragon": "Dragon",
+      "Electric": "Electric",
+      "Fairy": "Fairy",
+      "Fighting": "Fighting",
+      "Fire": "Fire",
+      "Flying": "Flying",
+      "Ghost": "Ghost",
+      "Grass": "Grass",
+      "Ground": "Ground",
+      "Ice": "Ice",
+      "Normal": "Normal",
+      "Poison": "Poison",
+      "Psychic": "Psychic",
+      "Rock": "Rock",
+      "Steel": "Steel",
+      "Water": "Water"
+    },
+    "placeholder": "Select a type"
+  },
   "updated": "Updated",
   "yes": "Yes"
 }

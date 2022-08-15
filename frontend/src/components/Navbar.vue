@@ -17,6 +17,10 @@
               <!-- <font-awesome-icon icon="users" /> -->
               {{ $t('abilities.title') }}
             </b-nav-item>
+            <b-nav-item href="/moves">
+              <!-- <font-awesome-icon icon="users" /> -->
+              {{ $t('moves.title') }}
+            </b-nav-item>
           </template>
         </b-navbar-nav>
 

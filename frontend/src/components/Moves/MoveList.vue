@@ -1,39 +1,44 @@
 <template>
   <b-container>
-    <h1 v-t="'abilities.title'" />
+    <h1 v-t="'moves.title'" />
     <div class="my-2">
       <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
-      <icon-button class="mx-1" href="/create-ability" icon="plus" text="actions.create" variant="success" />
+      <icon-button class="mx-1" href="/create-move" icon="plus" text="actions.create" variant="success" />
     </div>
     <b-row>
       <search-field class="col" v-model="search" />
+      <type-select class="col" v-model="type" />
       <sort-select class="col" :desc="desc" :options="sortOptions" v-model="sort" @desc="desc = $event" />
       <count-select class="col" v-model="count" />
     </b-row>
-    <template v-if="abilities.length">
+    <template v-if="moves.length">
       <table id="table" class="table table-striped">
         <thead>
           <tr>
             <th scope="col" v-t="'name.label'" />
+            <th scope="col" v-t="'type.label'" />
+            <th scope="col" v-t="'moves.category.label'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
           </tr>
         </thead>
         <tbody>
-          <tr v-for="ability in abilities" :key="ability.id">
+          <tr v-for="move in moves" :key="move.id">
             <td>
-              <b-link :href="`/abilities/${ability.id}`">{{ ability.name }}</b-link>
+              <b-link :href="`/moves/${move.id}`">{{ move.name }}</b-link>
             </td>
-            <td><status-cell :actor="ability.updatedBy" :date="ability.updatedAt" /></td>
+            <td>{{ $t(`type.options.${move.type}`) }}</td>
+            <td>{{ $t(`moves.category.options.${move.category}`) }}</td>
+            <td><status-cell :actor="move.updatedBy" :date="move.updatedAt" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${ability.id}`" />
+              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${move.id}`" />
               <delete-modal
-                confirm="abilities.delete.confirm"
-                :displayName="ability.name"
-                :id="`delete_${ability.id}`"
+                confirm="moves.delete.confirm"
+                :displayName="move.name"
+                :id="`delete_${move.id}`"
                 :loading="loading"
-                title="abilities.delete.title"
-                @ok="onDelete(ability, $event)"
+                title="moves.delete.title"
+                @ok="onDelete(move, $event)"
               />
             </td>
           </tr>
@@ -41,31 +46,33 @@
       </table>
       <b-pagination v-model="page" :total-rows="total" :per-page="count" aria-controls="table" />
     </template>
-    <p v-else v-t="'abilities.empty'" />
+    <p v-else v-t="'moves.empty'" />
   </b-container>
 </template>
 
 <script>
-import { deleteAbility, getAbilities } from '@/api/abilities'
+import { deleteMove, getMoves } from '@/api/moves'
 
 export default {
-  name: 'AbilityList',
+  name: 'MoveList',
   data() {
     return {
-      abilities: [],
       count: 10,
       desc: false,
       loading: false,
+      moves: [],
       page: 1,
       search: null,
       sort: 'Name',
-      total: 0
+      total: 0,
+      type: null
     }
   },
   computed: {
     params() {
       return {
         search: this.search,
+        type: this.type,
         sort: this.sort,
         desc: this.desc,
         index: (this.page - 1) * this.count,
@@ -74,7 +81,7 @@ export default {
     },
     sortOptions() {
       return this.orderBy(
-        Object.entries(this.$i18n.t('abilities.sort.options')).map(([value, text]) => ({ text, value })),
+        Object.entries(this.$i18n.t('moves.sort.options')).map(([value, text]) => ({ text, value })),
         'text'
       )
     }
@@ -85,9 +92,9 @@ export default {
         this.loading = true
         let refresh = false
         try {
-          await deleteAbility(id)
+          await deleteMove(id)
           refresh = true
-          this.toast('success', 'abilities.delete.success')
+          this.toast('success', 'moves.delete.success')
           if (typeof callback === 'function') {
             callback()
           }
@@ -108,8 +115,8 @@ export default {
       if (!this.loading) {
         this.loading = true
         try {
-          const { data } = await getAbilities(params ?? this.params)
-          this.abilities = data.items
+          const { data } = await getMoves(params ?? this.params)
+          this.moves = data.items
           this.total = data.total
         } catch (e) {
           this.handleError(e)
@@ -124,7 +131,7 @@ export default {
       deep: true,
       immediate: true,
       async handler(newValue, oldValue) {
-        if (newValue?.index && oldValue && (newValue.search !== oldValue.search || newValue.count !== oldValue.count)) {
+        if (newValue?.index && oldValue && (newValue.search !== oldValue.search || newValue.type !== oldValue.type || newValue.count !== oldValue.count)) {
           this.page = 1
           await this.refresh()
         } else {

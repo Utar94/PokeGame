@@ -1,0 +1,17 @@
+﻿@using PokeGame.Core.Moves.Models;
+
+@model MoveModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create move";
+}
+
+@if (Model == null)
+{
+  <move-edit></move-edit>
+}
+else
+{
+  <move-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></move-edit>
+}

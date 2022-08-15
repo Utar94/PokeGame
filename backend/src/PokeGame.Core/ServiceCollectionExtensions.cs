@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Core.Abilities;
+using PokeGame.Core.Moves;
 using System.Reflection;
 
 namespace PokeGame.Core
@@ -21,6 +22,7 @@ namespace PokeGame.Core
     private static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
       return services
+        .AddScoped<IMoveService, MoveService>()
         .AddScoped<IAbilityService, AbilityService>();
     }
   }
