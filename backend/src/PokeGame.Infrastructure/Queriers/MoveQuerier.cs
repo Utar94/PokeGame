@@ -51,7 +51,7 @@ namespace PokeGame.Infrastructure.Queriers
         {
           MoveSort.Name => desc ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name),
           MoveSort.UpdatedAt => desc ? query.OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt) : query.OrderBy(x => x.UpdatedAt ?? x.CreatedAt),
-          _ => throw new ArgumentException($"The API key sort '{sort}' is not valid.", nameof(sort)),
+          _ => throw new ArgumentException($"The move sort '{sort}' is not valid.", nameof(sort)),
         };
       }
       query = query.ApplyPaging(index, count);

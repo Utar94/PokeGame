@@ -30,7 +30,8 @@
                   <b-input-group-text>{{ $t('moves.powerPoints.unit') }}</b-input-group-text>
                 </b-input-group-append>
               </form-field>
-              <form-field class="col" id="power" label="moves.power" :minValue="0" :maxValue="250" :step="5" type="number" v-model.number="power" />
+              <form-field v-if="category === 'Status'" class="col" disabled id="power" label="moves.power" type="number" :value="0" />
+              <form-field v-else class="col" id="power" label="moves.power" :minValue="0" :maxValue="250" :step="5" type="number" v-model.number="power" />
               <form-field
                 class="col"
                 id="accuracy"
@@ -109,7 +110,7 @@ export default {
       const payload = {
         name: this.name,
         powerPoints: this.powerPoints,
-        power: this.power || null,
+        power: this.category === 'Status' ? null : this.power || null,
         accuracy: this.accuracy / 100 || null,
         description: this.description,
         reference: this.reference,

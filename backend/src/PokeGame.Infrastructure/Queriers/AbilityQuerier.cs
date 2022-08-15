@@ -47,7 +47,7 @@ namespace PokeGame.Infrastructure.Queriers
         {
           AbilitySort.Name => desc ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name),
           AbilitySort.UpdatedAt => desc ? query.OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt) : query.OrderBy(x => x.UpdatedAt ?? x.CreatedAt),
-          _ => throw new ArgumentException($"The API key sort '{sort}' is not valid.", nameof(sort)),
+          _ => throw new ArgumentException($"The ability sort '{sort}' is not valid.", nameof(sort)),
         };
       }
       query = query.ApplyPaging(index, count);

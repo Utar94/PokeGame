@@ -8,6 +8,10 @@
   "editTitle": "Edit ability",
   "empty": "This list is empty.",
   "newTitle": "Create ability",
+  "select": {
+    "label": "Ability",
+    "placeholder": "Select an ability"
+  },
   "sort": {
     "options": {
       "Name": "Name",

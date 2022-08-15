@@ -1,0 +1,28 @@
+{
+  "category": {
+    "label": "Category",
+    "placeholder": "Enter a category"
+  },
+  "created": "The species has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following species?",
+    "success": "The species has been deleted.",
+    "title": "Delete species"
+  },
+  "editTitle": "Edit species",
+  "empty": "This list is empty.",
+  "newTitle": "Create species",
+  "number": "Number",
+  "primaryType": "Primary Type",
+  "secondaryType": "Secondary Type",
+  "sort": {
+    "options": {
+      "Category": "Category",
+      "Name": "Name",
+      "Number": "Number",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "title": "Species",
+  "updated": "The species has been updated."
+}

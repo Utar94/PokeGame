@@ -1,0 +1,17 @@
+﻿@using PokeGame.Core.Species.Models;
+
+@model SpeciesModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create species";
+}
+
+@if (Model == null)
+{
+  <species-edit></species-edit>
+}
+else
+{
+  <species-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></species-edit>
+}

@@ -19,6 +19,8 @@ namespace PokeGame.Core.Abilities
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
 
+    public List<Species.Species> Species { get; private set; } = new();
+
     public void Delete(Guid userId) => ApplyChange(new DeletedEvent(userId));
     public void Update(UpdateAbilityPayload payload, Guid userId) => ApplyChange(new UpdatedEvent(payload, userId));
 
