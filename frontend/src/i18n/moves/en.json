@@ -1,0 +1,37 @@
+{
+  "accuracy": {
+    "label": "Accuracy",
+    "unit": "%"
+  },
+  "category": {
+    "label": "Category",
+    "options": {
+      "Physical": "Physical",
+      "Special": "Special",
+      "Status": "Status"
+    },
+    "placeholder": "Select a category"
+  },
+  "created": "The move has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following move?",
+    "success": "The move has been deleted.",
+    "title": "Delete move"
+  },
+  "editTitle": "Edit move",
+  "empty": "This list is empty.",
+  "newTitle": "Create move",
+  "power": "Power",
+  "powerPoints": {
+    "label": "Power Points",
+    "unit": "PP"
+  },
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "title": "Moves",
+  "updated": "The move has been updated."
+}

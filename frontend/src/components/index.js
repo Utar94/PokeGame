@@ -6,6 +6,8 @@ export default {
   AbilityList: () => import(/* webpackChunkName: "abilityList" */ './Abilities/AbilityList.vue'),
   AppFooter,
   Home: () => import(/* webpackChunkName: "home" */ './Home.vue'),
+  MoveEdit: () => import(/* webpackChunkName: "moveEdit" */ './Moves/MoveEdit.vue'),
+  MoveList: () => import(/* webpackChunkName: "moveList" */ './Moves/MoveList.vue'),
   Navbar,
   Profile: () => import(/* webpackChunkName: "profile" */ './Account/Profile.vue'),
   SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue')

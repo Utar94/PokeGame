@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using PokeGame.Core;
 using PokeGame.Core.Abilities;
+using PokeGame.Core.Moves;
 using PokeGame.Infrastructure.Entities;
 
 namespace PokeGame.Infrastructure
@@ -18,6 +19,7 @@ namespace PokeGame.Infrastructure
 
     public DbSet<Ability> Abilities { get; private set; } = null!;
     public DbSet<Event> Events { get; private set; } = null!;
+    public DbSet<Move> Moves { get; private set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
