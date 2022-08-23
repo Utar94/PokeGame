@@ -10,5 +10,8 @@ export default {
   MoveList: () => import(/* webpackChunkName: "moveList" */ './Moves/MoveList.vue'),
   Navbar,
   Profile: () => import(/* webpackChunkName: "profile" */ './Account/Profile.vue'),
-  SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue')
+  SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue'),
+  SignUp: () => import(/* webpackChunkName: "signUp" */ './Account/SignUp.vue'),
+  UserInvite: () => import(/* webpackChunkName: "userInvite" */ './Users/UserInvite.vue'),
+  UserList: () => import(/* webpackChunkName: "userList" */ './Users/UserList.vue')
 }

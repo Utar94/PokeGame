@@ -15,6 +15,13 @@
       };
     }
 
+    internal static class CreateUser
+    {
+      public const int Lifetime = 7 * 24 * 60 * 60; // One week
+      public const string Purpose = "create_user";
+      public const string Template = "UserInvitation";
+    }
+
     internal static class Policies
     {
       public const string Administrator = nameof(Administrator);

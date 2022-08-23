@@ -13,11 +13,11 @@ namespace PokeGame.Web
 {
   internal class Startup : StartupBase
   {
-    private readonly IConfiguration _configuration;
+    private readonly PortalSettings _portalSettings;
 
     public Startup(IConfiguration configuration)
     {
-      _configuration = configuration;
+      _portalSettings = configuration.GetSection("Portal").Get<PortalSettings>() ?? new();
     }
 
     public override void ConfigureServices(IServiceCollection services)
@@ -60,8 +60,7 @@ namespace PokeGame.Web
         .AddHealthChecks()
         .AddDbContextCheck<PokeGameDbContext>();
 
-      services.AddPortalClient(_configuration.GetSection("Portal").Get<PortalSettings>() ?? new());
-
+      services.AddSingleton(_portalSettings);
       services.AddSingleton<IAuthorizationHandler, AdministratorAuthorizationHandler>();
       services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
       services.AddSingleton<IUserContext, HttpUserContext>();
@@ -69,6 +68,8 @@ namespace PokeGame.Web
 
       services.AddPokeGameCore();
       services.AddPokeGameInfrastructure();
+
+      services.AddPortalClient(_portalSettings);
     }
 
     public override void Configure(IApplicationBuilder applicationBuilder)

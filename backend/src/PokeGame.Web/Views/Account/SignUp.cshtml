@@ -1,0 +1,8 @@
+﻿@model PokeGame.Web.Models.Users.SignUpModel
+@{
+    Layout = "_Layout";
+
+    ViewBag.Title = "Sign Up";
+}
+
+<sign-up email="@(Model.Email)" token="@(Model.Token)"></sign-up>
