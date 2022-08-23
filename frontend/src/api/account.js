@@ -11,3 +11,7 @@ export async function saveProfile(payload) {
 export async function signIn(payload) {
   return await post('/api/account/sign/in', payload)
 }
+
+export async function signUp(payload) {
+  return await post('/api/account/sign/up', payload)
+}

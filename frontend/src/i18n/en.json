@@ -6,6 +6,7 @@
     "refresh": "Refresh",
     "save": "Save"
   },
+  "by": "By",
   "copyright": "© PokéGame {version} 2022.",
   "count": "Count",
   "description": {
@@ -55,6 +56,7 @@
     "updatedAt": "Last updated on {date}"
   },
   "success": "Success!",
+  "system": "System",
   "type": {
     "label": "Type",
     "options": {

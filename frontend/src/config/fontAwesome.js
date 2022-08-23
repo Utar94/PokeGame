@@ -4,10 +4,12 @@ import {
   faBan,
   faCheck,
   faCog,
+  faEnvelope,
   faExternalLinkAlt,
   faInfoCircle,
   faKey,
   faPlus,
+  faRobot,
   faSave,
   faSignInAlt,
   faSignOutAlt,
@@ -18,6 +20,23 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faBan, faCheck, faCog, faExternalLinkAlt, faInfoCircle, faKey, faPlus, faSave, faSignInAlt, faSignOutAlt, faSyncAlt, faTrashAlt, faUser, faVial)
+library.add(
+  faBan,
+  faCheck,
+  faCog,
+  faEnvelope,
+  faExternalLinkAlt,
+  faInfoCircle,
+  faKey,
+  faPlus,
+  faRobot,
+  faSave,
+  faSignInAlt,
+  faSignOutAlt,
+  faSyncAlt,
+  faTrashAlt,
+  faUser,
+  faVial
+)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
