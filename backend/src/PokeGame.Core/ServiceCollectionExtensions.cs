@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Core.Abilities;
 using PokeGame.Core.Moves;
+using PokeGame.Core.Species;
 using System.Reflection;
 
 namespace PokeGame.Core
@@ -22,8 +23,9 @@ namespace PokeGame.Core
     private static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
       return services
+        .AddScoped<IAbilityService, AbilityService>()
         .AddScoped<IMoveService, MoveService>()
-        .AddScoped<IAbilityService, AbilityService>();
+        .AddScoped<ISpeciesService, SpeciesService>();
     }
   }
 }

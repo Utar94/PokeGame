@@ -21,6 +21,10 @@
               <!-- <font-awesome-icon icon="users" /> -->
               {{ $t('moves.title') }}
             </b-nav-item>
+            <b-nav-item href="/species">
+              <!-- <font-awesome-icon icon="users" /> -->
+              {{ $t('species.title') }}
+            </b-nav-item>
             <b-nav-item href="/users">
               <!-- <font-awesome-icon icon="users" /> -->
               {{ $t('users.title') }}

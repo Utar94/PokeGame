@@ -12,28 +12,26 @@
 </template>
 
 <script>
+import { getAbilities } from '@/api/abilities'
+
 export default {
-  name: 'TypeSelect',
+  name: 'AbilitySelect',
   props: {
     disabled: {
       type: Boolean,
       default: false
     },
-    exclude: {
-      type: Array,
-      default: () => []
-    },
     id: {
       type: String,
-      default: 'type'
+      default: 'ability'
     },
     label: {
       type: String,
-      default: 'type.label'
+      default: 'abilities.select.label'
     },
     placeholder: {
       type: String,
-      default: 'type.placeholder'
+      default: 'abilities.select.placeholder'
     },
     required: {
       type: Boolean,
@@ -41,14 +39,25 @@ export default {
     },
     value: {}
   },
+  data() {
+    return {
+      abilities: []
+    }
+  },
   computed: {
     options() {
-      return this.orderBy(
-        Object.entries(this.$i18n.t('type.options'))
-          .filter(([value]) => !this.exclude.includes(value))
-          .map(([value, text]) => ({ text, value })),
-        'text'
-      )
+      return this.abilities.map(({ id, name }) => ({
+        text: name,
+        value: id
+      }))
+    }
+  },
+  async created() {
+    try {
+      const { data } = await getAbilities({ sort: 'Name', desc: false })
+      this.abilities = data.items
+    } catch (e) {
+      this.handleError(e)
     }
   }
 }

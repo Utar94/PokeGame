@@ -2,6 +2,7 @@
 using PokeGame.Core;
 using PokeGame.Core.Abilities;
 using PokeGame.Core.Moves;
+using PokeGame.Core.Species;
 using PokeGame.Infrastructure.Queriers;
 using PokeGame.Infrastructure.Repositories;
 using System.Reflection;
@@ -24,14 +25,16 @@ namespace PokeGame.Infrastructure
     {
       return services
         .AddScoped<IAbilityQuerier, AbilityQuerier>()
-        .AddScoped<IMoveQuerier, MoveQuerier>();
+        .AddScoped<IMoveQuerier, MoveQuerier>()
+        .AddScoped<ISpeciesQuerier, SpeciesQuerier>();
     }
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
       return services
-      .AddScoped<IRepository<Ability>, Repository<Ability>>()
-      .AddScoped<IRepository<Move>, Repository<Move>>();
+        .AddScoped<IRepository<Ability>, Repository<Ability>>()
+        .AddScoped<IRepository<Move>, Repository<Move>>()
+        .AddScoped<IRepository<Species>, Repository<Species>>();
     }
   }
 }
