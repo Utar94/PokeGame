@@ -19,6 +19,10 @@ export default {
       type: Boolean,
       default: false
     },
+    exclude: {
+      type: Array,
+      default: () => []
+    },
     id: {
       type: String,
       default: 'type'
@@ -40,7 +44,9 @@ export default {
   computed: {
     options() {
       return this.orderBy(
-        Object.entries(this.$i18n.t('type.options')).map(([value, text]) => ({ text, value })),
+        Object.entries(this.$i18n.t('type.options'))
+          .filter(([value]) => !this.exclude.includes(value))
+          .map(([value, text]) => ({ text, value })),
         'text'
       )
     }

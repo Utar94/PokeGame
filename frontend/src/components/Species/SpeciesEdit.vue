@@ -22,8 +22,23 @@
                 type="number"
                 v-model.number="number"
               />
-              <type-select class="col" :disabled="Boolean(species)" id="primaryType" label="species.primaryType" :required="!species" v-model="primaryType" />
-              <type-select class="col" :disabled="Boolean(species)" id="secondaryType" label="species.secondaryType" v-model="secondaryType" />
+              <type-select
+                class="col"
+                :disabled="Boolean(species)"
+                :exclude="secondaryType ? [secondaryType] : []"
+                id="primaryType"
+                label="species.primaryType"
+                :required="!species"
+                v-model="primaryType"
+              />
+              <type-select
+                class="col"
+                :disabled="Boolean(species)"
+                :exclude="primaryType ? [primaryType] : []"
+                id="secondaryType"
+                label="species.secondaryType"
+                v-model="secondaryType"
+              />
             </b-row>
             <b-row>
               <name-field class="col" required v-model="name" />
