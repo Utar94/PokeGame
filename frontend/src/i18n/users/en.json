@@ -5,6 +5,7 @@
     "label": "Email Address",
     "placeholder": "Enter your email address"
   },
+  "empty": "This list is empty.",
   "firstName": {
     "label": "First Name",
     "placeholder": "Enter your first name"
@@ -13,6 +14,14 @@
   "information": {
     "authentication": "Authentication Information",
     "personal": "Personal Information"
+  },
+  "invite": {
+    "emailConflict": "The email address is already used.",
+    "emailPlaceholder": "Enter an email address",
+    "failed": "Invitation failed!",
+    "submit": "Invite",
+    "success": "The user has been invited.",
+    "title": "Invite user"
   },
   "lastName": {
     "label": "Last Name",
@@ -39,6 +48,7 @@
     "placeholder": "Enter your password",
     "submit": "Change password"
   },
+  "passwordChangedAt": "Password changed on",
   "phone": {
     "confirmed": "Confirmed",
     "label": "Phone Number",
@@ -62,7 +72,25 @@
     "title": "Sign In"
   },
   "signOut": "Sign Out",
+  "signUp": {
+    "info": "Please complete the form below to sign up. You will be able to sign in to your account using the following email:",
+    "submit": "Sign up",
+    "title": "Sign Up"
+  },
   "signedInAt": "Last signed-in on",
+  "sort": {
+    "options": {
+      "Email": "Email address",
+      "FirstMiddleLastName": "Name",
+      "LastFirstMiddleName": "Last name, then first and middle names",
+      "PasswordChangedAt": "Password changed on",
+      "PhoneNumber": "Phone number",
+      "SignedInAt": "Signed-in on",
+      "UpdatedAt": "Updated on",
+      "Username": "Username"
+    }
+  },
+  "title": "Users",
   "updatedAt": "Last updated on",
   "username": {
     "label": "Username",
