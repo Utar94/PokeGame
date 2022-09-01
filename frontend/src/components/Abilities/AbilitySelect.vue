@@ -21,6 +21,10 @@ export default {
       type: Boolean,
       default: false
     },
+    exclude: {
+      type: Array,
+      default: () => []
+    },
     id: {
       type: String,
       default: 'ability'
@@ -46,10 +50,12 @@ export default {
   },
   computed: {
     options() {
-      return this.abilities.map(({ id, name }) => ({
-        text: name,
-        value: id
-      }))
+      return this.abilities
+        .filter(({ id }) => !this.exclude.includes(id))
+        .map(({ id, name }) => ({
+          text: name,
+          value: id
+        }))
     }
   },
   async created() {

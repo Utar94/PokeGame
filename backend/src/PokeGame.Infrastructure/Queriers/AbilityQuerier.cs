@@ -19,6 +19,15 @@ namespace PokeGame.Infrastructure.Queriers
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    public async Task<IEnumerable<Ability>> GetAsync(IEnumerable<Guid> ids, bool readOnly, CancellationToken cancellationToken)
+    {
+      ArgumentNullException.ThrowIfNull(ids);
+
+      return await _abilities.ApplyTracking(readOnly)
+        .Where(x => ids.Contains(x.Id))
+        .ToArrayAsync(cancellationToken);
+    }
+
     public async Task<PagedList<Ability>> GetPagedAsync(string? search,
       AbilitySort? sort, bool desc,
       int? index, int? count,

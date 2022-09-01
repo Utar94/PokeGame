@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.Queriers
     public async Task<Species?> GetAsync(Guid id, bool readOnly, CancellationToken cancellationToken)
     {
       return await _species.ApplyTracking(readOnly)
-        .Include(x => x.Ability)
+        .Include(x => x.Abilities)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
@@ -25,8 +25,7 @@ namespace PokeGame.Infrastructure.Queriers
       int? index, int? count,
       bool readOnly, CancellationToken cancellationToken)
     {
-      IQueryable<Species> query = _species.ApplyTracking(readOnly)
-        .Include(x => x.Ability);
+      IQueryable<Species> query = _species.ApplyTracking(readOnly);
 
       if (search != null)
       {

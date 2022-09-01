@@ -23,6 +23,8 @@ namespace PokeGame.Infrastructure
     public DbSet<Move> Moves { get; private set; } = null!;
     public DbSet<Species> Species { get; private set; } = null!;
 
+    internal DbSet<SpeciesAbility> SpeciesAbilities { get; private set; } = null!;
+
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
       builder.UseNpgsql(_configuration.GetValue<string>($"POSTGRESQLCONNSTR_{nameof(PokeGameDbContext)}"));

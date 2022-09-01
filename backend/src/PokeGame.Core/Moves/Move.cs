@@ -19,9 +19,9 @@ namespace PokeGame.Core.Moves
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
 
-    public double? Accuracy { get; private set; }
-    public int? Power { get; private set; }
-    public int PowerPoints { get; private set; }
+    public byte? Accuracy { get; private set; }
+    public byte? Power { get; private set; }
+    public byte PowerPoints { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }

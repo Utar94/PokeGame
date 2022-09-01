@@ -5,7 +5,7 @@
     "success": "The ability has been deleted.",
     "title": "Delete ability"
   },
-  "editTitle": "Edit ability",
+  "editTitle": "Edit ability: {name}",
   "empty": "This list is empty.",
   "newTitle": "Create ability",
   "select": {

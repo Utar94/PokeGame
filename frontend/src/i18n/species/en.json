@@ -1,4 +1,8 @@
 {
+  "baseExperienceYield": "Base Experience Yield",
+  "baseFriendship": "Base Friendship",
+  "baseStatistics": "Base Statistics",
+  "catchRate": "Catch Rate",
   "category": {
     "label": "Category",
     "placeholder": "Enter a category"
@@ -9,8 +13,33 @@
     "success": "The species has been deleted.",
     "title": "Delete species"
   },
-  "editTitle": "Edit species",
+  "editTitle": "Edit species: {name}",
   "empty": "This list is empty.",
+  "evYield": {
+    "exceeded": "The sum for the EV yield cannot exceed 3.",
+    "label": "EV Yield"
+  },
+  "genderRatio": {
+    "genderUnknown": "Gender unknown",
+    "label": "Gender Ratio (Male)",
+    "unit": "%"
+  },
+  "height": {
+    "label": "Height",
+    "unit": "m"
+  },
+  "levelingRate": {
+    "label": "Leveling Rate",
+    "options": {
+      "Erratic": "Erratic",
+      "Fast": "Fast",
+      "Fluctuating": "Fluctuating",
+      "MediumFast": "Medium Fast",
+      "MediumSlow": "Medium Slow",
+      "Slow": "Slow"
+    },
+    "placeholder": "Select a leveling rate"
+  },
   "newTitle": "Create species",
   "number": "Number",
   "primaryType": "Primary Type",
@@ -24,5 +53,9 @@
     }
   },
   "title": "Species",
-  "updated": "The species has been updated."
+  "updated": "The species has been updated.",
+  "weight": {
+    "label": "Weight",
+    "unit": "kg"
+  }
 }

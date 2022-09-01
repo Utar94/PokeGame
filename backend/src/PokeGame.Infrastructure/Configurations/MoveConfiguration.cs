@@ -17,6 +17,7 @@ namespace PokeGame.Infrastructure.Configurations
       builder.Property(x => x.Name).HasMaxLength(100);
       builder.Property(x => x.PowerPoints).HasDefaultValue(0);
       builder.Property(x => x.Reference).HasMaxLength(2048);
+      builder.Property(x => x.Sid).HasColumnName($"{nameof(Move)}Id");
       builder.Property(x => x.Type).HasDefaultValue(default(PokemonType));
     }
   }

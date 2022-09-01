@@ -25,7 +25,11 @@ namespace PokeGame.Web
       base.ConfigureServices(services);
 
       services
-        .AddControllersWithViews(options => options.Filters.Add<ErrorExceptionFilterAttribute>())
+        .AddControllersWithViews(options =>
+        {
+          options.Filters.Add<ApiExceptionFilterAttribute>();
+          options.Filters.Add<ErrorExceptionFilterAttribute>();
+        })
         .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
       services

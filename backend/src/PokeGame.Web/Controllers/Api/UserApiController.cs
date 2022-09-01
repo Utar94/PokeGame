@@ -32,12 +32,12 @@ namespace PokeGame.Web.Controllers.Api
     )
     {
       _bcc = configuration.GetSection("Bcc").Get<IEnumerable<string>>()
-        .Select(email => new RecipientPayload
+        ?.Select(email => new RecipientPayload
         {
           Address = email,
           Type = RecipientType.Bcc
         })
-        .ToHashSet();
+        .ToHashSet() ?? new();
 
       _messageService = messageService;
       _tokenService = tokenService;

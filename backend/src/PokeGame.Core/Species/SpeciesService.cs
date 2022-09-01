@@ -34,9 +34,8 @@ namespace PokeGame.Core.Species
 
     public async Task<SpeciesModel> CreateAsync(CreateSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      Ability? ability = await ResolveAbilityAsync(payload.AbilityId, cancellationToken);
-
-      var species = new Species(payload, _userContext.Id, ability);
+      var species = new Species(payload, _userContext.Id);
+      await SetAbilitiesAsync(species, payload, cancellationToken);
       _validator.ValidateAndThrow(species);
 
       await _repository.SaveAsync(species, cancellationToken);
@@ -82,12 +81,11 @@ namespace PokeGame.Core.Species
 
     public async Task<SpeciesModel> UpdateAsync(Guid id, UpdateSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      Ability? ability = await ResolveAbilityAsync(payload.AbilityId, cancellationToken);
-
       Species species = await _querier.GetAsync(id, readOnly: false, cancellationToken)
         ?? throw new EntityNotFoundException<Species>(id);
 
-      species.Update(payload, _userContext.Id, ability);
+      species.Update(payload, _userContext.Id);
+      await SetAbilitiesAsync(species, payload, cancellationToken);
       _validator.ValidateAndThrow(species);
 
       await _repository.SaveAsync(species, cancellationToken);
@@ -95,17 +93,22 @@ namespace PokeGame.Core.Species
       return await _mappingService.MapAsync<SpeciesModel>(species, cancellationToken);
     }
 
-    private async Task<Ability?> ResolveAbilityAsync(Guid? id, CancellationToken cancellationToken)
+    public async Task SetAbilitiesAsync(Species species, SaveSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      Ability? ability = null;
+      species.Abilities.Clear();
 
-      if (id.HasValue)
+      if (payload.AbilityIds?.Any() == true)
       {
-        ability = await _abilityQuerier.GetAsync(id.Value, readOnly: false, cancellationToken)
-          ?? throw new EntityNotFoundException<Ability>(id.Value, nameof(SaveSpeciesPayload.AbilityId));
-      }
+        IEnumerable<Ability> abilities = await _abilityQuerier.GetAsync(payload.AbilityIds, readOnly: false, cancellationToken);
 
-      return ability;
+        IEnumerable<Guid> missingIds = payload.AbilityIds.Except(abilities.Select(x => x.Id));
+        if (missingIds.Any())
+        {
+          throw new AbilitiesNotFoundException(missingIds);
+        }
+
+        species.Abilities.AddRange(abilities);
+      }
     }
   }
 }
