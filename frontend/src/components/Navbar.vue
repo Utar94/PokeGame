@@ -17,6 +17,10 @@
               <font-awesome-icon icon="tools" />
               {{ $t('abilities.title') }}
             </b-nav-item>
+            <b-nav-item href="/items">
+              <font-awesome-icon icon="shopping-cart" />
+              {{ $t('items.title') }}
+            </b-nav-item>
             <b-nav-item href="/moves">
               <font-awesome-icon icon="magic" />
               {{ $t('moves.title') }}

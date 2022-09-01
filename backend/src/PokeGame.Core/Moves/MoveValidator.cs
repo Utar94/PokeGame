@@ -13,7 +13,7 @@ namespace PokeGame.Core.Moves
       RuleFor(x => x.Description)
         .MaximumLength(1000);
 
-      When(x => x.Category == Category.Status, () => RuleFor(x => x.Power).Null());
+      When(x => x.Category == MoveCategory.Status, () => RuleFor(x => x.Power).Null());
 
       RuleFor(x => x.Accuracy)
         .LessThanOrEqualTo((byte)100)

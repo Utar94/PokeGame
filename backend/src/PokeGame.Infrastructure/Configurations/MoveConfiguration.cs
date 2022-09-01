@@ -13,7 +13,7 @@ namespace PokeGame.Infrastructure.Configurations
 
       builder.HasIndex(x => x.Name);
 
-      builder.Property(x => x.Category).HasDefaultValue(default(Category));
+      builder.Property(x => x.Category).HasDefaultValue(default(MoveCategory));
       builder.Property(x => x.Name).HasMaxLength(100);
       builder.Property(x => x.PowerPoints).HasDefaultValue(0);
       builder.Property(x => x.Reference).HasMaxLength(2048);
