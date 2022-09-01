@@ -32,9 +32,6 @@ namespace PokeGame.Core.Species
     public byte? CatchRate { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
 
-    public string? Notes { get; private set; }
-    public string? Reference { get; private set; }
-
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public string? BaseStatisticsSerialized
     {
@@ -47,6 +44,9 @@ namespace PokeGame.Core.Species
       get => FormatDictionary(EvYield);
       private set => FillDictionary(EvYield, value);
     }
+
+    public string? Notes { get; private set; }
+    public string? Reference { get; private set; }
 
     public List<Abilities.Ability> Abilities { get; private set; } = new();
 
@@ -87,6 +87,24 @@ namespace PokeGame.Core.Species
       BaseFriendship = payload.BaseFriendship;
       CatchRate = payload.CatchRate;
       LevelingRate = payload.LevelingRate;
+
+      BaseStatistics.Clear();
+      if (payload.BaseStatistics != null)
+      {
+        foreach (StatisticValuePayload pair in payload.BaseStatistics)
+        {
+          BaseStatistics[pair.Statistic] = pair.Value;
+        }
+      }
+
+      EvYield.Clear();
+      if (payload.EvYield != null)
+      {
+        foreach (StatisticValuePayload pair in payload.EvYield)
+        {
+          EvYield[pair.Statistic] = pair.Value;
+        }
+      }
 
       Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;

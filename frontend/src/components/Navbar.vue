@@ -14,19 +14,19 @@
           <b-nav-item v-if="environment === 'development'" href="/swagger" target="_blank"><font-awesome-icon icon="vial" /> Swagger</b-nav-item>
           <template v-if="currentUser.isAuthenticated">
             <b-nav-item href="/abilities">
-              <!-- <font-awesome-icon icon="users" /> -->
+              <font-awesome-icon icon="tools" />
               {{ $t('abilities.title') }}
             </b-nav-item>
             <b-nav-item href="/moves">
-              <!-- <font-awesome-icon icon="users" /> -->
+              <font-awesome-icon icon="magic" />
               {{ $t('moves.title') }}
             </b-nav-item>
             <b-nav-item href="/species">
-              <!-- <font-awesome-icon icon="users" /> -->
+              <font-awesome-icon icon="paw" />
               {{ $t('species.title') }}
             </b-nav-item>
             <b-nav-item href="/users">
-              <!-- <font-awesome-icon icon="users" /> -->
+              <font-awesome-icon icon="users" />
               {{ $t('users.title') }}
             </b-nav-item>
           </template>

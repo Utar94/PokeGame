@@ -1,6 +1,7 @@
 <template>
   <b-container>
-    <h1 v-t="ability ? 'abilities.editTitle' : 'abilities.newTitle'" />
+    <h1 v-if="ability">{{ $t('abilities.editTitle', { name: ability.name }) }}</h1>
+    <h1 v-else v-t="'abilities.newTitle'" />
     <status-detail v-if="ability" :model="ability" />
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">

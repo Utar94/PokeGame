@@ -18,7 +18,7 @@
     "success": "The move has been deleted.",
     "title": "Delete move"
   },
-  "editTitle": "Edit move",
+  "editTitle": "Edit move: {name}",
   "empty": "This list is empty.",
   "newTitle": "Create move",
   "power": "Power",

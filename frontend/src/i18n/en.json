@@ -17,6 +17,7 @@
     "body": "An unexpected error occurred. Please try again later or contact our support team.",
     "title": "Error!"
   },
+  "experience": "Experience",
   "gameData": "Game data",
   "locale": {
     "label": "Locale",
@@ -49,6 +50,16 @@
     "desc": "Descending",
     "label": "Sort",
     "placeholder": "Select a sort option"
+  },
+  "statistic": {
+    "options": {
+      "Attack": "Attack",
+      "Defense": "Defense",
+      "HP": "HP",
+      "SpecialAttack": "Sp. Attack",
+      "SpecialDefense": "Sp. Defense",
+      "Speed": "Speed"
+    }
   },
   "statusDetail": {
     "by": "by",

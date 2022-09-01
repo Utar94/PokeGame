@@ -24,6 +24,9 @@ namespace PokeGame.Core.Species.Models
     public byte? CatchRate { get; set; }
     public LevelingRate LevelingRate { get; set; }
 
+    public IEnumerable<StatisticValueModel>? BaseStatistics { get; set; }
+    public IEnumerable<StatisticValueModel>? EvYield { get; set; }
+
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 

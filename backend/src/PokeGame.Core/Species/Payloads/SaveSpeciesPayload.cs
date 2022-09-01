@@ -17,6 +17,9 @@ namespace PokeGame.Core.Species.Payloads
     public byte? CatchRate { get; set; }
     public LevelingRate LevelingRate { get; set; }
 
+    public IEnumerable<StatisticValuePayload>? BaseStatistics { get; set; }
+    public IEnumerable<StatisticValuePayload>? EvYield { get; set; }
+
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 

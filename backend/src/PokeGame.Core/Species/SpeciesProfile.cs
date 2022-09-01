@@ -9,7 +9,17 @@ namespace PokeGame.Core.Species
     public SpeciesProfile()
     {
       CreateMap<Species, SpeciesModel>()
-        .IncludeBase<Aggregate, AggregateModel>();
+        .IncludeBase<Aggregate, AggregateModel>()
+        .ForMember(x => x.BaseStatistics, x => x.MapFrom(y => y.BaseStatistics.Select(pair => new StatisticValueModel
+        {
+          Statistic = pair.Key,
+          Value = pair.Value
+        })))
+        .ForMember(x => x.EvYield, x => x.MapFrom(y => y.EvYield.Select(pair => new StatisticValueModel
+        {
+          Statistic = pair.Key,
+          Value = pair.Value
+        })));
       CreateMap<SpeciesModel, SpeciesSummary>()
         .IncludeBase<AggregateModel, AggregateSummary>();
     }

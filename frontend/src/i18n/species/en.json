@@ -1,6 +1,7 @@
 {
   "baseExperienceYield": "Base Experience Yield",
   "baseFriendship": "Base Friendship",
+  "baseStatistics": "Base Statistics",
   "catchRate": "Catch Rate",
   "category": {
     "label": "Category",
@@ -12,8 +13,12 @@
     "success": "The species has been deleted.",
     "title": "Delete species"
   },
-  "editTitle": "Edit species",
+  "editTitle": "Edit species: {name}",
   "empty": "This list is empty.",
+  "evYield": {
+    "exceeded": "The sum for the EV yield cannot exceed 3.",
+    "label": "EV Yield"
+  },
   "genderRatio": {
     "genderUnknown": "Gender unknown",
     "label": "Gender Ratio (Male)",
