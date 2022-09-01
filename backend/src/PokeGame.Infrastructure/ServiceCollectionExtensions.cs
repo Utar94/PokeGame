@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Core;
 using PokeGame.Core.Abilities;
+using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
 using PokeGame.Infrastructure.Queriers;
@@ -25,6 +26,7 @@ namespace PokeGame.Infrastructure
     {
       return services
         .AddScoped<IAbilityQuerier, AbilityQuerier>()
+        .AddScoped<IItemQuerier, ItemQuerier>()
         .AddScoped<IMoveQuerier, MoveQuerier>()
         .AddScoped<ISpeciesQuerier, SpeciesQuerier>();
     }
@@ -33,6 +35,7 @@ namespace PokeGame.Infrastructure
     {
       return services
         .AddScoped<IRepository<Ability>, Repository<Ability>>()
+        .AddScoped<IRepository<Item>, Repository<Item>>()
         .AddScoped<IRepository<Move>, Repository<Move>>()
         .AddScoped<IRepository<Species>, Repository<Species>>();
     }

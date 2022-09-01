@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Core.Abilities;
+using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
 using System.Reflection;
@@ -24,6 +25,7 @@ namespace PokeGame.Core
     {
       return services
         .AddScoped<IAbilityService, AbilityService>()
+        .AddScoped<IItemService, ItemService>()
         .AddScoped<IMoveService, MoveService>()
         .AddScoped<ISpeciesService, SpeciesService>();
     }

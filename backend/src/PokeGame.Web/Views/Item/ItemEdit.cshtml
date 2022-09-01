@@ -1,0 +1,17 @@
+﻿@using PokeGame.Core.Items.Models;
+
+@model ItemModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create item";
+}
+
+@if (Model == null)
+{
+  <item-edit></item-edit>
+}
+else
+{
+  <item-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></item-edit>
+}
