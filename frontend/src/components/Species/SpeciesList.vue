@@ -19,7 +19,6 @@
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'type.label'" />
             <th scope="col" v-t="'species.category.label'" />
-            <th scope="col" v-t="'abilities.select.label'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
           </tr>
@@ -38,7 +37,6 @@
               </template>
             </td>
             <td v-text="item.category || '—'" />
-            <td v-text="item.ability ? item.ability.name : '—'" />
             <td><status-cell :actor="item.updatedBy" :date="item.updatedAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />

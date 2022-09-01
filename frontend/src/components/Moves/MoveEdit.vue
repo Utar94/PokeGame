@@ -32,6 +32,7 @@
               </form-field>
               <form-field v-if="category === 'Status'" class="col" disabled id="power" label="moves.power" type="number" :value="0" />
               <form-field v-else class="col" id="power" label="moves.power" :minValue="0" :maxValue="250" :step="5" type="number" v-model.number="power" />
+              <!-- TODO(fpion): UX for value 0 (never misses) -->
               <form-field
                 class="col"
                 id="accuracy"
@@ -100,7 +101,7 @@ export default {
         (this.name ?? '') !== (this.move?.name ?? '') ||
         this.powerPoints !== (this.move?.powerPoints ?? 0) ||
         this.power !== (this.move?.power ?? 0) ||
-        this.accuracy / 100 !== (this.move?.accuracy ?? 0) ||
+        this.accuracy !== (this.move?.accuracy ?? 0) ||
         (this.description ?? '') !== (this.move?.description ?? '') ||
         (this.reference ?? '') !== (this.move?.reference ?? '') ||
         (this.notes ?? '') !== (this.move?.notes ?? '')
@@ -111,7 +112,7 @@ export default {
         name: this.name,
         powerPoints: this.powerPoints,
         power: this.category === 'Status' ? null : this.power || null,
-        accuracy: this.accuracy / 100 || null,
+        accuracy: this.accuracy || null,
         description: this.description,
         reference: this.reference,
         notes: this.notes
@@ -126,7 +127,7 @@ export default {
   methods: {
     setModel(move) {
       this.move = move
-      this.accuracy = (move.accuracy ?? 0) * 100
+      this.accuracy = move.accuracy ?? 0
       this.category = move.category
       this.description = move.description
       this.name = move.name

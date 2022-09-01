@@ -27,7 +27,8 @@ namespace PokeGame.Infrastructure.Migrations
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("AbilityId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
 
@@ -86,12 +87,13 @@ namespace PokeGame.Infrastructure.Migrations
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("MoveId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
 
-                    b.Property<double?>("Accuracy")
-                        .HasColumnType("double precision");
+                    b.Property<byte?>("Accuracy")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("Category")
                         .ValueGeneratedOnAdd()
@@ -124,13 +126,13 @@ namespace PokeGame.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Power")
-                        .HasColumnType("integer");
+                    b.Property<byte?>("Power")
+                        .HasColumnType("smallint");
 
-                    b.Property<int>("PowerPoints")
+                    b.Property<byte>("PowerPoints")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
 
                     b.Property<string>("Reference")
                         .HasMaxLength(2048)
@@ -166,12 +168,26 @@ namespace PokeGame.Infrastructure.Migrations
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("SpeciesId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
 
-                    b.Property<int?>("AbilitySid")
+                    b.Property<int?>("BaseExperienceYield")
                         .HasColumnType("integer");
+
+                    b.Property<byte>("BaseFriendship")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
+
+                    b.Property<string>("BaseStatisticsSerialized")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("BaseStatistics");
+
+                    b.Property<byte?>("CatchRate")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Category")
                         .HasMaxLength(100)
@@ -190,10 +206,26 @@ namespace PokeGame.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<string>("EvYieldSerialized")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("EvYield");
+
+                    b.Property<double?>("GenderRatio")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Height")
+                        .HasColumnType("double precision");
+
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<int>("LevelingRate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -229,9 +261,10 @@ namespace PokeGame.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.HasKey("Sid");
+                    b.Property<double?>("Weight")
+                        .HasColumnType("double precision");
 
-                    b.HasIndex("AbilitySid");
+                    b.HasKey("Sid");
 
                     b.HasIndex("Category");
 
@@ -298,18 +331,34 @@ namespace PokeGame.Infrastructure.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("PokeGame.Core.Species.Species", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.Entities.SpeciesAbility", b =>
                 {
-                    b.HasOne("PokeGame.Core.Abilities.Ability", "Ability")
-                        .WithMany("Species")
-                        .HasForeignKey("AbilitySid");
+                    b.Property<int>("SpeciesId")
+                        .HasColumnType("integer");
 
-                    b.Navigation("Ability");
+                    b.Property<int>("AbilityId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SpeciesId", "AbilityId");
+
+                    b.HasIndex("AbilityId");
+
+                    b.ToTable("SpeciesAbilities");
                 });
 
-            modelBuilder.Entity("PokeGame.Core.Abilities.Ability", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.Entities.SpeciesAbility", b =>
                 {
-                    b.Navigation("Species");
+                    b.HasOne("PokeGame.Core.Abilities.Ability", null)
+                        .WithMany()
+                        .HasForeignKey("AbilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Core.Species.Species", null)
+                        .WithMany()
+                        .HasForeignKey("SpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

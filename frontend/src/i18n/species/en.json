@@ -1,4 +1,7 @@
 {
+  "baseExperienceYield": "Base Experience Yield",
+  "baseFriendship": "Base Friendship",
+  "catchRate": "Catch Rate",
   "category": {
     "label": "Category",
     "placeholder": "Enter a category"
@@ -11,6 +14,27 @@
   },
   "editTitle": "Edit species",
   "empty": "This list is empty.",
+  "genderRatio": {
+    "genderUnknown": "Gender unknown",
+    "label": "Gender Ratio (Male)",
+    "unit": "%"
+  },
+  "height": {
+    "label": "Height",
+    "unit": "m"
+  },
+  "levelingRate": {
+    "label": "Leveling Rate",
+    "options": {
+      "Erratic": "Erratic",
+      "Fast": "Fast",
+      "Fluctuating": "Fluctuating",
+      "MediumFast": "Medium Fast",
+      "MediumSlow": "Medium Slow",
+      "Slow": "Slow"
+    },
+    "placeholder": "Select a leveling rate"
+  },
   "newTitle": "Create species",
   "number": "Number",
   "primaryType": "Primary Type",
@@ -24,5 +48,9 @@
     }
   },
   "title": "Species",
-  "updated": "The species has been updated."
+  "updated": "The species has been updated.",
+  "weight": {
+    "label": "Weight",
+    "unit": "kg"
+  }
 }
