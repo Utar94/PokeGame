@@ -12,7 +12,7 @@ namespace PokeGame.Infrastructure.Configurations
 
       builder.HasIndex(x => x.Name);
 
-      builder.Property(x => x.Category).HasDefaultValue(default(Category));
+      builder.Property(x => x.Category).HasDefaultValue(default(ItemCategory));
       builder.Property(x => x.Name).HasMaxLength(100);
       builder.Property(x => x.Reference).HasMaxLength(2048);
       builder.Property(x => x.Sid).HasColumnName($"{nameof(Item)}Id");

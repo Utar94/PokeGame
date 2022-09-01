@@ -1,6 +1,6 @@
 ﻿namespace PokeGame.Core.Items
 {
-  public enum Category
+  public enum ItemCategory
   {
     Medicine = 0,
     PokeBall = 1,

@@ -14,7 +14,7 @@ namespace PokeGame.Core.Moves
     }
 
     public PokemonType Type { get; private set; }
-    public Category Category { get; private set; }
+    public MoveCategory Category { get; private set; }
 
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }

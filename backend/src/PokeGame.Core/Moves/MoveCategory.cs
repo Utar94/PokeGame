@@ -1,6 +1,6 @@
 ﻿namespace PokeGame.Core.Moves
 {
-  public enum Category
+  public enum MoveCategory
   {
     Status = 0,
     Physical = 1,

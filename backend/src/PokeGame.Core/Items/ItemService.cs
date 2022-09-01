@@ -61,7 +61,7 @@ namespace PokeGame.Core.Items
       return await _mappingService.MapAsync<ItemModel>(item, cancellationToken);
     }
 
-    public async Task<ListModel<ItemModel>> GetAsync(Category? category, string? search,
+    public async Task<ListModel<ItemModel>> GetAsync(ItemCategory? category, string? search,
       ItemSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)

@@ -19,7 +19,7 @@ namespace PokeGame.Infrastructure.Queriers
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<PagedList<Item>> GetPagedAsync(Category? category, string? search,
+    public async Task<PagedList<Item>> GetPagedAsync(ItemCategory? category, string? search,
       ItemSort? sort, bool desc,
       int? index, int? count,
       bool readOnly, CancellationToken cancellationToken)

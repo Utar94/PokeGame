@@ -2,6 +2,6 @@
 {
   public class CreateItemPayload : SaveItemPayload
   {
-    public Category Category { get; set; }
+    public ItemCategory Category { get; set; }
   }
 }

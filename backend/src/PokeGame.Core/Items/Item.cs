@@ -13,7 +13,7 @@ namespace PokeGame.Core.Items
     {
     }
 
-    public Category Category { get; private set; }
+    public ItemCategory Category { get; private set; }
 
     public int? Price { get; private set; }
 

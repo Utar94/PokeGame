@@ -38,7 +38,7 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<ItemSummary>> GetAsync(Category? category, string? search,
+    public async Task<ActionResult<ItemSummary>> GetAsync(ItemCategory? category, string? search,
       ItemSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)

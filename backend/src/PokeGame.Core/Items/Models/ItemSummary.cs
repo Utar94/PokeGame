@@ -4,7 +4,7 @@ namespace PokeGame.Core.Items.Models
 {
   public class ItemSummary : AggregateSummary
   {
-    public Category Category { get; set; }
+    public ItemCategory Category { get; set; }
 
     public int? Price { get; set; }
 
