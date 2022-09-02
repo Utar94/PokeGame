@@ -4,6 +4,7 @@ import configurations from './configurations/en.json'
 import items from './items/en.json'
 import moves from './moves/en.json'
 import species from './species/en.json'
+import trainers from './trainers/en.json'
 import users from './users/en.json'
 
 export default {
@@ -13,5 +14,6 @@ export default {
   items,
   moves,
   species,
+  trainers,
   users
 }

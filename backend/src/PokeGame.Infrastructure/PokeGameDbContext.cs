@@ -5,6 +5,7 @@ using PokeGame.Core.Abilities;
 using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
+using PokeGame.Core.Trainers;
 using PokeGame.Infrastructure.Entities;
 
 namespace PokeGame.Infrastructure
@@ -24,6 +25,7 @@ namespace PokeGame.Infrastructure
     public DbSet<Item> Items { get; private set; } = null!;
     public DbSet<Move> Moves { get; private set; } = null!;
     public DbSet<Species> Species { get; private set; } = null!;
+    public DbSet<Trainer> Trainers { get; private set; } = null!;
 
     internal DbSet<SpeciesAbility> SpeciesAbilities { get; private set; } = null!;
 

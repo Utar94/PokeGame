@@ -1,0 +1,17 @@
+﻿@using PokeGame.Core.Trainers.Models;
+
+@model TrainerModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create trainer";
+}
+
+@if (Model == null)
+{
+  <trainer-edit></trainer-edit>
+}
+else
+{
+  <trainer-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></trainer-edit>
+}

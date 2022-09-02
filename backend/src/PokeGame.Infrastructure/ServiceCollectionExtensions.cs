@@ -4,6 +4,7 @@ using PokeGame.Core.Abilities;
 using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
+using PokeGame.Core.Trainers;
 using PokeGame.Infrastructure.Queriers;
 using PokeGame.Infrastructure.Repositories;
 using System.Reflection;
@@ -28,7 +29,8 @@ namespace PokeGame.Infrastructure
         .AddScoped<IAbilityQuerier, AbilityQuerier>()
         .AddScoped<IItemQuerier, ItemQuerier>()
         .AddScoped<IMoveQuerier, MoveQuerier>()
-        .AddScoped<ISpeciesQuerier, SpeciesQuerier>();
+        .AddScoped<ISpeciesQuerier, SpeciesQuerier>()
+        .AddScoped<ITrainerQuerier, TrainerQuerier>();
     }
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
@@ -37,7 +39,8 @@ namespace PokeGame.Infrastructure
         .AddScoped<IRepository<Ability>, Repository<Ability>>()
         .AddScoped<IRepository<Item>, Repository<Item>>()
         .AddScoped<IRepository<Move>, Repository<Move>>()
-        .AddScoped<IRepository<Species>, Repository<Species>>();
+        .AddScoped<IRepository<Species>, Repository<Species>>()
+        .AddScoped<IRepository<Trainer>, Repository<Trainer>>();
     }
   }
 }

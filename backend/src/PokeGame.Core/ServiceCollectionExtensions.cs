@@ -4,6 +4,7 @@ using PokeGame.Core.Abilities;
 using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
+using PokeGame.Core.Trainers;
 using System.Reflection;
 
 namespace PokeGame.Core
@@ -27,7 +28,8 @@ namespace PokeGame.Core
         .AddScoped<IAbilityService, AbilityService>()
         .AddScoped<IItemService, ItemService>()
         .AddScoped<IMoveService, MoveService>()
-        .AddScoped<ISpeciesService, SpeciesService>();
+        .AddScoped<ISpeciesService, SpeciesService>()
+        .AddScoped<ITrainerService, TrainerService>();
     }
   }
 }

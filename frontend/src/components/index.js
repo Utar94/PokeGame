@@ -16,6 +16,8 @@ export default {
   SignUp: () => import(/* webpackChunkName: "signUp" */ './Account/SignUp.vue'),
   SpeciesEdit: () => import(/* webpackChunkName: "speciesEdit" */ './Species/SpeciesEdit.vue'),
   SpeciesList: () => import(/* webpackChunkName: "speciesList" */ './Species/SpeciesList.vue'),
+  TrainerEdit: () => import(/* webpackChunkName: "trainerEdit" */ './Trainers/TrainerEdit.vue'),
+  TrainerList: () => import(/* webpackChunkName: "trainerList" */ './Trainers/TrainerList.vue'),
   UserInvite: () => import(/* webpackChunkName: "userInvite" */ './Users/UserInvite.vue'),
   UserList: () => import(/* webpackChunkName: "userList" */ './Users/UserList.vue')
 }

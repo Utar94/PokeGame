@@ -1,0 +1,31 @@
+{
+  "created": "The trainer has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following trainer?",
+    "success": "The trainer has been deleted.",
+    "title": "Delete trainer"
+  },
+  "editTitle": "Edit trainer: {name}",
+  "empty": "This list is empty.",
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "Female": "Female",
+      "Male": "Male",
+      "Other": "Other"
+    },
+    "placeholder": "Select a gender"
+  },
+  "money": "Money",
+  "newTitle": "Create trainer",
+  "number": "Number",
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "Number": "Number",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "title": "Trainers",
+  "updated": "The trainer has been updated."
+}
