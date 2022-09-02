@@ -42,6 +42,21 @@
     "label": "Reference",
     "placeholder": "Place the link to the reference"
   },
+  "region": {
+    "label": "Region",
+    "options": {
+      "Alola": "Alola",
+      "Galar": "Galar",
+      "Hoenn": "Hoenn",
+      "Indigo": "Indigo",
+      "Johto": "Johto",
+      "Kalos": "Kalos",
+      "Kanto": "Kanto",
+      "Sinnoh": "Sinnoh",
+      "Unova": "Unova"
+    },
+    "placeholder": "Select a region"
+  },
   "search": {
     "label": "Search",
     "placeholder": "Enter something to search"

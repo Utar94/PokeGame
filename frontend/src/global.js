@@ -14,6 +14,7 @@ import LocaleSelect from './components/shared/LocaleSelect.vue'
 import NameField from './components/shared/NameField.vue'
 import NotesField from './components/shared/NotesField.vue'
 import ReferenceField from './components/shared/ReferenceField.vue'
+import RegionSelect from './components/shared/RegionSelect.vue'
 import SearchField from './components/shared/SearchField.vue'
 import SortSelect from './components/shared/SortSelect.vue'
 import StatusCell from './components/shared/StatusCell.vue'
@@ -35,6 +36,7 @@ Vue.component('locale-select', LocaleSelect)
 Vue.component('name-field', NameField)
 Vue.component('notes-field', NotesField)
 Vue.component('reference-field', ReferenceField)
+Vue.component('region-select', RegionSelect)
 Vue.component('search-field', SearchField)
 Vue.component('sort-select', SortSelect)
 Vue.component('status-cell', StatusCell)

@@ -62,6 +62,10 @@
     "title": "Profile",
     "updated": "Your profile has been updated."
   },
+  "select": {
+    "label": "User",
+    "placeholder": "Select an user"
+  },
   "signIn": {
     "accountIsDisabled": "Your account is disabled.",
     "failed": "Sign in failed!",

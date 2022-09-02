@@ -29,6 +29,10 @@
               <font-awesome-icon icon="paw" />
               {{ $t('species.title') }}
             </b-nav-item>
+            <b-nav-item href="/trainers">
+              <font-awesome-icon icon="id-card" />
+              {{ $t('trainers.title') }}
+            </b-nav-item>
             <b-nav-item href="/users">
               <font-awesome-icon icon="users" />
               {{ $t('users.title') }}
