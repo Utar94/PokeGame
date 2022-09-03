@@ -23,6 +23,10 @@
   "empty": "This list is empty.",
   "newTitle": "Create item",
   "price": "Price",
+  "select": {
+    "label": "Item",
+    "placeholder": "Select an item"
+  },
   "sort": {
     "options": {
       "Name": "Name",

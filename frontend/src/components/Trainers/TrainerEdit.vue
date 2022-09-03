@@ -27,6 +27,7 @@
             <name-field required v-model="name" />
             <description-field v-model="description" />
           </b-tab>
+          <inventory-tab v-if="trainer" :trainer="trainer" @updated="onInventoryUpdated" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <notes-field v-model="notes" />
@@ -39,13 +40,15 @@
 
 <script>
 import GenderSelect from './GenderSelect.vue'
+import InventoryTab from './InventoryTab.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
-import { createTrainer, updateTrainer } from '@/api/trainers'
+import { createTrainer, getTrainer, updateTrainer } from '@/api/trainers'
 
 export default {
   name: 'TrainerEdit',
   components: {
     GenderSelect,
+    InventoryTab,
     UserSelect
   },
   props: {
@@ -130,6 +133,15 @@ export default {
         digits.push(this.checksum(Number(random[i]) + this.checksum(Number(timestamp[i - 1]) + Number(timestamp[10 - i]))))
       }
       this.number = digits.join('')
+    },
+    async onInventoryUpdated() {
+      try {
+        const { data } = await getTrainer(this.trainer.id)
+        this.trainer = data
+        this.money = data.money
+      } catch (e) {
+        this.handleError(e)
+      }
     },
     setModel(trainer) {
       this.trainer = trainer

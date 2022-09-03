@@ -7,6 +7,8 @@ namespace PokeGame.Core.Models
     public AggregateProfile()
     {
       CreateMap<Aggregate, AggregateModel>();
+      CreateMap<Aggregate, AggregateSummary>()
+        .ForMember(x => x.UpdatedAt, x => x.MapFrom(y => y.UpdatedAt ?? y.CreatedAt));
       CreateMap<AggregateModel, AggregateSummary>()
         .ForMember(x => x.UpdatedAt, x => x.MapFrom(y => y.UpdatedAt ?? y.CreatedAt));
     }

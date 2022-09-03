@@ -16,6 +16,33 @@
     },
     "placeholder": "Select a gender"
   },
+  "inventory": {
+    "add": "Add item",
+    "added": "The item has been added.",
+    "bought": "The item has been bought.",
+    "buy": "Buy",
+    "buyItem": "Buy item",
+    "category": "Category",
+    "empty": "This list is empty.",
+    "insufficientMoney": "The trainer does not have enough money.",
+    "item": "Item",
+    "itemPriceRequired": "The item price is required.",
+    "label": "Inventory",
+    "price": "Price",
+    "quantity": "Quantity",
+    "remove": "Remove item",
+    "removed": "The item has been removed.",
+    "sell": "Sell",
+    "sellItem": "Sell item",
+    "sold": "The item has been sold.",
+    "sort": {
+      "options": {
+        "ItemName": "Item Name",
+        "ItemPrice": "Item Price",
+        "Quantity": "Quantity"
+      }
+    }
+  },
   "money": "Money",
   "newTitle": "Create trainer",
   "number": "Number",

@@ -10,6 +10,8 @@ namespace PokeGame.Core.Items
     {
       CreateMap<Item, ItemModel>()
         .IncludeBase<Aggregate, AggregateModel>();
+      CreateMap<Item, ItemSummary>()
+        .IncludeBase<Aggregate, AggregateSummary>();
       CreateMap<ItemModel, ItemSummary>()
         .IncludeBase<AggregateModel, AggregateSummary>();
     }
