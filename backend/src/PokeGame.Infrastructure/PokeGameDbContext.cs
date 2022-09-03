@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using PokeGame.Core;
 using PokeGame.Core.Abilities;
+using PokeGame.Core.Inventories;
 using PokeGame.Core.Items;
 using PokeGame.Core.Moves;
 using PokeGame.Core.Species;
@@ -22,6 +23,7 @@ namespace PokeGame.Infrastructure
 
     public DbSet<Ability> Abilities { get; private set; } = null!;
     public DbSet<Event> Events { get; private set; } = null!;
+    public DbSet<Inventory> Inventory { get; private set; } = null!;
     public DbSet<Item> Items { get; private set; } = null!;
     public DbSet<Move> Moves { get; private set; } = null!;
     public DbSet<Species> Species { get; private set; } = null!;
