@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using PokeGame.Core.Inventories;
 
 namespace PokeGame.Core.Trainers
 {
@@ -21,6 +22,11 @@ namespace PokeGame.Core.Trainers
 
       RuleFor(x => x.Reference)
         .Must(ValidationRules.BeAValidUrl);
+
+      RuleFor(x => x.Inventory)
+        .Must(x => x.GroupBy(x => x.ItemId).All(g => g.Count() == 1));
+      RuleForEach(x => x.Inventory)
+        .SetValidator(new InventoryValidator());
     }
   }
 }

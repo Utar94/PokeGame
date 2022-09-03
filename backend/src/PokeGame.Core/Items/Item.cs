@@ -1,4 +1,5 @@
-﻿using PokeGame.Core.Items.Events;
+﻿using PokeGame.Core.Inventories;
+using PokeGame.Core.Items.Events;
 using PokeGame.Core.Items.Payloads;
 
 namespace PokeGame.Core.Items
@@ -22,6 +23,8 @@ namespace PokeGame.Core.Items
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
+
+    public List<Inventory> Inventory { get; private set; } = new();
 
     public void Delete(Guid userId) => ApplyChange(new DeletedEvent(userId));
     public void Update(UpdateItemPayload payload, Guid userId) => ApplyChange(new UpdatedEvent(payload, userId));

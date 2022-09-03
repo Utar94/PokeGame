@@ -19,13 +19,20 @@ namespace PokeGame.Infrastructure.Queriers
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    public async Task<Trainer?> GetWithInventoryAsync(Guid id, bool readOnly, CancellationToken cancellationToken)
+    {
+      return await _trainers.ApplyTracking(readOnly)
+        .Include(x => x.Inventory).ThenInclude(x => x.Item)
+        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
     public async Task<PagedList<Trainer>> GetPagedAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
       TrainerSort? sort, bool desc,
       int? index, int? count,
       bool readOnly, CancellationToken cancellationToken)
     {
       IQueryable<Trainer> query = _trainers.ApplyTracking(readOnly);
-      
+
       if (gender.HasValue)
       {
         query = query.Where(x => x.Gender == gender.Value);
