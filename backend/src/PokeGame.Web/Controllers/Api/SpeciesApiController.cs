@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core;
-using PokeGame.Core.Models;
-using PokeGame.Core.Species;
-using PokeGame.Core.Species.Models;
-using PokeGame.Core.Species.Payloads;
+using PokeGame.Application.Models;
+using PokeGame.Application.Species;
+using PokeGame.Application.Species.Models;
+using PokeGame.Domain;
+using PokeGame.Domain.Species.Payloads;
+using PokeGame.Web.Models.Api.Species;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -14,12 +14,10 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/species")]
   public class SpeciesApiController : ControllerBase
   {
-    private readonly IMapper _mapper;
     private readonly ISpeciesService _service;
 
-    public SpeciesApiController(IMapper mapper, ISpeciesService service)
+    public SpeciesApiController(ISpeciesService service)
     {
-      _mapper = mapper;
       _service = service;
     }
 
@@ -35,7 +33,9 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<SpeciesModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      return Ok(await _service.DeleteAsync(id, cancellationToken));
+      await _service.DeleteAsync(id, cancellationToken);
+
+      return NoContent();
     }
 
     [HttpGet]
@@ -49,7 +49,11 @@ namespace PokeGame.Web.Controllers.Api
         index, count,
         cancellationToken);
 
-      return Ok(new ListModel<SpeciesSummary>(_mapper.Map<IEnumerable<SpeciesSummary>>(species.Items), species.Total));
+      return Ok(new ListModel<SpeciesSummary>
+      {
+        Items = species.Items.Select(x => new SpeciesSummary(x)),
+        Total = species.Total
+      });
     }
 
     [HttpGet("{id}")]

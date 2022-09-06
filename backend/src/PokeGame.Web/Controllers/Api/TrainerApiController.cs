@@ -1,11 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core;
-using PokeGame.Core.Models;
-using PokeGame.Core.Trainers;
-using PokeGame.Core.Trainers.Models;
-using PokeGame.Core.Trainers.Payloads;
+using PokeGame.Application.Models;
+using PokeGame.Application.Trainers;
+using PokeGame.Application.Trainers.Models;
+using PokeGame.Domain;
+using PokeGame.Domain.Trainers;
+using PokeGame.Domain.Trainers.Payloads;
+using PokeGame.Web.Models.Api.Trainer;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -14,12 +15,10 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/trainers")]
   public class TrainerApiController : ControllerBase
   {
-    private readonly IMapper _mapper;
     private readonly ITrainerService _service;
 
-    public TrainerApiController(IMapper mapper, ITrainerService service)
+    public TrainerApiController(ITrainerService service)
     {
-      _mapper = mapper;
       _service = service;
     }
 
@@ -35,7 +34,9 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<TrainerModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      return Ok(await _service.DeleteAsync(id, cancellationToken));
+      await _service.DeleteAsync(id, cancellationToken);
+
+      return NoContent();
     }
 
     [HttpGet]
@@ -49,7 +50,11 @@ namespace PokeGame.Web.Controllers.Api
         index, count,
         cancellationToken);
 
-      return Ok(new ListModel<TrainerSummary>(_mapper.Map<IEnumerable<TrainerSummary>>(trainers.Items), trainers.Total));
+      return Ok(new ListModel<TrainerSummary>
+      {
+        Items = trainers.Items.Select(x => new TrainerSummary(x)),
+        Total = trainers.Total
+      });
     }
 
     [HttpGet("{id}")]

@@ -7,8 +7,9 @@ using Logitar.Portal.Core.Users.Models;
 using Logitar.Portal.Core.Users.Payloads;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core;
+using PokeGame.Infrastructure;
 using PokeGame.Web.Models.Api.Account;
+using PokeGame.Web.Models.Users;
 using System.Text.Json;
 
 namespace PokeGame.Web.Controllers.Api
@@ -37,14 +38,16 @@ namespace PokeGame.Web.Controllers.Api
 
     [Authorize(Policy = Constants.Policies.AuthenticatedUser)]
     [HttpPost("password/change")]
-    public async Task<ActionResult<UserModel>> ChangePasswordAsync([FromBody] ChangePasswordPayload payload, CancellationToken cancellationToken)
+    public async Task<ActionResult<ProfileModel>> ChangePasswordAsync([FromBody] ChangePasswordPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _accountService.ChangePasswordAsync(_userContext.SessionId, payload, cancellationToken));
+      UserModel user = await _accountService.ChangePasswordAsync(_userContext.SessionId, payload, cancellationToken);
+
+      return Ok(new ProfileModel(user));
     }
 
     [Authorize(Policy = Constants.Policies.AuthenticatedUser)]
     [HttpPut("profile")]
-    public async Task<ActionResult<UserModel>> SaveProfileAsync([FromBody] SaveProfileModel model, CancellationToken cancellationToken)
+    public async Task<ActionResult<ProfileModel>> SaveProfileAsync([FromBody] SaveProfileModel model, CancellationToken cancellationToken)
     {
       UserModel user = HttpContext.GetUser() ?? throw new InvalidOperationException("The User is required");
 
@@ -58,8 +61,9 @@ namespace PokeGame.Web.Controllers.Api
         Locale = model.Locale,
         Picture = model.Picture
       };
+      user = await _accountService.SaveProfileAsync(_userContext.SessionId, payload, cancellationToken);
 
-      return Ok(await _accountService.SaveProfileAsync(_userContext.SessionId, payload, cancellationToken));
+      return Ok(new ProfileModel(user));
     }
 
     [HttpPost("sign/in")]

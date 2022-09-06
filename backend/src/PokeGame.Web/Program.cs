@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Infrastructure;
+using PokeGame.Infrastructure.ReadModel;
 
 namespace PokeGame.Web
 {
@@ -19,8 +20,12 @@ namespace PokeGame.Web
       if (builder.Configuration.GetValue<bool>("MigrateDatabase"))
       {
         using IServiceScope scope = application.Services.CreateScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<PokeGameDbContext>();
-        await dbContext.Database.MigrateAsync();
+
+        using var eventContext = scope.ServiceProvider.GetRequiredService<EventContext>();
+        await eventContext.Database.MigrateAsync();
+
+        using var readContext = scope.ServiceProvider.GetRequiredService<ReadContext>();
+        await readContext.Database.MigrateAsync();
       }
 
       application.Run();

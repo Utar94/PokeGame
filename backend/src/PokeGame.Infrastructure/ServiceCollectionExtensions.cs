@@ -1,14 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PokeGame.Core;
-using PokeGame.Core.Abilities;
-using PokeGame.Core.Inventories;
-using PokeGame.Core.Items;
-using PokeGame.Core.Moves;
-using PokeGame.Core.Species;
-using PokeGame.Core.Trainers;
-using PokeGame.Infrastructure.Queriers;
-using PokeGame.Infrastructure.Repositories;
-using System.Reflection;
+using PokeGame.Application;
+using PokeGame.Domain.Abilities;
+using PokeGame.Domain.Items;
+using PokeGame.Domain.Moves;
+using PokeGame.Domain.Species;
+using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Infrastructure
 {
@@ -16,23 +12,9 @@ namespace PokeGame.Infrastructure
   {
     public static IServiceCollection AddPokeGameInfrastructure(this IServiceCollection services)
     {
-      Assembly assembly = typeof(ServiceCollectionExtensions).Assembly;
-
       return services
-        .AddDbContext<PokeGameDbContext>()
-        .AddQueriers()
+        .AddDbContext<EventContext>()
         .AddRepositories();
-    }
-
-    private static IServiceCollection AddQueriers(this IServiceCollection services)
-    {
-      return services
-        .AddScoped<IAbilityQuerier, AbilityQuerier>()
-        .AddScoped<IInventoryQuerier, InventoryQuerier>()
-        .AddScoped<IItemQuerier, ItemQuerier>()
-        .AddScoped<IMoveQuerier, MoveQuerier>()
-        .AddScoped<ISpeciesQuerier, SpeciesQuerier>()
-        .AddScoped<ITrainerQuerier, TrainerQuerier>();
     }
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)

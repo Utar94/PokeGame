@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj" />
+    <ProjectReference Include="..\PokeGame.Infrastructure.ReadModel\PokeGame.Infrastructure.ReadModel.csproj" />
   </ItemGroup>
 
 </Project>

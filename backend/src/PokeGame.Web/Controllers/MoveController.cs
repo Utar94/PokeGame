@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core.Moves;
-using PokeGame.Core.Moves.Models;
+using PokeGame.Application.Moves;
+using PokeGame.Application.Moves.Models;
 
 namespace PokeGame.Web.Controllers
 {
