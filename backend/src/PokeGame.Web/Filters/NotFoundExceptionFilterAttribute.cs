@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using PokeGame.Application;
 using PokeGame.Application.Inventories;
 using PokeGame.Application.Species;
+using PokeGame.Domain.Pokemon;
 
 namespace PokeGame.Web.Filters
 {
@@ -32,6 +33,10 @@ namespace PokeGame.Web.Filters
           ItemId = inventoryNotFound.Data["ItemId"],
           TrainerId = inventoryNotFound.Data["TrainerId"]
         });
+      }
+      else if (context.Exception is NatureNotFoundException natureNotFound)
+      {
+        Handle(context, new { Field = natureNotFound.Data["ParamName"] });
       }
     }
 
