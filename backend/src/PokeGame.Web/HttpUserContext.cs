@@ -1,4 +1,4 @@
-﻿using PokeGame.Core;
+﻿using PokeGame.Infrastructure;
 using System.Net;
 
 namespace PokeGame.Web
@@ -16,9 +16,9 @@ namespace PokeGame.Web
       ?? throw new InvalidOperationException($"The {nameof(_httpContextAccessor.HttpContext)} is required.");
 
     public Guid Id => HttpContext.GetUser()?.Id
-      ?? throw new ApiException(HttpStatusCode.Unauthorized, "An authenticated user is required.");
+      ?? throw new InvalidOperationException("An authenticated user is required.");
 
     public Guid SessionId => HttpContext.GetSession()?.Id
-      ?? throw new ApiException(HttpStatusCode.Unauthorized, "A session is required.");
+      ?? throw new InvalidOperationException("A session is required.");
   }
 }

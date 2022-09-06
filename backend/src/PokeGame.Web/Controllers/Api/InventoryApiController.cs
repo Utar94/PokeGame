@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core.Inventories;
-using PokeGame.Core.Inventories.Models;
-using PokeGame.Core.Items;
-using PokeGame.Core.Models;
+using PokeGame.Application.Inventories;
+using PokeGame.Application.Inventories.Models;
+using PokeGame.Application.Models;
+using PokeGame.Domain.Items;
 using PokeGame.Web.Models.Api.Inventory;
 
 namespace PokeGame.Web.Controllers.Api

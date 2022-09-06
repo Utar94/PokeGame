@@ -1,10 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core.Items;
-using PokeGame.Core.Items.Models;
-using PokeGame.Core.Items.Payloads;
-using PokeGame.Core.Models;
+using PokeGame.Application.Items;
+using PokeGame.Application.Items.Models;
+using PokeGame.Application.Models;
+using PokeGame.Domain.Items;
+using PokeGame.Domain.Items.Payloads;
+using PokeGame.Web.Models.Api.Items;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -13,12 +14,10 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/items")]
   public class ItemApiController : ControllerBase
   {
-    private readonly IMapper _mapper;
     private readonly IItemService _service;
 
-    public ItemApiController(IMapper mapper, IItemService service)
+    public ItemApiController(IItemService service)
     {
-      _mapper = mapper;
       _service = service;
     }
 
@@ -34,7 +33,9 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<ItemModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      return Ok(await _service.DeleteAsync(id, cancellationToken));
+      await _service.DeleteAsync(id, cancellationToken);
+
+      return NoContent();
     }
 
     [HttpGet]
@@ -48,7 +49,11 @@ namespace PokeGame.Web.Controllers.Api
         index, count,
         cancellationToken);
 
-      return Ok(new ListModel<ItemSummary>(_mapper.Map<IEnumerable<ItemSummary>>(items.Items), items.Total));
+      return Ok(new ListModel<ItemSummary>
+      {
+        Items = items.Items.Select(x => new ItemSummary(x)),
+        Total = items.Total
+      });
     }
 
     [HttpGet("{id}")]

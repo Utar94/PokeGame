@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core.Abilities;
-using PokeGame.Core.Abilities.Models;
-using PokeGame.Core.Abilities.Payloads;
-using PokeGame.Core.Models;
+using PokeGame.Application.Abilities;
+using PokeGame.Application.Abilities.Models;
+using PokeGame.Application.Models;
+using PokeGame.Domain.Abilities.Payloads;
+using PokeGame.Web.Models.Api.Ability;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -13,12 +13,10 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/abilities")]
   public class AbilityApiController : ControllerBase
   {
-    private readonly IMapper _mapper;
     private readonly IAbilityService _service;
 
-    public AbilityApiController(IMapper mapper, IAbilityService service)
+    public AbilityApiController(IAbilityService service)
     {
-      _mapper = mapper;
       _service = service;
     }
 
@@ -34,7 +32,9 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<AbilityModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      return Ok(await _service.DeleteAsync(id, cancellationToken));
+      await _service.DeleteAsync(id, cancellationToken);
+
+      return NoContent();
     }
 
     [HttpGet]
@@ -48,7 +48,11 @@ namespace PokeGame.Web.Controllers.Api
         index, count,
         cancellationToken);
 
-      return Ok(new ListModel<AbilitySummary>(_mapper.Map<IEnumerable<AbilitySummary>>(abilities.Items), abilities.Total));
+      return Ok(new ListModel<AbilitySummary>
+      {
+        Items = abilities.Items.Select(x => new AbilitySummary(x)),
+        Total = abilities.Total
+      });
     }
 
     [HttpGet("{id}")]

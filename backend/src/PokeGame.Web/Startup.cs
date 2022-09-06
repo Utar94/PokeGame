@@ -1,7 +1,8 @@
 ﻿using Logitar.Portal.Client;
 using Microsoft.AspNetCore.Authorization;
-using PokeGame.Core;
+using PokeGame.Application;
 using PokeGame.Infrastructure;
+using PokeGame.Infrastructure.ReadModel;
 using PokeGame.Web.Authentication;
 using PokeGame.Web.Authorization;
 using PokeGame.Web.Configuration;
@@ -27,8 +28,9 @@ namespace PokeGame.Web
       services
         .AddControllersWithViews(options =>
         {
-          options.Filters.Add<ApiExceptionFilterAttribute>();
           options.Filters.Add<ErrorExceptionFilterAttribute>();
+          options.Filters.Add<BadRequestExceptionFilterAttribute>();
+          options.Filters.Add<NotFoundExceptionFilterAttribute>();
         })
         .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -62,7 +64,8 @@ namespace PokeGame.Web
       services.AddApplicationInsightsTelemetry();
       services
         .AddHealthChecks()
-        .AddDbContextCheck<PokeGameDbContext>();
+        .AddDbContextCheck<EventContext>()
+        .AddDbContextCheck<ReadContext>();
 
       services.AddSingleton(_portalSettings);
       services.AddSingleton<IAuthorizationHandler, AdministratorAuthorizationHandler>();
@@ -70,8 +73,9 @@ namespace PokeGame.Web
       services.AddSingleton<IUserContext, HttpUserContext>();
       services.AddScoped<IConfigurationService, ConfigurationService>();
 
-      services.AddPokeGameCore();
+      services.AddPokeGameApplication();
       services.AddPokeGameInfrastructure();
+      services.AddPokeGameReadModel();
 
       services.AddPortalClient(_portalSettings);
     }

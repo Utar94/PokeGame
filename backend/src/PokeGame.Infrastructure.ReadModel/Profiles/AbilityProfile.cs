@@ -1,0 +1,16 @@
+﻿using AutoMapper;
+using PokeGame.Application.Abilities.Models;
+using PokeGame.Application.Models;
+using PokeGame.Infrastructure.ReadModel.Entities;
+
+namespace PokeGame.Infrastructure.ReadModel.Profiles
+{
+  internal class AbilityProfile : Profile
+  {
+    public AbilityProfile()
+    {
+      CreateMap<Ability, AbilityModel>()
+        .IncludeBase<Entity, AggregateModel>();
+    }
+  }
+}

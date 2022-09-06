@@ -4,7 +4,7 @@ using Logitar.Portal.Core.Tokens.Payloads;
 using Logitar.Portal.Core.Users.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Core;
+using PokeGame.Infrastructure;
 using PokeGame.Web.Models.Users;
 
 namespace PokeGame.Web.Controllers
@@ -37,7 +37,7 @@ namespace PokeGame.Web.Controllers
     {
       UserModel user = await _accountService.GetProfileAsync(_userContext.SessionId, cancellationToken);
 
-      return View(user);
+      return View(new ProfileModel(user));
     }
 
     [HttpGet("sign-in")]
