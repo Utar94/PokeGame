@@ -70,7 +70,7 @@ namespace PokeGame.Application.Pokemon
 
       When(x => x.History == null, () =>
       {
-        RuleFor(x => x.OriginalTrainer)
+        RuleFor(x => x.OriginalTrainerId)
           .Null();
         RuleFor(x => x.Position)
           .Null();
@@ -81,7 +81,7 @@ namespace PokeGame.Application.Pokemon
       {
         RuleFor(x => x.History!)
           .SetValidator(x => new HistoryValidator(x));
-        RuleFor(x => x.OriginalTrainer)
+        RuleFor(x => x.OriginalTrainerId)
           .NotNull();
         RuleFor(x => x.Position)
           .NotNull();

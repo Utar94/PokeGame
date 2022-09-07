@@ -8,9 +8,7 @@ namespace PokeGame.Domain.Pokemon
   {
     public Pokemon(CreatePokemonPayload payload, Species.Species species)
     {
-      ArgumentNullException.ThrowIfNull(species);
-
-      ApplyChange(new PokemonCreated(species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, species.Name));
+      ApplyChange(PokemonCreated.Create(payload, species));
     }
     private Pokemon()
     {
@@ -19,9 +17,11 @@ namespace PokeGame.Domain.Pokemon
     public Guid SpeciesId { get; private set; }
     public Guid AbilityId { get; private set; }
 
+    public byte BaseFriendship { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
     public byte Level { get; private set; }
     public int Experience { get; private set; }
+    public byte Friendship { get; private set; }
 
     public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
@@ -39,7 +39,7 @@ namespace PokeGame.Domain.Pokemon
     public Guid? HeldItemId { get; private set; }
 
     public History? History { get; private set; }
-    public Guid? OriginalTrainer { get; private set; }
+    public Guid? OriginalTrainerId { get; private set; }
     public byte? Position { get; private set; }
     public byte? Box { get; private set; }
 
@@ -54,13 +54,15 @@ namespace PokeGame.Domain.Pokemon
       SpeciesId = @event.Payload.SpeciesId;
       AbilityId = @event.Payload.AbilityId;
 
+      BaseFriendship = @event.BaseFriendship;
       LevelingRate = @event.LevelingRate;
       Level = @event.Payload.Level;
       Experience = @event.Payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
+      Friendship = @event.Payload.Friendship ?? BaseFriendship;
 
       GenderRatio = @event.GenderRatio;
       Gender = @event.Payload.Gender;
-      Nature = Nature.GetNature(@event.Payload.Nature);
+      Nature = Nature.GetNature(@event.Payload.Nature, nameof(@event.Payload.Nature));
       SpeciesName = @event.SpeciesName;
       Surname = @event.Payload.Surname?.CleanTrim();
       Description = @event.Payload.Description?.CleanTrim();
@@ -96,9 +98,9 @@ namespace PokeGame.Domain.Pokemon
       HeldItemId = @event.Payload.HeldItemId;
 
       History = @event.Payload.History == null ? null : new(@event.Payload.History);
-      if (@event.Payload.History != null && OriginalTrainer == null)
+      if (@event.Payload.History != null && OriginalTrainerId == null)
       {
-        OriginalTrainer = @event.Payload.History.TrainerId;
+        OriginalTrainerId = @event.Payload.History.TrainerId;
       }
       Position = @event.Payload.Position;
       Box = @event.Payload.Box;

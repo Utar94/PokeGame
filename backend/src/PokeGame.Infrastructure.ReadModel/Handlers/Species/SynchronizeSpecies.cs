@@ -1,77 +1,73 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
-using PokeGame.Domain.Species.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
+using PokeGame.Infrastructure.ReadModel.Handlers.Abilities;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
 {
-  internal abstract class SynchronizeSpecies
+  internal class SynchronizeSpecies
   {
-    protected SynchronizeSpecies(ReadContext readContext, IRepository<Domain.Species.Species> repository)
+    private readonly ReadContext _readContext;
+    private readonly IRepository<Domain.Species.Species> _repository;
+    private readonly SynchronizeAbility _synchronizeAbility;
+
+    public SynchronizeSpecies(
+      ReadContext readContext,
+      IRepository<Domain.Species.Species> repository,
+      SynchronizeAbility synchronizeAbility
+    )
     {
-      ReadContext = readContext;
-      Repository = repository;
+      _readContext = readContext;
+      _repository = repository;
+      _synchronizeAbility = synchronizeAbility;
     }
 
-    protected ReadContext ReadContext { get; }
-    protected IRepository<Domain.Species.Species> Repository { get; }
-
-    protected async Task SynchronizeAsync(Guid id, int version, CancellationToken cancellationToken)
+    public async Task<SpeciesEntity?> ExecuteAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-      Entities.Species? entity = await ReadContext.Species
-        .Include(x => x.Abilities)
+      SpeciesEntity? entity = await _readContext.Species
+        .Include(x => x.SpeciesAbilities)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-      if (entity == null)
+      if (entity != null && version.HasValue && entity.Version >= version.Value)
       {
-        entity = new Entities.Species { Id = id };
-        ReadContext.Species.Add(entity);
-      }
-      else if (entity.Version >= version)
-      {
-        return;
+        return entity;
       }
 
-      Domain.Species.Species species = await Repository.LoadAsync(id, version, cancellationToken)
-        ?? throw new EntityNotFoundException<Domain.Species.Species>(id);
-
-      entity.Synchronize(species);
-
-      entity.Abilities.Clear();
-      if (species.AbilityIds.Any())
+      Domain.Species.Species? species = await _repository.LoadAsync(id, version, cancellationToken);
+      if (species != null)
       {
-        entity.Abilities.AddRange(await ReadContext.Abilities
-          .Where(x => species.AbilityIds.Contains(x.Id))
-          .ToArrayAsync(cancellationToken));
+        if (entity == null)
+        {
+          entity = new SpeciesEntity { Id = id };
+          _readContext.Species.Add(entity);
+        }
+
+        entity.Synchronize(species);
+
+        entity.SpeciesAbilities.Clear();
+        if (species.AbilityIds.Any())
+        {
+          List<AbilityEntity> abilities = await _readContext.Abilities
+            .Where(x => species.AbilityIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
+          IEnumerable<Guid> missingIds = species.AbilityIds.Except(abilities.Select(x => x.Id)).Distinct();
+          if (missingIds.Any())
+          {
+            abilities.AddRange(await _synchronizeAbility.ExecuteAsync(missingIds, cancellationToken));
+          }
+
+          entity.SpeciesAbilities.AddRange(abilities.Select(ability => new SpeciesAbilityEntity
+          {
+            Ability = ability,
+            AbilityId = ability.Sid
+          }));
+        }
+
+        await _readContext.SaveChangesAsync(cancellationToken);
       }
 
-      await ReadContext.SaveChangesAsync(cancellationToken);
-    }
-  }
-
-  internal class SpeciesCreatedHandler : SynchronizeSpecies, INotificationHandler<SpeciesCreated>
-  {
-    public SpeciesCreatedHandler(ReadContext readContext, IRepository<Domain.Species.Species> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(SpeciesCreated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class SpeciesUpdatedHandler : SynchronizeSpecies, INotificationHandler<SpeciesUpdated>
-  {
-    public SpeciesUpdatedHandler(ReadContext readContext, IRepository<Domain.Species.Species> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(SpeciesUpdated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
+      return entity;
     }
   }
 }

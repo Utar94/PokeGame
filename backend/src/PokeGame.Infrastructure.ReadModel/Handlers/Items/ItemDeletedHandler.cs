@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Items
 
     public async Task Handle(ItemDeleted notification, CancellationToken cancellationToken)
     {
-      Item? item = await _readContext.Items
+      ItemEntity? item = await _readContext.Items
         .SingleOrDefaultAsync(x => x.Id == notification.AggregateId, cancellationToken);
 
       if (item != null)

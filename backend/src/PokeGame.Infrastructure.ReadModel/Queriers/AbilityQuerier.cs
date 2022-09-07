@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Abilities.Models;
 using PokeGame.Application.Models;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class AbilityQuerier : IAbilityQuerier
   {
-    private readonly DbSet<Entities.Ability> _abilities;
+    private readonly DbSet<AbilityEntity> _abilities;
     private readonly IMapper _mapper;
 
     public AbilityQuerier(IMapper mapper, ReadContext readContext)
@@ -19,7 +20,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<AbilityModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Ability? ability = await _abilities.AsNoTracking()
+      AbilityEntity? ability = await _abilities.AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return ability == null ? null : _mapper.Map<AbilityModel>(ability);
@@ -30,7 +31,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Ability> query = _abilities.AsNoTracking();
+      IQueryable<AbilityEntity> query = _abilities.AsNoTracking();
 
       if (search != null)
       {
@@ -58,7 +59,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Ability[] abilities = await query.ToArrayAsync(cancellationToken);
+      AbilityEntity[] abilities = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

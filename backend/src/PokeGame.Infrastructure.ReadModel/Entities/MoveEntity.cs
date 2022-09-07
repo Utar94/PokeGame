@@ -3,7 +3,7 @@ using PokeGame.Domain.Moves;
 
 namespace PokeGame.Infrastructure.ReadModel.Entities
 {
-  internal class Move : Entity
+  internal class MoveEntity : Entity
   {
     public PokemonType Type { get; set; }
     public MoveCategory Category { get; set; }
@@ -18,7 +18,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
-    public void Synchronize(Domain.Moves.Move move)
+    public List<PokemonMoveEntity> PokemonMoves { get; set; } = new();
+
+    public void Synchronize(Move move)
     {
       base.Synchronize(move);
 

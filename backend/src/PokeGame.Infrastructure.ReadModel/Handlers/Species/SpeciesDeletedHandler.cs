@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PokeGame.Domain.Species.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
 {
@@ -15,7 +16,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
 
     public async Task Handle(SpeciesDeleted notification, CancellationToken cancellationToken)
     {
-      Entities.Species? species = await _readContext.Species
+      SpeciesEntity? species = await _readContext.Species
         .SingleOrDefaultAsync(x => x.Id == notification.AggregateId, cancellationToken);
 
       if (species != null)

@@ -9,7 +9,7 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
   {
     public TrainerProfile()
     {
-      CreateMap<Trainer, TrainerModel>()
+      CreateMap<TrainerEntity, TrainerModel>()
         .IncludeBase<Entity, AggregateModel>();
     }
   }

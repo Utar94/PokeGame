@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
 
     public async Task Handle(TrainerDeleted notification, CancellationToken cancellationToken)
     {
-      Trainer? trainer = await _readContext.Trainers
+      TrainerEntity? trainer = await _readContext.Trainers
         .SingleOrDefaultAsync(x => x.Id == notification.AggregateId, cancellationToken);
 
       if (trainer != null)

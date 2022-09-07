@@ -5,13 +5,14 @@ using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class TrainerQuerier : ITrainerQuerier
   {
     private readonly IMapper _mapper;
-    private readonly DbSet<Entities.Trainer> _trainers;
+    private readonly DbSet<TrainerEntity> _trainers;
 
     public TrainerQuerier(IMapper mapper, ReadContext readContext)
     {
@@ -21,7 +22,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<TrainerModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Trainer? trainer = await _trainers.AsNoTracking()
+      TrainerEntity? trainer = await _trainers.AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return trainer == null ? null : _mapper.Map<TrainerModel>(trainer);
@@ -32,7 +33,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Trainer> query = _trainers.AsNoTracking();
+      IQueryable<TrainerEntity> query = _trainers.AsNoTracking();
 
       if (gender.HasValue)
       {
@@ -74,7 +75,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Trainer[] trainers = await query.ToArrayAsync(cancellationToken);
+      TrainerEntity[] trainers = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

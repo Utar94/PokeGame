@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using PokeGame.Application;
 using PokeGame.Application.Inventories;
+using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
 using PokeGame.Domain.Pokemon;
 
@@ -9,43 +10,43 @@ namespace PokeGame.Web.Filters
 {
   internal class NotFoundExceptionFilterAttribute : ExceptionFilterAttribute
   {
+    private static readonly Dictionary<Type, Func<ExceptionContext, ActionResult>> _handlers = new()
+    {
+      [typeof(AbilitiesNotFoundException)] = HandleAbilitiesNotFound,
+      [typeof(EntityNotFoundException)] = HandleEntityNotFound,
+      [typeof(InventoryNotFoundException)] = HandleInventoryNotFound,
+      [typeof(MovesNotFoundException)] = HandleMovesNotFound,
+      [typeof(NatureNotFoundException)] = HandleNatureNotFound
+    };
+
     public override void OnException(ExceptionContext context)
     {
-      if (context.Exception is EntityNotFoundException entityNotFound)
+      if (_handlers.TryGetValue(context.Exception.GetType(), out Func<ExceptionContext, ActionResult>? handler))
       {
-        if (entityNotFound.Data.Contains("ParamName"))
-        {
-          Handle(context, new { Field = entityNotFound.Data["ParamName"] });
-        }
-        else
-        {
-          Handle(context);
-        }
-      }
-      else if (context.Exception is AbilitiesNotFoundException abilitiesNotFound)
-      {
-        Handle(context, new { Ids = abilitiesNotFound.Data["Ids"] });
-      }
-      else if (context.Exception is InventoryNotFoundException inventoryNotFound)
-      {
-        Handle(context, new
-        {
-          ItemId = inventoryNotFound.Data["ItemId"],
-          TrainerId = inventoryNotFound.Data["TrainerId"]
-        });
-      }
-      else if (context.Exception is NatureNotFoundException natureNotFound)
-      {
-        Handle(context, new { Field = natureNotFound.Data["ParamName"] });
+        context.Result = handler(context);
+        context.ExceptionHandled = true;
       }
     }
 
-    private static void Handle(ExceptionContext context, object? value = null)
-    {
-      context.ExceptionHandled = true;
-      context.Result = value == null
-        ? new NotFoundResult()
-        : new NotFoundObjectResult(value);
-    }
+    private static ActionResult HandleAbilitiesNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
+
+    private static ActionResult HandleEntityNotFound(ExceptionContext context)
+      => context.Exception.Data.Contains("ParamName")
+        ? new NotFoundObjectResult(new { Field = context.Exception.Data["ParamName"] })
+        : new NotFoundResult();
+
+    private static ActionResult HandleInventoryNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new
+      {
+        ItemId = context.Exception.Data["ItemId"],
+        TrainerId = context.Exception.Data["TrainerId"]
+      });
+
+    private static ActionResult HandleMovesNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
+
+    private static ActionResult HandleNatureNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Field = context.Exception.Data["ParamName"] });
   }
 }

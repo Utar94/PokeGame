@@ -25,11 +25,15 @@ namespace PokeGame.Infrastructure
     {
       string aggregateType = typeof(T).GetName();
 
-      Event[] events = await _eventContext.Events.AsNoTracking()
-        .Where(x => x.AggregateType == aggregateType && x.AggregateId == id
-          && (!version.HasValue || x.Version <= version.Value))
-        .OrderBy(x => x.Version)
-        .ToArrayAsync(cancellationToken);
+      IQueryable<Event> query = _eventContext.Events.AsNoTracking()
+        .Where(x => x.AggregateType == aggregateType && x.AggregateId == id);
+
+      if (version.HasValue)
+      {
+        query = query.Where(x => x.Version <= version.Value);
+      }
+
+      Event[] events = await query.OrderBy(x => x.Version).ToArrayAsync(cancellationToken);
 
       return Load(events, id);
     }

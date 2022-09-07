@@ -1,6 +1,8 @@
-﻿namespace PokeGame.Infrastructure.ReadModel.Entities
+﻿using PokeGame.Domain.Abilities;
+
+namespace PokeGame.Infrastructure.ReadModel.Entities
 {
-  internal class Ability : Entity
+  internal class AbilityEntity : Entity
   {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
@@ -8,9 +10,10 @@
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
-    public List<Species> Species { get; set; } = new();
+    public List<PokemonEntity> Pokemon { get; set; } = new();
+    public List<SpeciesAbilityEntity> SpeciesAbilities { get; set; } = new();
 
-    public void Synchronize(Domain.Abilities.Ability ability)
+    public void Synchronize(Ability ability)
     {
       base.Synchronize(ability);
 

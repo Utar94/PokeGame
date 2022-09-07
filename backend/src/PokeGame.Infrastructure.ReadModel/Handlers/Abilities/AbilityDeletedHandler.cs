@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Abilities
 
     public async Task Handle(AbilityDeleted notification, CancellationToken cancellationToken)
     {
-      Ability? ability = await _readContext.Abilities
+      AbilityEntity? ability = await _readContext.Abilities
         .SingleOrDefaultAsync(x => x.Id == notification.AggregateId, cancellationToken);
 
       if (ability != null)

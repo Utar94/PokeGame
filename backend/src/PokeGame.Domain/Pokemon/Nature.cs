@@ -50,7 +50,7 @@
     public Flavor? FavoriteFlavor => IncreasedStatistic.HasValue ? GetFlavor(IncreasedStatistic.Value) : null;
     public Flavor? DislikedFlavor => DecreasedStatistic.HasValue ? GetFlavor(DecreasedStatistic.Value) : null;
 
-    public static Nature GetNature(string name, string? paramName = null)
+    public static Nature GetNature(string name, string paramName)
     {
       if (!_natures.TryGetValue(name, out Nature? nature))
       {

@@ -24,7 +24,7 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Ability", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.AbilityEntity", b =>
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
@@ -84,7 +84,7 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Abilities", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Inventory", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.InventoryEntity", b =>
                 {
                     b.Property<int>("TrainerId")
                         .HasColumnType("integer");
@@ -102,7 +102,7 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Inventory", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Item", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", b =>
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
@@ -170,7 +170,7 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Items", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Move", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.MoveEntity", b =>
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
@@ -251,7 +251,178 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Moves", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Species", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", b =>
+                {
+                    b.Property<int>("Sid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("PokemonId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
+
+                    b.Property<int>("AbilityId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("Box")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("CreatedById")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"));
+
+                    b.Property<int?>("CurrentTrainerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EffortValues")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Experience")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("Gender")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int?>("HeldItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<string>("IndividualValues")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<byte>("Level")
+                        .HasColumnType("smallint");
+
+                    b.Property<byte?>("MetAtLevel")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("MetLocation")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("MetOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Nature")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OriginalTrainerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("Position")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<int>("SpeciesId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Statistics")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Surname")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Sid");
+
+                    b.HasIndex("AbilityId");
+
+                    b.HasIndex("CurrentTrainerId");
+
+                    b.HasIndex("Gender");
+
+                    b.HasIndex("HeldItemId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("OriginalTrainerId");
+
+                    b.HasIndex("SpeciesId");
+
+                    b.HasIndex("Surname");
+
+                    b.ToTable("Pokemon", "ReadModel");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonMoveEntity", b =>
+                {
+                    b.Property<int>("PokemonId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MoveId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Position")
+                        .HasColumnType("smallint");
+
+                    b.Property<byte>("RemainingPowerPoints")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("PokemonId", "MoveId");
+
+                    b.HasIndex("MoveId");
+
+                    b.HasIndex("PokemonId", "Position")
+                        .IsUnique();
+
+                    b.ToTable("PokemonMoves", "ReadModel");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbilityEntity", b =>
+                {
+                    b.Property<int>("SpeciesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AbilityId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SpeciesId", "AbilityId");
+
+                    b.HasIndex("AbilityId");
+
+                    b.ToTable("SpeciesAbilities", "ReadModel");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", b =>
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
@@ -368,22 +539,7 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Species", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbility", b =>
-                {
-                    b.Property<int>("SpeciesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AbilityId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("SpeciesId", "AbilityId");
-
-                    b.HasIndex("AbilityId");
-
-                    b.ToTable("SpeciesAbilities", "ReadModel");
-                });
-
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Trainer", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", b =>
                 {
                     b.Property<int>("Sid")
                         .ValueGeneratedOnAdd()
@@ -478,15 +634,15 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Trainers", "ReadModel");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Inventory", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.InventoryEntity", b =>
                 {
-                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.Item", "Item")
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", "Item")
                         .WithMany("Inventory")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.Trainer", "Trainer")
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", "Trainer")
                         .WithMany("Inventory")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -497,29 +653,117 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Navigation("Trainer");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbility", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", b =>
                 {
-                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.Ability", null)
-                        .WithMany()
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.AbilityEntity", "Ability")
+                        .WithMany("Pokemon")
                         .HasForeignKey("AbilityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.Species", null)
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", "CurrentTrainer")
+                        .WithMany("Pokemon")
+                        .HasForeignKey("CurrentTrainerId");
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", "HeldItem")
                         .WithMany()
+                        .HasForeignKey("HeldItemId");
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", "OriginalTrainer")
+                        .WithMany("OriginalPokemon")
+                        .HasForeignKey("OriginalTrainerId");
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", "Species")
+                        .WithMany("Pokemon")
                         .HasForeignKey("SpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Ability");
+
+                    b.Navigation("CurrentTrainer");
+
+                    b.Navigation("HeldItem");
+
+                    b.Navigation("OriginalTrainer");
+
+                    b.Navigation("Species");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Item", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonMoveEntity", b =>
+                {
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.MoveEntity", "Move")
+                        .WithMany("PokemonMoves")
+                        .HasForeignKey("MoveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", "Pokemon")
+                        .WithMany("Moves")
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Move");
+
+                    b.Navigation("Pokemon");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbilityEntity", b =>
+                {
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.AbilityEntity", "Ability")
+                        .WithMany("SpeciesAbilities")
+                        .HasForeignKey("AbilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", "Species")
+                        .WithMany("SpeciesAbilities")
+                        .HasForeignKey("SpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ability");
+
+                    b.Navigation("Species");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.AbilityEntity", b =>
+                {
+                    b.Navigation("Pokemon");
+
+                    b.Navigation("SpeciesAbilities");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", b =>
                 {
                     b.Navigation("Inventory");
                 });
 
-            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.Trainer", b =>
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.MoveEntity", b =>
+                {
+                    b.Navigation("PokemonMoves");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", b =>
+                {
+                    b.Navigation("Moves");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", b =>
+                {
+                    b.Navigation("Pokemon");
+
+                    b.Navigation("SpeciesAbilities");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", b =>
                 {
                     b.Navigation("Inventory");
+
+                    b.Navigation("OriginalPokemon");
+
+                    b.Navigation("Pokemon");
                 });
 #pragma warning restore 612, 618
         }

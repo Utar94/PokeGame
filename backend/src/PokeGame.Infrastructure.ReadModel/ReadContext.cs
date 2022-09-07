@@ -13,12 +13,15 @@ namespace PokeGame.Infrastructure.ReadModel
       _configuration = configuration;
     }
 
-    internal DbSet<Ability> Abilities { get; private set; } = null!;
-    internal DbSet<Inventory> Inventory { get; private set; } = null!;
-    internal DbSet<Item> Items { get; private set; } = null!;
-    internal DbSet<Move> Moves { get; private set; } = null!;
-    internal DbSet<Species> Species { get; private set; } = null!;
-    internal DbSet<Trainer> Trainers { get; private set; } = null!;
+    internal DbSet<AbilityEntity> Abilities { get; private set; } = null!;
+    internal DbSet<InventoryEntity> Inventory { get; private set; } = null!;
+    internal DbSet<ItemEntity> Items { get; private set; } = null!;
+    internal DbSet<MoveEntity> Moves { get; private set; } = null!;
+    internal DbSet<PokemonEntity> Pokemon { get; private set; } = null!;
+    internal DbSet<PokemonMoveEntity> PokemonMoves { get; private set; } = null!;
+    internal DbSet<SpeciesEntity> Species { get; private set; } = null!;
+    internal DbSet<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = null!;
+    internal DbSet<TrainerEntity> Trainers { get; private set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -28,6 +31,8 @@ namespace PokeGame.Infrastructure.ReadModel
     protected override void OnModelCreating(ModelBuilder builder)
     {
       builder.ApplyConfigurationsFromAssembly(typeof(ReadContext).Assembly);
+
+      builder.Entity<SpeciesAbilityEntity>().HasKey(x => new { x.SpeciesId, x.AbilityId });
 
       builder.HasDefaultSchema("ReadModel");
 

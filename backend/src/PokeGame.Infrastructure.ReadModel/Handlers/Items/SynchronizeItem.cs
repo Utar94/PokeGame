@@ -1,69 +1,46 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
 using PokeGame.Domain.Items;
-using PokeGame.Domain.Items.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Items
 {
-  internal abstract class SynchronizeItem
+  internal class SynchronizeItem
   {
-    protected SynchronizeItem(ReadContext readContext, IRepository<Item> repository)
+    private readonly ReadContext _readContext;
+    private readonly IRepository<Item> _repository;
+
+    public SynchronizeItem(ReadContext readContext, IRepository<Item> repository)
     {
-      ReadContext = readContext;
-      Repository = repository;
+      _readContext = readContext;
+      _repository = repository;
     }
 
-    protected ReadContext ReadContext { get; }
-    protected IRepository<Item> Repository { get; }
-
-    protected async Task SynchronizeAsync(Guid id, int version, CancellationToken cancellationToken)
+    public async Task<ItemEntity?> ExecuteAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-      Entities.Item? entity = await ReadContext.Items
+      ItemEntity? entity = await _readContext.Items
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-      if (entity == null)
+      if (entity != null && version.HasValue && entity.Version >= version.Value)
       {
-        entity = new Entities.Item { Id = id };
-        ReadContext.Items.Add(entity);
-      }
-      else if (entity.Version >= version)
-      {
-        return;
+        return entity;
       }
 
-      Item item = await Repository.LoadAsync(id, version, cancellationToken)
-        ?? throw new EntityNotFoundException<Item>(id);
+      Item? item = await _repository.LoadAsync(id, version, cancellationToken);
+      if (item != null)
+      {
+        if (entity == null)
+        {
+          entity = new ItemEntity { Id = id };
+          _readContext.Items.Add(entity);
+        }
 
-      entity.Synchronize(item);
+        entity.Synchronize(item);
 
-      await ReadContext.SaveChangesAsync(cancellationToken);
-    }
-  }
+        await _readContext.SaveChangesAsync(cancellationToken);
+      }
 
-  internal class ItemCreatedHandler : SynchronizeItem, INotificationHandler<ItemCreated>
-  {
-    public ItemCreatedHandler(ReadContext readContext, IRepository<Item> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(ItemCreated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class ItemUpdatedHandler : SynchronizeItem, INotificationHandler<ItemUpdated>
-  {
-    public ItemUpdatedHandler(ReadContext readContext, IRepository<Item> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(ItemUpdated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
+      return entity;
     }
   }
 }

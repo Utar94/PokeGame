@@ -1,0 +1,19 @@
+﻿@using PokeGame.Application.Pokemon.Models;
+
+@model PokemonModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Species == null
+    ? "Create Pokemon"
+    : $"{Model.Surname ?? Model.Species.Name} Lv.{Model.Level}";
+}
+
+@if (Model == null)
+{
+  <pokemon-edit></pokemon-edit>
+}
+else
+{
+  <pokemon-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></pokemon-edit>
+}

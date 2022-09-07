@@ -8,7 +8,7 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
   {
     public InventoryProfile()
     {
-      CreateMap<Inventory, InventoryModel>();
+      CreateMap<InventoryEntity, InventoryModel>();
     }
   }
 }
