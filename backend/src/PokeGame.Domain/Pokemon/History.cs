@@ -5,19 +5,18 @@ namespace PokeGame.Domain.Pokemon
   public class History
   {
     public History(HistoryPayload payload)
-      : this(payload?.Level ?? 0, payload?.Location ?? string.Empty, payload?.MetOn ?? default)
     {
       ArgumentNullException.ThrowIfNull(payload);
-    }
-    public History(byte level, string location, DateTime metOn)
-    {
-      Level = level;
-      Location = location ?? throw new ArgumentNullException(nameof(location));
-      MetOn = metOn;
+
+      Level = payload.Level;
+      Location = payload.Location;
+      MetOn = payload.MetOn;
+      TrainerId = payload.TrainerId;
     }
 
     public byte Level { get; }
     public string Location { get; }
     public DateTime MetOn { get; }
+    public Guid TrainerId { get; }
   }
 }

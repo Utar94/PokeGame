@@ -46,6 +46,7 @@ namespace PokeGame.Application.Species
 
       RuleForEach(x => x.BaseStatistics.Values)
         .GreaterThan((byte)0);
+
       RuleFor(x => x.EvYield)
         .Must(x => x.Values.Sum(y => y) <= 3);
     }
