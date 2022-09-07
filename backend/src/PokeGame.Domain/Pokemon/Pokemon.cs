@@ -10,7 +10,7 @@ namespace PokeGame.Domain.Pokemon
     {
       ArgumentNullException.ThrowIfNull(species);
 
-      ApplyChange(new PokemonCreated(species.BaseStatistics, species.LevelingRate, payload, species.Name));
+      ApplyChange(new PokemonCreated(species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, species.Name));
     }
     private Pokemon()
     {
@@ -23,6 +23,7 @@ namespace PokeGame.Domain.Pokemon
     public byte Level { get; private set; }
     public int Experience { get; private set; }
 
+    public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
     public Nature Nature { get; private set; } = null!;
     public string SpeciesName { get; private set; } = null!;
@@ -57,6 +58,7 @@ namespace PokeGame.Domain.Pokemon
       Level = @event.Payload.Level;
       Experience = @event.Payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
 
+      GenderRatio = @event.GenderRatio;
       Gender = @event.Payload.Gender;
       Nature = Nature.GetNature(@event.Payload.Nature);
       SpeciesName = @event.SpeciesName;

@@ -14,6 +14,29 @@ namespace PokeGame.Application.Pokemon
         .GreaterThanOrEqualTo(x => ExperienceTable.GetTotalExperience(x.LevelingRate, x.Level))
         .LessThan(x => ExperienceTable.GetTotalExperience(x.LevelingRate, x.Level < 100 ? (x.Level + 1) : 100));
 
+      RuleFor(x => x.GenderRatio)
+        .InclusiveBetween(0.0, 100.0);
+
+      When(x => x.GenderRatio == null, () =>
+        RuleFor(x => x.Gender)
+          .Equal(PokemonGender.Unknown)
+      );
+      When(x => x.GenderRatio != null, () =>
+      {
+        When(x => x.GenderRatio!.Value == 0.0, () =>
+          RuleFor(x => x.Gender)
+            .Equal(PokemonGender.Female)
+        );
+        When(x => x.GenderRatio!.Value == 100.0, () =>
+          RuleFor(x => x.Gender)
+            .Equal(PokemonGender.Male)
+        );
+        When(x => x.GenderRatio!.Value > 0.0 && x.GenderRatio!.Value < 100.0, () =>
+          RuleFor(x => x.Gender)
+            .NotEqual(PokemonGender.Unknown)
+        );
+      });
+
       RuleFor(x => x.Nature)
         .NotNull();
 
