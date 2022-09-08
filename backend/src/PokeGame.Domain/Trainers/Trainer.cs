@@ -30,6 +30,7 @@ namespace PokeGame.Domain.Trainers
     public string? Reference { get; private set; }
 
     public Dictionary<Guid, int> Inventory { get; private set; } = new();
+    public Dictionary<Guid, PokedexEntry> Pokedex { get; private set; } = new();
 
     public void Delete() => ApplyChange(new TrainerDeleted());
     public void Update(UpdateTrainerPayload payload) => ApplyChange(new TrainerUpdated(payload));
@@ -89,6 +90,17 @@ namespace PokeGame.Domain.Trainers
       ApplyChange(new SoldItem(item.Id, item.Price.Value, quantity));
     }
 
+    public void RemovePokedex(Guid speciesId)
+    {
+      if (!Pokedex.ContainsKey(speciesId))
+      {
+        throw new NotImplementedException(); // TODO(fpion): implement
+      }
+
+      ApplyChange(new RemovedPokedex(speciesId));
+    }
+    public void SavePokedex(Guid speciesId, bool hasCaught) => ApplyChange(new SavedPokedex(speciesId, hasCaught));
+
     protected virtual void Apply(AddedItem @event)
     {
       AddItem(@event.ItemId, @event.Quantity);
@@ -98,6 +110,14 @@ namespace PokeGame.Domain.Trainers
       Money -= @event.ItemPrice * @event.Quantity;
 
       AddItem(@event.ItemId, @event.Quantity);
+    }
+    protected virtual void Apply(RemovedPokedex @event)
+    {
+      Pokedex.Remove(@event.SpeciesId);
+    }
+    protected virtual void Apply(SavedPokedex @event)
+    {
+      Pokedex[@event.SpeciesId] = new(@event.HasCaught, @event.OccurredAt);
     }
     protected virtual void Apply(TrainerCreated @event)
     {

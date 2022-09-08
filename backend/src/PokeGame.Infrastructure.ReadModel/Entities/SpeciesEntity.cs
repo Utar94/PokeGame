@@ -30,6 +30,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
+    public List<PokedexEntity> Pokedex { get; set; } = new();
     public List<PokemonEntity> Pokemon { get; set; } = new();
     public List<SpeciesAbilityEntity> SpeciesAbilities { get; set; } = new();
 

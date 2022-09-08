@@ -17,6 +17,7 @@ namespace PokeGame.Infrastructure.ReadModel
     internal DbSet<InventoryEntity> Inventory { get; private set; } = null!;
     internal DbSet<ItemEntity> Items { get; private set; } = null!;
     internal DbSet<MoveEntity> Moves { get; private set; } = null!;
+    internal DbSet<PokedexEntity> Pokedex { get; private set; } = null!;
     internal DbSet<PokemonEntity> Pokemon { get; private set; } = null!;
     internal DbSet<PokemonMoveEntity> PokemonMoves { get; private set; } = null!;
     internal DbSet<SpeciesEntity> Species { get; private set; } = null!;

@@ -4,6 +4,7 @@ using PokeGame.Application.Abilities;
 using PokeGame.Application.Inventories;
 using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
+using PokeGame.Application.Pokedex;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
 using PokeGame.Application.Trainers;
@@ -39,6 +40,7 @@ namespace PokeGame.Infrastructure.ReadModel
         .AddScoped<IInventoryQuerier, InventoryQuerier>()
         .AddScoped<IItemQuerier, ItemQuerier>()
         .AddScoped<IMoveQuerier, MoveQuerier>()
+        .AddScoped<IPokedexQuerier, PokedexQuerier>()
         .AddScoped<IPokemonQuerier, PokemonQuerier>()
         .AddScoped<ISpeciesQuerier, SpeciesQuerier>()
         .AddScoped<ITrainerQuerier, TrainerQuerier>();
@@ -51,6 +53,7 @@ namespace PokeGame.Infrastructure.ReadModel
         .AddScoped<SynchronizeInventory>()
         .AddScoped<SynchronizeItem>()
         .AddScoped<SynchronizeMove>()
+        .AddScoped<SynchronizePokedex>()
         .AddScoped<SynchronizePokemon>()
         .AddScoped<SynchronizeSpecies>()
         .AddScoped<SynchronizeTrainer>();

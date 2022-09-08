@@ -22,6 +22,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public List<InventoryEntity> Inventory { get; set; } = new();
     public List<PokemonEntity> OriginalPokemon { get; set; } = new();
+    public List<PokedexEntity> Pokedex { get; set; } = new();
     public List<PokemonEntity> Pokemon { get; set; } = new();
 
     public void Synchronize(Trainer trainer)
