@@ -51,10 +51,10 @@
     "edit": "Edit entry",
     "empty": "This list is empty.",
     "hasCaught": "Caught",
-    "label": "Pokedex",
+    "label": "Pokédex",
     "remove": {
-      "confirm": "Do you really want to remove the following Pokedex entry?",
-      "success": "The Pokedex entry entry has been removed.",
+      "confirm": "Do you really want to remove the following Pokédex entry?",
+      "success": "The Pokédex entry entry has been removed.",
       "text": "Remove entry"
     },
     "sort": {
@@ -66,6 +66,10 @@
         "Weight": "Weight"
       }
     }
+  },
+  "select": {
+    "label": "Trainer",
+    "placeholder": "Select a trainer"
   },
   "sort": {
     "options": {

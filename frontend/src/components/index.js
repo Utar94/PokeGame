@@ -10,6 +10,7 @@ export default {
   ItemList: () => import(/* webpackChunkName: "itemList" */ './Items/ItemList.vue'),
   MoveEdit: () => import(/* webpackChunkName: "moveEdit" */ './Moves/MoveEdit.vue'),
   MoveList: () => import(/* webpackChunkName: "moveList" */ './Moves/MoveList.vue'),
+  PokemonList: () => import(/* webpackChunkName: "pokemonList" */ './Pokemon/PokemonList.vue'),
   Navbar,
   Profile: () => import(/* webpackChunkName: "profile" */ './Account/Profile.vue'),
   SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue'),

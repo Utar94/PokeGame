@@ -1,0 +1,35 @@
+{
+  "boxFormat": "Box {box} ({position})",
+  "created": "The Pokémon has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following Pokémon?",
+    "success": "The Pokémon has been deleted.",
+    "title": "Delete Pokémon"
+  },
+  "editTitle": "Edit Pokémon: {name}",
+  "empty": "This list is empty.",
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "Female": "Female",
+      "Male": "Male",
+      "Unknown": "Unknown"
+    },
+    "placeholder": "Select a gender"
+  },
+  "heldItem": "Held Item",
+  "identification": "Identification",
+  "levelFormat": "Lv. {level}",
+  "location": "Location",
+  "newTitle": "Create Pokémon",
+  "partyFormat": "In Party ({position})",
+  "sort": {
+    "options": {
+      "Level": "Level",
+      "Name": "Name",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "title": "Pokémon",
+  "updated": "The Pokémon has been updated."
+}

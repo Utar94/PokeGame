@@ -5,6 +5,7 @@ import {
   faCheck,
   faCog,
   faDice,
+  faDog,
   faDollarSign,
   faEdit,
   faEnvelope,
@@ -13,9 +14,11 @@ import {
   faInfoCircle,
   faKey,
   faMagic,
+  faMars,
   faMinus,
   faPaw,
   faPlus,
+  faQuestion,
   faRobot,
   faSave,
   faShoppingCart,
@@ -26,6 +29,7 @@ import {
   faTrashAlt,
   faUser,
   faUsers,
+  faVenus,
   faVial
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -35,6 +39,7 @@ library.add(
   faCheck,
   faCog,
   faDice,
+  faDog,
   faDollarSign,
   faEdit,
   faEnvelope,
@@ -43,9 +48,11 @@ library.add(
   faInfoCircle,
   faKey,
   faMagic,
+  faMars,
   faMinus,
   faPaw,
   faPlus,
+  faQuestion,
   faRobot,
   faSave,
   faShoppingCart,
@@ -56,6 +63,7 @@ library.add(
   faTrashAlt,
   faUser,
   faUsers,
+  faVenus,
   faVial
 )
 

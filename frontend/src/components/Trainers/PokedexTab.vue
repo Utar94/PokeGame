@@ -56,7 +56,7 @@
 
 <script>
 import EditEntryModal from './EditEntryModal.vue'
-import { deletePokedex, getPokedex } from '@/api/pokedex'
+import { deleteEntry, getEntries } from '@/api/pokedex'
 
 export default {
   name: 'PokedexTab',
@@ -110,7 +110,7 @@ export default {
         this.loading = true
         let refresh = false
         try {
-          await deletePokedex(this.trainerId, species.id)
+          await deleteEntry(this.trainerId, species.id)
           refresh = true
           this.toast('success', 'trainers.pokedex.remove.success')
           if (typeof callback === 'function') {
@@ -133,7 +133,7 @@ export default {
       if (!this.loading) {
         this.loading = true
         try {
-          const { data } = await getPokedex(this.trainerId, params ?? this.params)
+          const { data } = await getEntries(this.trainerId, params ?? this.params)
           this.entries = data.items
           this.total = data.total
         } catch (e) {

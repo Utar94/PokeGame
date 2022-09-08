@@ -22,7 +22,7 @@
 
 <script>
 import SpeciesSelect from '@/components/Species/SpeciesSelect.vue'
-import { savePokedex } from '@/api/pokedex'
+import { saveEntry } from '@/api/pokedex'
 
 export default {
   name: 'EditEntryModal',
@@ -77,7 +77,7 @@ export default {
         this.loading = true
         try {
           if (await this.$refs.form.validate()) {
-            const { data } = await savePokedex(this.trainerId, this.speciesId, this.payload)
+            const { data } = await saveEntry(this.trainerId, this.speciesId, this.payload)
             this.$emit('updated', data)
             this.$refs.form.reset()
             if (typeof callback === 'function') {
