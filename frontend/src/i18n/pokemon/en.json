@@ -1,0 +1,92 @@
+{
+  "created": "The Pokémon has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following Pokémon?",
+    "success": "The Pokémon has been deleted.",
+    "title": "Delete Pokémon"
+  },
+  "editTitle": "Edit Pokémon: {name}",
+  "empty": "This list is empty.",
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "Female": "Female",
+      "Male": "Male",
+      "Unknown": "Unknown"
+    },
+    "placeholder": "Select a gender"
+  },
+  "heldItem": "Held Item",
+  "identification": "Identification",
+  "individualValues": {
+    "title": "Individual Values (IV)",
+    "totalFormat": "Total IV: {total} (average: 93)"
+  },
+  "level": "Level",
+  "levelFormat": "Lv. {level}",
+  "moves": {
+    "add": "Add move",
+    "title": "Moves"
+  },
+  "nature": {
+    "label": "Nature",
+    "options": {
+      "Adamant": "Adamant",
+      "Bashful": "Bashful",
+      "Bold": "Bold",
+      "Brave": "Brave",
+      "Calm": "Calm",
+      "Careful": "Careful",
+      "Docile": "Docile",
+      "Gentle": "Gentle",
+      "Hardy": "Hardy",
+      "Hasty": "Hasty",
+      "Impish": "Impish",
+      "Jolly": "Jolly",
+      "Lax": "Lax",
+      "Lonely": "Lonely",
+      "Mild": "Mild",
+      "Modest": "Modest",
+      "Naive": "Naive",
+      "Naughty": "Naughty",
+      "Quiet": "Quiet",
+      "Quirky": "Quirky",
+      "Rash": "Rash",
+      "Relaxed": "Relaxed",
+      "Sassy": "Sassy",
+      "Serious": "Serious",
+      "Timid": "Timid"
+    },
+    "placeholder": "Select a nature"
+  },
+  "newTitle": "Create Pokémon",
+  "sort": {
+    "options": {
+      "Level": "Level",
+      "Name": "Name",
+      "UpdatedAt": "Updated on"
+    }
+  },
+  "surname": {
+    "label": "Surname",
+    "placeholder": "Enter a surname"
+  },
+  "title": "Pokémon",
+  "trainer": {
+    "box": "Box",
+    "boxFormat": "Box {box} ({position})",
+    "history": "History",
+    "location": "Location",
+    "metLevel": "Met at Level",
+    "metLocation": {
+      "label": "Met Location",
+      "placeholder": "Enter the location"
+    },
+    "metOn": "Met On",
+    "party": "In Party",
+    "partyFormat": "In Party ({position})",
+    "position": "Position",
+    "title": "Trainer"
+  },
+  "updated": "The Pokémon has been updated."
+}

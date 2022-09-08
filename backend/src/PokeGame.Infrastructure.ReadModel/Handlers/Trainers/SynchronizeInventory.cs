@@ -1,112 +1,76 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
 using PokeGame.Domain.Trainers;
-using PokeGame.Domain.Trainers.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
+using PokeGame.Infrastructure.ReadModel.Handlers.Items;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
 {
-  internal abstract class SynchronizeInventory
+  internal class SynchronizeInventory
   {
-    protected SynchronizeInventory(ReadContext readContext, IRepository<Trainer> repository)
+    private readonly ReadContext _readContext;
+    private readonly SynchronizeItem _synchronizeItem;
+    private readonly SynchronizeTrainer _synchronizeTrainer;
+    private readonly IRepository<Trainer> _trainerRepository;
+
+    public SynchronizeInventory(
+      ReadContext readContext,
+      SynchronizeItem synchronizeItem,
+      SynchronizeTrainer synchronizeTrainer,
+      IRepository<Trainer> trainerRepository
+    )
     {
-      ReadContext = readContext;
-      Repository = repository;
+      _readContext = readContext;
+      _synchronizeItem = synchronizeItem;
+      _synchronizeTrainer = synchronizeTrainer;
+      _trainerRepository = trainerRepository;
     }
 
-    protected ReadContext ReadContext { get; }
-    protected IRepository<Trainer> Repository { get; }
-
-    protected async Task SynchronizeAsync(Guid trainerId, Guid itemId, int version, CancellationToken cancellationToken)
+    public async Task<InventoryEntity?> ExecuteAsync(Guid trainerId, Guid itemId, int version, CancellationToken cancellationToken = default)
     {
-      Trainer trainer = await Repository.LoadAsync(trainerId, version, cancellationToken)
-        ?? throw new EntityNotFoundException<Trainer>(trainerId);
-
-      Entities.Trainer trainerEntity = await ReadContext.Trainers
-        .Include(x => x.Inventory)
-        .SingleAsync(x => x.Id == trainer.Id, cancellationToken);
-      if (trainerEntity.Version < version)
+      TrainerEntity? trainerEntity = await _synchronizeTrainer.ExecuteAsync(trainerId, version, cancellationToken);
+      if (trainerEntity == null)
       {
-        trainerEntity.Synchronize(trainer);
+        return null;
       }
 
-      Entities.Item item = await ReadContext.Items
-        .SingleAsync(x => x.Id == itemId, cancellationToken);
-
-      Entities.Inventory? entity = trainerEntity.Inventory.SingleOrDefault(x => x.ItemId == item.Sid);
-
-      if (trainer.Inventory.TryGetValue(item.Id, out int quantity))
+      ItemEntity? item = await _readContext.Items.SingleOrDefaultAsync(x => x.Id == itemId, cancellationToken)
+        ?? await _synchronizeItem.ExecuteAsync(itemId, version: null, cancellationToken);
+      if (item == null)
       {
-        if (entity == null)
-        {
-          entity = new Entities.Inventory
-          {
-            TrainerId = trainerEntity.Sid,
-            ItemId = item.Sid
-          };
-          trainerEntity.Inventory.Add(entity);
-        }
+        return null;
+      }
 
+      InventoryEntity? entity = trainerEntity.Inventory.SingleOrDefault(x => x.ItemId == item.Sid);
+      if (entity == null)
+      {
+        entity = new InventoryEntity
+        {
+          Item = item,
+          ItemId = item.Sid
+        };
+
+        trainerEntity.Inventory.Add(entity);
+      }
+
+      Trainer? trainer = await _trainerRepository.LoadAsync(trainerId, version, cancellationToken);
+      if (trainer == null)
+      {
+        return null;
+      }
+
+      if (trainer.Inventory.TryGetValue(item.Id, out int quantity) && quantity > 0)
+      {
         entity.Quantity = quantity;
       }
-      else if (entity != null)
+      else
       {
         trainerEntity.Inventory.Remove(entity);
       }
 
-      await ReadContext.SaveChangesAsync(cancellationToken);
-    }
-  }
+      await _readContext.SaveChangesAsync(cancellationToken);
 
-  internal class AddedItemHandler : SynchronizeInventory, INotificationHandler<AddedItem>
-  {
-    public AddedItemHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(AddedItem notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.ItemId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class BoughtItemHandler : SynchronizeInventory, INotificationHandler<BoughtItem>
-  {
-    public BoughtItemHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(BoughtItem notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.ItemId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class RemovedItemHandler : SynchronizeInventory, INotificationHandler<RemovedItem>
-  {
-    public RemovedItemHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(RemovedItem notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.ItemId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class SoldItemHandler : SynchronizeInventory, INotificationHandler<SoldItem>
-  {
-    public SoldItemHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(SoldItem notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.ItemId, notification.Version, cancellationToken);
+      return entity;
     }
   }
 }

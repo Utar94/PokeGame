@@ -1,9 +1,10 @@
 ﻿using PokeGame.Domain;
 using PokeGame.Domain.Pokemon;
+using PokeGame.Domain.Species;
 
 namespace PokeGame.Infrastructure.ReadModel.Entities
 {
-  internal class Species : Entity
+  internal class SpeciesEntity : Entity
   {
     public int Number { get; set; }
 
@@ -29,9 +30,11 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
-    public List<Ability> Abilities { get; set; } = new();
+    public List<PokedexEntity> Pokedex { get; set; } = new();
+    public List<PokemonEntity> Pokemon { get; set; } = new();
+    public List<SpeciesAbilityEntity> SpeciesAbilities { get; set; } = new();
 
-    public void Synchronize(Domain.Species.Species species)
+    public void Synchronize(Species species)
     {
       base.Synchronize(species);
 
@@ -53,11 +56,13 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       CatchRate = species.CatchRate;
       LevelingRate = species.LevelingRate;
 
-      BaseStatistics = species.BaseStatistics.Any()
-        ? string.Join('|', species.BaseStatistics.Where(x => x.Value != 0).Select(pair => string.Join(':', pair.Key, pair.Value)))
+      IEnumerable<KeyValuePair<Statistic, byte>> baseStatistics = species.BaseStatistics.Where(x => x.Value > 0);
+      BaseStatistics = baseStatistics.Any()
+        ? string.Join('|', baseStatistics.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
-      EvYield = species.EvYield.Any()
-        ? string.Join('|', species.EvYield.Where(x => x.Value != 0).Select(pair => string.Join(':', pair.Key, pair.Value)))
+      IEnumerable<KeyValuePair<Statistic, byte>> evYield = species.EvYield.Where(x => x.Value > 0);
+      EvYield = evYield.Any()
+        ? string.Join('|', evYield.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
 
       Notes = species.Notes;

@@ -1,69 +1,48 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
 using PokeGame.Domain.Trainers;
-using PokeGame.Domain.Trainers.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
 {
-  internal abstract class SynchronizeTrainer
+  internal class SynchronizeTrainer
   {
-    protected SynchronizeTrainer(ReadContext readContext, IRepository<Trainer> repository)
+    private readonly ReadContext _readContext;
+    private readonly IRepository<Trainer> _repository;
+
+    public SynchronizeTrainer(ReadContext readContext, IRepository<Trainer> repository)
     {
-      ReadContext = readContext;
-      Repository = repository;
+      _readContext = readContext;
+      _repository = repository;
     }
 
-    protected ReadContext ReadContext { get; }
-    protected IRepository<Trainer> Repository { get; }
-
-    protected async Task SynchronizeAsync(Guid id, int version, CancellationToken cancellationToken)
+    public async Task<TrainerEntity?> ExecuteAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-      Entities.Trainer? entity = await ReadContext.Trainers
+      TrainerEntity? entity = await _readContext.Trainers
+        .Include(x => x.Inventory).ThenInclude(x => x.Item)
+        .Include(x => x.Pokedex).ThenInclude(x => x.Species)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-      if (entity == null)
+      if (entity != null && version.HasValue && entity.Version >= version.Value)
       {
-        entity = new Entities.Trainer { Id = id };
-        ReadContext.Trainers.Add(entity);
-      }
-      else if (entity.Version >= version)
-      {
-        return;
+        return entity;
       }
 
-      Trainer trainer = await Repository.LoadAsync(id, version, cancellationToken)
-        ?? throw new EntityNotFoundException<Trainer>(id);
+      Trainer? trainer = await _repository.LoadAsync(id, version, cancellationToken);
+      if (trainer != null)
+      {
+        if (entity == null)
+        {
+          entity = new TrainerEntity { Id = id };
+          _readContext.Trainers.Add(entity);
+        }
 
-      entity.Synchronize(trainer);
+        entity.Synchronize(trainer);
 
-      await ReadContext.SaveChangesAsync(cancellationToken);
-    }
-  }
+        await _readContext.SaveChangesAsync(cancellationToken);
+      }
 
-  internal class TrainerCreatedHandler : SynchronizeTrainer, INotificationHandler<TrainerCreated>
-  {
-    public TrainerCreatedHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(TrainerCreated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class TrainerUpdatedHandler : SynchronizeTrainer, INotificationHandler<TrainerUpdated>
-  {
-    public TrainerUpdatedHandler(ReadContext readContext, IRepository<Trainer> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(TrainerUpdated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
+      return entity;
     }
   }
 }

@@ -4,12 +4,13 @@ using PokeGame.Application.Inventories;
 using PokeGame.Application.Inventories.Models;
 using PokeGame.Application.Models;
 using PokeGame.Domain.Items;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class InventoryQuerier : IInventoryQuerier
   {
-    private readonly DbSet<Entities.Inventory> _inventory;
+    private readonly DbSet<InventoryEntity> _inventory;
     private readonly IMapper _mapper;
 
     public InventoryQuerier(IMapper mapper, ReadContext readContext)
@@ -20,7 +21,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<InventoryModel?> GetAsync(Guid trainerId, Guid itemId, CancellationToken cancellationToken)
     {
-      Entities.Inventory? inventory = await _inventory.AsNoTracking()
+      InventoryEntity? inventory = await _inventory.AsNoTracking()
         .Include(x => x.Item)
         .Include(x => x.Trainer)
         .SingleOrDefaultAsync(x => x.Trainer!.Id == trainerId && x.Item!.Id == itemId, cancellationToken);
@@ -33,7 +34,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Inventory> query = _inventory.AsNoTracking()
+      IQueryable<InventoryEntity> query = _inventory.AsNoTracking()
         .Include(x => x.Item)
         .Include(x => x.Trainer)
         .Where(x => x.Trainer!.Id == trainerId);
@@ -69,7 +70,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Inventory[] inventory = await query.ToArrayAsync(cancellationToken);
+      InventoryEntity[] inventory = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

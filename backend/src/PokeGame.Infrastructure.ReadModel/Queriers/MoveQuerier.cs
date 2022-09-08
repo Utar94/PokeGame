@@ -4,13 +4,14 @@ using PokeGame.Application.Models;
 using PokeGame.Application.Moves;
 using PokeGame.Application.Moves.Models;
 using PokeGame.Domain;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class MoveQuerier : IMoveQuerier
   {
     private readonly IMapper _mapper;
-    private readonly DbSet<Entities.Move> _moves;
+    private readonly DbSet<MoveEntity> _moves;
 
     public MoveQuerier(IMapper mapper, ReadContext readContext)
     {
@@ -20,7 +21,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<MoveModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Move? move = await _moves.AsNoTracking()
+      MoveEntity? move = await _moves.AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return move == null ? null : _mapper.Map<MoveModel>(move);
@@ -31,7 +32,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Move> query = _moves.AsNoTracking();
+      IQueryable<MoveEntity> query = _moves.AsNoTracking();
 
       if (search != null)
       {
@@ -63,7 +64,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Move[] moves = await query.ToArrayAsync(cancellationToken);
+      MoveEntity[] moves = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

@@ -56,7 +56,7 @@ export default {
           text: fullName ? `${fullName} (${username})` : username,
           value: id
         })),
-        'value'
+        'text'
       )
     }
   },

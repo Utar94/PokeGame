@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PokeGame.Application.Abilities.Models;
 using PokeGame.Application.Models;
 using PokeGame.Application.Species.Models;
 using PokeGame.Domain.Pokemon;
@@ -10,17 +11,24 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
   {
     public SpeciesProfile()
     {
-      CreateMap<Species, SpeciesModel>()
+      CreateMap<SpeciesEntity, SpeciesModel>()
         .IncludeBase<Entity, AggregateModel>()
+        .ForMember(x => x.Abilities, x => x.MapFrom(GetAbilities))
         .ForMember(x => x.BaseStatistics, x => x.MapFrom(GetBaseStatistics))
         .ForMember(x => x.EvYield, x => x.MapFrom(GetEvYield));
     }
 
-    private static IEnumerable<StatisticValueModel> GetBaseStatistics(Species species, SpeciesModel model)
+    private static IEnumerable<AbilityModel> GetAbilities(SpeciesEntity species, SpeciesModel model, IEnumerable<AbilityModel> abilities, ResolutionContext context)
+    {
+      return species.SpeciesAbilities.Where(x => x.Ability != null)
+        .Select(x => context.Mapper.Map<AbilityModel>(x.Ability));
+    }
+
+    private static IEnumerable<StatisticValueModel> GetBaseStatistics(SpeciesEntity species, SpeciesModel model)
     {
       return ParseStatisticValues(species.BaseStatistics);
     }
-    private static IEnumerable<StatisticValueModel> GetEvYield(Species species, SpeciesModel model)
+    private static IEnumerable<StatisticValueModel> GetEvYield(SpeciesEntity species, SpeciesModel model)
     {
       return ParseStatisticValues(species.EvYield);
     }

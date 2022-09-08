@@ -3,7 +3,7 @@ using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Infrastructure.ReadModel.Entities
 {
-  internal class Trainer : Entity
+  internal class TrainerEntity : Entity
   {
     public Guid? UserId { get; set; }
 
@@ -20,10 +20,15 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
-    public List<Inventory> Inventory { get; set; } = new();
+    public List<InventoryEntity> Inventory { get; set; } = new();
+    public List<PokemonEntity> OriginalPokemon { get; set; } = new();
+    public List<PokedexEntity> Pokedex { get; set; } = new();
+    public List<PokemonEntity> Pokemon { get; set; } = new();
 
-    public void Synchronize(Domain.Trainers.Trainer trainer)
+    public void Synchronize(Trainer trainer)
     {
+      base.Synchronize(trainer);
+
       UserId = trainer.UserId;
 
       Region = trainer.Region;

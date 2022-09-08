@@ -4,9 +4,9 @@ using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Configurations
 {
-  internal class AbilityConfiguration : EntityConfiguration<Ability>, IEntityTypeConfiguration<Ability>
+  internal class AbilityConfiguration : EntityConfiguration<AbilityEntity>, IEntityTypeConfiguration<AbilityEntity>
   {
-    public override void Configure(EntityTypeBuilder<Ability> builder)
+    public override void Configure(EntityTypeBuilder<AbilityEntity> builder)
     {
       base.Configure(builder);
 
@@ -14,7 +14,7 @@ namespace PokeGame.Infrastructure.ReadModel.Configurations
 
       builder.Property(x => x.Name).HasMaxLength(100);
       builder.Property(x => x.Reference).HasMaxLength(2048);
-      builder.Property(x => x.Sid).HasColumnName($"{nameof(Ability)}Id");
+      builder.Property(x => x.Sid).HasColumnName("AbilityId");
     }
   }
 }

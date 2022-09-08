@@ -25,6 +25,10 @@
               <font-awesome-icon icon="magic" />
               {{ $t('moves.title') }}
             </b-nav-item>
+            <b-nav-item href="/pokemon">
+              <font-awesome-icon icon="dog" />
+              {{ $t('pokemon.title') }}
+            </b-nav-item>
             <b-nav-item href="/species">
               <font-awesome-icon icon="paw" />
               {{ $t('species.title') }}

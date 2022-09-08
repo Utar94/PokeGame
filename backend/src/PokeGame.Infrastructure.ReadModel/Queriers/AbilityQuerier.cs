@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Abilities.Models;
 using PokeGame.Application.Models;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class AbilityQuerier : IAbilityQuerier
   {
-    private readonly DbSet<Entities.Ability> _abilities;
+    private readonly DbSet<AbilityEntity> _abilities;
     private readonly IMapper _mapper;
 
     public AbilityQuerier(IMapper mapper, ReadContext readContext)
@@ -19,18 +20,19 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<AbilityModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Ability? ability = await _abilities.AsNoTracking()
+      AbilityEntity? ability = await _abilities.AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return ability == null ? null : _mapper.Map<AbilityModel>(ability);
     }
 
-    public async Task<ListModel<AbilityModel>> GetPagedAsync(string? search,
+    public async Task<ListModel<AbilityModel>> GetPagedAsync(string? search, Guid? speciesId,
       AbilitySort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Ability> query = _abilities.AsNoTracking();
+      IQueryable<AbilityEntity> query = _abilities.AsNoTracking()
+        .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Species);
 
       if (search != null)
       {
@@ -43,6 +45,10 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
             query = query.Where(x => EF.Functions.ILike(x.Name, pattern));
           }
         }
+      }
+      if (speciesId.HasValue)
+      {
+        query = query.Where(x => x.SpeciesAbilities.Any(y => y.Species!.Id == speciesId.Value));
       }
 
       long total = await query.LongCountAsync(cancellationToken);
@@ -58,7 +64,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Ability[] abilities = await query.ToArrayAsync(cancellationToken);
+      AbilityEntity[] abilities = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

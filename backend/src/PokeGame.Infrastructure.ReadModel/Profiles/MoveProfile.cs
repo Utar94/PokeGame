@@ -9,7 +9,7 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
   {
     public MoveProfile()
     {
-      CreateMap<Move, MoveModel>()
+      CreateMap<MoveEntity, MoveModel>()
         .IncludeBase<Entity, AggregateModel>();
     }
   }

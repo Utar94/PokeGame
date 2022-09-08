@@ -44,6 +44,10 @@
   "number": "Number",
   "primaryType": "Primary Type",
   "secondaryType": "Secondary Type",
+  "select": {
+    "label": "Species",
+    "placeholder": "Select a species"
+  },
   "sort": {
     "options": {
       "Category": "Category",

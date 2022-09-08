@@ -8,7 +8,9 @@
     :required="required"
     :value="value"
     @input="$emit('input', $event)"
-  />
+  >
+    <slot />
+  </form-select>
 </template>
 
 <script>
@@ -41,6 +43,10 @@ export default {
       type: Boolean,
       default: false
     },
+    speciesId: {
+      type: String,
+      default: ''
+    },
     value: {}
   },
   data() {
@@ -58,12 +64,18 @@ export default {
         }))
     }
   },
-  async created() {
-    try {
-      const { data } = await getAbilities({ sort: 'Name', desc: false })
-      this.abilities = data.items
-    } catch (e) {
-      this.handleError(e)
+  watch: {
+    speciesId: {
+      immediate: true,
+      async handler(speciesId) {
+        try {
+          const { data } = await getAbilities({ speciesId, sort: 'Name', desc: false })
+          this.abilities = data.items
+          this.$emit('refresh', data)
+        } catch (e) {
+          this.handleError(e)
+        }
+      }
     }
   }
 }

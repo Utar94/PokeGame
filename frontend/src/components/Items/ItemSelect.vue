@@ -27,7 +27,7 @@ export default {
     },
     id: {
       type: String,
-      default: 'id'
+      default: 'item'
     },
     label: {
       type: String,

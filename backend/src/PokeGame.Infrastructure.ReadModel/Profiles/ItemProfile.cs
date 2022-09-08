@@ -9,7 +9,7 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
   {
     public ItemProfile()
     {
-      CreateMap<Item, ItemModel>()
+      CreateMap<ItemEntity, ItemModel>()
         .IncludeBase<Entity, AggregateModel>();
     }
   }

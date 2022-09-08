@@ -4,13 +4,14 @@ using PokeGame.Application.Models;
 using PokeGame.Application.Species;
 using PokeGame.Application.Species.Models;
 using PokeGame.Domain;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class SpeciesQuerier : ISpeciesQuerier
   {
     private readonly IMapper _mapper;
-    private readonly DbSet<Entities.Species> _species;
+    private readonly DbSet<SpeciesEntity> _species;
 
     public SpeciesQuerier(IMapper mapper, ReadContext readContext)
     {
@@ -20,8 +21,8 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Species? species = await _species.AsNoTracking()
-        .Include(x => x.Abilities)
+      SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return species == null ? null : _mapper.Map<SpeciesModel>(species);
@@ -32,7 +33,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Species> query = _species.AsNoTracking();
+      IQueryable<SpeciesEntity> query = _species.AsNoTracking();
 
       if (search != null)
       {
@@ -68,7 +69,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Species[] species = await query.ToArrayAsync(cancellationToken);
+      SpeciesEntity[] species = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

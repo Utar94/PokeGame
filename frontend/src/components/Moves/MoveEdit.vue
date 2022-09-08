@@ -82,7 +82,7 @@ export default {
   },
   data() {
     return {
-      accuracy: 0,
+      accuracy: 100,
       category: null,
       description: null,
       loading: false,

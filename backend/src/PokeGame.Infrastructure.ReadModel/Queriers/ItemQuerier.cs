@@ -4,12 +4,13 @@ using PokeGame.Application.Items;
 using PokeGame.Application.Items.Models;
 using PokeGame.Application.Models;
 using PokeGame.Domain.Items;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class ItemQuerier : IItemQuerier
   {
-    private readonly DbSet<Entities.Item> _items;
+    private readonly DbSet<ItemEntity> _items;
     private readonly IMapper _mapper;
 
     public ItemQuerier(IMapper mapper, ReadContext readContext)
@@ -20,7 +21,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<ItemModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      Entities.Item? item = await _items.AsNoTracking()
+      ItemEntity? item = await _items.AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return item == null ? null : _mapper.Map<ItemModel>(item);
@@ -31,7 +32,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<Entities.Item> query = _items.AsNoTracking();
+      IQueryable<ItemEntity> query = _items.AsNoTracking();
 
       if (category.HasValue)
       {
@@ -64,7 +65,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       query = query.ApplyPaging(index, count);
 
-      Entities.Item[] items = await query.ToArrayAsync(cancellationToken);
+      ItemEntity[] items = await query.ToArrayAsync(cancellationToken);
 
       return new()
       {

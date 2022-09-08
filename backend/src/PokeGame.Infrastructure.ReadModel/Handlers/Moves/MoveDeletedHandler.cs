@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Moves
 
     public async Task Handle(MoveDeleted notification, CancellationToken cancellationToken)
     {
-      Move? move = await _readContext.Moves
+      MoveEntity? move = await _readContext.Moves
         .SingleOrDefaultAsync(x => x.Id == notification.AggregateId, cancellationToken);
 
       if (move != null)

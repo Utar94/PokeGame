@@ -1,69 +1,77 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
 using PokeGame.Domain.Moves;
-using PokeGame.Domain.Moves.Events;
+using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Handlers.Moves
 {
-  internal abstract class SynchronizeMove
+  internal class SynchronizeMove
   {
-    protected SynchronizeMove(ReadContext readContext, IRepository<Move> repository)
+    private readonly ReadContext _readContext;
+    private readonly IRepository<Move> _repository;
+
+    public SynchronizeMove(ReadContext readContext, IRepository<Move> repository)
     {
-      ReadContext = readContext;
-      Repository = repository;
+      _readContext = readContext;
+      _repository = repository;
     }
 
-    protected ReadContext ReadContext { get; }
-    protected IRepository<Move> Repository { get; }
-
-    protected async Task SynchronizeAsync(Guid id, int version, CancellationToken cancellationToken)
+    public async Task<MoveEntity?> ExecuteAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-      Entities.Move? entity = await ReadContext.Moves
+      MoveEntity? entity = await _readContext.Moves
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-      if (entity == null)
+      if (entity != null && version.HasValue && entity.Version >= version.Value)
       {
-        entity = new Entities.Move { Id = id };
-        ReadContext.Moves.Add(entity);
-      }
-      else if (entity.Version >= version)
-      {
-        return;
+        return entity;
       }
 
-      Move move = await Repository.LoadAsync(id, version, cancellationToken)
-        ?? throw new EntityNotFoundException<Move>(id);
+      Move? move = await _repository.LoadAsync(id, version, cancellationToken);
+      if (move != null)
+      {
+        if (entity == null)
+        {
+          entity = new MoveEntity { Id = id };
+          _readContext.Moves.Add(entity);
+        }
 
-      entity.Synchronize(move);
+        entity.Synchronize(move);
 
-      await ReadContext.SaveChangesAsync(cancellationToken);
-    }
-  }
+        await _readContext.SaveChangesAsync(cancellationToken);
+      }
 
-  internal class MoveCreatedHandler : SynchronizeMove, INotificationHandler<MoveCreated>
-  {
-    public MoveCreatedHandler(ReadContext readContext, IRepository<Move> repository)
-      : base(readContext, repository)
-    {
-    }
-
-    public async Task Handle(MoveCreated notification, CancellationToken cancellationToken)
-    {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
-    }
-  }
-
-  internal class MoveUpdatedHandler : SynchronizeMove, INotificationHandler<MoveUpdated>
-  {
-    public MoveUpdatedHandler(ReadContext readContext, IRepository<Move> repository)
-      : base(readContext, repository)
-    {
+      return entity;
     }
 
-    public async Task Handle(MoveUpdated notification, CancellationToken cancellationToken)
+    public async Task<IEnumerable<MoveEntity>> ExecuteAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
     {
-      await SynchronizeAsync(notification.AggregateId, notification.Version, cancellationToken);
+      Dictionary<Guid, MoveEntity> entities = await _readContext.Moves
+        .Where(x => ids.Contains(x.Id))
+        .ToDictionaryAsync(x => x.Id, x => x, cancellationToken);
+
+      IEnumerable<Move> moves = await _repository.LoadAsync(ids, cancellationToken);
+      foreach (Move move in moves)
+      {
+        if (entities.TryGetValue(move.Id, out MoveEntity? entity))
+        {
+          if (entity.Version >= move.Version)
+          {
+            continue;
+          }
+        }
+        else
+        {
+          entity = new MoveEntity { Id = move.Id };
+          entities[entity.Id] = entity;
+          _readContext.Moves.Add(entity);
+        }
+
+        entity.Synchronize(move);
+      }
+
+      await _readContext.SaveChangesAsync(cancellationToken);
+
+      return entities.Values;
     }
   }
 }

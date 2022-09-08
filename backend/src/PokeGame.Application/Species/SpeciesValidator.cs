@@ -23,7 +23,7 @@ namespace PokeGame.Application.Species
         .MaximumLength(1000);
 
       RuleFor(x => x.GenderRatio)
-        .InclusiveBetween(0, 100);
+        .InclusiveBetween(0.0, 100.0);
 
       RuleFor(x => x.Height)
         .GreaterThan(0.0);
@@ -46,6 +46,7 @@ namespace PokeGame.Application.Species
 
       RuleForEach(x => x.BaseStatistics.Values)
         .GreaterThan((byte)0);
+
       RuleFor(x => x.EvYield)
         .Must(x => x.Values.Sum(y => y) <= 3);
     }

@@ -9,7 +9,7 @@ namespace PokeGame.Application.Abilities
     Task<AbilityModel> CreateAsync(CreateAbilityPayload payload, CancellationToken cancellationToken = default);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<AbilityModel?> GetAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<ListModel<AbilityModel>> GetAsync(string? search = null,
+    Task<ListModel<AbilityModel>> GetAsync(string? search = null, Guid? speciesId = null,
       AbilitySort? sort = null, bool desc = false,
       int? index = null, int? count = null,
       CancellationToken cancellationToken = default);

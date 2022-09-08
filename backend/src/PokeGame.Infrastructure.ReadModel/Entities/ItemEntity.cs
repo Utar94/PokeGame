@@ -1,10 +1,8 @@
-﻿using PokeGame.Domain;
-using PokeGame.Domain.Items;
-using PokeGame.Domain.Items.Payloads;
+﻿using PokeGame.Domain.Items;
 
 namespace PokeGame.Infrastructure.ReadModel.Entities
 {
-  internal class Item : Entity
+  internal class ItemEntity : Entity
   {
     public ItemCategory Category { get; set; }
 
@@ -16,9 +14,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; set; }
     public string? Reference { get; set; }
 
-    public List<Inventory> Inventory { get; set; } = new();
+    public List<InventoryEntity> Inventory { get; set; } = new();
 
-    public void Synchronize(Domain.Items.Item item)
+    public void Synchronize(Item item)
     {
       base.Synchronize(item);
 
