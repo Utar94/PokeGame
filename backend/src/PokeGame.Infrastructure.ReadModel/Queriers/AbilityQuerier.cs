@@ -26,12 +26,13 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       return ability == null ? null : _mapper.Map<AbilityModel>(ability);
     }
 
-    public async Task<ListModel<AbilityModel>> GetPagedAsync(string? search,
+    public async Task<ListModel<AbilityModel>> GetPagedAsync(string? search, Guid? speciesId,
       AbilitySort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<AbilityEntity> query = _abilities.AsNoTracking();
+      IQueryable<AbilityEntity> query = _abilities.AsNoTracking()
+        .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Species);
 
       if (search != null)
       {
@@ -44,6 +45,10 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
             query = query.Where(x => EF.Functions.ILike(x.Name, pattern));
           }
         }
+      }
+      if (speciesId.HasValue)
+      {
+        query = query.Where(x => x.SpeciesAbilities.Any(y => y.Species!.Id == speciesId.Value));
       }
 
       long total = await query.LongCountAsync(cancellationToken);

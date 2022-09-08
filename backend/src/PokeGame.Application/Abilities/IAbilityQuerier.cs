@@ -6,7 +6,7 @@ namespace PokeGame.Application.Abilities
   public interface IAbilityQuerier
   {
     Task<AbilityModel?> GetAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<ListModel<AbilityModel>> GetPagedAsync(string? search = null,
+    Task<ListModel<AbilityModel>> GetPagedAsync(string? search = null, Guid? speciesId = null,
       AbilitySort? sort = null, bool desc = false,
       int? index = null, int? count = null,
       CancellationToken cancellationToken = default);

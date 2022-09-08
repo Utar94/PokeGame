@@ -49,12 +49,12 @@ namespace PokeGame.Application.Abilities
       return await _querier.GetAsync(id, cancellationToken);
     }
 
-    public async Task<ListModel<AbilityModel>> GetAsync(string? search,
+    public async Task<ListModel<AbilityModel>> GetAsync(string? search, Guid? speciesId,
       AbilitySort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return await _querier.GetPagedAsync(search,
+      return await _querier.GetPagedAsync(search, speciesId,
         sort, desc,
         index, count,
         cancellationToken);

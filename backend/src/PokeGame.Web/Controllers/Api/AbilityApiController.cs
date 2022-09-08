@@ -38,12 +38,12 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<AbilitySummary>> GetAsync(string? search,
+    public async Task<ActionResult<AbilitySummary>> GetAsync(string? search, Guid? speciesId,
       AbilitySort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<AbilityModel> abilities = await _service.GetAsync(search,
+      ListModel<AbilityModel> abilities = await _service.GetAsync(search, speciesId,
         sort, desc,
         index, count,
         cancellationToken);
