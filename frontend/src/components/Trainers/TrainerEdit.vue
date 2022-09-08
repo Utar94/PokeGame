@@ -28,6 +28,7 @@
             <description-field v-model="description" />
           </b-tab>
           <inventory-tab v-if="trainer" :trainer="trainer" @updated="onInventoryUpdated" />
+          <pokedex-tab v-if="trainer" :trainerId="trainer.id" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <notes-field v-model="notes" />
@@ -41,6 +42,7 @@
 <script>
 import GenderSelect from './GenderSelect.vue'
 import InventoryTab from './InventoryTab.vue'
+import PokedexTab from './PokedexTab.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
 import { createTrainer, getTrainer, updateTrainer } from '@/api/trainers'
 
@@ -49,6 +51,7 @@ export default {
   components: {
     GenderSelect,
     InventoryTab,
+    PokedexTab,
     UserSelect
   },
   props: {

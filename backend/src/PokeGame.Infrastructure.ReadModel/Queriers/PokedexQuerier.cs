@@ -35,6 +35,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       CancellationToken cancellationToken)
     {
       IQueryable<PokedexEntity> query = _pokedex.AsNoTracking()
+        .Include(x => x.Species)
         .Where(x => x.Trainer!.Id == trainerId);
 
       if (hasCaught.HasValue)

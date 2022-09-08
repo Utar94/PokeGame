@@ -7,6 +7,7 @@ namespace PokeGame.Web.Models.Api.Pokedex
   {
     public PokedexSpecies(SpeciesModel species)
     {
+      Id = species.Id;
       Number = species.Number;
 
       PrimaryType = species.PrimaryType;
@@ -21,6 +22,7 @@ namespace PokeGame.Web.Models.Api.Pokedex
       Weight = species.Weight;
     }
 
+    public Guid Id { get; set; }
     public int Number { get; set; }
 
     public PokemonType PrimaryType { get; set; }

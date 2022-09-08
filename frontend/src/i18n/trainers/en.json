@@ -46,6 +46,27 @@
   "money": "Money",
   "newTitle": "Create trainer",
   "number": "Number",
+  "pokedex": {
+    "add": "Add entry",
+    "edit": "Edit entry",
+    "empty": "This list is empty.",
+    "hasCaught": "Caught",
+    "label": "Pokedex",
+    "remove": {
+      "confirm": "Do you really want to remove the following Pokedex entry?",
+      "success": "The Pokedex entry entry has been removed.",
+      "text": "Remove entry"
+    },
+    "sort": {
+      "options": {
+        "Height": "Height",
+        "Name": "Name",
+        "Number": "Number",
+        "UpdatedAt": "Updated on",
+        "Weight": "Weight"
+      }
+    }
+  },
   "sort": {
     "options": {
       "Name": "Name",

@@ -2,8 +2,8 @@
   <b-tab :title="$t('trainers.inventory.label')">
     <div class="my-2">
       <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
-      <icon-button class="mx-1" icon="plus" text="trainers.inventory.add" variant="success" v-b-modal.add />
-      <add-item-modal id="add" :trainer="trainer" @added="onAdded" @bought="onBought" />
+      <icon-button class="mx-1" icon="plus" text="trainers.inventory.add" variant="success" v-b-modal.addItem />
+      <add-item-modal id="addItem" :trainer="trainer" @added="onAdded" @bought="onBought" />
     </div>
     <b-row>
       <search-field class="col" v-model="search" />

@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Application", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Infrastructure", "src\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj", "{E015DC96-3AD5-4F38-AEB4-7093995164CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Infrastructure.ReadModel", "src\PokeGame.Infrastructure.ReadModel\PokeGame.Infrastructure.ReadModel.csproj", "{D3F4A875-3C7F-4DF3-8C2C-4C7AF23DD1DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Infrastructure.ReadModel", "src\PokeGame.Infrastructure.ReadModel\PokeGame.Infrastructure.ReadModel.csproj", "{D3F4A875-3C7F-4DF3-8C2C-4C7AF23DD1DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
