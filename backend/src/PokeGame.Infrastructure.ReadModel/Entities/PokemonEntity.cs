@@ -40,6 +40,8 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public void Synchronize(Pokemon pokemon)
     {
+      base.Synchronize(pokemon);
+
       Level = pokemon.Level;
       Experience = pokemon.Experience;
 

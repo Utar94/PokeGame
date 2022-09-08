@@ -22,7 +22,7 @@
             <th scope="col" v-t="'pokemon.identification'" />
             <th scope="col" v-t="'species.select.label'" />
             <th scope="col" v-t="'trainers.select.label'" />
-            <th scope="col" v-t="'pokemon.location'" />
+            <th scope="col" v-t="'pokemon.trainer.location'" />
             <th scope="col" v-t="'pokemon.heldItem'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
@@ -52,8 +52,8 @@
             </td>
             <td>
               <template v-if="item.position !== null">
-                <template v-if="item.box >= 0">{{ $t('pokemon.boxFormat', { box: item.box + 1, position: item.position + 1 }) }}</template>
-                <template v-else>{{ $t('pokemon.partyFormat', { position: item.position + 1 }) }}</template>
+                <template v-if="item.box !== null">{{ $t('pokemon.trainer.boxFormat', { box: item.box + 1, position: item.position + 1 }) }}</template>
+                <template v-else>{{ $t('pokemon.trainer.partyFormat', { position: item.position + 1 }) }}</template>
               </template>
               <template v-else>&mdash;</template>
             </td>

@@ -26,6 +26,10 @@
     "label": "Power Points",
     "unit": "PP"
   },
+  "select": {
+    "label": "Move",
+    "placeholder": "Select a move"
+  },
   "sort": {
     "options": {
       "Name": "Name",

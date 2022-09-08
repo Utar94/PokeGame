@@ -5,7 +5,7 @@ namespace PokeGame.Domain.Pokemon.Events
 {
   public class PokemonCreated : DomainEvent, INotification
   {
-    private PokemonCreated(
+    public PokemonCreated(
       byte baseFriendship,
       Dictionary<Statistic, byte> baseStatistics,
       double? genderRatio,

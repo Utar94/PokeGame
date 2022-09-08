@@ -92,7 +92,7 @@ namespace PokeGame.Application.Pokemon
         );
         When(x => x.Box != null, () =>
           RuleFor(x => x.Position)
-            .InclusiveBetween((byte)0, (byte)29)
+            .InclusiveBetween((byte)0, (byte)31)
         );
       });
 

@@ -99,7 +99,7 @@ export default {
     sortOptions() {
       return this.orderBy(
         Object.entries(this.$i18n.t('trainers.inventory.sort.options')).map(([value, text]) => ({ text, value })),
-        'value'
+        'text'
       )
     }
   },

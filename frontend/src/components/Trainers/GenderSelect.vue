@@ -41,7 +41,7 @@ export default {
     options() {
       return this.orderBy(
         Object.entries(this.$i18n.t('trainers.gender.options')).map(([value, text]) => ({ text, value })),
-        'value'
+        'text'
       )
     }
   }

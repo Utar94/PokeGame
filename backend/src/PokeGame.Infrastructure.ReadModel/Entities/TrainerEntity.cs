@@ -27,6 +27,8 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public void Synchronize(Trainer trainer)
     {
+      base.Synchronize(trainer);
+
       UserId = trainer.UserId;
 
       Region = trainer.Region;

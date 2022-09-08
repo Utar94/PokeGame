@@ -8,7 +8,9 @@
     :required="required"
     :value="value"
     @input="$emit('input', $event)"
-  />
+  >
+    <slot />
+  </form-select>
 </template>
 
 <script>
@@ -41,7 +43,7 @@ export default {
     options() {
       return this.orderBy(
         Object.entries(this.$i18n.t('pokemon.gender.options')).map(([value, text]) => ({ text, value })),
-        'value'
+        'text'
       )
     }
   }
