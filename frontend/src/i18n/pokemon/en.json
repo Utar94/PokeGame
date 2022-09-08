@@ -30,6 +30,10 @@
       "UpdatedAt": "Updated on"
     }
   },
+  "surname": {
+    "label": "Surname",
+    "placeholder": "Enter a surname"
+  },
   "title": "Pokémon",
   "updated": "The Pokémon has been updated."
 }

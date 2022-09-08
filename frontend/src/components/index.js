@@ -5,6 +5,7 @@ export default {
   AbilityEdit: () => import(/* webpackChunkName: "abilityEdit" */ './Abilities/AbilityEdit.vue'),
   AbilityList: () => import(/* webpackChunkName: "abilityList" */ './Abilities/AbilityList.vue'),
   AppFooter,
+  CreatePokemon: () => import(/* webpackChunkName: "createPokemon" */ './Pokemon/CreatePokemon.vue'),
   Home: () => import(/* webpackChunkName: "home" */ './Home.vue'),
   ItemEdit: () => import(/* webpackChunkName: "itemEdit" */ './Items/ItemEdit.vue'),
   ItemList: () => import(/* webpackChunkName: "itemList" */ './Items/ItemList.vue'),
