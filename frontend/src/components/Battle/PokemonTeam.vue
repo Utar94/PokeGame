@@ -10,7 +10,10 @@
           :class="{ clickable: !readonly, 'table-info': selected.includes(item.id) }"
           @click.prevent="$emit('toggled', item)"
         >
-          <td v-if="!readonly"><b-form-checkbox :checked="selected.includes(item.id)" size="lg" /></td>
+          <td>
+            <b-form-checkbox v-if="!readonly" :checked="selected.includes(item.id)" size="lg" />
+            <template v-else>{{ item.speed }}</template>
+          </td>
           <td>
             <template v-if="item.surname">
               {{ item.surname }}
@@ -19,15 +22,38 @@
             <gender-icon :gender="item.gender" />
             {{ $t('pokemon.levelFormat', { level: item.level }) }}
             {{ item.species.name }}
+            <template v-if="readonly">
+              <br />
+              <template v-if="item.trainer"><gender-icon :gender="item.trainer.gender" /> {{ item.trainer.name }}</template>
+              <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
+            </template>
           </td>
           <td>
+            {{ $t('battle.combatTracker.hpFormat', { current: item.currentHitPoints, max: item.maximumHitPoints }) }}
+            <template v-if="item.currentHitPoints < 1">
+              <br />
+              <font-awesome-icon icon="heartbeat" /> <strong>{{ $t('pokemon.fainted') }}</strong>
+            </template>
+            <template v-else-if="item.statusCondition"><br />{{ $t(`pokemon.condition.options.${item.statusCondition}`) }}</template>
+          </td>
+          <td v-if="readonly">
+            <a v-if="item.ability && item.ability.reference" :href="item.ability.reference" target="_blank">
+              <ability-info :ability="item.ability" />
+              <font-awesome-icon icon="external-link-alt" />
+            </a>
+            <ability-info v-else-if="item.ability" :ability="item.ability" />
+            <br v-if="item.ability && item.heldItem" />
+            <a v-if="item.heldItem && item.heldItem.reference" :href="item.heldItem.reference" target="_blank">
+              <held-item-info :item="item.heldItem" />
+              <font-awesome-icon icon="external-link-alt" />
+            </a>
+            <held-item-info v-else-if="item.heldItem" :item="item.heldItem" />
+          </td>
+          <td v-if="!readonly">
             <template v-if="item.trainer"><gender-icon :gender="item.trainer.gender" /> {{ item.trainer.name }}</template>
             <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
           </td>
-          <!-- TODO(fpion): Ability (if readonly) with Notes & Reference -->
-          <!-- TODO(fpion): Speed (if readonly) with Stage changes -->
-          <!-- TODO(fpion): Held Item (if readonly) with Notes & Reference -->
-          <!-- TODO(fpion): Use a Move (if readonly) -->
+          <!-- TODO(fpion): Use a Move (if readonly & not fainted) -->
           <!-- TODO(fpion): Switch Pokémon (if readonly) -->
         </tr>
       </tbody>
@@ -36,8 +62,15 @@
 </template>
 
 <script>
+import AbilityInfo from './AbilityInfo.vue'
+import HeldItemInfo from './HeldItemInfo.vue'
+
 export default {
   name: 'PokemonTeam',
+  components: {
+    AbilityInfo,
+    HeldItemInfo
+  },
   props: {
     max: {
       type: Number,

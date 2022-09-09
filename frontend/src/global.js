@@ -57,10 +57,10 @@ Vue.mixin({
       }
       this.toast('errorToast.title', 'errorToast.body', 'danger')
     },
-    orderBy(items, key = null) {
+    orderBy(items, key = null, desc = false) {
       return typeof key !== 'undefined' && key !== null
-        ? [...items].sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0))
-        : [...items].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+        ? [...items].sort((a, b) => (a[key] < b[key] ? (desc ? 1 : -1) : a[key] > b[key] ? (desc ? -1 : 1) : 0))
+        : [...items].sort((a, b) => (a < b ? (desc ? 1 : -1) : a > b ? (desc ? -1 : 1) : 0))
     },
     roll(roll) {
       const dice = roll.split('d')

@@ -23,6 +23,7 @@
         </pokemon-team>
       </b-row>
     </template>
+    <icon-button icon="chevron-left" text="battle.pokemonSelection.title" variant="primary" @click="onPrevious" />
   </b-container>
 </template>
 
@@ -59,6 +60,11 @@ export default {
     },
     playerTrainers() {
       return this.battle.players.trainers.map(id => this.trainers[id])
+    }
+  },
+  methods: {
+    onPrevious() {
+      this.$store.commit('setBattleStep', 'PokemonSelection')
     }
   },
   async created() {

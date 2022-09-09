@@ -1,5 +1,6 @@
 ﻿using PokeGame.Application.Pokemon.Models;
 using PokeGame.Domain.Pokemon;
+using PokeGame.Web.Models.Api.Ability;
 using PokeGame.Web.Models.Api.Items;
 using PokeGame.Web.Models.Api.Species;
 using PokeGame.Web.Models.Api.Trainer;
@@ -14,13 +15,24 @@ namespace PokeGame.Web.Models.Api.Pokemon
       {
         throw new ArgumentException($"The {nameof(model.Species)} is required.", nameof(model));
       }
+      if (model.Ability == null)
+      {
+        throw new ArgumentException($"The {nameof(model.Ability)} is required.", nameof(model));
+      }
 
       Species = new SpeciesSummary(model.Species);
+      Ability = new AbilitySummary(model.Ability);
 
       Level = model.Level;
 
       Gender = model.Gender;
       Surname = model.Surname;
+
+      Speed = model.Statistics.SingleOrDefault(x => x.Statistic == Statistic.Speed)?.Value ?? 0;
+
+      CurrentHitPoints = model.CurrentHitPoints;
+      MaximumHitPoints = model.Statistics.SingleOrDefault(x => x.Statistic == Statistic.HP)?.Value ?? 0;
+      StatusCondition = model.StatusCondition;
 
       if (model.HeldItem != null)
       {
@@ -36,11 +48,18 @@ namespace PokeGame.Web.Models.Api.Pokemon
     }
 
     public SpeciesSummary Species { get; set; } = null!;
+    public AbilitySummary Ability { get; set; } = null!;
 
     public byte Level { get; set; }
 
     public PokemonGender Gender { get; set; }
     public string? Surname { get; set; }
+
+    public short Speed { get; set; }
+
+    public short CurrentHitPoints { get; set; }
+    public short MaximumHitPoints { get; set; }
+    public StatusCondition? StatusCondition { get; set; }
 
     public ItemSummary? HeldItem { get; set; }
 

@@ -30,7 +30,9 @@ export default {
   },
   computed: {
     ...mapState({
+      opponentPokemonIds: state => state.battle.opponents.pokemon,
       opponentTrainerIds: state => state.battle.opponents.trainers,
+      playerPokemonIds: state => state.battle.players.pokemon,
       playerTrainerIds: state => state.battle.players.trainers
     }),
     isValid() {
@@ -52,12 +54,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setBattlePokemon', 'resetBattleTrainers']),
+    ...mapActions(['setBattlePokemon', 'resetBattle']),
     onNext() {
       this.setBattlePokemon({ opponents: this.opponents, players: this.players })
     },
     onPrevious() {
-      this.resetBattleTrainers()
+      this.resetBattle()
     },
     toggleOpponent({ id }) {
       const index = this.opponents.findIndex(value => value === id)
@@ -89,6 +91,22 @@ export default {
       }
     } catch (e) {
       this.handleError(e)
+    }
+  },
+  watch: {
+    opponentPokemonIds: {
+      deep: true,
+      immediate: true,
+      handler(opponents) {
+        this.opponents = opponents
+      }
+    },
+    playerPokemonIds: {
+      deep: true,
+      immediate: true,
+      handler(players) {
+        this.players = players
+      }
     }
   }
 }

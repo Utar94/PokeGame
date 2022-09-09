@@ -26,9 +26,9 @@
         <tbody>
           <tr v-for="item in species" :key="item.id">
             <td>
-              <b-link :href="`/species/${item.id}`">{{ item.number }}</b-link>
+              <b-link :href="`/species/${item.id}`">{{ item.name }}</b-link>
             </td>
-            <td v-text="item.name" />
+            <td v-text="item.number" />
             <td>
               {{ $t(`type.options.${item.primaryType}`) }}
               <template v-if="item.secondaryType">

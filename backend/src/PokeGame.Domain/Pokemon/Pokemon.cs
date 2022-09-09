@@ -35,6 +35,9 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
     public Dictionary<Statistic, short> Statistics { get; private set; } = new();
 
+    public short CurrentHitPoints { get; private set; }
+    public StatusCondition? StatusCondition { get; private set; }
+
     public List<PokemonMove> Moves { get; private set; } = new();
     public Guid? HeldItemId { get; private set; }
 
@@ -51,21 +54,23 @@ namespace PokeGame.Domain.Pokemon
 
     protected virtual void Apply(PokemonCreated @event)
     {
-      SpeciesId = @event.Payload.SpeciesId;
-      AbilityId = @event.Payload.AbilityId;
+      CreatePokemonPayload payload = @event.Payload;
+
+      SpeciesId = payload.SpeciesId;
+      AbilityId = payload.AbilityId;
 
       BaseFriendship = @event.BaseFriendship;
       LevelingRate = @event.LevelingRate;
-      Level = @event.Payload.Level;
-      Experience = @event.Payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
-      Friendship = @event.Payload.Friendship ?? BaseFriendship;
+      Level = payload.Level;
+      Experience = payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
+      Friendship = payload.Friendship ?? BaseFriendship;
 
       GenderRatio = @event.GenderRatio;
-      Gender = @event.Payload.Gender;
-      Nature = Nature.GetNature(@event.Payload.Nature, nameof(@event.Payload.Nature));
+      Gender = payload.Gender;
+      Nature = Nature.GetNature(payload.Nature, nameof(payload.Nature));
       SpeciesName = @event.SpeciesName;
-      Surname = @event.Payload.Surname?.CleanTrim();
-      Description = @event.Payload.Description?.CleanTrim();
+      Surname = payload.Surname?.CleanTrim();
+      Description = payload.Description?.CleanTrim();
 
       BaseStatistics.Clear();
       foreach (var (statistic, value) in @event.BaseStatistics)
@@ -73,40 +78,44 @@ namespace PokeGame.Domain.Pokemon
         BaseStatistics[statistic] = value;
       }
       IndividualValues.Clear();
-      if (@event.Payload.IndividualValues?.Any() == true)
+      if (payload.IndividualValues?.Any() == true)
       {
-        foreach (StatisticValuePayload individualValue in @event.Payload.IndividualValues)
+        foreach (StatisticValuePayload individualValue in payload.IndividualValues)
         {
           IndividualValues[individualValue.Statistic] = individualValue.Value;
         }
       }
       EffortValues.Clear();
-      if (@event.Payload.EffortValues?.Any() == true)
+      if (payload.EffortValues?.Any() == true)
       {
-        foreach (StatisticValuePayload effortValue in @event.Payload.EffortValues)
+        foreach (StatisticValuePayload effortValue in payload.EffortValues)
         {
           EffortValues[effortValue.Statistic] = effortValue.Value;
         }
       }
       ComputeStatistics();
 
+      CurrentHitPoints = payload.CurrentHitPoints
+        ?? (Statistics.TryGetValue(Statistic.HP, out short totalHitPoints) ? totalHitPoints : (short)0);
+      StatusCondition = payload.StatusCondition;
+
       Moves.Clear();
-      if (@event.Payload.Moves?.Any() == true)
+      if (payload.Moves?.Any() == true)
       {
-        Moves.AddRange(@event.Payload.Moves.Select(move => new PokemonMove(move)));
+        Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
       }
-      HeldItemId = @event.Payload.HeldItemId;
+      HeldItemId = payload.HeldItemId;
 
-      History = @event.Payload.History == null ? null : new(@event.Payload.History);
-      if (@event.Payload.History != null && OriginalTrainerId == null)
+      History = payload.History == null ? null : new(payload.History);
+      if (payload.History != null && OriginalTrainerId == null)
       {
-        OriginalTrainerId = @event.Payload.History.TrainerId;
+        OriginalTrainerId = payload.History.TrainerId;
       }
-      Position = @event.Payload.Position;
-      Box = @event.Payload.Box;
+      Position = payload.Position;
+      Box = payload.Box;
 
-      Notes = @event.Payload.Notes?.CleanTrim();
-      Reference = @event.Payload.Reference;
+      Notes = payload.Notes?.CleanTrim();
+      Reference = payload.Reference;
     }
     protected virtual void Apply(PokemonDeleted @event)
     {
@@ -114,10 +123,12 @@ namespace PokeGame.Domain.Pokemon
     }
     protected virtual void Apply(PokemonUpdated @event)
     {
-      Description = @event.Payload.Description?.CleanTrim();
+      UpdatePokemonPayload payload = @event.Payload;
 
-      Notes = @event.Payload.Notes?.CleanTrim();
-      Reference = @event.Payload.Reference;
+      Description = payload.Description?.CleanTrim();
+
+      Notes = payload.Notes?.CleanTrim();
+      Reference = payload.Reference;
     }
 
     private void ComputeStatistics()

@@ -20,14 +20,15 @@ export default new Vuex.Store({
         pokemon: [],
         trainers: []
       },
-      round: 0,
       step: 'TrainerSelection'
     }
   },
   actions: {
-    resetBattleTrainers({ commit }) {
+    resetBattle({ commit }) {
       commit('setPlayerTrainers', [])
       commit('setOpponentTrainers', [])
+      commit('setPlayerPokemon', [])
+      commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')
     },
     setBattlePokemon({ commit }, { opponents, players }) {

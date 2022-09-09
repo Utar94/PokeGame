@@ -10,7 +10,9 @@ This project is setup to use migrations. All the commands below must be executed
 
 To create a new migration, execute the following command. Do not forget to specify a name!
 
-`dotnet ef migrations add <YOUR_MIGRATION_NAME> --startup-project ../PokeGame.Web`
+`dotnet ef migrations add <YOUR_MIGRATION_NAME> --startup-project ../PokeGame.Web --context EventContext`
+
+`dotnet ef migrations add <YOUR_MIGRATION_NAME> --startup-project ../PokeGame.Web --context ReadContext`
 
 ### Remove a migration
 
