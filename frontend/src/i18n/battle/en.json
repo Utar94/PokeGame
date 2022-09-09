@@ -1,4 +1,7 @@
 {
+  "combatTracker": {
+    "title": "Combat Tracker"
+  },
   "opponents": "Opponents",
   "players": "Players",
   "pokemonSelection": {
