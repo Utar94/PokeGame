@@ -1,0 +1,11 @@
+{
+  "opponents": "Opponents",
+  "players": "Players",
+  "pokemonSelection": {
+    "title": "Pokémon Selection"
+  },
+  "title": "Battle!",
+  "trainerSelection": {
+    "title": "Trainer Selection"
+  }
+}

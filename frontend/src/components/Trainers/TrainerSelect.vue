@@ -1,14 +1,7 @@
 <template>
-  <form-select
-    :disabled="disabled"
-    :id="id"
-    :label="label"
-    :options="options"
-    :placeholder="placeholder"
-    :required="required"
-    :value="value"
-    @input="$emit('input', $event)"
-  />
+  <form-select :disabled="disabled" :id="id" :label="label" :options="options" :placeholder="placeholder" :required="required" :value="value" @input="onInput">
+    <slot />
+  </form-select>
 </template>
 
 <script>
@@ -56,6 +49,15 @@ export default {
           text: name,
           value: id
         }))
+    }
+  },
+  methods: {
+    onInput($event) {
+      this.$emit('input', $event)
+      const trainer = this.trainers.find(({ id }) => id === $event)
+      if (trainer) {
+        this.$emit('trainer', trainer)
+      }
     }
   },
   async created() {

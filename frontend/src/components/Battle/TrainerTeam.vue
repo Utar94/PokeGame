@@ -1,0 +1,65 @@
+<template>
+  <div>
+    <h3 v-if="title" v-text="title" />
+    <trainer-select :disabled="trainers.length === 3" :exclude="exclude" :id="id" :value="trainer ? trainer.id : null" @trainer="trainer = $event">
+      <b-input-group-append>
+        <icon-button :disabled="!trainer" icon="plus" variant="primary" @click="onAdd" />
+      </b-input-group-append>
+    </trainer-select>
+    <table class="table table-striped">
+      <tbody>
+        <tr v-for="(trainer, index) in trainers" :key="trainer.id">
+          <td>
+            <font-awesome-icon v-if="trainer.gender === 'Male'" icon="mars" />
+            <font-awesome-icon v-else-if="trainer.gender === 'Female'" icon="venus" />
+            <font-awesome-icon v-else icon="neuter" />
+            {{ trainer.name }}
+          </td>
+          <td v-text="trainer.number" />
+          <td>{{ $t(`region.options.${trainer.region}`) }}</td>
+          <td><icon-button icon="times" variant="danger" @click="$emit('removed', index)" /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
+
+export default {
+  name: 'TrainerTeam',
+  components: {
+    TrainerSelect
+  },
+  props: {
+    exclude: {
+      type: Array,
+      default: () => []
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    trainers: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      trainer: null
+    }
+  },
+  methods: {
+    onAdd() {
+      this.$emit('added', this.trainer)
+      this.trainer = null
+    }
+  }
+}
+</script>
