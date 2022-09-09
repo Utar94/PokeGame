@@ -19,9 +19,8 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
-            <th scope="col" v-t="'trainers.number'" />
             <th scope="col" v-t="'name.label'" />
-            <th scope="col" v-t="'trainers.gender.label'" />
+            <th scope="col" v-t="'trainers.number'" />
             <th scope="col" v-t="'region.label'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
@@ -30,10 +29,9 @@
         <tbody>
           <tr v-for="trainer in trainers" :key="trainer.id">
             <td>
-              <b-link :href="`/trainers/${trainer.id}`">{{ trainer.number }}</b-link>
+              <b-link :href="`/trainers/${trainer.id}`"><gender-icon :gender="trainer.name" /> {{ trainer.name }}</b-link>
             </td>
-            <td v-text="trainer.name" />
-            <td>{{ $t(`trainers.gender.options.${trainer.gender}`) }}</td>
+            <td v-text="trainer.number" />
             <td>{{ $t(`region.options.${trainer.region}`) }}</td>
             <td><status-cell :actor="trainer.updatedBy" :date="trainer.updatedAt" /></td>
             <td>

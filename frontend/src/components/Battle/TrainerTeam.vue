@@ -9,12 +9,7 @@
     <table class="table table-striped">
       <tbody>
         <tr v-for="(trainer, index) in trainers" :key="trainer.id">
-          <td>
-            <font-awesome-icon v-if="trainer.gender === 'Male'" icon="mars" />
-            <font-awesome-icon v-else-if="trainer.gender === 'Female'" icon="venus" />
-            <font-awesome-icon v-else icon="neuter" />
-            {{ trainer.name }}
-          </td>
+          <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
           <td v-text="trainer.number" />
           <td>{{ $t(`region.options.${trainer.region}`) }}</td>
           <td><icon-button icon="times" variant="danger" @click="$emit('removed', index)" /></td>

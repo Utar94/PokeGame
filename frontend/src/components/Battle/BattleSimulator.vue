@@ -1,16 +1,19 @@
 <template>
-  <b-container>
+  <div>
     <trainer-selection v-if="step === 'TrainerSelection'" />
-  </b-container>
+    <pokemon-selection v-else-if="step === 'PokemonSelection'" />
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import PokemonSelection from './PokemonSelection.vue'
 import TrainerSelection from './TrainerSelection.vue'
 
 export default {
   name: 'BattleSimulator',
   components: {
+    PokemonSelection,
     TrainerSelection
   },
   computed: {
