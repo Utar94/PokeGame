@@ -1,0 +1,60 @@
+<template>
+  <b-container>
+    <h1 v-t="'battle.trainerSelection.title'" />
+    <b-row>
+      <trainer-team class="col" :exclude="exclude" id="players" :title="$t('battle.players')" :trainers="players" @added="addPlayer" @removed="removePlayer" />
+      <trainer-team
+        class="col"
+        :exclude="exclude"
+        id="opponents"
+        :title="$t('battle.opponents')"
+        :trainers="opponents"
+        @added="addOpponent"
+        @removed="removeOpponent"
+      />
+    </b-row>
+    <icon-button :disabled="!players.length" icon="chevron-right" text="battle.pokemonSelection.title" variant="primary" @click="onNext" />
+  </b-container>
+</template>
+
+<script>
+import Vue from 'vue'
+import { mapActions } from 'vuex'
+import TrainerTeam from './TrainerTeam.vue'
+
+export default {
+  name: 'TrainerSelection',
+  components: {
+    TrainerTeam
+  },
+  data() {
+    return {
+      opponents: [],
+      players: []
+    }
+  },
+  computed: {
+    exclude() {
+      return this.players.map(({ id }) => id).concat(this.opponents.map(({ id }) => id))
+    }
+  },
+  methods: {
+    ...mapActions(['setTrainers']),
+    addOpponent(trainer) {
+      this.opponents.push(trainer)
+    },
+    addPlayer(trainer) {
+      this.players.push(trainer)
+    },
+    onNext() {
+      this.setTrainers({ opponents: this.opponents, players: this.players })
+    },
+    removeOpponent(index) {
+      Vue.delete(this.opponents, index)
+    },
+    removePlayer(index) {
+      Vue.delete(this.players, index)
+    }
+  }
+}
+</script>

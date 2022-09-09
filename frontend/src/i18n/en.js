@@ -1,5 +1,6 @@
 import shared from './en.json'
 import abilities from './abilities/en.json'
+import battle from './battle/en.json'
 import configurations from './configurations/en.json'
 import items from './items/en.json'
 import moves from './moves/en.json'
@@ -11,6 +12,7 @@ import users from './users/en.json'
 export default {
   ...shared,
   abilities,
+  battle,
   configurations,
   items,
   moves,
