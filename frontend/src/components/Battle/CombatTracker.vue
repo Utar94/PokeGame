@@ -50,13 +50,21 @@ export default {
   computed: {
     ...mapState(['battle']),
     opponentPokemon() {
-      return this.battle.opponents.pokemon.map(id => this.pokemon[id])
+      return this.orderBy(
+        this.battle.opponents.pokemon.map(id => this.pokemon[id]),
+        'speed',
+        true
+      )
     },
     opponentTrainers() {
       return this.battle.opponents.trainers.map(id => this.trainers[id])
     },
     playerPokemon() {
-      return this.battle.players.pokemon.map(id => this.pokemon[id])
+      return this.orderBy(
+        this.battle.players.pokemon.map(id => this.pokemon[id]),
+        'speed',
+        true
+      )
     },
     playerTrainers() {
       return this.battle.players.trainers.map(id => this.trainers[id])

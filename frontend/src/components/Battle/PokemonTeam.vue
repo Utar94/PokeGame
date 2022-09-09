@@ -28,14 +28,9 @@
               <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
             </template>
           </td>
-          <td>
-            {{ $t('battle.combatTracker.hpFormat', { current: item.currentHitPoints, max: item.maximumHitPoints }) }}
-            <template v-if="item.currentHitPoints < 1">
-              <br />
-              <font-awesome-icon icon="heartbeat" /> <strong>{{ $t('pokemon.fainted') }}</strong>
-            </template>
-            <template v-else-if="item.statusCondition"><br />{{ $t(`pokemon.condition.options.${item.statusCondition}`) }}</template>
-          </td>
+          <td><pokemon-condition :pokemon="item" /></td>
+          <!-- TODO(fpion): volatile conditions -->
+          <!-- TODO(fpion): stat Stage changes -->
           <td v-if="readonly">
             <a v-if="item.ability && item.ability.reference" :href="item.ability.reference" target="_blank">
               <ability-info :ability="item.ability" />
@@ -64,12 +59,14 @@
 <script>
 import AbilityInfo from './AbilityInfo.vue'
 import HeldItemInfo from './HeldItemInfo.vue'
+import PokemonCondition from './PokemonCondition.vue'
 
 export default {
   name: 'PokemonTeam',
   components: {
     AbilityInfo,
-    HeldItemInfo
+    HeldItemInfo,
+    PokemonCondition
   },
   props: {
     max: {
