@@ -88,5 +88,6 @@
     "position": "Position",
     "title": "Trainer"
   },
-  "updated": "The Pokémon has been updated."
+  "updated": "The Pokémon has been updated.",
+  "wild": "Wild Pokémon"
 }

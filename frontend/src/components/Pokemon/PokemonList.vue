@@ -32,7 +32,7 @@
           <tr v-for="item in pokemon" :key="item.id">
             <td>
               <a :href="`/pokemon/${item.id}`">
-                <font-awesome-icon :icon="item.gender === 'Male' ? 'mars' : item.gender === 'Female' ? 'venus' : 'question'" />
+                <gender-icon :gender="item.gender" />
                 {{ item.surname || item.species.name }}
                 {{ $t('pokemon.levelFormat', { level: item.level }) }}
               </a>

@@ -8,6 +8,7 @@ import FormField from './components/shared/FormField.vue'
 import FormSelect from './components/shared/FormSelect.vue'
 import FormTextarea from './components/shared/FormTextarea.vue'
 import FormUrl from './components/shared/FormUrl.vue'
+import GenderIcon from './components/shared/GenderIcon.vue'
 import IconButton from './components/shared/IconButton.vue'
 import IconSubmit from './components/shared/IconSubmit.vue'
 import LocaleSelect from './components/shared/LocaleSelect.vue'
@@ -30,6 +31,7 @@ Vue.component('form-field', FormField)
 Vue.component('form-select', FormSelect)
 Vue.component('form-textarea', FormTextarea)
 Vue.component('form-url', FormUrl)
+Vue.component('gender-icon', GenderIcon)
 Vue.component('icon-button', IconButton)
 Vue.component('icon-submit', IconSubmit)
 Vue.component('locale-select', LocaleSelect)

@@ -35,11 +35,17 @@ export default {
   },
   computed: {
     exclude() {
-      return this.players.map(({ id }) => id).concat(this.opponents.map(({ id }) => id))
+      return this.playerIds.concat(this.opponentIds)
+    },
+    opponentIds() {
+      return this.opponents.map(({ id }) => id)
+    },
+    playerIds() {
+      return this.players.map(({ id }) => id)
     }
   },
   methods: {
-    ...mapActions(['setTrainers']),
+    ...mapActions(['setBattleTrainers']),
     addOpponent(trainer) {
       this.opponents.push(trainer)
     },
@@ -47,7 +53,7 @@ export default {
       this.players.push(trainer)
     },
     onNext() {
-      this.setTrainers({ opponents: this.opponents, players: this.players })
+      this.setBattleTrainers({ opponents: this.opponentIds, players: this.playerIds })
     },
     removeOpponent(index) {
       Vue.delete(this.opponents, index)
