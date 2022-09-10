@@ -35,6 +35,7 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
     public Dictionary<Statistic, short> Statistics { get; private set; } = new();
 
+    public short MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out short maximumHitPoints) ? maximumHitPoints : (short)0;
     public short CurrentHitPoints { get; private set; }
     public StatusCondition? StatusCondition { get; private set; }
 
@@ -51,6 +52,8 @@ namespace PokeGame.Domain.Pokemon
 
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
+
+    public void Heal(short restoreHitPoints, bool removeCondition) => ApplyChange(new PokemonHealed(restoreHitPoints, removeCondition));
 
     protected virtual void Apply(PokemonCreated @event)
     {
@@ -120,6 +123,19 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonDeleted @event)
     {
       Delete(@event);
+    }
+    protected virtual void Apply(PokemonHealed @event)
+    {
+      CurrentHitPoints += @event.RestoreHitPoints;
+      if (CurrentHitPoints > MaximumHitPoints)
+      {
+        CurrentHitPoints = MaximumHitPoints;
+      }
+
+      if (@event.RemoveCondition)
+      {
+        StatusCondition = null;
+      }
     }
     protected virtual void Apply(PokemonUpdated @event)
     {

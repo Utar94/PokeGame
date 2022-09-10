@@ -73,5 +73,11 @@ namespace PokeGame.Web.Controllers.Api
     {
       return Ok(await _service.UpdateAsync(id, payload, cancellationToken));
     }
+
+    [HttpPatch("{id}/heal")]
+    public async Task<ActionResult<PokemonModel>> HealAsync(Guid id, [FromBody] HealPokemonPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _service.HealAsync(id, payload.RestoreHitPoints, payload.RemoveCondition, cancellationToken));
+    }
   }
 }

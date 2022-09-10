@@ -62,6 +62,9 @@ namespace PokeGame.Application.Pokemon
       RuleForEach(x => x.Statistics.Values)
         .InclusiveBetween((short)0, (short)999);
 
+      RuleFor(x => x.CurrentHitPoints)
+        .SetValidator(x => new CurrentHitPointsValidator(x));
+
       RuleFor(x => x.Moves)
         .Must(moves => moves.GroupBy(y => y.MoveId).Count() == moves.Count
           && moves.GroupBy(y => y.Position).Count() == moves.Count);

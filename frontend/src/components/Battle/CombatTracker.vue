@@ -4,10 +4,10 @@
     <template v-if="Object.keys(trainers).length">
       <h3 v-t="'trainers.title'" />
       <b-row>
-        <trainer-team class="col" id="playerTrainers" :trainers="playerTrainers">
+        <trainer-team class="col" id="playerTrainers" :pokemon="playerPokemon" :trainers="playerTrainers" @pokemonUpdated="refreshPokemon">
           <template #title><h5 v-t="'battle.players'" /></template>
         </trainer-team>
-        <trainer-team class="col" id="opponentTrainers" :trainers="opponentTrainers">
+        <trainer-team class="col" id="opponentTrainers" :pokemon="opponentPokemon" :trainers="opponentTrainers" @pokemonUpdated="refreshPokemon">
           <template #title><h5 v-t="'battle.opponents'" /></template>
         </trainer-team>
       </b-row>
@@ -73,21 +73,31 @@ export default {
   methods: {
     onPrevious() {
       this.$store.commit('setBattleStep', 'PokemonSelection')
+    },
+    async refreshPokemon() {
+      try {
+        const { data } = await getPokemonList({ sort: 'Name', desc: false })
+        for (const item of data.items) {
+          Vue.set(this.pokemon, item.id, item)
+        }
+      } catch (e) {
+        this.handleError(e)
+      }
+    },
+    async refreshTrainers() {
+      try {
+        const { data } = await getTrainers({ sort: 'Name', desc: false })
+        for (const trainer of data.items) {
+          Vue.set(this.trainers, trainer.id, trainer)
+        }
+      } catch (e) {
+        this.handleError(e)
+      }
     }
   },
-  async created() {
-    try {
-      const trainers = await getTrainers({ sort: 'Name', desc: false })
-      for (const item of trainers.data.items) {
-        Vue.set(this.trainers, item.id, item)
-      }
-      const pokemon = await getPokemonList({ sort: 'Name', desc: false })
-      for (const item of pokemon.data.items) {
-        Vue.set(this.pokemon, item.id, item)
-      }
-    } catch (e) {
-      this.handleError(e)
-    }
+  created() {
+    this.refreshTrainers()
+    this.refreshPokemon()
   }
 }
 </script>

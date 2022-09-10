@@ -14,6 +14,7 @@ namespace PokeGame.Application.Pokemon
       PokemonSort? sort = null, bool desc = false,
       int? index = null, int? count = null,
       CancellationToken cancellationToken = default);
+    Task<PokemonModel> HealAsync(Guid id, short restoreHitPoints = 0, bool removeCondition = false, CancellationToken cancellationToken = default);
     Task<PokemonModel> UpdateAsync(Guid id, UpdatePokemonPayload payload, CancellationToken cancellationToken = default);
   }
 }

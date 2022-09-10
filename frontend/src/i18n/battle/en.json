@@ -8,8 +8,11 @@
   "pokemonSelection": {
     "title": "Pokémon Selection"
   },
+  "removeCondition": "Remove Condition",
+  "restoreHitPoints": "Restore HP",
   "title": "Battle!",
   "trainerSelection": {
     "title": "Trainer Selection"
-  }
+  },
+  "useItem": "Use an Item"
 }

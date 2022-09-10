@@ -20,8 +20,13 @@
           <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
           <td v-text="trainer.number" />
           <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-          <td v-if="!readonly"><icon-button icon="times" variant="danger" @click="$emit('removed', index)" /></td>
-          <!-- TODO(fpion): Use an Item (if readonly) -->
+          <td>
+            <template v-if="readonly">
+              <icon-button icon="shopping-cart" text="battle.useItem" variant="primary" v-b-modal="`useItem_${trainer.id}`" />
+              <use-item-modal :id="`useItem_${trainer.id}`" :pokemon="pokemon" :trainerId="trainer.id" @pokemonUpdated="$emit('pokemonUpdated', $event)" />
+            </template>
+            <icon-button v-else icon="times" variant="danger" @click="$emit('removed', index)" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -30,11 +35,13 @@
 
 <script>
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
+import UseItemModal from './UseItemModal.vue'
 
 export default {
   name: 'TrainerTeam',
   components: {
-    TrainerSelect
+    TrainerSelect,
+    UseItemModal
   },
   props: {
     exclude: {
@@ -44,6 +51,10 @@ export default {
     id: {
       type: String,
       required: true
+    },
+    pokemon: {
+      type: Array,
+      default: () => []
     },
     title: {
       type: String,
