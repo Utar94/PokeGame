@@ -24,6 +24,9 @@ namespace PokeGame.Application.Pokemon.Models
     public IEnumerable<StatisticValueModel> EffortValues { get; set; } = Enumerable.Empty<StatisticValueModel>();
     public IEnumerable<PokemonStatisticModel> Statistics { get; set; } = Enumerable.Empty<PokemonStatisticModel>();
 
+    public short CurrentHitPoints { get; set; }
+    public StatusCondition? StatusCondition { get; set; }
+
     public IEnumerable<PokemonMoveModel> Moves { get; set; } = Enumerable.Empty<PokemonMoveModel>();
     public ItemModel? HeldItem { get; set; }
 

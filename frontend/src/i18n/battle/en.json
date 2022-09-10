@@ -1,4 +1,8 @@
 {
+  "combatTracker": {
+    "hpFormat": "HP: {current}/{max}",
+    "title": "Combat Tracker"
+  },
   "opponents": "Opponents",
   "players": "Players",
   "pokemonSelection": {

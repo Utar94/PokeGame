@@ -1,4 +1,13 @@
 {
+  "condition": {
+    "options": {
+      "Burn": "Burn",
+      "Freeze": "Freeze",
+      "Paralysis": "Paralysis",
+      "Poison": "Poison",
+      "Sleep": "Sleep"
+    }
+  },
   "created": "The Pokémon has been created.",
   "delete": {
     "confirm": "Do you really want to delete the following Pokémon?",
@@ -7,6 +16,7 @@
   },
   "editTitle": "Edit Pokémon: {name}",
   "empty": "This list is empty.",
+  "fainted": "Fainted",
   "gender": {
     "label": "Gender",
     "options": {

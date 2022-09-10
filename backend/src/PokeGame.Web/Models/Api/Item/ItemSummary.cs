@@ -8,8 +8,14 @@ namespace PokeGame.Web.Models.Api.Items
     public ItemSummary(ItemModel model) : base(model)
     {
       Category = model.Category;
+
       Price = model.Price;
+
       Name = model.Name;
+      Description = model.Description;
+
+      Notes = model.Notes;
+      Reference = model.Reference;
     }
 
     public ItemCategory Category { get; set; }
@@ -17,5 +23,9 @@ namespace PokeGame.Web.Models.Api.Items
     public int? Price { get; set; }
 
     public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+
+    public string? Notes { get; set; }
+    public string? Reference { get; set; }
   }
 }

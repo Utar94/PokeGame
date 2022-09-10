@@ -19,6 +19,9 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public IEnumerable<StatisticValuePayload>? IndividualValues { get; set; }
     public IEnumerable<StatisticValuePayload>? EffortValues { get; set; }
 
+    public short? CurrentHitPoints { get; set; }
+    public StatusCondition? StatusCondition { get; set; }
+
     public IEnumerable<PokemonMovePayload>? Moves { get; set; }
     public Guid? HeldItemId { get; set; }
 
