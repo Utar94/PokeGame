@@ -121,6 +121,20 @@ namespace PokeGame.Application.Pokemon
         cancellationToken);
     }
 
+    public async Task<PokemonModel> HealAsync(Guid id, short restoreHitPoints, bool removeCondition, CancellationToken cancellationToken = default)
+    {
+      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(id, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(id);
+
+      pokemon.Heal(restoreHitPoints, removeCondition);
+      _validator.ValidateAndThrow(pokemon);
+
+      await _repository.SaveAsync(pokemon, cancellationToken);
+
+      return await _querier.GetAsync(pokemon.Id, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
+    }
+
     public async Task<PokemonModel> UpdateAsync(Guid id, UpdatePokemonPayload payload, CancellationToken cancellationToken)
     {
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(id, cancellationToken)

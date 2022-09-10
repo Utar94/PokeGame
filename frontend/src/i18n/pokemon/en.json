@@ -70,6 +70,10 @@
     "placeholder": "Select a nature"
   },
   "newTitle": "Create Pokémon",
+  "select": {
+    "label": "Pokémon",
+    "placeholder": "Select a Pokémon"
+  },
   "sort": {
     "options": {
       "Level": "Level",

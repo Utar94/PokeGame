@@ -29,7 +29,7 @@
         <tbody>
           <tr v-for="trainer in trainers" :key="trainer.id">
             <td>
-              <b-link :href="`/trainers/${trainer.id}`"><gender-icon :gender="trainer.name" /> {{ trainer.name }}</b-link>
+              <b-link :href="`/trainers/${trainer.id}`"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</b-link>
             </td>
             <td v-text="trainer.number" />
             <td>{{ $t(`region.options.${trainer.region}`) }}</td>
