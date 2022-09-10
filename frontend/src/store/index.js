@@ -12,6 +12,7 @@ export default new Vuex.Store({
   plugins: [vuexLocal.plugin],
   state: {
     battle: {
+      activePokemon: [],
       opponents: {
         pokemon: [],
         trainers: []
@@ -40,9 +41,18 @@ export default new Vuex.Store({
       commit('setPlayerTrainers', players)
       commit('setOpponentTrainers', opponents)
       commit('setBattleStep', 'PokemonSelection')
+    },
+    togglePokemon({ commit, state }, id) {
+      commit(
+        'setActivePokemon',
+        state.battle.activePokemon.includes(id) ? state.battle.activePokemon.filter(x => x !== id) : [...state.battle.activePokemon, id]
+      )
     }
   },
   mutations: {
+    setActivePokemon(state, activePokemon) {
+      state.battle.activePokemon = activePokemon ?? []
+    },
     setBattleStep(state, step) {
       state.battle.step = step ?? 'TrainerSelection'
     },

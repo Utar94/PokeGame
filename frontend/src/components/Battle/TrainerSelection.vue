@@ -2,8 +2,16 @@
   <b-container>
     <h1 v-t="'battle.trainerSelection.title'" />
     <b-row>
-      <trainer-team class="col" :exclude="exclude" id="players" :title="$t('battle.players')" :trainers="players" @added="addPlayer" @removed="removePlayer" />
-      <trainer-team
+      <select-trainer-team
+        class="col"
+        :exclude="exclude"
+        id="players"
+        :title="$t('battle.players')"
+        :trainers="players"
+        @added="addPlayer"
+        @removed="removePlayer"
+      />
+      <select-trainer-team
         class="col"
         :exclude="exclude"
         id="opponents"
@@ -20,12 +28,12 @@
 <script>
 import Vue from 'vue'
 import { mapActions } from 'vuex'
-import TrainerTeam from './TrainerTeam.vue'
+import SelectTrainerTeam from './SelectTrainerTeam.vue'
 
 export default {
   name: 'TrainerSelection',
   components: {
-    TrainerTeam
+    SelectTrainerTeam
   },
   data() {
     return {

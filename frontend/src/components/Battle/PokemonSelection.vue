@@ -2,8 +2,15 @@
   <b-container>
     <h1 v-t="'battle.pokemonSelection.title'" />
     <b-row>
-      <pokemon-team class="col" :max="maxPokemon" :pokemon="playerPokemon" :selected="players" :title="$t('battle.players')" @toggled="togglePlayer" />
-      <pokemon-team class="col" :max="maxPokemon" :pokemon="opponentPokemon" :selected="opponents" :title="$t('battle.opponents')" @toggled="toggleOpponent" />
+      <select-pokemon-team class="col" :max="maxPokemon" :pokemon="playerPokemon" :selected="players" :title="$t('battle.players')" @toggled="togglePlayer" />
+      <select-pokemon-team
+        class="col"
+        :max="maxPokemon"
+        :pokemon="opponentPokemon"
+        :selected="opponents"
+        :title="$t('battle.opponents')"
+        @toggled="toggleOpponent"
+      />
     </b-row>
     <icon-button class="mx-1" icon="chevron-left" text="battle.trainerSelection.title" variant="danger" @click="onPrevious" />
     <icon-button class="mx-1" :disabled="!isValid" icon="chevron-right" text="battle.title" variant="primary" @click="onNext" />
@@ -12,14 +19,14 @@
 
 <script>
 import Vue from 'vue'
-import PokemonTeam from './PokemonTeam.vue'
+import SelectPokemonTeam from './SelectPokemonTeam.vue'
 import { mapActions, mapState } from 'vuex'
 import { getPokemonList } from '@/api/pokemon'
 
 export default {
   name: 'PokemonSelection',
   components: {
-    PokemonTeam
+    SelectPokemonTeam
   },
   data() {
     return {
