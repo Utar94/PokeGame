@@ -61,12 +61,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setBattlePokemon', 'resetBattle']),
+    ...mapActions(['setBattlePokemon', 'resetBattlePokemon']),
     onNext() {
       this.setBattlePokemon({ opponents: this.opponents, players: this.players })
     },
     onPrevious() {
-      this.resetBattle()
+      this.resetBattlePokemon()
     },
     toggleOpponent({ id }) {
       const index = this.opponents.findIndex(value => value === id)

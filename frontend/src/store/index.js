@@ -25,9 +25,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    resetBattle({ commit }) {
-      commit('setPlayerTrainers', [])
-      commit('setOpponentTrainers', [])
+    resetBattlePokemon({ commit }) {
       commit('setPlayerPokemon', [])
       commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')

@@ -1,12 +1,6 @@
 <template>
   <div>
-    <h3 v-if="title" v-text="title" />
-    <slot name="title" />
-    <trainer-select :disabled="trainers.length === 3" :exclude="exclude" :id="id" :value="trainer ? trainer.id : null" @trainer="trainer = $event">
-      <b-input-group-append>
-        <icon-button :disabled="!trainer" icon="plus" variant="primary" @click="onAdd" />
-      </b-input-group-append>
-    </trainer-select>
+    <h3 v-t="title" />
     <table class="table table-striped">
       <tbody>
         <tr v-for="(trainer, index) in trainers" :key="trainer.id">
@@ -21,40 +15,16 @@
 </template>
 
 <script>
-import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
-
 export default {
   name: 'TrainerTeam',
-  components: {
-    TrainerSelect
-  },
   props: {
-    exclude: {
-      type: Array,
-      default: () => []
-    },
-    id: {
-      type: String,
-      required: true
-    },
     title: {
       type: String,
-      default: ''
+      required: true
     },
     trainers: {
       type: Array,
       default: () => []
-    }
-  },
-  data() {
-    return {
-      trainer: null
-    }
-  },
-  methods: {
-    onAdd() {
-      this.$emit('added', this.trainer)
-      this.trainer = null
     }
   }
 }

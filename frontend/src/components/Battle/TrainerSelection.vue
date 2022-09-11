@@ -2,24 +2,22 @@
   <b-container>
     <h1 v-t="'battle.trainerSelection.title'" />
     <b-row>
-      <select-trainer-team
-        class="col"
-        :exclude="exclude"
-        id="players"
-        :title="$t('battle.players')"
-        :trainers="players"
-        @added="addPlayer"
-        @removed="removePlayer"
-      />
-      <select-trainer-team
-        class="col"
-        :exclude="exclude"
-        id="opponents"
-        :title="$t('battle.opponents')"
-        :trainers="opponents"
-        @added="addOpponent"
-        @removed="removeOpponent"
-      />
+      <trainer-select-new class="col" :exclude="exclude" v-model="trainer" />
+      <b-form-group class="col" :label="$t('battle.team')">
+        <icon-button class="mx-1" :disabled="!trainer" icon="plus" text="battle.trainerSelection.addPlayer" variant="primary" @click="addTrainer('players')" />
+        <icon-button
+          class="mx-1"
+          :disabled="!trainer"
+          icon="plus"
+          text="battle.trainerSelection.addOpponent"
+          variant="danger"
+          @click="addTrainer('opponents')"
+        />
+      </b-form-group>
+    </b-row>
+    <b-row>
+      <select-trainer-team class="col" title="battle.players" :trainers="players" @removed="removeTrainer('players', $event)" />
+      <select-trainer-team class="col" title="battle.opponents" :trainers="opponents" @removed="removeTrainer('opponents', $event)" />
     </b-row>
     <icon-button :disabled="!players.length" icon="chevron-right" text="battle.pokemonSelection.title" variant="primary" @click="onNext" />
   </b-container>
@@ -29,16 +27,20 @@
 import Vue from 'vue'
 import { mapActions } from 'vuex'
 import SelectTrainerTeam from './SelectTrainerTeam.vue'
+import TrainerSelectNew from '@/components/Trainers/TrainerSelectNew.vue'
+import { getTrainers } from '@/api/trainers'
 
 export default {
   name: 'TrainerSelection',
   components: {
-    SelectTrainerTeam
+    SelectTrainerTeam,
+    TrainerSelectNew
   },
   data() {
     return {
       opponents: [],
-      players: []
+      players: [],
+      trainer: null
     }
   },
   computed: {
@@ -54,20 +56,45 @@ export default {
   },
   methods: {
     ...mapActions(['setBattleTrainers']),
-    addOpponent(trainer) {
-      this.opponents.push(trainer)
-    },
-    addPlayer(trainer) {
-      this.players.push(trainer)
+    addTrainer(team) {
+      switch (team) {
+        case 'players':
+          this.players.push(this.trainer)
+          break
+        case 'opponents':
+          this.opponents.push(this.trainer)
+          break
+      }
+      this.trainer = null
     },
     onNext() {
       this.setBattleTrainers({ opponents: this.opponentIds, players: this.playerIds })
     },
-    removeOpponent(index) {
-      Vue.delete(this.opponents, index)
-    },
-    removePlayer(index) {
-      Vue.delete(this.players, index)
+    removeTrainer(team, index) {
+      switch (team) {
+        case 'players':
+          Vue.delete(this.players, index)
+          break
+        case 'opponents':
+          Vue.delete(this.opponents, index)
+          break
+      }
+    }
+  },
+  async created() {
+    try {
+      const { battle } = this.$store.state
+      if (battle.players.trainers.length || battle.opponents.trainers.length) {
+        const { data } = await getTrainers()
+        const trainers = {}
+        for (const trainer of data.items) {
+          trainers[trainer.id] = trainer
+        }
+        this.players = battle.players.trainers.map(id => trainers[id])
+        this.opponents = battle.opponents.trainers.map(id => trainers[id])
+      }
+    } catch (e) {
+      this.handleError(e)
     }
   }
 }

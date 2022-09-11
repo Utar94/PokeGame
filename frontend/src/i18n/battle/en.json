@@ -10,8 +10,11 @@
   },
   "removeCondition": "Remove Condition",
   "restoreHitPoints": "Restore HP",
+  "team": "Team",
   "title": "Battle!",
   "trainerSelection": {
+    "addOpponent": "Add Opponent",
+    "addPlayer": "Add Player",
     "title": "Trainer Selection"
   },
   "useItem": "Use an Item"
