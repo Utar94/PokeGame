@@ -6,15 +6,11 @@
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
         <div class="my-2">
-          <icon-submit
-            v-if="species"
-            :disabled="evYieldExceeded || !hasChanges || loading"
-            icon="save"
-            :loading="loading"
-            text="actions.save"
-            variant="primary"
-          />
-          <icon-submit v-else :disabled="evYieldExceeded || !hasChanges || loading" icon="plus" :loading="loading" text="actions.create" variant="success" />
+          <template v-if="species">
+            <icon-submit class="mx-1" :disabled="!canSubmit" icon="save" :loading="loading" text="actions.save" variant="primary" />
+            <icon-button class="mx-1" href="/create-species" icon="plus" text="actions.create" variant="success" />
+          </template>
+          <icon-submit v-else :disabled="!canSubmit" icon="plus" :loading="loading" text="actions.create" variant="success" />
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
@@ -317,6 +313,9 @@ export default {
     }
   },
   computed: {
+    canSubmit() {
+      return !this.evYieldExceeded && this.hasChanges && !this.loading
+    },
     hasChanges() {
       return (
         (!this.species && (this.number || this.primaryType || this.secondaryType)) ||

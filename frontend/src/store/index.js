@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     battle: {
       activePokemon: [],
+      escapeAttempts: 0,
       location: null,
       opponents: {
         pokemon: [],
@@ -26,6 +27,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    addBattlePlayerPokemon({ commit, state }, id) {
+      if (!state.battle.players.pokemon.includes(id)) {
+        commit('setPlayerPokemon', state.battle.players.pokemon.concat([id]))
+      }
+    },
+    increaseEscapeAttempts({ commit, state }) {
+      commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
+    },
     removeBattlePokemon({ commit, state }, id) {
       if (state.battle.activePokemon.includes(id)) {
         commit(
@@ -45,6 +54,15 @@ export default new Vuex.Store({
           state.battle.players.pokemon.filter(x => x !== id)
         )
       }
+    },
+    resetBattle({ commit }) {
+      commit('setEscapeAttempts', 0)
+      commit('setLocation', null)
+      commit('setActivePokemon', [])
+      commit('setPlayerPokemon', [])
+      commit('setOpponentTrainers', [])
+      commit('setOpponentPokemon', [])
+      commit('setBattleStep', 'TrainerSelection')
     },
     resetBattlePokemon({ commit }) {
       commit('setActivePokemon', [])
@@ -78,6 +96,9 @@ export default new Vuex.Store({
     },
     setBattleStep(state, step) {
       state.battle.step = step ?? 'TrainerSelection'
+    },
+    setEscapeAttempts(state, escapeAttempts) {
+      state.battle.escapeAttempts = escapeAttempts ?? 0
     },
     setLocation(state, location) {
       state.battle.location = location ?? null

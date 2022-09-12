@@ -1,5 +1,6 @@
 <template>
   <b-modal :id="id" :title="$t('battle.useItem.title')" @hidden="reset">
+    <p v-if="displayLocationWarning"><i class="text-warning" v-t="'battle.useItem.locationWarning'" /></p>
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
         <form-select
@@ -46,8 +47,8 @@
         :disabled="!hasChanges || loading"
         icon="shopping-cart"
         :loading="loading"
-        text="battle.useItem.title"
-        variant="primary"
+        :text="item && item.category === 'PokeBall' ? 'battle.useItem.throwBall' : 'battle.useItem.title'"
+        variant="warning"
         @click="submit(ok)"
       />
     </template>
@@ -119,6 +120,9 @@ export default {
     },
     catchDC() {
       const pokemon = this.selectedPokemon
+      if (!pokemon) {
+        return 0
+      }
       let status = 1.0
       switch (pokemon.statusCondition) {
         case 'Freeze':
@@ -136,14 +140,19 @@ export default {
           status
       )
       const b = Math.floor(1048560 / Math.floor(Math.sqrt(Math.floor(Math.sqrt(Math.floor(16711680 / a))))))
-      const DC = Math.round((1 - b / 65535) * 20) + 5
+      const DC = Math.ceil((1 - b / 65535) * 20) + 5
       return DC < 0 ? 0 : DC
+    },
+    displayLocationWarning() {
+      return !this.battle.location && !this.battle.opponents.trainers.length
     },
     hasChanges() {
       return this.item || this.pokemonId
     },
     itemOptions() {
-      return Object.values(this.items).map(({ id, name }) => ({ text: name, value: id }))
+      return Object.values(this.items)
+        .filter(({ category }) => this.categories.includes(category))
+        .map(({ id, name }) => ({ text: name, value: id }))
     },
     pokemonOptions() {
       return this.orderBy(
@@ -241,9 +250,7 @@ export default {
           const { data } = await getInventory(trainerId, { sort: 'ItemName', desc: false })
           this.items = {}
           for (const value of data.items) {
-            if (this.categories.includes(value.item.category)) {
-              Vue.set(this.items, value.item.id, value.item)
-            }
+            Vue.set(this.items, value.item.id, value.item)
           }
         } catch (e) {
           this.handleError(e)

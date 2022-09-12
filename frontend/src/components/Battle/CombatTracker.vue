@@ -1,10 +1,12 @@
 <template>
   <b-container fluid>
     <h1 v-t="'battle.combatTracker.title'" />
-    <b-row>
+    <div class="my-2">
+      <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
+    </div>
+    <b-row v-if="!isTrainerBattle && remainingOpponentPokemon.length">
       <form-field
         class="col-3"
-        v-if="!isTrainerBattle"
         id="location"
         label="battle.combatTracker.location.label"
         :maxLength="100"
@@ -15,6 +17,13 @@
           <icon-button :disabled="!location || location === battle.location" icon="save" variant="primary" @click="saveLocation(location)" />
         </b-input-group-append>
       </form-field>
+      <b-form-group class="col-3">
+        <template #label>
+          <strong>{{ $t('battle.combatTracker.escape') }} ({{ $t('dcFormat', { dc: escapeDC }) }})</strong>
+        </template>
+        <icon-button class="mx-1" icon="plus" variant="primary" @click="increaseEscapeAttempts" />
+        {{ $t('battle.combatTracker.attemptsFormat', { attempts: battle.escapeAttempts }) }}
+      </b-form-group>
     </b-row>
     <template v-if="Object.keys(trainers).length">
       <h3 v-t="'trainers.title'" />
@@ -50,7 +59,32 @@
         </battle-pokemon-team>
       </b-row>
     </template>
-    <icon-button icon="chevron-left" text="battle.pokemonSelection.title" variant="warning" @click="onPrevious" />
+    <icon-button class="mx-1" icon="chevron-left" text="battle.pokemonSelection.title" variant="warning" @click="onPrevious" />
+    <icon-button
+      v-if="remainingPlayerPokemon.length > 0 && remainingOpponentPokemon.length === 0"
+      class="mx-1"
+      icon="crown"
+      text="battle.combatTracker.victory"
+      variant="primary"
+      @click="resetBattle"
+    />
+    <icon-button
+      v-if="remainingPlayerPokemon.length === 0 && remainingOpponentPokemon.length > 0"
+      class="mx-1"
+      icon="skull"
+      text="battle.combatTracker.defeat"
+      variant="primary"
+      @click="resetBattle"
+    />
+    <icon-button
+      v-if="!isTrainerBattle && remainingPlayerPokemon.length > 0 && remainingOpponentPokemon.length > 0"
+      class="mx-1"
+      icon="running"
+      text="battle.combatTracker.escape"
+      variant="primary"
+      @click="resetBattle"
+    />
+    <icon-button class="mx-1" icon="ban" text="actions.cancel" variant="danger" @click="resetBattle" />
   </b-container>
 </template>
 
@@ -70,6 +104,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       location: null,
       pokemon: {},
       trainers: {}
@@ -77,6 +112,16 @@ export default {
   },
   computed: {
     ...mapState(['battle']),
+    escapeDC() {
+      const activePlayerPokemon = this.playerPokemon.filter(x => x && this.battle.activePokemon.includes(x.id))
+      const playerSpeed = activePlayerPokemon.reduce((sum, { speed }) => sum + speed, 0) / activePlayerPokemon.length
+      const activeOpponentPokemon = this.opponentPokemon.filter(x => x && this.battle.activePokemon.includes(x.id))
+      const opponentSpeed = activeOpponentPokemon.reduce((sum, { speed }) => sum + speed, 0) / activeOpponentPokemon.length
+      if (!playerSpeed || !opponentSpeed || playerSpeed >= opponentSpeed) {
+        return 5
+      }
+      return Math.ceil((1 - ((Math.floor((playerSpeed * 128) / opponentSpeed) + 30 * this.battle.escapeAttempts) % 256) / 256) * 20) + 5
+    },
     isTrainerBattle() {
       return this.opponentTrainers.length > 0
     },
@@ -108,12 +153,26 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['removeBattlePokemon', 'saveLocation', 'togglePokemon']),
-    onPokemonCaught({ id }) {
+    ...mapActions(['addBattlePlayerPokemon', 'increaseEscapeAttempts', 'removeBattlePokemon', 'resetBattle', 'saveLocation', 'togglePokemon']),
+    onPokemonCaught({ id, box }) {
       this.removeBattlePokemon(id)
+      if (box === null) {
+        this.addBattlePlayerPokemon(id)
+        this.toast('success', 'battle.useItem.caughtToast.party')
+      } else {
+        this.toast('success', 'battle.useItem.caughtToast.box')
+      }
     },
     onPrevious() {
       this.$store.commit('setBattleStep', 'PokemonSelection')
+    },
+    async refresh() {
+      if (!this.loading) {
+        this.loading = true
+        await this.refreshTrainers()
+        await this.refreshPokemon()
+        this.loading = false
+      }
     },
     async refreshPokemon() {
       try {

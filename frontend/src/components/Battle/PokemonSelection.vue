@@ -12,7 +12,7 @@
         @toggled="toggleOpponent"
       />
     </b-row>
-    <icon-button class="mx-1" icon="chevron-left" text="battle.trainerSelection.title" variant="danger" @click="onPrevious" />
+    <icon-button class="mx-1" icon="chevron-left" text="battle.trainerSelection.title" variant="danger" @click="resetBattlePokemon" />
     <icon-button class="mx-1" :disabled="!isValid" icon="chevron-right" text="battle.title" variant="primary" @click="onNext" />
   </b-container>
 </template>
@@ -54,7 +54,7 @@ export default {
     opponentPokemon() {
       return this.opponentTrainerIds.length
         ? this.opponentTrainerIds.reduce((pokemon, trainerId) => pokemon.concat(this.pokemon[trainerId] ?? []), [])
-        : this.pokemon['Wild']
+        : this.pokemon['Wild'] ?? []
     },
     playerPokemon() {
       return this.playerTrainerIds.reduce((pokemon, trainerId) => pokemon.concat(this.pokemon[trainerId] ?? []), [])
@@ -64,9 +64,6 @@ export default {
     ...mapActions(['setBattlePokemon', 'resetBattlePokemon']),
     onNext() {
       this.setBattlePokemon({ opponents: this.opponents, players: this.players })
-    },
-    onPrevious() {
-      this.resetBattlePokemon()
     },
     toggleOpponent({ id }) {
       const index = this.opponents.findIndex(value => value === id)
@@ -94,6 +91,14 @@ export default {
           Vue.set(this.pokemon, key, [pokemon])
         } else {
           this.pokemon[key].push(pokemon)
+        }
+      }
+
+      if (!this.opponentTrainerIds.length) {
+        for (const pokemon of this.playerPokemon) {
+          if (pokemon.box === null && !this.playerPokemonIds.includes(pokemon.id)) {
+            this.togglePlayer(pokemon)
+          }
         }
       }
     } catch (e) {

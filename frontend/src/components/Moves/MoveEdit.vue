@@ -6,7 +6,10 @@
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
         <div class="my-2">
-          <icon-submit v-if="move" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
+          <template v-if="move">
+            <icon-submit class="mx-1" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
+            <icon-button class="mx-1" href="/create-move" icon="plus" text="actions.create" variant="success" />
+          </template>
           <icon-submit v-else :disabled="!hasChanges || loading" icon="plus" :loading="loading" text="actions.create" variant="success" />
         </div>
         <b-tabs content-class="mt-3">

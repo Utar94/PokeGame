@@ -1,5 +1,8 @@
 {
   "combatTracker": {
+    "attemptsFormat": "Attempts: {attempts}",
+    "defeat": "Defeat!",
+    "escape": "Escape",
     "hpFormat": "HP: {current}/{max}",
     "location": {
       "label": "Location",
@@ -7,6 +10,7 @@
     },
     "send": "Send",
     "title": "Combat Tracker",
+    "victory": "Victory!",
     "withdraw": "Withdraw"
   },
   "opponents": "Opponents",
@@ -23,9 +27,15 @@
   },
   "useItem": {
     "catchSuccess": "Catch Success",
+    "caughtToast": {
+      "box": "The Pokémon has been caught! It has been sent to a box.",
+      "party": "The Pokémon has been caught! It has been added to the trainer's party."
+    },
+    "locationWarning": "A location is required to throw a ball.",
     "removeAllConditions": "Remove All Conditions",
     "removeStatusCondition": "Remove Status Condition",
     "restoreHitPoints": "Restore HP",
+    "throwBall": "Throw Ball",
     "title": "Use an Item"
   }
 }
