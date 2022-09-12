@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     battle: {
       activePokemon: [],
+      location: null,
       opponents: {
         pokemon: [],
         trainers: []
@@ -25,10 +26,34 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    removeBattlePokemon({ commit, state }, id) {
+      if (state.battle.activePokemon.includes(id)) {
+        commit(
+          'setActivePokemon',
+          state.battle.activePokemon.filter(x => x !== id)
+        )
+      }
+      if (state.battle.opponents.pokemon.includes(id)) {
+        commit(
+          'setOpponentPokemon',
+          state.battle.opponents.pokemon.filter(x => x !== id)
+        )
+      }
+      if (state.battle.players.pokemon.includes(id)) {
+        commit(
+          'setOpponentPokemon',
+          state.battle.players.pokemon.filter(x => x !== id)
+        )
+      }
+    },
     resetBattlePokemon({ commit }) {
+      commit('setActivePokemon', [])
       commit('setPlayerPokemon', [])
       commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')
+    },
+    saveLocation({ commit }, location) {
+      commit('setLocation', location)
     },
     setBattlePokemon({ commit }, { opponents, players }) {
       commit('setPlayerPokemon', players)
@@ -53,6 +78,9 @@ export default new Vuex.Store({
     },
     setBattleStep(state, step) {
       state.battle.step = step ?? 'TrainerSelection'
+    },
+    setLocation(state, location) {
+      state.battle.location = location ?? null
     },
     setOpponentPokemon(state, pokemon) {
       state.battle.opponents.pokemon = pokemon ?? []

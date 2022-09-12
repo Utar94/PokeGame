@@ -3,7 +3,7 @@
     <slot name="title" />
     <table class="table">
       <tbody>
-        <battle-pokemon-row v-for="item in pokemon" :key="item.id" :pokemon="item" />
+        <battle-pokemon-row v-for="item in pokemon" :key="item.id" :canSwitch="canSwitch" :pokemon="item" />
       </tbody>
     </table>
   </div>
@@ -18,6 +18,10 @@ export default {
     BattlePokemonRow
   },
   props: {
+    canSwitch: {
+      type: Boolean,
+      default: false
+    },
     pokemon: {
       type: Array,
       default: () => []

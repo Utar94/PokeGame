@@ -7,6 +7,16 @@ namespace PokeGame.Application.Items
   {
     public ItemValidator()
     {
+      When(x => x.Category == ItemCategory.PokeBall, () =>
+      {
+        RuleFor(x => x.DefaultModifier)
+          .GreaterThan(0.0);
+      }).Otherwise(() =>
+      {
+        RuleFor(x => x.DefaultModifier)
+          .Null();
+      });
+
       RuleFor(x => x.Price)
         .InclusiveBetween(1, 999999);
 

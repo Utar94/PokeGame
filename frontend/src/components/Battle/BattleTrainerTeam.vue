@@ -8,8 +8,15 @@
           <td v-text="trainer.number" />
           <td>{{ $t(`region.options.${trainer.region}`) }}</td>
           <td>
-            <icon-button icon="shopping-cart" text="battle.useItem" variant="primary" v-b-modal="`useItem_${trainer.id}`" />
-            <use-item-modal :id="`useItem_${trainer.id}`" :pokemon="pokemon" :trainerId="trainer.id" @pokemonUpdated="$emit('pokemonUpdated', $event)" />
+            <icon-button icon="shopping-cart" text="battle.useItem.title" variant="warning" v-b-modal="`useItem_${trainer.id}`" />
+            <use-item-modal
+              :id="`useItem_${trainer.id}`"
+              :opponents="opponents"
+              :pokemon="pokemon"
+              :trainerId="trainer.id"
+              @pokemonCaught="$emit('pokemonCaught', $event)"
+              @pokemonUpdated="$emit('pokemonUpdated', $event)"
+            />
           </td>
         </tr>
       </tbody>
@@ -26,6 +33,10 @@ export default {
     UseItemModal
   },
   props: {
+    opponents: {
+      type: Array,
+      default: () => []
+    },
     pokemon: {
       type: Array,
       default: () => []

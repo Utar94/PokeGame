@@ -1,6 +1,5 @@
 <template>
   <tr :class="{ 'table-info': isActive }">
-    <td><b-form-checkbox :checked="isActive" size="lg" @input="togglePokemon(pokemon.id)" /></td>
     <td v-text="pokemon.speed" />
     <td>
       <template v-if="pokemon.surname">
@@ -30,6 +29,14 @@
       </a>
       <held-item-info v-else-if="heldItem" :item="heldItem" />
     </td>
+    <td v-if="canSwitch">
+      <icon-button
+        icon="exchange-alt"
+        :text="isActive ? 'battle.combatTracker.withdraw' : 'battle.combatTracker.send'"
+        variant="success"
+        @click="togglePokemon(pokemon.id)"
+      />
+    </td>
     <!-- TODO(fpion): Use a Move (if readonly & not fainted) -->
   </tr>
 </template>
@@ -48,6 +55,10 @@ export default {
     PokemonCondition
   },
   props: {
+    canSwitch: {
+      type: Boolean,
+      default: false
+    },
     pokemon: {
       type: Object,
       required: true
