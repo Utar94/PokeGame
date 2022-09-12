@@ -72,8 +72,8 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       MetAtLevel = pokemon.History?.Level;
       MetLocation = pokemon.History?.Location;
       MetOn = pokemon.History?.MetOn;
-      Position = pokemon.Position;
-      Box = pokemon.Box;
+      Position = pokemon.Position?.Position;
+      Box = pokemon.Position?.Box;
 
       Notes = pokemon.Notes;
       Reference = pokemon.Reference;

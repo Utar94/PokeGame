@@ -3,7 +3,7 @@
     <h1 v-t="'battle.trainerSelection.title'" />
     <b-row>
       <trainer-select-new class="col" :exclude="exclude" v-model="trainer" />
-      <b-form-group class="col" :label="$t('battle.team')">
+      <b-form-group class="col" :label="$t('battle.trainerSelection.team')">
         <icon-button class="mx-1" :disabled="!trainer" icon="plus" text="battle.trainerSelection.addPlayer" variant="primary" @click="addTrainer('players')" />
         <icon-button
           class="mx-1"

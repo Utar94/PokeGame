@@ -44,8 +44,7 @@ namespace PokeGame.Domain.Pokemon
 
     public History? History { get; private set; }
     public Guid? OriginalTrainerId { get; private set; }
-    public byte? Position { get; private set; }
-    public byte? Box { get; private set; }
+    public PokemonPosition? Position { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -53,8 +52,31 @@ namespace PokeGame.Domain.Pokemon
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
 
-    public void Heal(short restoreHitPoints, bool removeCondition) => ApplyChange(new PokemonHealed(restoreHitPoints, removeCondition));
+    public void Catch(string location, Guid trainerId, PokemonPosition position, string? surname = null)
+    {
+      if (OriginalTrainerId.HasValue || History != null)
+      {
+        throw new CannotCatchTrainerPokemonException(this);
+      }
 
+      ApplyChange(new PokemonCaught(location, trainerId, position.Position, position.Box, surname));
+    }
+    public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+
+    protected virtual void Apply(PokemonCaught @event)
+    {
+      Surname = @event.Surname?.CleanTrim();
+
+      SetHistory(new HistoryPayload
+      {
+        Level = Level,
+        Location = @event.Location,
+        MetOn = DateTime.UtcNow,
+        TrainerId = @event.TrainerId
+      });
+
+      Position = new(@event.Position, @event.Box);
+    }
     protected virtual void Apply(PokemonCreated @event)
     {
       CreatePokemonPayload payload = @event.Payload;
@@ -109,13 +131,8 @@ namespace PokeGame.Domain.Pokemon
       }
       HeldItemId = payload.HeldItemId;
 
-      History = payload.History == null ? null : new(payload.History);
-      if (payload.History != null && OriginalTrainerId == null)
-      {
-        OriginalTrainerId = payload.History.TrainerId;
-      }
-      Position = payload.Position;
-      Box = payload.Box;
+      SetHistory(payload.History);
+      Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
 
       Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;
@@ -126,13 +143,15 @@ namespace PokeGame.Domain.Pokemon
     }
     protected virtual void Apply(PokemonHealed @event)
     {
-      CurrentHitPoints += @event.RestoreHitPoints;
+      HealPokemonPayload payload = @event.Payload;
+
+      CurrentHitPoints += payload.RestoreHitPoints;
       if (CurrentHitPoints > MaximumHitPoints)
       {
         CurrentHitPoints = MaximumHitPoints;
       }
 
-      if (@event.RemoveCondition)
+      if (payload.RemoveAllConditions || payload.StatusCondition == StatusCondition)
       {
         StatusCondition = null;
       }
@@ -155,6 +174,15 @@ namespace PokeGame.Domain.Pokemon
       Statistics[Statistic.SpecialAttack] = this.CalculateStatistic(Statistic.SpecialAttack);
       Statistics[Statistic.SpecialDefense] = this.CalculateStatistic(Statistic.SpecialDefense);
       Statistics[Statistic.Speed] = this.CalculateStatistic(Statistic.Speed);
+    }
+
+    private void SetHistory(HistoryPayload? payload)
+    {
+      History = payload == null ? null : new(payload);
+      if (payload != null && OriginalTrainerId == null)
+      {
+        OriginalTrainerId = payload.TrainerId;
+      }
     }
 
     public override string ToString() => $"{Surname ?? SpeciesName} | {base.ToString()}";

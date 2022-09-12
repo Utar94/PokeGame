@@ -74,10 +74,16 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(await _service.UpdateAsync(id, payload, cancellationToken));
     }
 
+    [HttpPatch("{id}/catch")]
+    public async Task<ActionResult<PokemonModel>> CatchAsync(Guid id, [FromBody] CatchPokemonPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _service.CatchAsync(id, payload, cancellationToken));
+    }
+
     [HttpPatch("{id}/heal")]
     public async Task<ActionResult<PokemonModel>> HealAsync(Guid id, [FromBody] HealPokemonPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.HealAsync(id, payload.RestoreHitPoints, payload.RemoveCondition, cancellationToken));
+      return Ok(await _service.HealAsync(id, payload, cancellationToken));
     }
   }
 }

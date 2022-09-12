@@ -1,21 +1,31 @@
 {
   "combatTracker": {
     "hpFormat": "HP: {current}/{max}",
-    "title": "Combat Tracker"
+    "location": {
+      "label": "Location",
+      "placeholder": "Enter the battle location"
+    },
+    "send": "Send",
+    "title": "Combat Tracker",
+    "withdraw": "Withdraw"
   },
   "opponents": "Opponents",
   "players": "Players",
   "pokemonSelection": {
     "title": "Pokémon Selection"
   },
-  "removeCondition": "Remove Condition",
-  "restoreHitPoints": "Restore HP",
-  "team": "Team",
   "title": "Battle!",
   "trainerSelection": {
     "addOpponent": "Add Opponent",
     "addPlayer": "Add Player",
+    "team": "Team",
     "title": "Trainer Selection"
   },
-  "useItem": "Use an Item"
+  "useItem": {
+    "catchSuccess": "Catch Success",
+    "removeAllConditions": "Remove All Conditions",
+    "removeStatusCondition": "Remove Status Condition",
+    "restoreHitPoints": "Restore HP",
+    "title": "Use an Item"
+  }
 }

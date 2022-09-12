@@ -8,6 +8,7 @@ namespace PokeGame.Web.Models.Api.Items
     public ItemSummary(ItemModel model) : base(model)
     {
       Category = model.Category;
+      DefaultModifier = model.DefaultModifier;
 
       Price = model.Price;
 
@@ -19,6 +20,7 @@ namespace PokeGame.Web.Models.Api.Items
     }
 
     public ItemCategory Category { get; set; }
+    public double? DefaultModifier { get; set; }
 
     public int? Price { get; set; }
 

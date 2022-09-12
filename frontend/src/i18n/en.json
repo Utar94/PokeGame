@@ -10,6 +10,7 @@
   "by": "By",
   "copyright": "© PokéGame {version} 2022.",
   "count": "Count",
+  "dcFormat": "DC: {dc}",
   "description": {
     "label": "Description",
     "placeholder": "Enter a description"

@@ -38,6 +38,29 @@ namespace PokeGame.Application.Pokemon
       _validator = validator;
     }
 
+    public async Task<PokemonModel> CatchAsync(Guid id, CatchPokemonPayload payload, CancellationToken cancellationToken = default)
+    {
+      Trainer trainer = await _trainerRepository.LoadAsync(payload.TrainerId, cancellationToken)
+        ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
+
+      PokemonPosition position = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
+
+      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(id, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(id);
+
+      if (payload.Heal != null)
+      {
+        pokemon.Heal(payload.Heal);
+      }
+      pokemon.Catch(payload.Location, trainer.Id, position, payload.Surname);
+      _validator.ValidateAndThrow(pokemon);
+
+      await _repository.SaveAsync(pokemon, cancellationToken);
+
+      return await _querier.GetAsync(pokemon.Id, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
+    }
+
     public async Task<PokemonModel> CreateAsync(CreatePokemonPayload payload, CancellationToken cancellationToken)
     {
       Domain.Species.Species species = await _speciesRepository.LoadAsync(payload.SpeciesId, cancellationToken)
@@ -121,12 +144,12 @@ namespace PokeGame.Application.Pokemon
         cancellationToken);
     }
 
-    public async Task<PokemonModel> HealAsync(Guid id, short restoreHitPoints, bool removeCondition, CancellationToken cancellationToken = default)
+    public async Task<PokemonModel> HealAsync(Guid id, HealPokemonPayload payload, CancellationToken cancellationToken = default)
     {
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(id);
 
-      pokemon.Heal(restoreHitPoints, removeCondition);
+      pokemon.Heal(payload);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
@@ -147,6 +170,36 @@ namespace PokeGame.Application.Pokemon
 
       return await _querier.GetAsync(pokemon.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
+    }
+
+    private async Task<PokemonPosition> FindFirstAvailablePositionAsync(Guid trainerId, CancellationToken cancellationToken)
+    {
+      ListModel<PokemonModel> trainerPokemon = await _querier
+        .GetPagedAsync(trainerId: trainerId, cancellationToken: cancellationToken);
+
+      HashSet<string> positions = trainerPokemon.Items.Where(x => x.Position.HasValue)
+        .Select(x => x.Box.HasValue ? string.Join('_', x.Box.Value, x.Position!.Value) : x.Position!.Value.ToString()).ToHashSet();
+
+      for (int position = 0; position <= 5; position++)
+      {
+        if (!positions.Contains(position.ToString()))
+        {
+          return new PokemonPosition((byte)position);
+        }
+      }
+
+      for (int box = 0; box <= 31; box++)
+      {
+        for (int position = 0; position <= 29; position++)
+        {
+          if (!positions.Contains($"{box}_{position}"))
+          {
+            return new PokemonPosition((byte)position, (byte)box);
+          }
+        }
+      }
+
+      throw new NoAvailablePositionException(trainerId);
     }
   }
 }
