@@ -80,6 +80,7 @@
     "options": {
       "Level": "Level",
       "Name": "Name",
+      "Position": "Position",
       "UpdatedAt": "Updated on"
     }
   },
@@ -92,6 +93,7 @@
     "box": "Box",
     "boxFormat": "Box {box} ({position})",
     "history": "History",
+    "inBox": "In Box",
     "location": "Location",
     "metLevel": "Met at Level",
     "metLocation": {

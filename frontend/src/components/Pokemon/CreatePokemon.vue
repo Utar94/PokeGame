@@ -134,10 +134,10 @@
         </p>
         <h3 v-t="'pokemon.trainer.title'" />
         <b-row>
-          <trainer-select class="col" v-model="trainerId" />
+          <trainer-select class="col" v-model="trainer" />
           <form-field
             class="col"
-            :disabled="!trainerId || inParty"
+            :disabled="!trainer || inParty"
             id="box"
             label="pokemon.trainer.box"
             :minValue="1"
@@ -147,12 +147,12 @@
             v-model.number="box"
           >
             <template #after>
-              <b-form-checkbox :disabled="!trainerId" v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
+              <b-form-checkbox :disabled="!trainer" v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
             </template>
           </form-field>
           <form-field
             class="col"
-            :disabled="!trainerId"
+            :disabled="!trainer"
             id="position"
             label="pokemon.trainer.position"
             :minValue="1"
@@ -166,33 +166,33 @@
         <b-row>
           <form-field
             class="col"
-            :disabled="!trainerId"
+            :disabled="!trainer"
             id="metLevel"
             label="pokemon.trainer.metLevel"
             :minValue="1"
             :maxValue="level"
-            :required="Boolean(trainerId)"
+            :required="Boolean(trainer)"
             :step="1"
             type="number"
             v-model.number="metLevel"
           />
           <form-field
             class="col"
-            :disabled="!trainerId"
+            :disabled="!trainer"
             id="metLocation"
             label="pokemon.trainer.metLocation.label"
             :maxLength="100"
             placeholder="pokemon.trainer.metLocation.placeholder"
-            :required="Boolean(trainerId)"
+            :required="Boolean(trainer)"
             v-model="metLocation"
           />
-          <form-datetime class="col" :disabled="!trainerId" id="metOn" label="pokemon.trainer.metOn" :required="Boolean(trainerId)" v-model="metOn" />
+          <form-datetime class="col" :disabled="!trainer" id="metOn" label="pokemon.trainer.metOn" :required="Boolean(trainer)" v-model="metOn" />
         </b-row>
         <h3 v-t="'pokemon.moves.title'" />
         <b-row>
-          <move-select class="col-6" :disabled="moves.length === 4" :exclude="moveIds" v-model="moveId">
+          <move-select class="col-6" :disabled="moves.length === 4" :exclude="moveIds" v-model="move">
             <b-input-group-append>
-              <icon-button :disabled="!moveId" icon="plus" text="pokemon.moves.add" variant="success" @click="addMove" />
+              <icon-button :disabled="!move" icon="plus" text="pokemon.moves.add" variant="success" @click="addMove" />
             </b-input-group-append>
           </move-select>
         </b-row>
@@ -210,8 +210,8 @@
           <tbody>
             <tr v-for="(move, index) in moves" :key="move.id">
               <td>
-                <icon-button class="mx-1" :disabled="index === moves.length - 1" icon="arrow-down" variant="primary" @click="swapMoves(index, index + 1)" />
                 <icon-button class="mx-1" :disabled="index === 0" icon="arrow-up" variant="primary" @click="swapMoves(index, index - 1)" />
+                <icon-button class="mx-1" :disabled="index === moves.length - 1" icon="arrow-down" variant="primary" @click="swapMoves(index, index + 1)" />
               </td>
               <td v-text="move.name" />
               <td>{{ $t(`type.options.${move.type}`) }}</td>
@@ -237,7 +237,6 @@ import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import SpeciesSelect from '@/components/Species/SpeciesSelect.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { createPokemon } from '@/api/pokemon'
-import { getMove } from '@/api/moves'
 import { getSpecies } from '@/api/species'
 
 export default {
@@ -269,14 +268,14 @@ export default {
       metLevel: 1,
       metLocation: null,
       metOn: new Date(),
-      moveId: null,
+      move: null,
       moves: [],
       nature: null,
       position: 1,
       species: null,
       speciesId: null,
       surname: null,
-      trainerId: null
+      trainer: null
     }
   },
   computed: {
@@ -312,16 +311,16 @@ export default {
           remainingPowerPoints: powerPoints
         })),
         heldItemId: this.heldItemId,
-        history: this.trainerId
+        history: this.trainer
           ? {
               level: this.metLevel,
               location: this.metLocation,
               metOn: this.metOn,
-              trainerId: this.trainerId
+              trainerId: this.trainer.id
             }
           : null,
-        position: this.trainerId ? this.position - 1 : null,
-        box: this.trainerId && !this.inParty ? this.box - 1 : null
+        position: this.trainer ? this.position - 1 : null,
+        box: this.trainer && !this.inParty ? this.box - 1 : null
       }
     },
     totalIV() {
@@ -331,9 +330,8 @@ export default {
   methods: {
     async addMove() {
       try {
-        const { data } = await getMove(this.moveId)
-        this.moves.push(data)
-        this.moveId = null
+        this.moves.push(this.move)
+        this.move = null
       } catch (e) {
         this.handleError(e)
       }
@@ -415,8 +413,8 @@ export default {
         }
       }
     },
-    trainerId(trainerId) {
-      if (!trainerId) {
+    trainer(trainer) {
+      if (!trainer) {
         this.inParty = true
         this.metLevel = 1
         this.metLocation = null

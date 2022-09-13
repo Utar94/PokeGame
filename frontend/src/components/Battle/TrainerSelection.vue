@@ -2,7 +2,7 @@
   <b-container>
     <h1 v-t="'battle.trainerSelection.title'" />
     <b-row>
-      <trainer-select-new class="col" :exclude="exclude" v-model="trainer" />
+      <trainer-select class="col" :exclude="exclude" v-model="trainer" />
       <b-form-group class="col" :label="$t('battle.trainerSelection.team')">
         <icon-button class="mx-1" :disabled="!trainer" icon="plus" text="battle.trainerSelection.addPlayer" variant="primary" @click="addTrainer('players')" />
         <icon-button
@@ -27,14 +27,14 @@
 import Vue from 'vue'
 import { mapActions } from 'vuex'
 import SelectTrainerTeam from './SelectTrainerTeam.vue'
-import TrainerSelectNew from '@/components/Trainers/TrainerSelectNew.vue'
+import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { getTrainers } from '@/api/trainers'
 
 export default {
   name: 'TrainerSelection',
   components: {
     SelectTrainerTeam,
-    TrainerSelectNew
+    TrainerSelect
   },
   data() {
     return {

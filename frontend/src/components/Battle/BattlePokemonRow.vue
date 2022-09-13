@@ -1,6 +1,7 @@
 <template>
   <tr :class="{ 'table-info': isActive }">
     <td v-text="pokemon.speed" />
+    <td v-text="pokemon.position + 1" />
     <td>
       <template v-if="pokemon.surname">
         {{ pokemon.surname }}
