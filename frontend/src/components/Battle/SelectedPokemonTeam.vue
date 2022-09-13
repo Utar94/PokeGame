@@ -41,6 +41,9 @@ export default {
       return Math.min(this.battlingPlayerTrainers.length, this.battlingOpponentTrainers.length) * 6
     },
     pokemonList() {
+      if (this.team === 'opponents' && this.battlingOpponentTrainers.length === 0) {
+        return this.$store.getters.pokemonList.filter(({ history }) => history === null)
+      }
       const trainers = Object.fromEntries(
         (this.team === 'players' ? this.battlingPlayerTrainers : this.battlingOpponentTrainers).map(trainer => [trainer.id, trainer])
       )

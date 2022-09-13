@@ -5,7 +5,7 @@
       <selected-pokemon-team class="col" team="players" />
       <selected-pokemon-team class="col" team="opponents" />
     </b-row>
-    <icon-button class="mx-1" icon="chevron-left" text="battle.trainerSelection.title" variant="danger" @click="battlePrevious" />
+    <icon-button class="mx-1" icon="chevron-left" text="battle.trainerSelection.title" variant="primary" @click="battlePrevious" />
     <icon-button class="mx-1" icon="chevron-right" text="battle.title" variant="primary" @click="battleNext" />
   </b-container>
 </template>
