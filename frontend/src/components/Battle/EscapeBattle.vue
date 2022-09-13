@@ -14,17 +14,14 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'EscapeBattle',
   computed: {
-    ...mapGetters(['battleEscapeAttempts']),
+    ...mapGetters(['activeBattlingOpponentPokemon', 'activeBattlingPlayerPokemon', 'battleEscapeAttempts']),
     escapeDC() {
-      // const activePlayerPokemon = this.playerPokemon.filter(x => x && this.battle.activePokemon.includes(x.id))
-      // const playerSpeed = activePlayerPokemon.reduce((sum, { speed }) => sum + speed, 0) / activePlayerPokemon.length
-      // const activeOpponentPokemon = this.opponentPokemon.filter(x => x && this.battle.activePokemon.includes(x.id))
-      // const opponentSpeed = activeOpponentPokemon.reduce((sum, { speed }) => sum + speed, 0) / activeOpponentPokemon.length
-      // if (!playerSpeed || !opponentSpeed || playerSpeed >= opponentSpeed) {
-      //   return 5
-      // }
-      // return Math.ceil((1 - ((Math.floor((playerSpeed * 128) / opponentSpeed) + 30 * this.battle.escapeAttempts) % 256) / 256) * 20) + 5
-      return 0 // TODO(fpion): implement
+      const playerSpeed = this.activeBattlingPlayerPokemon.reduce((sum, { speed }) => sum + speed, 0) / this.activeBattlingPlayerPokemon.length
+      const opponentSpeed = this.activeBattlingOpponentPokemon.reduce((sum, { speed }) => sum + speed, 0) / this.activeBattlingOpponentPokemon.length
+      if (playerSpeed >= opponentSpeed) {
+        return 5
+      }
+      return Math.ceil((1 - ((Math.floor((playerSpeed * 128) / opponentSpeed) + 30 * this.battleEscapeAttempts) % 256) / 256) * 20) + 5
     }
   },
   methods: {

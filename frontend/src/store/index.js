@@ -31,6 +31,14 @@ export default new Vuex.Store({
     trainers: {} // NOTE(fpion): NEW!
   },
   getters: {
+    activeBattlingOpponentPokemon({ battle }, { battlingOpponentPokemon }) {
+      // NOTE(fpion): NEW!
+      return battlingOpponentPokemon.filter(({ id }) => battle.activePokemon.includes(id))
+    },
+    activeBattlingPlayerPokemon({ battle }, { battlingPlayerPokemon }) {
+      // NOTE(fpion): NEW!
+      return battlingPlayerPokemon.filter(({ id }) => battle.activePokemon.includes(id))
+    },
     activeBattlingPokemon({ battle, pokemonList }) {
       // NOTE(fpion): NEW!
       return battle.activePokemon.map(id => pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
@@ -164,25 +172,9 @@ export default new Vuex.Store({
       commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')
     },
-    resetBattlePokemon({ commit }) {
-      commit('setActivePokemon', [])
-      commit('setPlayerPokemon', [])
-      commit('setOpponentPokemon', [])
-      commit('setBattleStep', 'TrainerSelection')
-    },
     saveBattleLocation({ commit }, location) {
       // NOTE(fpion): NEW!
       commit('setLocation', location.length > 100 ? location.substr(0, 100) : location)
-    },
-    setBattlePokemon({ commit }, { opponents, players }) {
-      commit('setPlayerPokemon', players)
-      commit('setOpponentPokemon', opponents)
-      commit('setBattleStep', 'Battle')
-    },
-    setBattleTrainers({ commit }, { opponents, players }) {
-      commit('setPlayerTrainers', players)
-      commit('setOpponentTrainers', opponents)
-      commit('setBattleStep', 'PokemonSelection')
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       // NOTE(fpion): NEW!
@@ -213,12 +205,6 @@ export default new Vuex.Store({
       let trainers = state.battle.players.trainers
       trainers = trainers.includes(id) ? trainers.filter(trainer => trainer !== id) : trainers.concat([id])
       commit('setBattlingPlayerTrainers', trainers)
-    },
-    togglePokemon({ commit, state }, id) {
-      commit(
-        'setActivePokemon',
-        state.battle.activePokemon.includes(id) ? state.battle.activePokemon.filter(x => x !== id) : [...state.battle.activePokemon, id]
-      )
     }
   },
   mutations: {
@@ -262,9 +248,6 @@ export default new Vuex.Store({
     },
     setPlayerPokemon(state, pokemon) {
       state.battle.players.pokemon = pokemon ?? []
-    },
-    setPlayerTrainers(state, trainers) {
-      state.battle.players.trainers = trainers ?? []
     },
     setPokemonList(state, pokemonList) {
       // NOTE(fpion): NEW!
