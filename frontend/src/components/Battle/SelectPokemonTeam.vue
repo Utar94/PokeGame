@@ -23,7 +23,7 @@
           </td>
           <td><pokemon-condition :pokemon="item" /></td>
           <td>
-            <template v-if="item.trainer"><gender-icon :gender="item.trainer.gender" /> {{ item.trainer.name }}</template>
+            <template v-if="item.history"><gender-icon :gender="item.history.trainer.gender" /> {{ item.history.trainer.name }}</template>
             <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
           </td>
         </tr>

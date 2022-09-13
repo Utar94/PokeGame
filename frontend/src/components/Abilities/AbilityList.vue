@@ -24,7 +24,7 @@
             <td>
               <b-link :href="`/abilities/${ability.id}`">{{ ability.name }}</b-link>
             </td>
-            <td><status-cell :actor="ability.updatedBy" :date="ability.updatedAt" /></td>
+            <td><status-cell :actor="ability.updatedBy || ability.createdBy" :date="ability.updatedAt || ability.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${ability.id}`" />
               <delete-modal

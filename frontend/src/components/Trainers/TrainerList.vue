@@ -33,7 +33,7 @@
             </td>
             <td v-text="trainer.number" />
             <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-            <td><status-cell :actor="trainer.updatedBy" :date="trainer.updatedAt" /></td>
+            <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedAt || trainer.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />
               <delete-modal

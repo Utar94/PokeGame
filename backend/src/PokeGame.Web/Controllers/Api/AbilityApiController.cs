@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Abilities.Models;
-using PokeGame.Application.Models;
 using PokeGame.Domain.Abilities.Payloads;
-using PokeGame.Web.Models.Api.Ability;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -38,21 +36,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<AbilitySummary>> GetAsync(string? search, Guid? speciesId,
+    public async Task<ActionResult<AbilityModel>> GetAsync(string? search, Guid? speciesId,
       AbilitySort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<AbilityModel> abilities = await _service.GetAsync(search, speciesId,
+      return Ok(await _service.GetAsync(search, speciesId,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<AbilitySummary>
-      {
-        Items = abilities.Items.Select(x => new AbilitySummary(x)),
-        Total = abilities.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{id}")]

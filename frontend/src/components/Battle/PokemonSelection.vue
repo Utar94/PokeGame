@@ -86,7 +86,7 @@ export default {
     try {
       const { data } = await getPokemonList({ inParty: true, sort: 'Position', desc: false })
       for (const pokemon of data.items) {
-        const key = pokemon.trainer?.id ?? 'Wild'
+        const key = pokemon.history?.trainer.id ?? 'Wild'
         if (!this.pokemon[key]) {
           Vue.set(this.pokemon, key, [pokemon])
         } else {

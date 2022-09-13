@@ -82,7 +82,7 @@ export default {
       return this.$store.state.battle.activePokemon.includes(this.pokemon.id)
     },
     trainer() {
-      return this.pokemon.trainer
+      return this.pokemon.history?.trainer ?? null
     }
   },
   methods: {

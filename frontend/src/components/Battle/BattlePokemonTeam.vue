@@ -13,7 +13,7 @@
 import BattlePokemonRow from './BattlePokemonRow.vue'
 
 export default {
-  name: 'PokemonTeam',
+  name: 'BattlePokemonTeam',
   components: {
     BattlePokemonRow
   },
