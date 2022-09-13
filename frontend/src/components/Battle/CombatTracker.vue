@@ -176,7 +176,7 @@ export default {
     },
     async refreshPokemon() {
       try {
-        const { data } = await getPokemonList({ sort: 'Name', desc: false })
+        const { data } = await getPokemonList()
         this.pokemon = {}
         for (const item of data.items) {
           Vue.set(this.pokemon, item.id, item)

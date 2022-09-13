@@ -31,6 +31,11 @@
       <held-item-info v-else-if="heldItem" :item="heldItem" />
     </td>
     <td v-if="canSwitch">
+      <template v-if="isActive && pokemon.currentHitPoints">
+        <icon-button icon="magic" text="battle.makeMove.title" variant="danger" v-b-modal="`makeMove_${pokemon.id}`" />
+        <make-move-modal :id="`makeMove_${pokemon.id}`" :pokemon="pokemon" />
+        <div class="my-2" />
+      </template>
       <icon-button
         icon="exchange-alt"
         :text="isActive ? 'battle.combatTracker.withdraw' : 'battle.combatTracker.send'"
@@ -38,7 +43,6 @@
         @click="togglePokemon(pokemon.id)"
       />
     </td>
-    <!-- TODO(fpion): Use a Move (if readonly & not fainted) -->
   </tr>
 </template>
 
@@ -46,6 +50,7 @@
 import { mapActions } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
 import HeldItemInfo from './HeldItemInfo.vue'
+import MakeMoveModal from './MakeMoveModal.vue'
 import PokemonCondition from './PokemonCondition.vue'
 
 export default {
@@ -53,6 +58,7 @@ export default {
   components: {
     AbilityInfo,
     HeldItemInfo,
+    MakeMoveModal,
     PokemonCondition
   },
   props: {
