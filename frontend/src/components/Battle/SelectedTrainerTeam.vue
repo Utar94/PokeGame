@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 v-t="title" />
+    <h3 v-t="`battle.${team}`" />
     <table v-if="trainers.length > 0" class="table table-striped">
       <thead>
         <tr>
@@ -11,12 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="trainer in trainers" :key="trainer.id">
-          <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
-          <td v-text="trainer.number" />
-          <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-          <td><icon-button icon="times" variant="danger" @click="$emit('remove', trainer.id)" /></td>
-        </tr>
+        <selected-trainer-row v-for="trainer in trainers" :key="trainer.id" :team="team" :trainer="trainer" />
       </tbody>
     </table>
     <p v-else v-t="'trainers.empty'" />
@@ -24,16 +19,24 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import SelectedTrainerRow from './SelectedTrainerRow.vue'
+
 export default {
   name: 'SelectedTrainerTeam',
+  components: {
+    SelectedTrainerRow
+  },
   props: {
-    title: {
+    team: {
       type: String,
       required: true
-    },
-    trainers: {
-      type: Array,
-      required: true
+    }
+  },
+  computed: {
+    ...mapGetters(['battlingOpponentTrainers', 'battlingPlayerTrainers']),
+    trainers() {
+      return this.team === 'players' ? this.battlingPlayerTrainers : this.battlingOpponentTrainers
     }
   }
 }

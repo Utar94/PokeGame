@@ -1,6 +1,6 @@
 <template>
   <span>
-    {{ $t('battle.combatTracker.hpFormat', { current: pokemon.currentHitPoints, max: pokemon.maximumHitPoints }) }}
+    {{ $t('battle.hpFormat', { current: pokemon.currentHitPoints, max: pokemon.maximumHitPoints }) }}
     <br v-if="pokemon.currentHitPoints < 1 || pokemon.statusCondition" />
     <template v-if="pokemon.currentHitPoints < 1">
       <font-awesome-icon icon="heartbeat" /> <strong>{{ $t('pokemon.fainted') }}</strong>

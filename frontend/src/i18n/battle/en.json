@@ -3,7 +3,6 @@
     "attemptsFormat": "Attempts: {attempts}",
     "defeat": "Defeat!",
     "escape": "Escape",
-    "hpFormat": "HP: {current}/{max}",
     "location": {
       "label": "Location",
       "placeholder": "Enter the battle location"
@@ -13,10 +12,11 @@
     "victory": "Victory!",
     "withdraw": "Withdraw"
   },
+  "condition": "Condition",
+  "hpFormat": "HP: {current}/{max}",
   "makeMove": {
     "abilityAndHeldItem": "Ability & Held Item",
     "burn": "Burn (physical move, not Facade, without Guts: ×0.5)",
-    "condition": "Condition",
     "critical": "Critical",
     "damage": "Damage",
     "ppFormat": "PP: {current}/{max}",

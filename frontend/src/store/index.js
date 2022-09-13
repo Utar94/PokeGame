@@ -51,6 +51,10 @@ export default new Vuex.Store({
       // NOTE(fpion): NEW!
       return state.battle.players.trainers.map(id => state.trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
     },
+    pokemonList(state) {
+      // NOTE(fpion): NEW!
+      return Object.values(state.pokemonList)
+    },
     trainers(state) {
       // NOTE(fpion): NEW!
       return Object.values(state.trainers)
@@ -65,8 +69,22 @@ export default new Vuex.Store({
     battleNext({ commit, state }) {
       // NOTE(fpion): NEW!
       switch (state.battle.step) {
+        case 'PokemonSelection':
+          commit('setBattleStep', 'Battle')
+          break
         case 'TrainerSelection':
           commit('setBattleStep', 'PokemonSelection')
+          break
+      }
+    },
+    battlePrevious({ commit, state }) {
+      // NOTE(fpion): NEW!
+      switch (state.battle.step) {
+        case 'Battle':
+          commit('setBattleStep', 'PokemonSelection')
+          break
+        case 'PokemonSelection':
+          commit('setBattleStep', 'TrainerSelection')
           break
       }
     },
@@ -139,11 +157,23 @@ export default new Vuex.Store({
       commit('setOpponentTrainers', opponents)
       commit('setBattleStep', 'PokemonSelection')
     },
+    toggleBattlingOpponentPokemon({ commit, state }, id) {
+      // NOTE(fpion): NEW!
+      let pokemon = state.battle.opponents.pokemon
+      pokemon = pokemon.includes(id) ? pokemon.filter(trainer => trainer !== id) : pokemon.concat([id])
+      commit('setBattlingOpponentPokemon', pokemon)
+    },
     toggleBattlingOpponentTrainer({ commit, state }, id) {
       // NOTE(fpion): NEW!
       let trainers = state.battle.opponents.trainers
       trainers = trainers.includes(id) ? trainers.filter(trainer => trainer !== id) : trainers.concat([id])
       commit('setBattlingOpponentTrainers', trainers)
+    },
+    toggleBattlingPlayerPokemon({ commit, state }, id) {
+      // NOTE(fpion): NEW!
+      let pokemon = state.battle.players.pokemon
+      pokemon = pokemon.includes(id) ? pokemon.filter(trainer => trainer !== id) : pokemon.concat([id])
+      commit('setBattlingPlayerPokemon', pokemon)
     },
     toggleBattlingPlayerTrainer({ commit, state }, id) {
       // NOTE(fpion): NEW!
@@ -166,9 +196,17 @@ export default new Vuex.Store({
       // NOTE(fpion): NEW!
       state.battle.step = step ?? 'TrainerSelection'
     },
+    setBattlingOpponentPokemon(state, pokemon) {
+      // NOTE(fpion): NEW!
+      state.battle.opponents.pokemon = pokemon ?? []
+    },
     setBattlingOpponentTrainers(state, trainers) {
       // NOTE(fpion): NEW!
       state.battle.opponents.trainers = trainers ?? []
+    },
+    setBattlingPlayerPokemon(state, pokemon) {
+      // NOTE(fpion): NEW!
+      state.battle.players.pokemon = pokemon ?? []
     },
     setBattlingPlayerTrainers(state, trainers) {
       // NOTE(fpion): NEW!

@@ -12,27 +12,13 @@
         v-model="trainerId"
       />
       <b-form-group class="col" :label="$t('battle.trainerSelection.team')">
-        <icon-button
-          class="mx-1"
-          :disabled="!trainerId"
-          icon="plus"
-          text="battle.trainerSelection.addPlayer"
-          variant="primary"
-          @click="toggleTrainer('players')"
-        />
-        <icon-button
-          class="mx-1"
-          :disabled="!trainerId"
-          icon="plus"
-          text="battle.trainerSelection.addOpponent"
-          variant="danger"
-          @click="toggleTrainer('opponents')"
-        />
+        <icon-button class="mx-1" :disabled="!trainerId" icon="plus" text="battle.trainerSelection.addPlayer" variant="primary" @click="toggle('players')" />
+        <icon-button class="mx-1" :disabled="!trainerId" icon="plus" text="battle.trainerSelection.addOpponent" variant="danger" @click="toggle('opponents')" />
       </b-form-group>
     </b-row>
     <b-row>
-      <selected-trainer-team class="col" title="battle.players" :trainers="battlingPlayerTrainers" @remove="toggleTrainer('players', $event)" />
-      <selected-trainer-team class="col" title="battle.opponents" :trainers="battlingOpponentTrainers" @remove="toggleTrainer('opponents', $event)" />
+      <selected-trainer-team class="col" team="players" />
+      <selected-trainer-team class="col" team="opponents" />
     </b-row>
     <icon-button
       :disabled="battlingPlayerTrainers.length === 0"
@@ -59,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battlingOpponentTrainers', 'battlingPlayerTrainers', 'trainers']),
+    ...mapGetters(['battlingPlayerTrainers', 'trainers']),
     ...mapState(['battle']),
     exclude() {
       return this.battle.players.trainers.concat(this.battle.opponents.trainers)
@@ -73,15 +59,13 @@ export default {
   },
   methods: {
     ...mapActions(['battleNext', 'loadTrainers', 'toggleBattlingOpponentTrainer', 'toggleBattlingPlayerTrainer']),
-    toggleTrainer(team, trainerId = null) {
+    toggle(team) {
       if (team === 'players') {
-        this.toggleBattlingPlayerTrainer(trainerId ?? this.trainerId)
+        this.toggleBattlingPlayerTrainer(this.trainerId)
       } else {
-        this.toggleBattlingOpponentTrainer(trainerId ?? this.trainerId)
+        this.toggleBattlingOpponentTrainer(this.trainerId)
       }
-      if (trainerId === null) {
-        this.trainerId = null
-      }
+      this.trainerId = null
     }
   },
   async created() {
