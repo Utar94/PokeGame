@@ -1,8 +1,7 @@
 {
+  "abilityAndHeldItem": "Ability & Held Item",
   "combatTracker": {
-    "attemptsFormat": "Attempts: {attempts}",
     "defeat": "Defeat!",
-    "escape": "Escape",
     "location": {
       "label": "Location",
       "placeholder": "Enter the battle location"
@@ -13,9 +12,12 @@
     "withdraw": "Withdraw"
   },
   "condition": "Condition",
+  "escape": {
+    "attemptsFormat": "Attempts: {attempts}",
+    "label": "Escape"
+  },
   "hpFormat": "HP: {current}/{max}",
   "makeMove": {
-    "abilityAndHeldItem": "Ability & Held Item",
     "burn": "Burn (physical move, not Facade, without Guts: ×0.5)",
     "critical": "Critical",
     "damage": "Damage",

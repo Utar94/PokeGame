@@ -5,7 +5,9 @@
     </h3>
     <table v-if="pokemonList.length > 0" class="table table-hover">
       <thead>
-        <th scope="col" />
+        <th scope="col">
+          <icon-button :icon="allSelected ? 'square' : 'check-square'" size="sm" variant="primary" @click="selectAll(!allSelected)" />
+        </th>
         <th scope="col" v-t="'pokemon.trainer.title'" />
         <th scope="col" v-t="'pokemon.trainer.position'" />
         <th scope="col" v-t="'pokemon.identification'" />
@@ -20,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import SelectedPokemonRow from './SelectedPokemonRow.vue'
 
 export default {
@@ -35,8 +37,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battlingOpponentTrainers', 'battlingPlayerTrainers']),
+    ...mapGetters(['battlingOpponentTrainers', 'battlingPlayerTrainers', 'isTrainerBattle']),
     ...mapState(['battle']),
+    allSelected() {
+      return this.pokemonList.every(({ id }) => this.selected.includes(id))
+    },
     max() {
       return Math.min(this.battlingPlayerTrainers.length, this.battlingOpponentTrainers.length) * 6
     },
@@ -56,6 +61,31 @@ export default {
     },
     selected() {
       return this.team === 'players' ? this.battle.players.pokemon : this.battle.opponents.pokemon
+    }
+  },
+  methods: {
+    ...mapActions(['toggleBattlingOpponentPokemon', 'toggleBattlingPlayerPokemon']),
+    selectAll(select = false) {
+      for (const pokemon of this.pokemonList) {
+        if (this.selected.includes(pokemon.id) === !select) {
+          if (this.team === 'players') {
+            this.toggleBattlingPlayerPokemon(pokemon.id)
+          } else {
+            this.toggleBattlingOpponentPokemon(pokemon.id)
+          }
+        }
+      }
+    }
+  },
+  watch: {
+    pokemonList: {
+      deep: true,
+      immediate: true,
+      handler() {
+        if ((!this.isTrainerBattle && this.team === 'players') || this.battlingPlayerTrainers.length === this.battlingOpponentTrainers.length) {
+          this.selectAll(true)
+        }
+      }
     }
   }
 }

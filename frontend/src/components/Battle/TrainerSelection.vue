@@ -20,13 +20,7 @@
       <selected-trainer-team class="col" team="players" />
       <selected-trainer-team class="col" team="opponents" />
     </b-row>
-    <icon-button
-      :disabled="battlingPlayerTrainers.length === 0"
-      icon="chevron-right"
-      text="battle.pokemonSelection.title"
-      variant="primary"
-      @click="battleNext"
-    />
+    <icon-button :disabled="!isValid" icon="chevron-right" text="battle.pokemonSelection.title" variant="primary" @click="battleNext" />
   </b-container>
 </template>
 
@@ -49,6 +43,9 @@ export default {
     ...mapState(['battle']),
     exclude() {
       return this.battle.players.trainers.concat(this.battle.opponents.trainers)
+    },
+    isValid() {
+      return this.battlingPlayerTrainers.length > 0
     },
     options() {
       return this.orderBy(

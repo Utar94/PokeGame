@@ -14,9 +14,9 @@ export default new Vuex.Store({
   plugins: [vuexLocal.plugin],
   state: {
     battle: {
-      activePokemon: [],
-      escapeAttempts: 0,
-      location: null,
+      activePokemon: [], // NOTE(fpion): NEW!
+      escapeAttempts: 0, // NOTE(fpion): NEW!
+      location: null, // NOTE(fpion): NEW!
       opponents: {
         pokemon: [], // NOTE(fpion): NEW!
         trainers: [] // NOTE(fpion): NEW!
@@ -31,33 +31,57 @@ export default new Vuex.Store({
     trainers: {} // NOTE(fpion): NEW!
   },
   getters: {
-    battleStep(state) {
+    activeBattlingPokemon({ battle, pokemonList }) {
       // NOTE(fpion): NEW!
-      return state.battle.step
+      return battle.activePokemon.map(id => pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
     },
-    battlingOpponentPokemon(state) {
+    battleEscapeAttempts({ battle }) {
       // NOTE(fpion): NEW!
-      return state.battle.opponents.pokemon.map(id => state.pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
+      return battle.escapeAttempts
     },
-    battlingOpponentTrainers(state) {
+    battleLocation({ battle }) {
       // NOTE(fpion): NEW!
-      return state.battle.opponents.trainers.map(id => state.trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+      return battle.location
     },
-    battlingPlayerPokemon(state) {
+    battleStep({ battle }) {
       // NOTE(fpion): NEW!
-      return state.battle.players.pokemon.map(id => state.pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
+      return battle.step
     },
-    battlingPlayerTrainers(state) {
+    battlingOpponentPokemon({ battle, pokemonList }) {
       // NOTE(fpion): NEW!
-      return state.battle.players.trainers.map(id => state.trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+      return battle.opponents.pokemon.map(id => pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
     },
-    pokemonList(state) {
+    battlingOpponentTrainers({ battle, trainers }) {
       // NOTE(fpion): NEW!
-      return Object.values(state.pokemonList)
+      return battle.opponents.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
     },
-    trainers(state) {
+    battlingPlayerPokemon({ battle, pokemonList }) {
       // NOTE(fpion): NEW!
-      return Object.values(state.trainers)
+      return battle.players.pokemon.map(id => pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
+    },
+    battlingPlayerTrainers({ battle, trainers }) {
+      // NOTE(fpion): NEW!
+      return battle.players.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    isTrainerBattle({ battle }) {
+      // NOTE(fpion): NEW!
+      return battle.opponents.trainers.length > 0
+    },
+    pokemonList({ pokemonList }) {
+      // NOTE(fpion): NEW!
+      return Object.values(pokemonList)
+    },
+    remainingBattlingOpponentPokemon(_, { battlingOpponentPokemon }) {
+      // NOTE(fpion): NEW!
+      return battlingOpponentPokemon.filter(({ currentHitPoints }) => currentHitPoints > 0)
+    },
+    remainingBattlingPlayerPokemon(_, { battlingPlayerPokemon }) {
+      // NOTE(fpion): NEW!
+      return battlingPlayerPokemon.filter(({ currentHitPoints }) => currentHitPoints > 0)
+    },
+    trainers({ trainers }) {
+      // NOTE(fpion): NEW!
+      return Object.values(trainers)
     }
   },
   actions: {
@@ -81,6 +105,7 @@ export default new Vuex.Store({
       // NOTE(fpion): NEW!
       switch (state.battle.step) {
         case 'Battle':
+          commit('setActiveBattlingPokemon', [])
           commit('setBattleStep', 'PokemonSelection')
           break
         case 'PokemonSelection':
@@ -89,6 +114,7 @@ export default new Vuex.Store({
       }
     },
     increaseEscapeAttempts({ commit, state }) {
+      // NOTE(fpion): NEW!
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
     },
     async loadPokemonList({ commit }) {
@@ -144,8 +170,9 @@ export default new Vuex.Store({
       commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')
     },
-    saveLocation({ commit }, location) {
-      commit('setLocation', location)
+    saveBattleLocation({ commit }, location) {
+      // NOTE(fpion): NEW!
+      commit('setLocation', location.length > 100 ? location.substr(0, 100) : location)
     },
     setBattlePokemon({ commit }, { opponents, players }) {
       commit('setPlayerPokemon', players)
@@ -156,6 +183,12 @@ export default new Vuex.Store({
       commit('setPlayerTrainers', players)
       commit('setOpponentTrainers', opponents)
       commit('setBattleStep', 'PokemonSelection')
+    },
+    toggleActiveBattlingPokemon({ commit, state }, id) {
+      // NOTE(fpion): NEW!
+      let activePokemon = state.battle.activePokemon
+      activePokemon = activePokemon.includes(id) ? activePokemon.filter(pokemon => pokemon !== id) : activePokemon.concat([id])
+      commit('setActiveBattlingPokemon', activePokemon)
     },
     toggleBattlingOpponentPokemon({ commit, state }, id) {
       // NOTE(fpion): NEW!
@@ -189,7 +222,8 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setActivePokemon(state, activePokemon) {
+    setActiveBattlingPokemon(state, activePokemon) {
+      // NOTE(fpion): NEW!
       state.battle.activePokemon = activePokemon ?? []
     },
     setBattleStep(state, step) {
@@ -213,8 +247,10 @@ export default new Vuex.Store({
       state.battle.players.trainers = trainers ?? []
     },
     setEscapeAttempts(state, escapeAttempts) {
+      // NOTE(fpion): NEW!
       state.battle.escapeAttempts = escapeAttempts ?? 0
     },
+    // NOTE(fpion): NEW!
     setLocation(state, location) {
       state.battle.location = location ?? null
     },
