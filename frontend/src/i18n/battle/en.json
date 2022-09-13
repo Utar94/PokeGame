@@ -19,7 +19,6 @@
     "condition": "Condition",
     "critical": "Critical",
     "damage": "Damage",
-    "other": "Other Modifiers",
     "ppFormat": "PP: {current}/{max}",
     "random": "Random (82+3d6)",
     "stab": {

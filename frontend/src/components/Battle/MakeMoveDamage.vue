@@ -20,7 +20,6 @@
         </b-input-group-append>
       </form-field>
       <form-select class="col" id="stab" label="battle.makeMove.stab.label" :options="stabOptions" v-model="stab" />
-      <form-field class="col" id="other" label="battle.makeMove.other" :minValue="0" :maxValue="999.999" :step="0.001" type="number" v-model.number="other" />
     </b-row>
     <b-form-group>
       <b-form-checkbox v-model="burn">{{ $t('battle.makeMove.burn') }}</b-form-checkbox>
@@ -47,7 +46,6 @@ export default {
       burn: false,
       critical: false,
       offensiveStatistic: 0,
-      other: 0,
       power: 0,
       random: 0,
       stab: 0
@@ -71,11 +69,10 @@ export default {
     value: {
       deep: true,
       immediate: true,
-      handler({ burn, critical, offensiveStatistic, other, power, random, stab }) {
+      handler({ burn, critical, offensiveStatistic, power, random, stab }) {
         this.burn = burn
         this.critical = critical
         this.offensiveStatistic = offensiveStatistic
-        this.other = other
         this.power = power
         this.random = random
         this.stab = stab

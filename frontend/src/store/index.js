@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
+import { getPokemonList } from '@/api/pokemon'
+import { getTrainers } from '@/api/trainers'
 
 Vue.use(Vuex)
 
@@ -16,14 +18,42 @@ export default new Vuex.Store({
       escapeAttempts: 0,
       location: null,
       opponents: {
-        pokemon: [],
-        trainers: []
+        pokemon: [], // NOTE(fpion): NEW!
+        trainers: [] // NOTE(fpion): NEW!
       },
       players: {
-        pokemon: [],
-        trainers: []
+        pokemon: [], // NOTE(fpion): NEW!
+        trainers: [] // NOTE(fpion): NEW!
       },
-      step: 'TrainerSelection'
+      step: 'TrainerSelection' // NOTE(fpion): NEW!
+    },
+    pokemonList: {}, // NOTE(fpion): NEW!
+    trainers: {} // NOTE(fpion): NEW!
+  },
+  getters: {
+    battleStep(state) {
+      // NOTE(fpion): NEW!
+      return state.battle.step
+    },
+    battlingOpponentPokemon(state) {
+      // NOTE(fpion): NEW!
+      return state.battle.opponents.pokemon.map(id => state.pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
+    },
+    battlingOpponentTrainers(state) {
+      // NOTE(fpion): NEW!
+      return state.battle.opponents.trainers.map(id => state.trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    battlingPlayerPokemon(state) {
+      // NOTE(fpion): NEW!
+      return state.battle.players.pokemon.map(id => state.pokemonList[id]).filter(pokemon => typeof pokemon === 'object' && pokemon !== null)
+    },
+    battlingPlayerTrainers(state) {
+      // NOTE(fpion): NEW!
+      return state.battle.players.trainers.map(id => state.trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    trainers(state) {
+      // NOTE(fpion): NEW!
+      return Object.values(state.trainers)
     }
   },
   actions: {
@@ -32,8 +62,34 @@ export default new Vuex.Store({
         commit('setPlayerPokemon', state.battle.players.pokemon.concat([id]))
       }
     },
+    battleNext({ commit, state }) {
+      // NOTE(fpion): NEW!
+      switch (state.battle.step) {
+        case 'TrainerSelection':
+          commit('setBattleStep', 'PokemonSelection')
+          break
+      }
+    },
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
+    },
+    async loadPokemonList({ commit }) {
+      // NOTE(fpion): NEW!
+      const { data } = await getPokemonList()
+      const pokemonList = {}
+      for (const item of data.items) {
+        pokemonList[item.id] = item
+      }
+      commit('setPokemonList', pokemonList)
+    },
+    async loadTrainers({ commit }) {
+      // NOTE(fpion): NEW!
+      const { data } = await getTrainers()
+      const trainers = {}
+      for (const item of data.items) {
+        trainers[item.id] = item
+      }
+      commit('setTrainers', trainers)
     },
     removeBattlePokemon({ commit, state }, id) {
       if (state.battle.activePokemon.includes(id)) {
@@ -83,6 +139,18 @@ export default new Vuex.Store({
       commit('setOpponentTrainers', opponents)
       commit('setBattleStep', 'PokemonSelection')
     },
+    toggleBattlingOpponentTrainer({ commit, state }, id) {
+      // NOTE(fpion): NEW!
+      let trainers = state.battle.opponents.trainers
+      trainers = trainers.includes(id) ? trainers.filter(trainer => trainer !== id) : trainers.concat([id])
+      commit('setBattlingOpponentTrainers', trainers)
+    },
+    toggleBattlingPlayerTrainer({ commit, state }, id) {
+      // NOTE(fpion): NEW!
+      let trainers = state.battle.players.trainers
+      trainers = trainers.includes(id) ? trainers.filter(trainer => trainer !== id) : trainers.concat([id])
+      commit('setBattlingPlayerTrainers', trainers)
+    },
     togglePokemon({ commit, state }, id) {
       commit(
         'setActivePokemon',
@@ -95,7 +163,16 @@ export default new Vuex.Store({
       state.battle.activePokemon = activePokemon ?? []
     },
     setBattleStep(state, step) {
+      // NOTE(fpion): NEW!
       state.battle.step = step ?? 'TrainerSelection'
+    },
+    setBattlingOpponentTrainers(state, trainers) {
+      // NOTE(fpion): NEW!
+      state.battle.opponents.trainers = trainers ?? []
+    },
+    setBattlingPlayerTrainers(state, trainers) {
+      // NOTE(fpion): NEW!
+      state.battle.players.trainers = trainers ?? []
     },
     setEscapeAttempts(state, escapeAttempts) {
       state.battle.escapeAttempts = escapeAttempts ?? 0
@@ -114,6 +191,14 @@ export default new Vuex.Store({
     },
     setPlayerTrainers(state, trainers) {
       state.battle.players.trainers = trainers ?? []
+    },
+    setPokemonList(state, pokemonList) {
+      // NOTE(fpion): NEW!
+      state.pokemonList = pokemonList || {}
+    },
+    setTrainers(state, trainers) {
+      // NOTE(fpion): NEW!
+      state.trainers = trainers || {}
     }
   }
 })

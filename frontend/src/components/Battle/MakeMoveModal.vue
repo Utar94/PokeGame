@@ -42,7 +42,6 @@ export default {
         burn: false,
         critical: false,
         offensiveStatistic: 0,
-        other: 0,
         power: 0,
         random: 0,
         stab: 0
@@ -87,7 +86,7 @@ export default {
     },
     reset(callback = null) {
       this.move = null
-      this.targets = []
+      this.selectedTargets = []
       if (typeof callback === 'function') {
         callback()
       }

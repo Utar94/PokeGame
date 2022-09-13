@@ -2,97 +2,91 @@
   <b-container>
     <h1 v-t="'battle.trainerSelection.title'" />
     <b-row>
-      <trainer-select class="col" :exclude="exclude" v-model="trainer" />
+      <form-select
+        class="col"
+        :disabled="options.length === 0"
+        id="trainer"
+        label="trainers.select.label"
+        :options="options"
+        placeholder="trainers.select.placeholder"
+        v-model="trainerId"
+      />
       <b-form-group class="col" :label="$t('battle.trainerSelection.team')">
-        <icon-button class="mx-1" :disabled="!trainer" icon="plus" text="battle.trainerSelection.addPlayer" variant="primary" @click="addTrainer('players')" />
         <icon-button
           class="mx-1"
-          :disabled="!trainer"
+          :disabled="!trainerId"
+          icon="plus"
+          text="battle.trainerSelection.addPlayer"
+          variant="primary"
+          @click="toggleTrainer('players')"
+        />
+        <icon-button
+          class="mx-1"
+          :disabled="!trainerId"
           icon="plus"
           text="battle.trainerSelection.addOpponent"
           variant="danger"
-          @click="addTrainer('opponents')"
+          @click="toggleTrainer('opponents')"
         />
       </b-form-group>
     </b-row>
     <b-row>
-      <select-trainer-team class="col" title="battle.players" :trainers="players" @removed="removeTrainer('players', $event)" />
-      <select-trainer-team class="col" title="battle.opponents" :trainers="opponents" @removed="removeTrainer('opponents', $event)" />
+      <selected-trainer-team class="col" title="battle.players" :trainers="battlingPlayerTrainers" @remove="toggleTrainer('players', $event)" />
+      <selected-trainer-team class="col" title="battle.opponents" :trainers="battlingOpponentTrainers" @remove="toggleTrainer('opponents', $event)" />
     </b-row>
-    <icon-button :disabled="!players.length" icon="chevron-right" text="battle.pokemonSelection.title" variant="primary" @click="onNext" />
+    <icon-button
+      :disabled="battlingPlayerTrainers.length === 0"
+      icon="chevron-right"
+      text="battle.pokemonSelection.title"
+      variant="primary"
+      @click="battleNext"
+    />
   </b-container>
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapActions } from 'vuex'
-import SelectTrainerTeam from './SelectTrainerTeam.vue'
-import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
-import { getTrainers } from '@/api/trainers'
+import { mapActions, mapGetters, mapState } from 'vuex'
+import SelectedTrainerTeam from './SelectedTrainerTeam.vue'
 
 export default {
   name: 'TrainerSelection',
   components: {
-    SelectTrainerTeam,
-    TrainerSelect
+    SelectedTrainerTeam
   },
   data() {
     return {
-      opponents: [],
-      players: [],
-      trainer: null
+      trainerId: null
     }
   },
   computed: {
+    ...mapGetters(['battlingOpponentTrainers', 'battlingPlayerTrainers', 'trainers']),
+    ...mapState(['battle']),
     exclude() {
-      return this.playerIds.concat(this.opponentIds)
+      return this.battle.players.trainers.concat(this.battle.opponents.trainers)
     },
-    opponentIds() {
-      return this.opponents.map(({ id }) => id)
-    },
-    playerIds() {
-      return this.players.map(({ id }) => id)
+    options() {
+      return this.orderBy(
+        this.trainers.filter(({ id }) => !this.exclude.includes(id)).map(({ id, name, number }) => ({ text: `${name} (#${number})`, value: id })),
+        'text'
+      )
     }
   },
   methods: {
-    ...mapActions(['setBattleTrainers']),
-    addTrainer(team) {
-      switch (team) {
-        case 'players':
-          this.players.push(this.trainer)
-          break
-        case 'opponents':
-          this.opponents.push(this.trainer)
-          break
+    ...mapActions(['battleNext', 'loadTrainers', 'toggleBattlingOpponentTrainer', 'toggleBattlingPlayerTrainer']),
+    toggleTrainer(team, trainerId = null) {
+      if (team === 'players') {
+        this.toggleBattlingPlayerTrainer(trainerId ?? this.trainerId)
+      } else {
+        this.toggleBattlingOpponentTrainer(trainerId ?? this.trainerId)
       }
-      this.trainer = null
-    },
-    onNext() {
-      this.setBattleTrainers({ opponents: this.opponentIds, players: this.playerIds })
-    },
-    removeTrainer(team, index) {
-      switch (team) {
-        case 'players':
-          Vue.delete(this.players, index)
-          break
-        case 'opponents':
-          Vue.delete(this.opponents, index)
-          break
+      if (trainerId === null) {
+        this.trainerId = null
       }
     }
   },
   async created() {
     try {
-      const { battle } = this.$store.state
-      if (battle.players.trainers.length || battle.opponents.trainers.length) {
-        const { data } = await getTrainers()
-        const trainers = {}
-        for (const trainer of data.items) {
-          trainers[trainer.id] = trainer
-        }
-        this.players = battle.players.trainers.map(id => trainers[id])
-        this.opponents = battle.opponents.trainers.map(id => trainers[id])
-      }
+      await this.loadTrainers()
     } catch (e) {
       this.handleError(e)
     }
