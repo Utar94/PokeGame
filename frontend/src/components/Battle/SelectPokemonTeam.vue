@@ -11,6 +11,7 @@
           @click.prevent="$emit('toggled', item)"
         >
           <td><b-form-checkbox :checked="selected.includes(item.id)" size="lg" /></td>
+          <td v-text="item.position + 1" />
           <td>
             <template v-if="item.surname">
               {{ item.surname }}

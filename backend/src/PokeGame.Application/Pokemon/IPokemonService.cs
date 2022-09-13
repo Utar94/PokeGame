@@ -11,7 +11,7 @@ namespace PokeGame.Application.Pokemon
     Task<PokemonModel> CreateAsync(CreatePokemonPayload payload, CancellationToken cancellationToken = default);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<PokemonModel?> GetAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<ListModel<PokemonModel>> GetAsync(PokemonGender? gender = null, string? search = null, Guid? speciesId = null, Guid? trainerId = null,
+    Task<ListModel<PokemonModel>> GetAsync(PokemonGender? gender = null, byte? inBox = null, bool? inParty = null, bool? isWild = null, string? search = null, Guid? speciesId = null, Guid? trainerId = null,
       PokemonSort? sort = null, bool desc = false,
       int? index = null, int? count = null,
       CancellationToken cancellationToken = default);

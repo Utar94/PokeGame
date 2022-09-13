@@ -8,7 +8,17 @@
     <b-row>
       <gender-select class="col" v-model="gender" />
       <species-select class="col" v-model="speciesId" />
-      <trainer-select class="col" v-model="trainerId" />
+      <trainer-select class="col" :disabled="isWild" v-model="trainer">
+        <template #after>
+          <b-form-checkbox v-model="isWild">{{ $t('pokemon.wild') }}</b-form-checkbox>
+        </template>
+      </trainer-select>
+      <form-field class="col" :disabled="!inBox" id="box" label="pokemon.trainer.box" :minValue="1" :maxValue="32" :step="1" type="number" v-model.number="box">
+        <template #after>
+          <b-form-checkbox :disabled="!trainer" inline v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
+          <b-form-checkbox :disabled="!trainer" inline v-model="inBox">{{ $t('pokemon.trainer.inBox') }}</b-form-checkbox>
+        </template>
+      </form-field>
     </b-row>
     <b-row>
       <search-field class="col" v-model="search" />
@@ -100,9 +110,13 @@ export default {
   },
   data() {
     return {
+      box: 1,
       count: 10,
       desc: false,
       gender: null,
+      inBox: false,
+      inParty: false,
+      isWild: false,
       loading: false,
       page: 1,
       pokemon: [],
@@ -110,16 +124,19 @@ export default {
       sort: 'Name',
       speciesId: null,
       total: 0,
-      trainerId: null
+      trainer: null
     }
   },
   computed: {
     params() {
       return {
         gender: this.gender,
+        inBox: this.trainer && this.inBox && this.box >= 1 && this.box <= 32 ? this.box - 1 : null,
+        inParty: (this.trainer && this.inParty) || null,
+        isWild: this.isWild || null,
         search: this.search,
         speciesId: this.speciesId,
-        trainerId: this.trainerId,
+        trainerId: this.isWild ? null : this.trainer?.id ?? null,
         sort: this.sort,
         desc: this.desc,
         index: (this.page - 1) * this.count,
@@ -174,6 +191,20 @@ export default {
     }
   },
   watch: {
+    inBox(inBox) {
+      this.box = 1
+      if (inBox) {
+        this.inParty = false
+      }
+    },
+    inParty(inParty) {
+      if (inParty) {
+        this.inBox = false
+      }
+    },
+    isWild() {
+      this.trainer = null
+    },
     params: {
       deep: true,
       immediate: true,
@@ -183,6 +214,9 @@ export default {
           oldValue &&
           (newValue.search !== oldValue.search ||
             newValue.gender !== oldValue.gender ||
+            newValue.inBox !== oldValue.inBox ||
+            newValue.inParty !== oldValue.inParty ||
+            newValue.isWild !== oldValue.isWild ||
             newValue.speciesId !== oldValue.speciesId ||
             newValue.trainerId !== oldValue.trainerId ||
             newValue.count !== oldValue.count)
@@ -192,6 +226,12 @@ export default {
         } else {
           await this.refresh(newValue)
         }
+      }
+    },
+    trainer(trainer) {
+      if (!trainer) {
+        this.inParty = false
+        this.inBox = false
       }
     }
   }

@@ -133,12 +133,12 @@ namespace PokeGame.Application.Pokemon
       return await _querier.GetAsync(id, cancellationToken);
     }
 
-    public async Task<ListModel<PokemonModel>> GetAsync(PokemonGender? gender, string? search, Guid? speciesId, Guid? trainerId,
+    public async Task<ListModel<PokemonModel>> GetAsync(PokemonGender? gender, byte? inBox, bool? inParty, bool? isWild, string? search, Guid? speciesId, Guid? trainerId,
       PokemonSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return await _querier.GetPagedAsync(gender, search, speciesId, trainerId,
+      return await _querier.GetPagedAsync(gender, inBox, inParty, isWild, search, speciesId, trainerId,
         sort, desc,
         index, count,
         cancellationToken);
