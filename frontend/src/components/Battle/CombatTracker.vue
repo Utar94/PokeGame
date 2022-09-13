@@ -43,7 +43,8 @@
       variant="primary"
       @click="resetBattle"
     />
-    <icon-button class="mx-1" icon="ban" text="actions.cancel" variant="danger" @click="resetBattle" /> -->
+    -->
+    <cancel-battle />
   </b-container>
 </template>
 
@@ -51,6 +52,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import BattlingPokemonTeam from './BattlingPokemonTeam.vue'
 import BattlingTrainerTeam from './BattlingTrainerTeam.vue'
+import CancelBattle from './CancelBattle.vue'
 import EscapeBattle from './EscapeBattle.vue'
 import LocationField from './LocationField.vue'
 
@@ -59,6 +61,7 @@ export default {
   components: {
     BattlingPokemonTeam,
     BattlingTrainerTeam,
+    CancelBattle,
     EscapeBattle,
     LocationField
   },

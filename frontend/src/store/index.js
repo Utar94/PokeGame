@@ -164,17 +164,17 @@ export default new Vuex.Store({
       }
     },
     resetBattle({ commit }) {
+      commit('setActiveBattlingPokemon', [])
+      commit('setBattleLocation', null)
+      commit('setBattlingPlayerPokemon', [])
+      commit('setBattlingOpponentTrainers', [])
+      commit('setBattlingOpponentPokemon', [])
       commit('setEscapeAttempts', 0)
-      commit('setLocation', null)
-      commit('setActivePokemon', [])
-      commit('setPlayerPokemon', [])
-      commit('setOpponentTrainers', [])
-      commit('setOpponentPokemon', [])
       commit('setBattleStep', 'TrainerSelection')
     },
     saveBattleLocation({ commit }, location) {
       // NOTE(fpion): NEW!
-      commit('setLocation', location.length > 100 ? location.substr(0, 100) : location)
+      commit('setBattleLocation', location.length > 100 ? location.substr(0, 100) : location)
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       // NOTE(fpion): NEW!
@@ -212,6 +212,10 @@ export default new Vuex.Store({
       // NOTE(fpion): NEW!
       state.battle.activePokemon = activePokemon ?? []
     },
+    setBattleLocation(state, location) {
+      // NOTE(fpion): NEW!
+      state.battle.location = location ?? null
+    },
     setBattleStep(state, step) {
       // NOTE(fpion): NEW!
       state.battle.step = step ?? 'TrainerSelection'
@@ -236,15 +240,8 @@ export default new Vuex.Store({
       // NOTE(fpion): NEW!
       state.battle.escapeAttempts = escapeAttempts ?? 0
     },
-    // NOTE(fpion): NEW!
-    setLocation(state, location) {
-      state.battle.location = location ?? null
-    },
     setOpponentPokemon(state, pokemon) {
       state.battle.opponents.pokemon = pokemon ?? []
-    },
-    setOpponentTrainers(state, trainers) {
-      state.battle.opponents.trainers = trainers ?? []
     },
     setPlayerPokemon(state, pokemon) {
       state.battle.players.pokemon = pokemon ?? []

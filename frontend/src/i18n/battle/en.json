@@ -1,5 +1,10 @@
 {
   "abilityAndHeldItem": "Ability & Held Item",
+  "cancel": {
+    "confirm1": "Are you sure you want to cancel the battle?",
+    "confirm2": "Any change made will be lost.",
+    "label": "Cancel Battle"
+  },
   "combatTracker": {
     "defeat": "Defeat!",
     "location": {
