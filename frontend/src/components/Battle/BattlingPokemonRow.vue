@@ -27,6 +27,7 @@
       <!-- TODO(fpion): Make a Move -->
       <icon-button
         v-if="isTrainerBattle || team === 'players'"
+        :disabled="hasEnded"
         icon="exchange-alt"
         :text="active ? 'battle.combatTracker.withdraw' : 'battle.combatTracker.send'"
         variant="success"
@@ -64,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isTrainerBattle']),
+    ...mapGetters(['hasEnded', 'isTrainerBattle']),
     trainer() {
       return this.pokemon.history?.trainer ?? null
     }

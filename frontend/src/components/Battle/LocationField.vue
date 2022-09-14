@@ -7,7 +7,11 @@
     placeholder="battle.combatTracker.location.placeholder"
     :value="battleLocation"
     @input="saveBattleLocation"
-  />
+  >
+    <template #after>
+      <i v-if="!battleLocation" class="text-warning" v-t="'battle.locationWarning'" />
+    </template>
+  </form-field>
 </template>
 
 <script>

@@ -26,8 +26,8 @@
           <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
         </td>
         <td><pokemon-condition :pokemon="target" /></td>
-        <!-- TODO(fpion): volatile conditions -->
-        <!-- TODO(fpion): stat Stage changes -->
+        <!-- TODO(fpion): Volatile Conditions -->
+        <!-- TODO(fpion): Stage changes -->
         <td>
           <a v-if="target.ability && target.ability.reference" :href="target.ability.reference" target="_blank">
             <ability-info :ability="target.ability" />

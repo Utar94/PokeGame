@@ -22,7 +22,13 @@
     "confirm": "Are you sure you want to escape the battle?",
     "label": "Escape"
   },
+  "healing": {
+    "removeAllConditions": "Remove All Conditions",
+    "removeStatusCondition": "Remove Status Condition",
+    "restoreHitPoints": "Restore HP"
+  },
   "hpFormat": "HP: {current}/{max}",
+  "locationWarning": "A location is required to throw a ball.",
   "makeMove": {
     "burn": "Burn (physical move, not Facade, without Guts: ×0.5)",
     "critical": "Critical",
@@ -43,6 +49,15 @@
   "pokemonSelection": {
     "title": "Pokémon Selection"
   },
+  "quantityFormat": "Quantity: {quantity}",
+  "throwBall": {
+    "catchSuccess": "Catch Success",
+    "caughtToast": {
+      "box": "The Pokémon has been caught! It has been sent to a box.",
+      "party": "The Pokémon has been caught! It has been added to the trainer's party."
+    },
+    "label": "Throw Ball"
+  },
   "title": "Battle!",
   "trainerSelection": {
     "addOpponent": "Add Opponent",
@@ -50,17 +65,5 @@
     "team": "Team",
     "title": "Trainer Selection"
   },
-  "useItem": {
-    "catchSuccess": "Catch Success",
-    "caughtToast": {
-      "box": "The Pokémon has been caught! It has been sent to a box.",
-      "party": "The Pokémon has been caught! It has been added to the trainer's party."
-    },
-    "locationWarning": "A location is required to throw a ball.",
-    "removeAllConditions": "Remove All Conditions",
-    "removeStatusCondition": "Remove Status Condition",
-    "restoreHitPoints": "Restore HP",
-    "throwBall": "Throw Ball",
-    "title": "Use an Item"
-  }
+  "useItem": "Use an Item"
 }

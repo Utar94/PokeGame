@@ -3,15 +3,24 @@
     <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
     <td v-text="trainer.number" />
     <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-    <td><!-- TODO(fpion): Use an Item --></td>
+    <td>
+      <use-item class="mx-1" :team="team" :trainer="trainer" />
+      <throw-ball v-if="!isTrainerBattle" class="mx-1" :trainer="trainer" />
+    </td>
   </tr>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import ThrowBall from './ThrowBall.vue'
+import UseItem from './UseItem.vue'
 
 export default {
   name: 'BattlingTrainerRow',
+  components: {
+    ThrowBall,
+    UseItem
+  },
   props: {
     team: {
       type: String,
@@ -21,6 +30,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  computed: {
+    ...mapGetters(['isTrainerBattle'])
   },
   methods: {
     ...mapActions(['toggleBattlingOpponentTrainer', 'toggleBattlingPlayerTrainer']),
