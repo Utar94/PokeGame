@@ -17,6 +17,19 @@ export default new Vuex.Store({
       activePokemon: [],
       escapeAttempts: 0,
       location: null,
+      move: {
+        attacker: null,
+        damage: {
+          attack: 0,
+          burn: false,
+          critical: false,
+          power: 0,
+          random: 0,
+          stab: 0
+        },
+        selected: null,
+        targets: {}
+      },
       opponents: {
         pokemon: [],
         trainers: []
@@ -45,6 +58,15 @@ export default new Vuex.Store({
     },
     battleLocation({ battle }) {
       return battle.location
+    },
+    battleMoveAttacker({ battle }) {
+      return battle.move.attacker
+    },
+    battleMoveDamage({ battle }) {
+      return battle.move.damage
+    },
+    battleMoveTargets({ battle }) {
+      return battle.move.targets
     },
     battleStep({ battle }) {
       return battle.step
@@ -75,6 +97,12 @@ export default new Vuex.Store({
     },
     remainingBattlingPlayerPokemon(_, { battlingPlayerPokemon }) {
       return battlingPlayerPokemon.filter(({ currentHitPoints }) => currentHitPoints > 0)
+    },
+    selectedBattleMove({ battle }) {
+      return battle.move.selected
+    },
+    selectedBattleMoveCategory(_, { selectedBattleMove }) {
+      return selectedBattleMove?.category ?? null
     },
     trainers({ trainers }) {
       return Object.values(trainers)
@@ -121,7 +149,14 @@ export default new Vuex.Store({
       }
       commit('setTrainers', trainers)
     },
+    makeBattleMove({ commit, state }, pokemon) {
+      if (pokemon.id !== state.battle.move.attacker?.id) {
+        commit('resetBattleMove')
+        commit('setBattleMoveAttacker', pokemon)
+      }
+    },
     resetBattle({ commit }) {
+      commit('resetBattleMove')
       commit('setActiveBattlingPokemon', [])
       commit('setBattleLocation', null)
       commit('setBattlingPlayerPokemon', [])
@@ -130,13 +165,44 @@ export default new Vuex.Store({
       commit('setEscapeAttempts', 0)
       commit('setBattleStep', 'TrainerSelection')
     },
-    saveBattleLocation({ commit }, location) {
-      commit('setBattleLocation', location.length > 100 ? location.substr(0, 100) : location)
+    resetBattleMove({ commit }) {
+      commit('resetBattleMove')
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
       activePokemon = activePokemon.includes(id) ? activePokemon.filter(pokemon => pokemon !== id) : activePokemon.concat([id])
       commit('setActiveBattlingPokemon', activePokemon)
+    },
+    toggleBattleMove({ commit, state }, move) {
+      const { battle } = state
+      if (battle.move.selected?.id === move.id) {
+        commit('setSelectedBattleMove', null)
+        commit('setBattleMoveDamage', null)
+      } else {
+        commit('setSelectedBattleMove', move)
+        if (move.category === 'Physical' || move.category === 'Special') {
+          const damage = {
+            attack: move.category === 'Physical' ? battle.move.attacker.attack : battle.move.attacker.specialAttack,
+            burn: false,
+            critical: false,
+            power: move.power ?? 0,
+            random: 85 + Math.floor(Math.random() * (15 + 1)),
+            stab: move.type === battle.move.attacker.species.primaryType || move.type === battle.move.attacker.species.secondaryType ? 1.5 : 1
+          }
+          commit('setBattleMoveDamage', damage)
+        } else {
+          commit('setBattleMoveDamage', null)
+        }
+      }
+    },
+    toggleBattleMoveTarget({ commit, state }, pokemon) {
+      const targets = { ...state.battle.move.targets }
+      if (targets[pokemon.id]) {
+        delete targets[pokemon.id]
+      } else {
+        targets[pokemon.id] = { pokemon, defense: pokemon.defense, specialDefense: pokemon.specialDefense, effectiveness: 1, otherModifiers: 1 }
+      }
+      commit('setBattleMoveTargets', targets)
     },
     toggleBattlingOpponentPokemon({ commit, state }, id) {
       let pokemon = state.battle.opponents.pokemon
@@ -164,6 +230,19 @@ export default new Vuex.Store({
       trainers = trainers.includes(id) ? trainers.filter(trainer => trainer !== id) : trainers.concat([id])
       commit('setBattlingPlayerTrainers', trainers)
     },
+    updateBattleLocation({ commit }, location) {
+      commit('setBattleLocation', location.length > 100 ? location.substr(0, 100) : location)
+    },
+    updateBattleMoveDamage({ commit, state }, { attack, burn, critical, power, random, stab }) {
+      const damage = state.battle.move.damage
+      damage.attack = attack ?? damage.attack
+      damage.burn = burn ?? damage.burn
+      damage.critical = critical ?? damage.critical
+      damage.power = power ?? damage.power
+      damage.random = random ?? damage.random
+      damage.stab = stab ?? damage.stab
+      commit('setBattleMoveDamage', damage)
+    },
     updatePokemon({ commit, state }, pokemon) {
       const pokemonList = { ...state.pokemonList }
       pokemonList[pokemon.id] = pokemon
@@ -171,11 +250,42 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    resetBattleMove(state) {
+      state.battle.move = {
+        attacker: state.battle.move.attacker ?? null,
+        damage: {
+          attack: 0,
+          burn: false,
+          critical: false,
+          power: 0,
+          random: 0,
+          stab: 0
+        },
+        selected: null,
+        targets: {}
+      }
+    },
     setActiveBattlingPokemon(state, activePokemon) {
       state.battle.activePokemon = activePokemon ?? []
     },
     setBattleLocation(state, location) {
       state.battle.location = location ?? null
+    },
+    setBattleMoveAttacker(state, attacker) {
+      state.battle.move.attacker = attacker ?? null
+    },
+    setBattleMoveDamage(state, damage) {
+      state.battle.move.damage = damage ?? {
+        attack: 0,
+        burn: false,
+        critical: false,
+        power: 0,
+        random: 0,
+        stab: 0
+      }
+    },
+    setBattleMoveTargets(state, targets) {
+      state.battle.move.targets = targets ?? {}
     },
     setBattleStep(state, step) {
       state.battle.step = step ?? 'TrainerSelection'
@@ -197,6 +307,9 @@ export default new Vuex.Store({
     },
     setPokemonList(state, pokemonList) {
       state.pokemonList = pokemonList || {}
+    },
+    setSelectedBattleMove(state, selected) {
+      state.battle.move.selected = selected ?? null
     },
     setTrainers(state, trainers) {
       state.trainers = trainers || {}

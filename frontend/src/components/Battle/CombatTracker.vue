@@ -22,6 +22,7 @@
     <end-battle v-if="hasEnded" />
     <escape-battle v-else-if="!isTrainerBattle" class="mx-1" />
     <cancel-battle class="mx-1" />
+    <make-move-modal />
   </b-container>
 </template>
 
@@ -34,6 +35,7 @@ import EndBattle from './EndBattle.vue'
 import EscapeBattle from './EscapeBattle.vue'
 import EscapeBattleInfo from './EscapeBattleInfo.vue'
 import LocationField from './LocationField.vue'
+import MakeMoveModal from './MakeMoveModal.vue'
 
 export default {
   name: 'CombatTracker',
@@ -44,7 +46,8 @@ export default {
     EndBattle,
     EscapeBattle,
     EscapeBattleInfo,
-    LocationField
+    LocationField,
+    MakeMoveModal
   },
   data() {
     return {

@@ -24,15 +24,16 @@
       </template>
     </td>
     <td>
-      <!-- TODO(fpion): Make a Move -->
       <icon-button
-        v-if="isTrainerBattle || team === 'players'"
-        :disabled="hasEnded"
-        icon="exchange-alt"
-        :text="active ? 'battle.combatTracker.withdraw' : 'battle.combatTracker.send'"
-        variant="success"
-        @click="toggleActiveBattlingPokemon(pokemon.id)"
+        v-if="active"
+        class="mx-1"
+        :disabled="hasEnded || pokemon.currentHitPoints === 0"
+        icon="magic"
+        text="battle.makeMove.label"
+        variant="danger"
+        @click="makeMove"
       />
+      <switch-pokemon v-if="isTrainerBattle || team === 'players'" :active="active" :pokemon="pokemon" />
     </td>
   </tr>
 </template>
@@ -42,13 +43,15 @@ import { mapActions, mapGetters } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
 import ItemInfo from './ItemInfo.vue'
 import PokemonCondition from './PokemonCondition.vue'
+import SwitchPokemon from './SwitchPokemon.vue'
 
 export default {
   name: 'BattlingPokemonRow',
   components: {
     AbilityInfo,
     ItemInfo,
-    PokemonCondition
+    PokemonCondition,
+    SwitchPokemon
   },
   props: {
     active: {
@@ -71,13 +74,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['toggleActiveBattlingPokemon', 'toggleBattlingOpponentPokemon', 'toggleBattlingPlayerPokemon']),
-    toggle() {
-      if (this.team === 'players') {
-        this.toggleBattlingPlayerPokemon(this.pokemon.id)
-      } else {
-        this.toggleBattlingOpponentPokemon(this.pokemon.id)
-      }
+    ...mapActions(['makeBattleMove']),
+    makeMove() {
+      this.makeBattleMove(this.pokemon)
+      this.$bvModal.show('makeMove')
     }
   }
 }

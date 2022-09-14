@@ -6,7 +6,7 @@
     :maxLength="100"
     placeholder="battle.combatTracker.location.placeholder"
     :value="battleLocation"
-    @input="saveBattleLocation"
+    @input="updateBattleLocation"
   >
     <template #after>
       <i v-if="!battleLocation" class="text-warning" v-t="'battle.locationWarning'" />
@@ -23,7 +23,7 @@ export default {
     ...mapGetters(['battleLocation'])
   },
   methods: {
-    ...mapActions(['saveBattleLocation'])
+    ...mapActions(['updateBattleLocation'])
   }
 }
 </script>

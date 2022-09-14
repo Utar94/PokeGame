@@ -1,117 +1,72 @@
 <template>
-  <b-modal :id="id" size="xl" :title="$t('battle.makeMove.title')" @shown="refresh">
-    <h6 v-t="'moves.title'" />
-    <make-move-table :moves="moves" :selected="move" @toggled="onMoveToggled" />
-    <h6 v-t="'battle.makeMove.targets'" />
-    <move-target-table :selected="selectedTargets" :targets="targets" @toggled="onTargetToggled" />
-    <template v-if="move && move.move.category !== 'Status'">
-      <h6 v-t="'battle.makeMove.damage'" />
-      <make-move-damage :move="move" v-model="damage" />
-    </template>
+  <b-modal id="makeMove" size="xl" :title="$t('battle.makeMove.label')">
+    <validation-observer ref="form">
+      <b-form @submit.prevent="submit">
+        <h6 v-t="'moves.title'" />
+        <select-move-table />
+        <h6 v-t="'battle.makeMove.targets'" />
+        <select-target-table />
+        <template v-if="doesDamage">
+          <h6 v-t="'battle.makeMove.damage'" />
+          <move-damage />
+        </template>
+      </b-form>
+    </validation-observer>
     <template #modal-footer="{ cancel, ok }">
       <icon-button icon="ban" text="actions.cancel" @click="reset(cancel)" />
-      <icon-button disabled icon="magic" :loading="loading" text="battle.makeMove.title" variant="danger" @click="ok()" />
+      <icon-button :disabled="loading" icon="magic" :loading="loading" text="battle.makeMove.label" variant="danger" @click="submit(ok)" />
     </template>
   </b-modal>
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapState } from 'vuex'
-import MakeMoveDamage from './MakeMoveDamage.vue'
-import MakeMoveTable from './MakeMoveTable.vue'
-import MoveTargetTable from './MoveTargetTable.vue'
-import { getPokemonList } from '@/api/pokemon'
+import { mapActions, mapGetters } from 'vuex'
+import MoveDamage from './MoveDamage.vue'
+import SelectMoveTable from './SelectMoveTable.vue'
+import SelectTargetTable from './SelectTargetTable.vue'
 
 export default {
   name: 'MakeMoveModal',
-  components: { MakeMoveDamage, MakeMoveTable, MoveTargetTable },
-  props: {
-    id: {
-      type: String,
-      default: 'makeMove'
-    },
-    pokemon: {
-      type: Object,
-      required: true
-    }
+  components: {
+    MoveDamage,
+    SelectMoveTable,
+    SelectTargetTable
   },
   data() {
     return {
-      damage: {
-        burn: false,
-        critical: false,
-        offensiveStatistic: 0,
-        power: 0,
-        random: 0,
-        stab: 0
-      },
-      loading: false,
-      move: null,
-      pokemonIndex: {},
-      selectedTargets: []
+      loading: false
     }
   },
   computed: {
-    ...mapState(['battle']),
-    moves() {
-      return this.orderBy(this.pokemon.moves, 'position')
-    },
-    targets() {
-      return Object.values(this.pokemonIndex).filter(({ id }) => this.battle.activePokemon.includes(id))
+    ...mapGetters(['selectedBattleMove']),
+    doesDamage() {
+      return Boolean(this.selectedBattleMove?.power)
     }
   },
   methods: {
-    onMoveToggled(selected) {
-      this.move = this.move?.move.id === selected.move.id ? null : selected
-    },
-    onTargetToggled({ id }) {
-      const index = this.selectedTargets.findIndex(x => x === id)
-      if (index >= 0) {
-        Vue.delete(this.selectedTargets, index)
-      } else {
-        this.selectedTargets.push(id)
-      }
-    },
-    async refresh() {
-      try {
-        const { data } = await getPokemonList()
-        this.pokemonIndex = {}
-        for (const item of data.items) {
-          Vue.set(this.pokemonIndex, item.id, item)
-        }
-      } catch (e) {
-        this.handleError(e)
-      }
-    },
+    ...mapActions(['resetBattleMove']),
     reset(callback = null) {
-      this.move = null
-      this.selectedTargets = []
+      this.resetBattleMove()
       if (typeof callback === 'function') {
         callback()
       }
-    }
-  },
-  watch: {
-    move: {
-      deep: true,
-      handler(value) {
-        const move = value?.move ?? null
-        this.damage.power = move?.power ?? 0
-        switch (move?.category) {
-          case 'Physical':
-            this.damage.offensiveStatistic = this.pokemon.attack
-            break
-          case 'Special':
-            this.damage.offensiveStatistic = this.pokemon.specialAttack
-            break
-          default:
-            this.damage.offensiveStatistic = 0
-            break
+    },
+    async submit(callback = null) {
+      if (!this.loading) {
+        this.loading = true
+        try {
+          if (await this.$refs.form.validate()) {
+            // TODO(fpion): implement
+          }
+          this.$refs.form.reset()
+          if (typeof callback === 'function') {
+            callback()
+          }
+        } catch (e) {
+          this.handleError(e)
+        } finally {
+          this.loading = false
         }
-        this.damage.burn = this.pokemon.statusCondition === 'Burn' && move?.category === 'Physical'
-        this.damage.random = 82 + this.roll('3d6')
-        this.damage.stab = move?.type === this.pokemon.species.primaryType || move?.type === this.pokemon.species.secondaryType ? 1.5 : 1.0
       }
     }
   }
