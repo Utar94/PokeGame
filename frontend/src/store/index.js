@@ -243,6 +243,31 @@ export default new Vuex.Store({
       damage.stab = stab ?? damage.stab
       commit('setBattleMoveDamage', damage)
     },
+    updateBattleTargetDefense({ commit, state }, { id, value }) {
+      let target = state.battle.move.targets[id]
+      if (target) {
+        if (state.battle.move.selected.category === 'Physical') {
+          target = { ...target, defense: value }
+        } else {
+          target = { ...target, specialDefense: value }
+        }
+        commit('setBattleMoveTarget', { id, target })
+      }
+    },
+    updateBattleTargetEffectiveness({ commit, state }, { id, value }) {
+      let target = state.battle.move.targets[id]
+      if (target) {
+        target = { ...target, effectiveness: value }
+        commit('setBattleMoveTarget', { id, target })
+      }
+    },
+    updateBattleTargetOtherModifiers({ commit, state }, { id, value }) {
+      let target = state.battle.move.targets[id]
+      if (target) {
+        target = { ...target, otherModifiers: value }
+        commit('setBattleMoveTarget', { id, target })
+      }
+    },
     updatePokemon({ commit, state }, pokemon) {
       const pokemonList = { ...state.pokemonList }
       pokemonList[pokemon.id] = pokemon
@@ -283,6 +308,9 @@ export default new Vuex.Store({
         random: 0,
         stab: 0
       }
+    },
+    setBattleMoveTarget(state, { id, target }) {
+      state.battle.move.targets[id] = target
     },
     setBattleMoveTargets(state, targets) {
       state.battle.move.targets = targets ?? {}
