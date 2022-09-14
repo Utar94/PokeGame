@@ -49,7 +49,7 @@
 <script>
 import { mapActions } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
-import HeldItemInfo from './HeldItemInfo.vue'
+import HeldItemInfo from './ItemInfo.vue'
 import MakeMoveModal from './MakeMoveModal.vue'
 import PokemonCondition from './PokemonCondition.vue'
 

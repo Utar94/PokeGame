@@ -36,10 +36,10 @@
           <ability-info v-else-if="target.ability" :ability="target.ability" />
           <br v-if="target.ability && target.heldItem" />
           <a v-if="target.heldItem && target.heldItem.reference" :href="target.heldItem.reference" target="_blank">
-            <held-item-info :item="target.heldItem" />
+            <item-info :item="target.heldItem" />
             <font-awesome-icon icon="external-link-alt" />
           </a>
-          <held-item-info v-else-if="target.heldItem" :item="target.heldItem" />
+          <item-info v-else-if="target.heldItem" :item="target.heldItem" />
         </td>
       </tr>
     </tbody>
@@ -48,14 +48,14 @@
 
 <script>
 import AbilityInfo from './AbilityInfo.vue'
-import HeldItemInfo from './HeldItemInfo.vue'
+import ItemInfo from './ItemInfo.vue'
 import PokemonCondition from './PokemonCondition.vue'
 
 export default {
   name: 'MoveTargetTable',
   components: {
     AbilityInfo,
-    HeldItemInfo,
+    ItemInfo,
     PokemonCondition
   },
   props: {

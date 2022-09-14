@@ -18,7 +18,10 @@
     </td>
     <td>
       <ability-info :ability="pokemon.ability" />
-      <held-item-info v-if="pokemon.heldItem" :item="pokemon.heldItem" />
+      <template v-if="pokemon.heldItem">
+        <br />
+        <item-info :item="pokemon.heldItem" />
+      </template>
     </td>
     <td>
       <!-- TODO(fpion): Make a Move -->
@@ -36,14 +39,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
-import HeldItemInfo from './HeldItemInfo.vue'
+import ItemInfo from './ItemInfo.vue'
 import PokemonCondition from './PokemonCondition.vue'
 
 export default {
   name: 'BattlingPokemonRow',
   components: {
     AbilityInfo,
-    HeldItemInfo,
+    ItemInfo,
     PokemonCondition
   },
   props: {
