@@ -4,9 +4,9 @@
     <div class="my-2">
       <icon-button class="mx-1" :disabled="loading" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh" />
     </div>
-    <b-row v-if="!isTrainerBattle && remainingBattlingOpponentPokemon.length > 0">
+    <b-row v-if="canEscape">
       <location-field />
-      <escape-battle />
+      <escape-battle-info />
     </b-row>
     <h3 v-t="'trainers.title'" />
     <b-row>
@@ -35,16 +35,9 @@
       variant="primary"
       @click="resetBattle"
     />
-    <icon-button
-      v-if="!isTrainerBattle && remainingPlayerPokemon.length > 0 && remainingOpponentPokemon.length > 0"
-      class="mx-1"
-      icon="running"
-      text="battle.combatTracker.escape"
-      variant="primary"
-      @click="resetBattle"
-    />
     -->
-    <cancel-battle />
+    <escape-battle v-if="canEscape" class="mx-1" />
+    <cancel-battle class="mx-1" />
   </b-container>
 </template>
 
@@ -54,6 +47,7 @@ import BattlingPokemonTeam from './BattlingPokemonTeam.vue'
 import BattlingTrainerTeam from './BattlingTrainerTeam.vue'
 import CancelBattle from './CancelBattle.vue'
 import EscapeBattle from './EscapeBattle.vue'
+import EscapeBattleInfo from './EscapeBattleInfo.vue'
 import LocationField from './LocationField.vue'
 
 export default {
@@ -63,6 +57,7 @@ export default {
     BattlingTrainerTeam,
     CancelBattle,
     EscapeBattle,
+    EscapeBattleInfo,
     LocationField
   },
   data() {
@@ -71,7 +66,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeBattlingPokemon', 'battlingOpponentPokemon', 'isTrainerBattle', 'remainingBattlingOpponentPokemon'])
+    ...mapGetters([
+      'activeBattlingPokemon',
+      'battlingOpponentPokemon',
+      'isTrainerBattle',
+      'remainingBattlingOpponentPokemon',
+      'remainingBattlingPlayerPokemon'
+    ]),
+    canEscape() {
+      return !this.isTrainerBattle && this.remainingBattlingPlayerPokemon.length > 0 && this.remainingBattlingOpponentPokemon.length > 0
+    }
   },
   methods: {
     ...mapActions(['battlePrevious', 'loadPokemonList', 'loadTrainers', 'toggleActiveBattlingPokemon']),

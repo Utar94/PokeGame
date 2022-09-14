@@ -1,31 +1,33 @@
 <template>
-  <b-form-group class="col-3">
-    <template #label>
-      <strong>{{ $t('battle.escape.label') }} ({{ $t('dcFormat', { dc: escapeDC }) }})</strong>
-    </template>
-    <icon-button class="mx-1" icon="plus" variant="primary" @click="increaseEscapeAttempts" />
-    {{ $t('battle.escape.attemptsFormat', { attempts: battleEscapeAttempts }) }}
-  </b-form-group>
+  <span>
+    <icon-button icon="running" text="battle.escape.label" variant="primary" v-b-modal.escapeBattle />
+    <b-modal id="escapeBattle" :title="$t('battle.escape.label')">
+      <p>
+        {{ $t('battle.escape.confirm') }}
+        <br />
+        <span class="text-danger" v-t="'battle.changesLost'" />
+      </p>
+      <template #modal-footer="{ cancel, ok }">
+        <icon-button icon="ban" text="actions.cancel" @click="cancel()" />
+        <icon-button icon="running" text="battle.escape.label" variant="primary" @click="onOk(ok)" />
+      </template>
+    </b-modal>
+  </span>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'EscapeBattle',
-  computed: {
-    ...mapGetters(['activeBattlingOpponentPokemon', 'activeBattlingPlayerPokemon', 'battleEscapeAttempts']),
-    escapeDC() {
-      const playerSpeed = this.activeBattlingPlayerPokemon.reduce((sum, { speed }) => sum + speed, 0) / this.activeBattlingPlayerPokemon.length
-      const opponentSpeed = this.activeBattlingOpponentPokemon.reduce((sum, { speed }) => sum + speed, 0) / this.activeBattlingOpponentPokemon.length
-      if (playerSpeed >= opponentSpeed) {
-        return 5
-      }
-      return Math.ceil((1 - ((Math.floor((playerSpeed * 128) / opponentSpeed) + 30 * this.battleEscapeAttempts) % 256) / 256) * 20) + 5
-    }
-  },
   methods: {
-    ...mapActions(['increaseEscapeAttempts'])
+    ...mapActions(['resetBattle']),
+    onOk(callback = null) {
+      this.resetBattle()
+      if (typeof callback === 'function') {
+        callback()
+      }
+    }
   }
 }
 </script>

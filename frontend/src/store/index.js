@@ -164,6 +164,7 @@ export default new Vuex.Store({
       }
     },
     resetBattle({ commit }) {
+      // NOTE(fpion): NEW!
       commit('setActiveBattlingPokemon', [])
       commit('setBattleLocation', null)
       commit('setBattlingPlayerPokemon', [])

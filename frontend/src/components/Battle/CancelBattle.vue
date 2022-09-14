@@ -1,11 +1,11 @@
 <template>
-  <span class="mx-1">
-    <icon-button icon="trash-alt" text="battle.cancel.label" variant="danger" v-b-modal.resetBattle />
-    <b-modal id="resetBattle" :title="$t('battle.cancel.label')">
-      <p class="text-danger">
-        {{ $t('battle.cancel.confirm1') }}
+  <span>
+    <icon-button icon="trash-alt" text="battle.cancel.label" variant="danger" v-b-modal.cancelBattle />
+    <b-modal id="cancelBattle" :title="$t('battle.cancel.label')">
+      <p>
+        {{ $t('battle.cancel.confirm') }}
         <br />
-        {{ $t('battle.cancel.confirm2') }}
+        <span class="text-danger" v-t="'battle.changesLost'" />
       </p>
       <template #modal-footer="{ cancel, ok }">
         <icon-button icon="ban" text="actions.cancel" @click="cancel()" />
@@ -19,13 +19,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'DeleteModal',
-  props: {
-    displayName: {
-      type: String,
-      default: ''
-    }
-  },
+  name: 'CancelBattle',
   methods: {
     ...mapActions(['resetBattle']),
     onOk(callback = null) {

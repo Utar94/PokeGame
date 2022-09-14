@@ -1,10 +1,10 @@
 {
   "abilityAndHeldItem": "Ability & Held Item",
   "cancel": {
-    "confirm1": "Are you sure you want to cancel the battle?",
-    "confirm2": "Any change made will be lost.",
+    "confirm": "Are you sure you want to cancel the battle?",
     "label": "Cancel Battle"
   },
+  "changesLost": "Any change made will be lost.",
   "combatTracker": {
     "defeat": "Defeat!",
     "location": {
@@ -19,6 +19,7 @@
   "condition": "Condition",
   "escape": {
     "attemptsFormat": "Attempts: {attempts}",
+    "confirm": "Are you sure you want to escape the battle?",
     "label": "Escape"
   },
   "hpFormat": "HP: {current}/{max}",
