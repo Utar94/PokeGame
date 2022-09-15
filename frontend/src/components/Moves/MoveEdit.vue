@@ -52,7 +52,7 @@
             </b-row>
             <description-field v-model="description" />
           </b-tab>
-          <b-tab :title="$t('moves.stagesAndCondition')">
+          <b-tab v-if="move" :title="$t('moves.stagesAndCondition')">
             <h4 v-t="'moves.statisticStages'" />
             <b-row>
               <form-field
@@ -133,6 +133,7 @@
               <condition-select class="col" v-model="statusCondition" />
               <form-field
                 class="col"
+                :disabled="!statusCondition"
                 id="statusChance"
                 label="moves.statusChance.label"
                 :minValue="0"
@@ -297,6 +298,15 @@ export default {
     }
     if (this.status === 'created') {
       this.toast('success', 'moves.created')
+    }
+  },
+  watch: {
+    statusCondition(value) {
+      if (value) {
+        this.statusChance = this.category === 'Status' ? 100 : 10
+      } else {
+        this.statusChance = 0
+      }
     }
   }
 }
