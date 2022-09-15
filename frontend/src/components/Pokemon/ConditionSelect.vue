@@ -13,6 +13,9 @@
     <template #after>
       <slot name="after" />
     </template>
+    <template #prepend>
+      <slot name="prepend" />
+    </template>
     <slot />
   </form-select>
 </template>

@@ -4,9 +4,11 @@
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
         <select-move />
-        <select-targets />
-        <move-damage v-if="selectedBattleMoveCategory === 'Physical' || selectedBattleMoveCategory === 'Special'" />
-        <move-condition />
+        <template v-if="selectedBattleMove">
+          <select-targets />
+          <move-condition />
+          <move-damage v-if="dealsDamage" />
+        </template>
         <div class="my-2">
           <icon-button class="mx-1" icon="ban" text="actions.cancel" @click="resetBattleMove" />
           <!-- <icon-submit :disabled="loading" icon="magic" :loading="loading" text="battle.makeMove.label" variant="danger"  /> -->
@@ -37,7 +39,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedBattleMoveCategory'])
+    ...mapGetters(['selectedBattleMove']),
+    dealsDamage() {
+      return this.selectedBattleMove.category === 'Physical' || this.selectedBattleMove.category === 'Special'
+    }
   },
   methods: {
     ...mapActions(['resetBattleMove']),

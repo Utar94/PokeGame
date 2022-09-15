@@ -33,7 +33,7 @@ export default {
     SelectTargetRow
   },
   computed: {
-    ...mapGetters(['activeBattlingPokemon', 'selectedBattleMoveCategory']),
+    ...mapGetters(['activeBattlingPokemon', 'selectedBattleMove']),
     activePokemon() {
       return this.orderBy(
         this.activeBattlingPokemon.map(pokemon => ({ ...pokemon, sort: `${pokemon.history?.trainer.name ?? this.$i18n.t('pokemon.wild')}|${pokemon.speed}` })),
@@ -41,7 +41,7 @@ export default {
       )
     },
     defensiveStatistic() {
-      switch (this.selectedBattleMoveCategory) {
+      switch (this.selectedBattleMove.category) {
         case 'Physical':
           return 'Defense'
         case 'Special':

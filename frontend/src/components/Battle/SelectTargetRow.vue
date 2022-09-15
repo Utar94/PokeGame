@@ -100,7 +100,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleMoveAttacker', 'battleMoveTargets', 'selectedBattleMove', 'selectedBattleMoveCategory']),
+    ...mapGetters(['battleMoveAttacker', 'battleMoveTargets', 'selectedBattleMove']),
     accuracy() {
       return this.selectedBattleMove ? this.$i18n.n(this.selectedBattleMove.accuracy / 100, 'percent') : '—'
     },
@@ -116,7 +116,7 @@ export default {
       return []
     },
     defensiveStatistic() {
-      switch (this.selectedBattleMoveCategory) {
+      switch (this.selectedBattleMove.category) {
         case 'Physical':
           return 'Defense'
         case 'Special':

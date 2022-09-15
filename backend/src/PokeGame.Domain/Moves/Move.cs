@@ -1,5 +1,6 @@
 ﻿using PokeGame.Domain.Moves.Events;
 using PokeGame.Domain.Moves.Payloads;
+using PokeGame.Domain.Pokemon;
 
 namespace PokeGame.Domain.Moves
 {
@@ -22,6 +23,12 @@ namespace PokeGame.Domain.Moves
     public byte? Accuracy { get; private set; }
     public byte? Power { get; private set; }
     public byte PowerPoints { get; private set; }
+
+    public StatusCondition? StatusCondition { get; private set; }
+    public byte? StatusChance { get; private set; }
+    public Dictionary<Statistic, short> StatisticStages { get; private set; } = new();
+    public short AccuracyStage { get; private set; }
+    public short EvasionStage { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -53,6 +60,21 @@ namespace PokeGame.Domain.Moves
       Accuracy = payload.Accuracy;
       Power = payload.Power;
       PowerPoints = payload.PowerPoints;
+
+      StatusCondition = payload.StatusCondition;
+      StatusChance = payload.StatusCondition.HasValue ? payload.StatusChance : null;
+
+      StatisticStages.Clear();
+      if (payload.StatisticStages?.Any() == true)
+      {
+        foreach (StatisticStagePayload stage in payload.StatisticStages)
+        {
+          StatisticStages[stage.Statistic] = stage.Value;
+        }
+      }
+
+      AccuracyStage = payload.AccuracyStage;
+      EvasionStage = payload.EvasionStage;
 
       Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;

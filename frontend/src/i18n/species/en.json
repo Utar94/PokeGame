@@ -57,6 +57,7 @@
     }
   },
   "title": "Species",
+  "totalFormat": "Total: {total}",
   "updated": "The species has been updated.",
   "weight": {
     "label": "Weight",
