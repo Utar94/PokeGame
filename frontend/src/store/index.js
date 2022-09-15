@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
+import effectivenessTable from './effectiveness.json'
 import { getPokemonList } from '@/api/pokemon'
 import { getTrainers } from '@/api/trainers'
 
@@ -25,7 +26,8 @@ export default new Vuex.Store({
           critical: false,
           power: 0,
           random: 0,
-          stab: 0
+          stab: 0,
+          weather: ''
         },
         selected: null,
         targets: {}
@@ -154,6 +156,7 @@ export default new Vuex.Store({
         commit('resetBattleMove')
         commit('setBattleMoveAttacker', pokemon)
       }
+      commit('setBattleStep', 'MakeMove')
     },
     resetBattle({ commit }) {
       commit('resetBattleMove')
@@ -167,6 +170,7 @@ export default new Vuex.Store({
     },
     resetBattleMove({ commit }) {
       commit('resetBattleMove')
+      commit('setBattleStep', 'Battle')
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -181,13 +185,16 @@ export default new Vuex.Store({
       } else {
         commit('setSelectedBattleMove', move)
         if (move.category === 'Physical' || move.category === 'Special') {
+          const attacker = battle.move.attacker
+          const stab = move.type === attacker.species.primaryType || move.type === attacker.species.secondaryType
           const damage = {
-            attack: move.category === 'Physical' ? battle.move.attacker.attack : battle.move.attacker.specialAttack,
-            burn: false,
+            attack: move.category === 'Physical' ? attacker.attack : attacker.specialAttack,
+            burn: attacker.statusCondition === 'Burn' && move.category === 'Physical' && move.name !== 'Facade' && attacker.ability.name !== 'Guts',
             critical: false,
             power: move.power ?? 0,
             random: 85 + Math.floor(Math.random() * (15 + 1)),
-            stab: move.type === battle.move.attacker.species.primaryType || move.type === battle.move.attacker.species.secondaryType ? 1.5 : 1
+            stab: stab ? (attacker.ability.name === 'Adaptability' ? 2 : 1.5) : 1,
+            weather: 'Normal'
           }
           commit('setBattleMoveDamage', damage)
         } else {
@@ -200,7 +207,11 @@ export default new Vuex.Store({
       if (targets[pokemon.id]) {
         delete targets[pokemon.id]
       } else {
-        targets[pokemon.id] = { pokemon, defense: pokemon.defense, specialDefense: pokemon.specialDefense, effectiveness: 1, otherModifiers: 1 }
+        const modifiers = effectivenessTable[state.battle.move.selected.type] ?? {}
+        const effectiveness =
+          (modifiers[pokemon.species.primaryType] ?? 1) * (pokemon.species.secondaryType ? modifiers[pokemon.species.secondaryType] ?? 1 : 1)
+        const { defense, specialDefense } = pokemon
+        targets[pokemon.id] = { pokemon, defense, specialDefense, effectiveness, otherModifiers: 1 }
       }
       commit('setBattleMoveTargets', targets)
     },
@@ -233,7 +244,7 @@ export default new Vuex.Store({
     updateBattleLocation({ commit }, location) {
       commit('setBattleLocation', location.length > 100 ? location.substr(0, 100) : location)
     },
-    updateBattleMoveDamage({ commit, state }, { attack, burn, critical, power, random, stab }) {
+    updateBattleMoveDamage({ commit, state }, { attack, burn, critical, power, random, stab, weather }) {
       const damage = state.battle.move.damage
       damage.attack = attack ?? damage.attack
       damage.burn = burn ?? damage.burn
@@ -241,6 +252,7 @@ export default new Vuex.Store({
       damage.power = power ?? damage.power
       damage.random = random ?? damage.random
       damage.stab = stab ?? damage.stab
+      damage.weather = weather ?? damage.weather
       commit('setBattleMoveDamage', damage)
     },
     updateBattleTargetDefense({ commit, state }, { id, value }) {
@@ -284,7 +296,8 @@ export default new Vuex.Store({
           critical: false,
           power: 0,
           random: 0,
-          stab: 0
+          stab: 0,
+          weather: ''
         },
         selected: null,
         targets: {}
@@ -306,7 +319,8 @@ export default new Vuex.Store({
         critical: false,
         power: 0,
         random: 0,
-        stab: 0
+        stab: 0,
+        weather: ''
       }
     },
     setBattleMoveTarget(state, { id, target }) {

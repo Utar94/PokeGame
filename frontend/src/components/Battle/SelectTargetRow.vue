@@ -22,6 +22,7 @@
         <item-info :item="pokemon.heldItem" />
       </template>
     </td>
+    <td v-text="accuracy" />
     <template v-if="defensiveStatistic">
       <td>
         <form-field
@@ -63,7 +64,11 @@
           type="number"
           :value="otherModifiers"
           @input="updateBattleTargetOtherModifiers({ id: pokemon.id, value: Number($event) })"
-        />
+        >
+          <template #prepend>
+            <b-input-group-prepend is-text>&times;</b-input-group-prepend>
+          </template>
+        </form-field>
       </td>
     </template>
   </tr>
@@ -95,7 +100,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleMoveAttacker', 'battleMoveTargets', 'selectedBattleMoveCategory']),
+    ...mapGetters(['battleMoveAttacker', 'battleMoveTargets', 'selectedBattleMove', 'selectedBattleMoveCategory']),
+    accuracy() {
+      return this.selectedBattleMove ? this.$i18n.n(this.selectedBattleMove.accuracy / 100, 'percent') : '—'
+    },
     attacker() {
       return this.pokemon.id === this.battleMoveAttacker.id
     },

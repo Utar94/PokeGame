@@ -30,9 +30,11 @@
   "hpFormat": "HP: {current}/{max}",
   "locationWarning": "A location is required to throw a ball.",
   "makeMove": {
+    "accuracy": "Accuracy",
     "attacker": "Attacker",
     "burn": "Burn (physical move, not Facade, without Guts: ×0.5)",
-    "critical": "Critical",
+    "conditionAndStatChanges": "Condition & Statistic Changes",
+    "critical": "Critical (×1.5)",
     "damage": "Damage",
     "effectiveness": {
       "label": "Effectiveness",
@@ -45,16 +47,27 @@
         "4": "Super effective (×4)"
       }
     },
+    "evasion": "Evasion",
     "label": "Make a Move",
+    "options": "Options",
     "otherModifiers": "Other Modifiers",
     "random": "Random (82+3d6)",
     "stab": {
       "adaptability": "STAB with Adaptability (×2)",
       "label": "STAB",
       "no": "No STAB (×1)",
-      "yes": "STAB (×1.5)"
+      "yes": "Standard STAB (×1.5)"
     },
-    "targets": "Targets"
+    "targets": "Targets",
+    "weather": {
+      "disabledWarning": "All effects of weather are negated because a Pokémon with the Air Lock or Cloud Nine ability is in battle.",
+      "label": "Weather",
+      "options": {
+        "HarshSunlight": "Harsh Sunlight (Fire ×1.5 / Water ×0.5)",
+        "Normal": "Normal",
+        "Rain": "Rain (Water ×1.5 / Fire ×0.5)"
+      }
+    }
   },
   "opponents": "Opponents",
   "players": "Players",

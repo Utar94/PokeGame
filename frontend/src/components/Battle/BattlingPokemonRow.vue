@@ -77,7 +77,6 @@ export default {
     ...mapActions(['makeBattleMove']),
     makeMove() {
       this.makeBattleMove(this.pokemon)
-      this.$bvModal.show('makeMove')
     }
   }
 }
