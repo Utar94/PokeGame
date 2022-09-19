@@ -94,6 +94,13 @@
         @input="updateBattleMoveCondition({ specialDefense: Number($event) })"
       />
     </b-row>
+    <form-field
+      id="volatile"
+      label="battle.makeMove.volatile.label"
+      placeholder="battle.makeMove.volatile.placeholder"
+      :value="battleMoveCondition.volatile"
+      @input="updateBattleMoveCondition({ volatile: $event })"
+    />
   </div>
 </template>
 

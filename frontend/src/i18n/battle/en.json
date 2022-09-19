@@ -59,6 +59,10 @@
       "yes": "Standard STAB (×1.5)"
     },
     "targets": "Targets",
+    "volatile": {
+      "label": "Volatile Conditions",
+      "placeholder": "Enter the volatile conditions separated by a comma ','"
+    },
     "weather": {
       "disabledWarning": "All effects of weather are negated because a Pokémon with the Air Lock or Cloud Nine ability is in battle.",
       "label": "Weather",

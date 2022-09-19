@@ -1,6 +1,4 @@
-﻿using PokeGame.Domain.Pokemon;
-
-namespace PokeGame.Domain.Pokemon.Payloads
+﻿namespace PokeGame.Domain.Pokemon.Payloads
 {
   public class HealPokemonPayload
   {

@@ -1,7 +1,7 @@
 {
   "accuracy": {
     "label": "Accuracy",
-    "neverMisses": "This moves never misses.",
+    "neverMisses": "This move never misses.",
     "unit": "%"
   },
   "category": {

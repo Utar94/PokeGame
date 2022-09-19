@@ -19,7 +19,7 @@ namespace PokeGame.Infrastructure
       _userContext = userContext;
     }
 
-    public async Task<T?> LoadAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<T?> LoadAsync(Guid id, CancellationToken cancellationToken)
       => await LoadAsync(id, version: null, cancellationToken);
     public async Task<T?> LoadAsync(Guid id, int? version, CancellationToken cancellationToken)
     {
@@ -38,7 +38,7 @@ namespace PokeGame.Infrastructure
       return Load(events, id);
     }
 
-    public async Task<IEnumerable<T>> LoadAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<T>> LoadAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
     {
       string aggregateType = typeof(T).GetName();
 
@@ -61,7 +61,7 @@ namespace PokeGame.Infrastructure
       return aggregates;
     }
 
-    public async Task SaveAsync(T instance, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(T instance, CancellationToken cancellationToken)
     {
       ArgumentNullException.ThrowIfNull(instance);
 
@@ -80,6 +80,45 @@ namespace PokeGame.Infrastructure
         await _eventContext.SaveChangesAsync(cancellationToken);
 
         foreach (DomainEvent change in instance.Changes)
+        {
+          await _publisher.Publish(change, cancellationToken);
+        }
+      }
+    }
+
+    public async Task SaveAsync(IEnumerable<T> instances, CancellationToken cancellationToken)
+    {
+      ArgumentNullException.ThrowIfNull(instances);
+
+      var changes = new List<DomainEvent>();
+      var entities = new List<Event>();
+
+      foreach (T instance in instances)
+      {
+        if (instance.HasChanges)
+        {
+          foreach (DomainEvent change in instance.Changes)
+          {
+            if (change.UserId == Guid.Empty)
+            {
+              change.UserId = _userContext.Id;
+            }
+          }
+
+          changes.AddRange(instance.Changes);
+          entities.AddRange(Event.FromChanges(instance));
+        }
+      }
+
+      if (entities.Any())
+      {
+        _eventContext.Events.AddRange(entities);
+        await _eventContext.SaveChangesAsync(cancellationToken);
+      }
+
+      if (changes.Any())
+      {
+        foreach (DomainEvent change in changes)
         {
           await _publisher.Publish(change, cancellationToken);
         }

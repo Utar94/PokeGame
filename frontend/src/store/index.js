@@ -5,6 +5,16 @@ import effectivenessTable from './effectiveness.json'
 import { getPokemonList } from '@/api/pokemon'
 import { getTrainers } from '@/api/trainers'
 
+function getStageChange(value, change) {
+  value += change
+  if (value > 6) {
+    return 6
+  } else if (value < -6) {
+    return -6
+  }
+  return value
+}
+
 Vue.use(Vuex)
 
 const vuexLocal = new VuexPersistence({
@@ -28,7 +38,8 @@ export default new Vuex.Store({
           specialAttack: 0,
           specialDefense: 0,
           speed: 0,
-          status: null
+          status: null,
+          volatile: null
         },
         damage: {
           attack: 0,
@@ -37,7 +48,7 @@ export default new Vuex.Store({
           power: 0,
           random: 0,
           stab: 0,
-          weather: ''
+          weather: null
         },
         selected: null,
         targets: {}
@@ -50,6 +61,7 @@ export default new Vuex.Store({
         pokemon: [],
         trainers: []
       },
+      status: {},
       step: 'TrainerSelection'
     },
     pokemonList: {},
@@ -121,6 +133,38 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    applyBattleMove({ commit, state }) {
+      const { battle } = state
+      const { accuracy, attack, defense, evasion, specialAttack, specialDefense, speed, volatile } = battle.move.condition
+      const volatileConditions = volatile?.split(',').map(condition => condition.trim()) ?? []
+      for (const id of Object.keys(battle.move.targets)) {
+        const status = {
+          ...(battle.status[id] ?? {
+            accuracy: 0,
+            attack: 0,
+            defense: 0,
+            evasion: 0,
+            specialAttack: 0,
+            specialDefense: 0,
+            speed: 0,
+            volatile: []
+          })
+        }
+        status.accuracy = getStageChange(status.accuracy, accuracy)
+        status.attack = getStageChange(status.attack, attack)
+        status.defense = getStageChange(status.defense, defense)
+        status.evasion = getStageChange(status.evasion, evasion)
+        status.specialAttack = getStageChange(status.specialAttack, specialAttack)
+        status.specialDefense = getStageChange(status.specialDefense, specialDefense)
+        status.speed = getStageChange(status.speed, speed)
+        for (const condition of volatileConditions) {
+          if (!status.volatile.includes(condition)) {
+            status.volatile.push(condition)
+          }
+        }
+        commit('setBattleStatus', { id, status })
+      }
+    },
     battleNext({ commit, state }) {
       switch (state.battle.step) {
         case 'PokemonSelection':
@@ -170,6 +214,7 @@ export default new Vuex.Store({
     },
     resetBattle({ commit }) {
       commit('resetBattleMove')
+      commit('resetBattleStatus')
       commit('setActiveBattlingPokemon', [])
       commit('setBattleLocation', null)
       commit('setBattlingPlayerPokemon', [])
@@ -189,7 +234,7 @@ export default new Vuex.Store({
     },
     toggleBattleMove({ commit, state }, move) {
       const { battle } = state
-      const { accuracyStage, category, evasionStage, id, name, power, statisticStages, statusCondition, type } = move
+      const { accuracyStage, category, evasionStage, id, name, power, statisticStages, statusCondition, type, volatileConditions } = move
       if (battle.move.selected?.id === id) {
         commit('setSelectedBattleMove', null)
         commit('setBattleMoveDamage', null)
@@ -220,7 +265,8 @@ export default new Vuex.Store({
           specialAttack: statisticStages.find(({ statistic }) => statistic === 'SpecialAttack')?.value ?? 0,
           specialDefense: statisticStages.find(({ statistic }) => statistic === 'SpecialDefense')?.value ?? 0,
           speed: statisticStages.find(({ statistic }) => statistic === 'Speed')?.value ?? 0,
-          status: statusCondition
+          status: statusCondition,
+          volatile: volatileConditions?.join(', ') ?? null
         }
         commit('setBattleMoveCondition', condition)
       }
@@ -268,7 +314,7 @@ export default new Vuex.Store({
     updateBattleLocation({ commit }, location) {
       commit('setBattleLocation', location.length > 100 ? location.substr(0, 100) : location)
     },
-    updateBattleMoveCondition({ commit, state }, { accuracy, attack, defense, evasion, specialAttack, specialDefense, speed, status }) {
+    updateBattleMoveCondition({ commit, state }, { accuracy, attack, defense, evasion, specialAttack, specialDefense, speed, status, volatile }) {
       const condition = state.battle.move.condition
       condition.accuracy = accuracy ?? condition.accuracy
       condition.attack = attack ?? condition.attack
@@ -278,6 +324,7 @@ export default new Vuex.Store({
       condition.specialDefense = specialDefense ?? condition.specialDefense
       condition.speed = speed ?? condition.speed
       condition.status = typeof status === 'undefined' ? condition.status : status
+      condition.volatile = volatile ?? condition.volatile
       commit('setBattleMoveCondition', condition)
     },
     updateBattleMoveDamage({ commit, state }, { attack, burn, critical, power, random, stab, weather }) {
@@ -325,7 +372,7 @@ export default new Vuex.Store({
   mutations: {
     resetBattleMove(state) {
       state.battle.move = {
-        attacker: state.battle.move.attacker ?? null,
+        attacker: null,
         condition: {
           accuracy: 0,
           attack: 0,
@@ -334,7 +381,8 @@ export default new Vuex.Store({
           specialAttack: 0,
           specialDefense: 0,
           speed: 0,
-          status: null
+          status: null,
+          volatile: null
         },
         damage: {
           attack: 0,
@@ -343,11 +391,14 @@ export default new Vuex.Store({
           power: 0,
           random: 0,
           stab: 0,
-          weather: ''
+          weather: null
         },
         selected: null,
         targets: {}
       }
+    },
+    resetBattleStatus(state) {
+      state.battle.status = {}
     },
     setActiveBattlingPokemon(state, activePokemon) {
       state.battle.activePokemon = activePokemon ?? []
@@ -367,7 +418,8 @@ export default new Vuex.Store({
         specialAttack: 0,
         specialDefense: 0,
         speed: 0,
-        status: null
+        status: null,
+        volatile: null
       }
     },
     setBattleMoveDamage(state, damage) {
@@ -378,14 +430,25 @@ export default new Vuex.Store({
         power: 0,
         random: 0,
         stab: 0,
-        weather: ''
+        weather: null
       }
     },
     setBattleMoveTarget(state, { id, target }) {
-      state.battle.move.targets[id] = target
+      if (target) {
+        state.battle.move.targets[id] = target
+      } else {
+        delete state.battle.move.targets[id]
+      }
     },
     setBattleMoveTargets(state, targets) {
       state.battle.move.targets = targets ?? {}
+    },
+    setBattleStatus(state, { id, status }) {
+      if (status) {
+        state.battle.status[id] = status
+      } else {
+        delete state.battle.status[id]
+      }
     },
     setBattleStep(state, step) {
       state.battle.step = step ?? 'TrainerSelection'

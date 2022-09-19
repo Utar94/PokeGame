@@ -69,8 +69,8 @@
           </template>
         </form-field>
       </td>
-      <td v-text="accuracy" />
-      <td v-text="damage" />
+      <td v-text="target ? accuracy : '—'" />
+      <td v-text="target ? damage : '—'" />
     </template>
   </tr>
 </template>
@@ -103,7 +103,8 @@ export default {
   computed: {
     ...mapGetters(['battleMoveAttacker', 'battleMoveDamage', 'battleMoveTargets', 'selectedBattleMove']),
     accuracy() {
-      return this.selectedBattleMove ? this.$i18n.n(this.selectedBattleMove.accuracy / 100, 'percent') : '—'
+      const { accuracy } = this.selectedBattleMove
+      return accuracy === null ? '—' : this.$i18n.n(accuracy / 100, 'percent')
     },
     attacker() {
       return this.pokemon.id === this.battleMoveAttacker.id
@@ -120,7 +121,7 @@ export default {
       const { level } = this.battleMoveAttacker
       const { attack, burn, critical, power, random, stab } = this.battleMoveDamage
       const { effectiveness, otherModifiers } = this.target
-      return Math.round(
+      return Math.floor(
         ((((2 * level) / 5 + 2) * power * (attack / this.defensiveStatisticValue)) / 50 + 2) *
           this.targetsModifier *
           this.weatherModifier *

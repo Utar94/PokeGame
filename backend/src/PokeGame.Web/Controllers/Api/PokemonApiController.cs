@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Application.Pokemon.Mutations;
+using PokeGame.Application.Pokemon.Queries;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
 
@@ -12,17 +15,17 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/pokemon")]
   public class PokemonApiController : ControllerBase
   {
-    private readonly IPokemonService _service;
+    private readonly IMediator _mediator;
 
-    public PokemonApiController(IPokemonService service)
+    public PokemonApiController(IMediator mediator)
     {
-      _service = service;
+      _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<ActionResult<PokemonModel>> CreateAsync([FromBody] CreatePokemonPayload payload, CancellationToken cancellationToken)
     {
-      PokemonModel pokemon = await _service.CreateAsync(payload, cancellationToken);
+      PokemonModel pokemon = await _mediator.Send(new CreatePokemonMutation(payload), cancellationToken);
       var uri = new Uri($"/api/pokemon/{pokemon.Id}", UriKind.Relative);
 
       return Created(uri, pokemon);
@@ -31,7 +34,7 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<PokemonModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      await _service.DeleteAsync(id, cancellationToken);
+      await _mediator.Send(new DeletePokemonMutation(id), cancellationToken);
 
       return NoContent();
     }
@@ -42,16 +45,26 @@ namespace PokeGame.Web.Controllers.Api
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return Ok(await _service.GetAsync(gender, inBox, inParty, isWild, search, speciesId, trainerId,
-        sort, desc,
-        index, count,
-        cancellationToken));
+      return Ok(await _mediator.Send(new GetPokemonListQuery
+      {
+        Gender = gender,
+        InBox = inBox,
+        InParty = inParty,
+        IsWild = isWild,
+        Search = search,
+        SpeciesId = speciesId,
+        TrainerId = trainerId,
+        Sort = sort,
+        Desc = desc,
+        Index = index,
+        Count = count
+      }, cancellationToken));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<PokemonModel>> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      PokemonModel? pokemon = await _service.GetAsync(id, cancellationToken);
+      PokemonModel? pokemon = await _mediator.Send(new GetPokemonQuery(id), cancellationToken);
       if (pokemon == null)
       {
         return NotFound();
@@ -63,19 +76,25 @@ namespace PokeGame.Web.Controllers.Api
     [HttpPut("{id}")]
     public async Task<ActionResult<PokemonModel>> UpdateAsync(Guid id, [FromBody] UpdatePokemonPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.UpdateAsync(id, payload, cancellationToken));
+      return Ok(await _mediator.Send(new UpdatePokemonMutation(id, payload), cancellationToken));
     }
 
     [HttpPatch("{id}/catch")]
     public async Task<ActionResult<PokemonModel>> CatchAsync(Guid id, [FromBody] CatchPokemonPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.CatchAsync(id, payload, cancellationToken));
+      return Ok(await _mediator.Send(new CatchPokemonMutation(id, payload), cancellationToken));
     }
 
     [HttpPatch("{id}/heal")]
     public async Task<ActionResult<PokemonModel>> HealAsync(Guid id, [FromBody] HealPokemonPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.HealAsync(id, payload, cancellationToken));
+      return Ok(await _mediator.Send(new HealPokemonMutation(id, payload), cancellationToken));
+    }
+
+    [HttpPatch("{id}/use-move/{moveId}")]
+    public async Task<ActionResult<PokemonModel>> UseMoveAsync(Guid id, Guid moveId, [FromBody] UsePokemonMovePayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new UsePokemonMoveMutation(id, moveId, payload), cancellationToken));
     }
   }
 }

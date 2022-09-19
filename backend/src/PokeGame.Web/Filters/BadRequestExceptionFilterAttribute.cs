@@ -11,11 +11,13 @@ namespace PokeGame.Web.Filters
     private static readonly Dictionary<Type, string> _codes = new()
     {
       [typeof(CannotCatchTrainerPokemonException)] = "CannotCatchTrainerPokemon",
+      [typeof(CannotWoundFaintedPokemonException)] = "CannotWoundFaintedPokemon",
       [typeof(InsufficientMoneyException)] = "InsufficientMoney",
       [typeof(InsufficientQuantityException)] = "InsufficientQuantity",
       [typeof(InvalidAbilityException)] = "InvalidAbility",
       [typeof(ItemPriceRequiredException)] = "ItemPriceRequired",
       [typeof(NoAvailablePositionException)] = "NoAvailablePosition",
+      [typeof(NoRemainingPowerPointException)] = "NoRemainingPowerPoint",
       [typeof(RemainingPowerPointsExceededException)] = "RemainingPowerPointsExceeded"
     };
 
