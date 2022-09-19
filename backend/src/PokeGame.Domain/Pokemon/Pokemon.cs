@@ -1,4 +1,5 @@
-﻿using PokeGame.Domain.Pokemon.Events;
+﻿using PokeGame.Domain.Moves;
+using PokeGame.Domain.Pokemon.Events;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Species.Payloads;
 
@@ -34,8 +35,13 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
     public Dictionary<Statistic, short> Statistics { get; private set; } = new();
-
     public short MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out short maximumHitPoints) ? maximumHitPoints : (short)0;
+    public short Attack => Statistics.TryGetValue(Statistic.Attack, out short attack) ? attack : (short)0;
+    public short Defense => Statistics.TryGetValue(Statistic.Defense, out short defense) ? defense : (short)0;
+    public short SpecialAttack => Statistics.TryGetValue(Statistic.SpecialAttack, out short specialAttack) ? specialAttack : (short)0;
+    public short SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out short specialDefense) ? specialDefense : (short)0;
+    public short Speed => Statistics.TryGetValue(Statistic.Speed, out short speed) ? speed : (short)0;
+
     public short CurrentHitPoints { get; private set; }
     public StatusCondition? StatusCondition { get; private set; }
 
@@ -62,6 +68,29 @@ namespace PokeGame.Domain.Pokemon
       ApplyChange(new PokemonCaught(location, trainerId, position.Position, position.Box, surname));
     }
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void UseMove(Move move, UsePokemonMovePayload payload)
+    {
+      ArgumentNullException.ThrowIfNull(move);
+
+      PokemonMove pokemonMove = Moves.SingleOrDefault(x => x.MoveId == move.Id)
+        ?? throw new PokemonMoveNotFoundException(this, move);
+
+      if (pokemonMove.RemainingPowerPoints == 0)
+      {
+        throw new NoRemainingPowerPointException(this, move);
+      }
+
+      ApplyChange(new PokemonUsedMove(move.Id, payload));
+    }
+    public void Wound(short damage, StatusCondition? statusCondition = null)
+    {
+      if (CurrentHitPoints == 0)
+      {
+        throw new CannotWoundFaintedPokemonException(this);
+      }
+
+      ApplyChange(new PokemonWounded(damage, statusCondition));
+    }
 
     protected virtual void Apply(PokemonCaught @event)
     {
@@ -164,6 +193,19 @@ namespace PokeGame.Domain.Pokemon
 
       Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;
+    }
+    protected virtual void Apply(PokemonUsedMove @event)
+    {
+      Moves.Single(x => x.MoveId == @event.MoveId).Use();
+    }
+    protected virtual void Apply(PokemonWounded @event)
+    {
+      CurrentHitPoints = (short)((CurrentHitPoints > @event.Damage) ? (CurrentHitPoints - @event.Damage) : 0);
+
+      if (@event.StatusCondition.HasValue)
+      {
+        StatusCondition = @event.StatusCondition.Value;
+      }
     }
 
     private void ComputeStatistics()

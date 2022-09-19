@@ -22,7 +22,12 @@ namespace PokeGame.Application.Pokemon.Models
 
     public IEnumerable<StatisticValueModel> IndividualValues { get; set; } = Enumerable.Empty<StatisticValueModel>();
     public IEnumerable<StatisticValueModel> EffortValues { get; set; } = Enumerable.Empty<StatisticValueModel>();
-    public IEnumerable<PokemonStatisticModel> Statistics { get; set; } = Enumerable.Empty<PokemonStatisticModel>();
+    public short MaximumHitPoints { get; set; }
+    public short Attack { get; set; }
+    public short Defense { get; set; }
+    public short SpecialAttack { get; set; }
+    public short SpecialDefense { get; set; }
+    public short Speed { get; set; }
 
     public short CurrentHitPoints { get; set; }
     public StatusCondition? StatusCondition { get; set; }

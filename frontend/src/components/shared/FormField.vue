@@ -4,6 +4,7 @@
       <template #label v-if="required && !hideLabel"><span class="text-danger">*</span> {{ $t(label) }}</template>
       <slot name="before" />
       <b-input-group>
+        <slot name="prepend" />
         <b-form-input
           :disabled="disabled"
           :id="id"

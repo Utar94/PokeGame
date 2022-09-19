@@ -128,9 +128,11 @@
                 v-model.number="baseFriendship"
               />
             </b-row>
-            <description-field v-model="description" />
-            <h4 v-t="'species.evYield.label'" />
-            <p v-if="evYieldExceeded" class="text-danger" v-t="'species.evYield.exceeded'" />
+            <strong v-t="'species.evYield.label'" />
+            <template v-if="evYieldExceeded">
+              <br />
+              <span class="text-danger" v-t="'species.evYield.exceeded'" />
+            </template>
             <b-row>
               <form-field
                 class="col"
@@ -193,7 +195,9 @@
                 v-model.number="evYield.Speed"
               />
             </b-row>
-            <h4 v-t="'species.baseStatistics'" />
+            <p>{{ $t('species.totalFormat', { total: totalEvYield }) }}</p>
+            <description-field v-model="description" />
+            <strong v-t="'species.baseStatistics'" />
             <b-row>
               <form-field class="col" id="baseHP" label="statistic.options.HP" :minValue="0" :step="1" type="number" v-model.number="baseStatistics.HP" />
               <form-field
@@ -242,6 +246,7 @@
                 v-model.number="baseStatistics.Speed"
               />
             </b-row>
+            <p>{{ $t('species.totalFormat', { total: totalBaseStatistics }) }}</p>
           </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
@@ -373,7 +378,13 @@ export default {
       return payload
     },
     evYieldExceeded() {
-      return Object.values(this.evYield).reduce((a, b) => a + b, 0) > 3
+      return this.totalEvYield > 3
+    },
+    totalBaseStatistics() {
+      return Object.values(this.baseStatistics).reduce((a, b) => a + b, 0) || 0
+    },
+    totalEvYield() {
+      return Object.values(this.evYield).reduce((a, b) => a + b, 0) || 0
     }
   },
   methods: {

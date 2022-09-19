@@ -27,6 +27,13 @@ export default new VueI18n({
       }
     }
   },
+  numberFormats: {
+    en: {
+      percent: {
+        style: 'percent'
+      }
+    }
+  },
   locale: 'en',
   fallbackLocale: 'en',
   messages: { en }

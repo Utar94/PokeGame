@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Models;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 using PokeGame.Domain.Trainers.Payloads;
-using PokeGame.Web.Models.Api.Trainer;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -40,21 +38,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<TrainerSummary>> GetAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
+    public async Task<ActionResult<TrainerModel>> GetAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
       TrainerSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<TrainerModel> trainers = await _service.GetAsync(gender, region, search, userId,
+      return Ok(await _service.GetAsync(gender, region, search, userId,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<TrainerSummary>
-      {
-        Items = trainers.Items.Select(x => new TrainerSummary(x)),
-        Total = trainers.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{id}")]

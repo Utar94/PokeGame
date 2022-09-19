@@ -54,8 +54,8 @@
               </a>
             </td>
             <td>
-              <a v-if="item.trainer" :href="`/trainers/${item.trainer.id}`" target="_blank">
-                {{ item.trainer.name }}
+              <a v-if="item.history" :href="`/trainers/${item.history.trainer.id}`" target="_blank">
+                {{ item.history.trainer.name }}
                 <font-awesome-icon icon="external-link-alt" />
               </a>
               <template v-else>&mdash;</template>
@@ -74,7 +74,7 @@
               </a>
               <template v-else>&mdash;</template>
             </td>
-            <td><status-cell :actor="item.updatedBy" :date="item.updatedAt" /></td>
+            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal

@@ -37,7 +37,7 @@
               </template>
             </td>
             <td v-text="item.category || '—'" />
-            <td><status-cell :actor="item.updatedBy" :date="item.updatedAt" /></td>
+            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal

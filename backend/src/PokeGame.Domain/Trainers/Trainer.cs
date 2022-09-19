@@ -94,7 +94,7 @@ namespace PokeGame.Domain.Trainers
     {
       if (!Pokedex.ContainsKey(speciesId))
       {
-        throw new NotImplementedException(); // TODO(fpion): implement
+        throw new PokedexEntryNotFoundException(this, speciesId);
       }
 
       ApplyChange(new RemovedPokedex(speciesId));

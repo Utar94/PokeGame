@@ -1,5 +1,6 @@
 ﻿using PokeGame.Domain;
 using PokeGame.Domain.Moves;
+using PokeGame.Domain.Pokemon;
 
 namespace PokeGame.Infrastructure.ReadModel.Entities
 {
@@ -14,6 +15,12 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public byte? Accuracy { get; set; }
     public byte? Power { get; set; }
     public byte PowerPoints { get; set; }
+
+    public StatusCondition? StatusCondition { get; set; }
+    public byte? StatusChance { get; set; }
+    public string? StatisticStages { get; set; }
+    public short AccuracyStage { get; set; }
+    public short EvasionStage { get; set; }
 
     public string? Notes { get; set; }
     public string? Reference { get; set; }
@@ -33,6 +40,15 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       Accuracy = move.Accuracy;
       Power = move.Power;
       PowerPoints = move.PowerPoints;
+
+      StatusCondition = move.StatusCondition;
+      StatusChance = move.StatusChance;
+      IEnumerable<KeyValuePair<Statistic, short>> statisticStages = move.StatisticStages.Where(x => x.Value != 0);
+      StatisticStages = statisticStages.Any()
+        ? string.Join('|', statisticStages.Select(pair => string.Join(':', pair.Key, pair.Value)))
+        : null;
+      AccuracyStage = move.AccuracyStage;
+      EvasionStage = move.EvasionStage;
 
       Notes = move.Notes;
       Reference = move.Reference;

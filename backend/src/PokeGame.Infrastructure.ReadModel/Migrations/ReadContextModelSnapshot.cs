@@ -185,6 +185,11 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Property<byte?>("Accuracy")
                         .HasColumnType("smallint");
 
+                    b.Property<short>("AccuracyStage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)0);
+
                     b.Property<int>("Category")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -202,6 +207,11 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<short>("EvasionStage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)0);
 
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -227,6 +237,16 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Property<string>("Reference")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
+
+                    b.Property<string>("StatisticStages")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<byte?>("StatusChance")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("StatusCondition")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Type")
                         .ValueGeneratedOnAdd()
