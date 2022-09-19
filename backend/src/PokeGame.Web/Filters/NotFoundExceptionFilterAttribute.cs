@@ -5,6 +5,7 @@ using PokeGame.Application.Inventories;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
 using PokeGame.Domain.Pokemon;
+using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Web.Filters
 {
@@ -16,7 +17,10 @@ namespace PokeGame.Web.Filters
       [typeof(EntityNotFoundException)] = HandleEntityNotFound,
       [typeof(InventoryNotFoundException)] = HandleInventoryNotFound,
       [typeof(MovesNotFoundException)] = HandleMovesNotFound,
-      [typeof(NatureNotFoundException)] = HandleNatureNotFound
+      [typeof(NatureNotFoundException)] = HandleNatureNotFound,
+      [typeof(PokedexEntryNotFoundException)] = HandlePokedexEntryNotFound,
+      [typeof(PokemonMoveNotFoundException)] = HandlePokemonMoveNotFound,
+      [typeof(PokemonNotFoundException)] = HandlePokemonNotFound
     };
 
     public override void OnException(ExceptionContext context)
@@ -48,5 +52,14 @@ namespace PokeGame.Web.Filters
 
     private static ActionResult HandleNatureNotFound(ExceptionContext context)
       => new NotFoundObjectResult(new { Field = context.Exception.Data["ParamName"] });
+
+    private static ActionResult HandlePokedexEntryNotFound(ExceptionContext context)
+      => new NotFoundResult();
+
+    private static ActionResult HandlePokemonMoveNotFound(ExceptionContext context)
+      => new NotFoundResult();
+
+    private static ActionResult HandlePokemonNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
   }
 }

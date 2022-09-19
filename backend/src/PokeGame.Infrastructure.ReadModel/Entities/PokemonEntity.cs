@@ -21,6 +21,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? EffortValues { get; set; }
     public string? Statistics { get; set; }
 
+    public short CurrentHitPoints { get; set; }
+    public StatusCondition? StatusCondition { get; set; }
+
     public List<PokemonMoveEntity> Moves { get; set; } = new();
     public ItemEntity? HeldItem { get; set; }
     public int? HeldItemId { get; set; }
@@ -63,11 +66,14 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
         ? string.Join(" | ", statistics.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
 
+      CurrentHitPoints = pokemon.CurrentHitPoints;
+      StatusCondition = pokemon.StatusCondition;
+
       MetAtLevel = pokemon.History?.Level;
       MetLocation = pokemon.History?.Location;
       MetOn = pokemon.History?.MetOn;
-      Position = pokemon.Position;
-      Box = pokemon.Box;
+      Position = pokemon.Position?.Position;
+      Box = pokemon.Position?.Box;
 
       Notes = pokemon.Notes;
       Reference = pokemon.Reference;

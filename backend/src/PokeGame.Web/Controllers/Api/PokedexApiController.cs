@@ -29,21 +29,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<ListModel<PokedexSummary>>> GetAsync(Guid trainerId, bool? hasCaught, string? search, PokemonType? type,
+    public async Task<ActionResult<ListModel<PokedexModel>>> GetAsync(Guid trainerId, bool? hasCaught, string? search, PokemonType? type,
       PokedexSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<PokedexModel> entries = await _service.GetAsync(trainerId, hasCaught, search, type,
+      return Ok(await _service.GetAsync(trainerId, hasCaught, search, type,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<PokedexSummary>
-      {
-        Items = entries.Items.Select(entry => new PokedexSummary(entry)),
-        Total = entries.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{speciesId}")]

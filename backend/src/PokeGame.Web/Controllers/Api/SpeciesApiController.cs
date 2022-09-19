@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Models;
 using PokeGame.Application.Species;
 using PokeGame.Application.Species.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Species.Payloads;
-using PokeGame.Web.Models.Api.Species;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -39,21 +37,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<SpeciesSummary>> GetAsync(string? search, PokemonType? type,
+    public async Task<ActionResult<SpeciesModel>> GetAsync(string? search, PokemonType? type,
       SpeciesSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<SpeciesModel> species = await _service.GetAsync(search, type,
+      return Ok(await _service.GetAsync(search, type,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<SpeciesSummary>
-      {
-        Items = species.Items.Select(x => new SpeciesSummary(x)),
-        Total = species.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{id}")]

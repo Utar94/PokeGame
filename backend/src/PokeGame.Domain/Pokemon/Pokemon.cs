@@ -1,4 +1,5 @@
-﻿using PokeGame.Domain.Pokemon.Events;
+﻿using PokeGame.Domain.Moves;
+using PokeGame.Domain.Pokemon.Events;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Species.Payloads;
 
@@ -34,14 +35,22 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
     public Dictionary<Statistic, short> Statistics { get; private set; } = new();
+    public short MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out short maximumHitPoints) ? maximumHitPoints : (short)0;
+    public short Attack => Statistics.TryGetValue(Statistic.Attack, out short attack) ? attack : (short)0;
+    public short Defense => Statistics.TryGetValue(Statistic.Defense, out short defense) ? defense : (short)0;
+    public short SpecialAttack => Statistics.TryGetValue(Statistic.SpecialAttack, out short specialAttack) ? specialAttack : (short)0;
+    public short SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out short specialDefense) ? specialDefense : (short)0;
+    public short Speed => Statistics.TryGetValue(Statistic.Speed, out short speed) ? speed : (short)0;
+
+    public short CurrentHitPoints { get; private set; }
+    public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new();
     public Guid? HeldItemId { get; private set; }
 
     public History? History { get; private set; }
     public Guid? OriginalTrainerId { get; private set; }
-    public byte? Position { get; private set; }
-    public byte? Box { get; private set; }
+    public PokemonPosition? Position { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -49,23 +58,73 @@ namespace PokeGame.Domain.Pokemon
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
 
+    public void Catch(string location, Guid trainerId, PokemonPosition position, string? surname = null)
+    {
+      if (OriginalTrainerId.HasValue || History != null)
+      {
+        throw new CannotCatchTrainerPokemonException(this);
+      }
+
+      ApplyChange(new PokemonCaught(location, trainerId, position.Position, position.Box, surname));
+    }
+    public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void UseMove(Move move, UsePokemonMovePayload payload)
+    {
+      ArgumentNullException.ThrowIfNull(move);
+
+      PokemonMove pokemonMove = Moves.SingleOrDefault(x => x.MoveId == move.Id)
+        ?? throw new PokemonMoveNotFoundException(this, move);
+
+      if (pokemonMove.RemainingPowerPoints == 0)
+      {
+        throw new NoRemainingPowerPointException(this, move);
+      }
+
+      ApplyChange(new PokemonUsedMove(move.Id, payload));
+    }
+    public void Wound(short damage, StatusCondition? statusCondition = null)
+    {
+      if (CurrentHitPoints == 0)
+      {
+        throw new CannotWoundFaintedPokemonException(this);
+      }
+
+      ApplyChange(new PokemonWounded(damage, statusCondition));
+    }
+
+    protected virtual void Apply(PokemonCaught @event)
+    {
+      Surname = @event.Surname?.CleanTrim();
+
+      SetHistory(new HistoryPayload
+      {
+        Level = Level,
+        Location = @event.Location,
+        MetOn = DateTime.UtcNow,
+        TrainerId = @event.TrainerId
+      });
+
+      Position = new(@event.Position, @event.Box);
+    }
     protected virtual void Apply(PokemonCreated @event)
     {
-      SpeciesId = @event.Payload.SpeciesId;
-      AbilityId = @event.Payload.AbilityId;
+      CreatePokemonPayload payload = @event.Payload;
+
+      SpeciesId = payload.SpeciesId;
+      AbilityId = payload.AbilityId;
 
       BaseFriendship = @event.BaseFriendship;
       LevelingRate = @event.LevelingRate;
-      Level = @event.Payload.Level;
-      Experience = @event.Payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
-      Friendship = @event.Payload.Friendship ?? BaseFriendship;
+      Level = payload.Level;
+      Experience = payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
+      Friendship = payload.Friendship ?? BaseFriendship;
 
       GenderRatio = @event.GenderRatio;
-      Gender = @event.Payload.Gender;
-      Nature = Nature.GetNature(@event.Payload.Nature, nameof(@event.Payload.Nature));
+      Gender = payload.Gender;
+      Nature = Nature.GetNature(payload.Nature, nameof(payload.Nature));
       SpeciesName = @event.SpeciesName;
-      Surname = @event.Payload.Surname?.CleanTrim();
-      Description = @event.Payload.Description?.CleanTrim();
+      Surname = payload.Surname?.CleanTrim();
+      Description = payload.Description?.CleanTrim();
 
       BaseStatistics.Clear();
       foreach (var (statistic, value) in @event.BaseStatistics)
@@ -73,51 +132,80 @@ namespace PokeGame.Domain.Pokemon
         BaseStatistics[statistic] = value;
       }
       IndividualValues.Clear();
-      if (@event.Payload.IndividualValues?.Any() == true)
+      if (payload.IndividualValues?.Any() == true)
       {
-        foreach (StatisticValuePayload individualValue in @event.Payload.IndividualValues)
+        foreach (StatisticValuePayload individualValue in payload.IndividualValues)
         {
           IndividualValues[individualValue.Statistic] = individualValue.Value;
         }
       }
       EffortValues.Clear();
-      if (@event.Payload.EffortValues?.Any() == true)
+      if (payload.EffortValues?.Any() == true)
       {
-        foreach (StatisticValuePayload effortValue in @event.Payload.EffortValues)
+        foreach (StatisticValuePayload effortValue in payload.EffortValues)
         {
           EffortValues[effortValue.Statistic] = effortValue.Value;
         }
       }
       ComputeStatistics();
 
+      CurrentHitPoints = payload.CurrentHitPoints
+        ?? (Statistics.TryGetValue(Statistic.HP, out short totalHitPoints) ? totalHitPoints : (short)0);
+      StatusCondition = payload.StatusCondition;
+
       Moves.Clear();
-      if (@event.Payload.Moves?.Any() == true)
+      if (payload.Moves?.Any() == true)
       {
-        Moves.AddRange(@event.Payload.Moves.Select(move => new PokemonMove(move)));
+        Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
       }
-      HeldItemId = @event.Payload.HeldItemId;
+      HeldItemId = payload.HeldItemId;
 
-      History = @event.Payload.History == null ? null : new(@event.Payload.History);
-      if (@event.Payload.History != null && OriginalTrainerId == null)
-      {
-        OriginalTrainerId = @event.Payload.History.TrainerId;
-      }
-      Position = @event.Payload.Position;
-      Box = @event.Payload.Box;
+      SetHistory(payload.History);
+      Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
 
-      Notes = @event.Payload.Notes?.CleanTrim();
-      Reference = @event.Payload.Reference;
+      Notes = payload.Notes?.CleanTrim();
+      Reference = payload.Reference;
     }
     protected virtual void Apply(PokemonDeleted @event)
     {
       Delete(@event);
     }
+    protected virtual void Apply(PokemonHealed @event)
+    {
+      HealPokemonPayload payload = @event.Payload;
+
+      CurrentHitPoints += payload.RestoreHitPoints;
+      if (CurrentHitPoints > MaximumHitPoints)
+      {
+        CurrentHitPoints = MaximumHitPoints;
+      }
+
+      if (payload.RemoveAllConditions || payload.StatusCondition == StatusCondition)
+      {
+        StatusCondition = null;
+      }
+    }
     protected virtual void Apply(PokemonUpdated @event)
     {
-      Description = @event.Payload.Description?.CleanTrim();
+      UpdatePokemonPayload payload = @event.Payload;
 
-      Notes = @event.Payload.Notes?.CleanTrim();
-      Reference = @event.Payload.Reference;
+      Description = payload.Description?.CleanTrim();
+
+      Notes = payload.Notes?.CleanTrim();
+      Reference = payload.Reference;
+    }
+    protected virtual void Apply(PokemonUsedMove @event)
+    {
+      Moves.Single(x => x.MoveId == @event.MoveId).Use();
+    }
+    protected virtual void Apply(PokemonWounded @event)
+    {
+      CurrentHitPoints = (short)((CurrentHitPoints > @event.Damage) ? (CurrentHitPoints - @event.Damage) : 0);
+
+      if (@event.StatusCondition.HasValue)
+      {
+        StatusCondition = @event.StatusCondition.Value;
+      }
     }
 
     private void ComputeStatistics()
@@ -128,6 +216,15 @@ namespace PokeGame.Domain.Pokemon
       Statistics[Statistic.SpecialAttack] = this.CalculateStatistic(Statistic.SpecialAttack);
       Statistics[Statistic.SpecialDefense] = this.CalculateStatistic(Statistic.SpecialDefense);
       Statistics[Statistic.Speed] = this.CalculateStatistic(Statistic.Speed);
+    }
+
+    private void SetHistory(HistoryPayload? payload)
+    {
+      History = payload == null ? null : new(payload);
+      if (payload != null && OriginalTrainerId == null)
+      {
+        OriginalTrainerId = payload.TrainerId;
+      }
     }
 
     public override string ToString() => $"{Surname ?? SpeciesName} | {base.ToString()}";

@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Items;
 using PokeGame.Application.Items.Models;
-using PokeGame.Application.Models;
 using PokeGame.Domain.Items;
 using PokeGame.Domain.Items.Payloads;
-using PokeGame.Web.Models.Api.Items;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -39,21 +37,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<ItemSummary>> GetAsync(ItemCategory? category, string? search,
+    public async Task<ActionResult<ItemModel>> GetAsync(ItemCategory? category, string? search,
       ItemSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<ItemModel> items = await _service.GetAsync(category, search,
+      return Ok(await _service.GetAsync(category, search,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<ItemSummary>
-      {
-        Items = items.Items.Select(x => new ItemSummary(x)),
-        Total = items.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{id}")]

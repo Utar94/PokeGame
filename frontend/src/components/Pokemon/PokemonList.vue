@@ -8,7 +8,17 @@
     <b-row>
       <gender-select class="col" v-model="gender" />
       <species-select class="col" v-model="speciesId" />
-      <trainer-select class="col" v-model="trainerId" />
+      <trainer-select class="col" :disabled="isWild" v-model="trainer">
+        <template #after>
+          <b-form-checkbox v-model="isWild">{{ $t('pokemon.wild') }}</b-form-checkbox>
+        </template>
+      </trainer-select>
+      <form-field class="col" :disabled="!inBox" id="box" label="pokemon.trainer.box" :minValue="1" :maxValue="32" :step="1" type="number" v-model.number="box">
+        <template #after>
+          <b-form-checkbox :disabled="!trainer" inline v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
+          <b-form-checkbox :disabled="!trainer" inline v-model="inBox">{{ $t('pokemon.trainer.inBox') }}</b-form-checkbox>
+        </template>
+      </form-field>
     </b-row>
     <b-row>
       <search-field class="col" v-model="search" />
@@ -32,7 +42,7 @@
           <tr v-for="item in pokemon" :key="item.id">
             <td>
               <a :href="`/pokemon/${item.id}`">
-                <font-awesome-icon :icon="item.gender === 'Male' ? 'mars' : item.gender === 'Female' ? 'venus' : 'question'" />
+                <gender-icon :gender="item.gender" />
                 {{ item.surname || item.species.name }}
                 {{ $t('pokemon.levelFormat', { level: item.level }) }}
               </a>
@@ -44,8 +54,8 @@
               </a>
             </td>
             <td>
-              <a v-if="item.trainer" :href="`/trainers/${item.trainer.id}`" target="_blank">
-                {{ item.trainer.name }}
+              <a v-if="item.history" :href="`/trainers/${item.history.trainer.id}`" target="_blank">
+                {{ item.history.trainer.name }}
                 <font-awesome-icon icon="external-link-alt" />
               </a>
               <template v-else>&mdash;</template>
@@ -64,7 +74,7 @@
               </a>
               <template v-else>&mdash;</template>
             </td>
-            <td><status-cell :actor="item.updatedBy" :date="item.updatedAt" /></td>
+            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal
@@ -100,9 +110,13 @@ export default {
   },
   data() {
     return {
+      box: 1,
       count: 10,
       desc: false,
       gender: null,
+      inBox: false,
+      inParty: false,
+      isWild: false,
       loading: false,
       page: 1,
       pokemon: [],
@@ -110,16 +124,19 @@ export default {
       sort: 'Name',
       speciesId: null,
       total: 0,
-      trainerId: null
+      trainer: null
     }
   },
   computed: {
     params() {
       return {
         gender: this.gender,
+        inBox: this.trainer && this.inBox && this.box >= 1 && this.box <= 32 ? this.box - 1 : null,
+        inParty: (this.trainer && this.inParty) || null,
+        isWild: this.isWild || null,
         search: this.search,
         speciesId: this.speciesId,
-        trainerId: this.trainerId,
+        trainerId: this.isWild ? null : this.trainer?.id ?? null,
         sort: this.sort,
         desc: this.desc,
         index: (this.page - 1) * this.count,
@@ -174,6 +191,20 @@ export default {
     }
   },
   watch: {
+    inBox(inBox) {
+      this.box = 1
+      if (inBox) {
+        this.inParty = false
+      }
+    },
+    inParty(inParty) {
+      if (inParty) {
+        this.inBox = false
+      }
+    },
+    isWild() {
+      this.trainer = null
+    },
     params: {
       deep: true,
       immediate: true,
@@ -183,6 +214,9 @@ export default {
           oldValue &&
           (newValue.search !== oldValue.search ||
             newValue.gender !== oldValue.gender ||
+            newValue.inBox !== oldValue.inBox ||
+            newValue.inParty !== oldValue.inParty ||
+            newValue.isWild !== oldValue.isWild ||
             newValue.speciesId !== oldValue.speciesId ||
             newValue.trainerId !== oldValue.trainerId ||
             newValue.count !== oldValue.count)
@@ -192,6 +226,12 @@ export default {
         } else {
           await this.refresh(newValue)
         }
+      }
+    },
+    trainer(trainer) {
+      if (!trainer) {
+        this.inParty = false
+        this.inBox = false
       }
     }
   }

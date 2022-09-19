@@ -6,12 +6,18 @@
     :options="options"
     :placeholder="placeholder"
     :required="required"
-    :value="value"
-    @input="$emit('input', $event)"
-  />
+    :value="value ? value.id : null"
+    @input="onInput"
+  >
+    <slot />
+    <template #after>
+      <slot name="after" />
+    </template>
+  </form-select>
 </template>
 
 <script>
+import Vue from 'vue'
 import { getTrainers } from '@/api/trainers'
 
 export default {
@@ -41,16 +47,19 @@ export default {
       type: Boolean,
       default: false
     },
-    value: {}
+    value: {
+      type: Object,
+      default: null
+    }
   },
   data() {
     return {
-      trainers: []
+      trainers: {}
     }
   },
   computed: {
     options() {
-      return this.trainers
+      return Object.values(this.trainers)
         .filter(({ id }) => !this.exclude.includes(id))
         .map(({ id, name }) => ({
           text: name,
@@ -58,10 +67,17 @@ export default {
         }))
     }
   },
+  methods: {
+    onInput($event) {
+      this.$emit('input', this.trainers[$event])
+    }
+  },
   async created() {
     try {
       const { data } = await getTrainers({ sort: 'Name', desc: false })
-      this.trainers = data.items
+      for (const trainer of data.items) {
+        Vue.set(this.trainers, trainer.id, trainer)
+      }
     } catch (e) {
       this.handleError(e)
     }

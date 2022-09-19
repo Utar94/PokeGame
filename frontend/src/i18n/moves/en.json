@@ -1,6 +1,7 @@
 {
   "accuracy": {
     "label": "Accuracy",
+    "neverMisses": "This move never misses.",
     "unit": "%"
   },
   "category": {
@@ -12,6 +13,7 @@
     },
     "placeholder": "Select a category"
   },
+  "condition": "Condition",
   "created": "The move has been created.",
   "delete": {
     "confirm": "Do you really want to delete the following move?",
@@ -20,6 +22,7 @@
   },
   "editTitle": "Edit move: {name}",
   "empty": "This list is empty.",
+  "evasion": "Evasion",
   "newTitle": "Create move",
   "power": "Power",
   "powerPoints": {
@@ -35,6 +38,12 @@
       "Name": "Name",
       "UpdatedAt": "Updated on"
     }
+  },
+  "stagesAndCondition": "Stages & Condition",
+  "statisticStages": "Statistic Stages",
+  "statusChance": {
+    "label": "Status Chance",
+    "unit": "%"
   },
   "title": "Moves",
   "updated": "The move has been updated."

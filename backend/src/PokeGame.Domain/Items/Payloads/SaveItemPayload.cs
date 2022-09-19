@@ -2,6 +2,8 @@
 {
   public abstract class SaveItemPayload
   {
+    public double? DefaultModifier { get; set; }
+
     public int? Price { get; set; }
 
     public string Name { get; set; } = string.Empty;

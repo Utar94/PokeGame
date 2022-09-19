@@ -1,4 +1,15 @@
 {
+  "condition": {
+    "label": "Status Condition",
+    "options": {
+      "Burn": "Burn",
+      "Freeze": "Freeze",
+      "Paralysis": "Paralysis",
+      "Poison": "Poison",
+      "Sleep": "Sleep"
+    },
+    "placeholder": "Select a status condition"
+  },
   "created": "The Pokémon has been created.",
   "delete": {
     "confirm": "Do you really want to delete the following Pokémon?",
@@ -7,6 +18,7 @@
   },
   "editTitle": "Edit Pokémon: {name}",
   "empty": "This list is empty.",
+  "fainted": "Fainted",
   "gender": {
     "label": "Gender",
     "options": {
@@ -60,10 +72,15 @@
     "placeholder": "Select a nature"
   },
   "newTitle": "Create Pokémon",
+  "select": {
+    "label": "Pokémon",
+    "placeholder": "Select a Pokémon"
+  },
   "sort": {
     "options": {
       "Level": "Level",
       "Name": "Name",
+      "Position": "Position",
       "UpdatedAt": "Updated on"
     }
   },
@@ -76,6 +93,7 @@
     "box": "Box",
     "boxFormat": "Box {box} ({position})",
     "history": "History",
+    "inBox": "In Box",
     "location": "Location",
     "metLevel": "Met at Level",
     "metLocation": {
@@ -88,5 +106,6 @@
     "position": "Position",
     "title": "Trainer"
   },
-  "updated": "The Pokémon has been updated."
+  "updated": "The Pokémon has been updated.",
+  "wild": "Wild Pokémon"
 }

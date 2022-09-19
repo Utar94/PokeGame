@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Inventories;
 using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
 using PokeGame.Application.Pokedex;
-using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
 using PokeGame.Application.Trainers;
 using System.Reflection;
@@ -19,8 +19,9 @@ namespace PokeGame.Application
       Assembly assembly = typeof(ServiceCollectionExtensions).Assembly;
 
       return services
-        .AddValidatorsFromAssembly(assembly, includeInternalTypes: true)
-        .AddApplicationServices();
+        .AddApplicationServices()
+        .AddMediatR(assembly)
+        .AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)
@@ -31,7 +32,6 @@ namespace PokeGame.Application
         .AddScoped<IItemService, ItemService>()
         .AddScoped<IMoveService, MoveService>()
         .AddScoped<IPokedexService, PokedexService>()
-        .AddScoped<IPokemonService, PokemonService>()
         .AddScoped<ISpeciesService, SpeciesService>()
         .AddScoped<ITrainerService, TrainerService>();
     }

@@ -3,6 +3,7 @@ import Gravatar from 'vue-gravatar'
 import JsonViewer from 'vue-json-viewer'
 import components from './components'
 import i18n from './i18n'
+import store from './store'
 import './config/bootstrap'
 import './config/fontAwesome'
 import './config/vee-validate'
@@ -15,5 +16,6 @@ Vue.use(JsonViewer)
 
 new Vue({
   components,
-  i18n
+  i18n,
+  store
 }).$mount('#app')

@@ -1,6 +1,7 @@
 ﻿using PokeGame.Application.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves;
+using PokeGame.Domain.Pokemon;
 
 namespace PokeGame.Application.Moves.Models
 {
@@ -15,6 +16,12 @@ namespace PokeGame.Application.Moves.Models
     public byte? Accuracy { get; set; }
     public byte? Power { get; set; }
     public byte PowerPoints { get; set; }
+
+    public StatusCondition? StatusCondition { get; set; }
+    public byte? StatusChance { get; set; }
+    public IEnumerable<StatisticStageModel> StatisticStages { get; set; } = Enumerable.Empty<StatisticStageModel>();
+    public short AccuracyStage { get; set; }
+    public short EvasionStage { get; set; }
 
     public string? Notes { get; set; }
     public string? Reference { get; set; }

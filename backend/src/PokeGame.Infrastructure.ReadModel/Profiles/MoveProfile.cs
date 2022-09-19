@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PokeGame.Application.Models;
 using PokeGame.Application.Moves.Models;
+using PokeGame.Domain.Pokemon;
 using PokeGame.Infrastructure.ReadModel.Entities;
 
 namespace PokeGame.Infrastructure.ReadModel.Profiles
@@ -10,7 +11,24 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
     public MoveProfile()
     {
       CreateMap<MoveEntity, MoveModel>()
-        .IncludeBase<Entity, AggregateModel>();
+        .IncludeBase<Entity, AggregateModel>()
+        .ForMember(x => x.StatisticStages, x => x.MapFrom(GetStatisticStages));
+    }
+
+    private static IEnumerable<StatisticStageModel> GetStatisticStages(MoveEntity move, MoveModel model)
+    {
+      string[] pairs = move.StatisticStages?.Split('|') ?? Array.Empty<string>();
+
+      return pairs.Select(pair =>
+      {
+        string[] values = pair.Split(':');
+
+        return new StatisticStageModel
+        {
+          Statistic = Enum.Parse<Statistic>(values[0]),
+          Value = short.Parse(values[1])
+        };
+      });
     }
   }
 }

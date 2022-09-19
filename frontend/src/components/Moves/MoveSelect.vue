@@ -1,10 +1,20 @@
 <template>
-  <form-select :disabled="disabled" :id="id" :label="label" :options="options" :placeholder="placeholder" :required="required" :value="value" @input="onInput">
+  <form-select
+    :disabled="disabled"
+    :id="id"
+    :label="label"
+    :options="options"
+    :placeholder="placeholder"
+    :required="required"
+    :value="value ? value.id : null"
+    @input="onInput"
+  >
     <slot />
   </form-select>
 </template>
 
 <script>
+import Vue from 'vue'
 import { getMoves } from '@/api/moves'
 
 export default {
@@ -38,12 +48,12 @@ export default {
   },
   data() {
     return {
-      moves: []
+      moves: {}
     }
   },
   computed: {
     options() {
-      return this.moves
+      return Object.values(this.moves)
         .filter(({ id }) => !this.exclude.includes(id))
         .map(({ id, name }) => ({
           text: name,
@@ -53,18 +63,15 @@ export default {
   },
   methods: {
     onInput($event) {
-      this.$emit('input', $event)
-      const move = this.moves.find(({ id }) => id === $event)
-      if (move) {
-        this.$emit('move', move)
-      }
+      this.$emit('input', this.moves[$event])
     }
   },
   async created() {
     try {
       const { data } = await getMoves({ sort: 'Name', desc: false })
-      this.moves = data.items
-      this.$emit('refresh', data)
+      for (const move of data.items) {
+        Vue.set(this.moves, move.id, move)
+      }
     } catch (e) {
       this.handleError(e)
     }

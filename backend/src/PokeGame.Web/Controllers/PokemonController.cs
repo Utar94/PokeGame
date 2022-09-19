@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Application.Pokemon.Queries;
 
 namespace PokeGame.Web.Controllers
 {
@@ -10,11 +11,11 @@ namespace PokeGame.Web.Controllers
   [Route("pokemon")]
   public class PokemonController : Controller
   {
-    private readonly IPokemonService _pokemonService;
+    private readonly IMediator _mediator;
 
-    public PokemonController(IPokemonService pokemonService)
+    public PokemonController(IMediator mediator)
     {
-      _pokemonService = pokemonService;
+      _mediator = mediator;
     }
 
     [HttpGet("/create-pokemon")]
@@ -32,7 +33,7 @@ namespace PokeGame.Web.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult> PokemonEdit(Guid id, CancellationToken cancellationToken = default)
     {
-      PokemonModel? pokemon = await _pokemonService.GetAsync(id, cancellationToken);
+      PokemonModel? pokemon = await _mediator.Send(new GetPokemonQuery(id), cancellationToken);
       if (pokemon == null)
       {
         return NotFound();

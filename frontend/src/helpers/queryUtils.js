@@ -1,4 +1,5 @@
 export function getQueryString(params) {
+  params = params ?? {}
   const filtered = Object.entries(params).filter(([, value]) => typeof value !== 'undefined' && value !== null)
 
   const list = []

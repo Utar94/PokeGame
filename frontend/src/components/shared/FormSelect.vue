@@ -1,9 +1,10 @@
 <template>
   <validation-provider :name="$t(label).toLowerCase()" :rules="allRules" :vid="id" v-slot="validationContext" slim>
-    <b-form-group :label="required ? '' : $t(label)" :label-for="id">
-      <template #label v-if="required"><span class="text-danger">*</span> {{ $t(label) }}</template>
+    <b-form-group :label="required || hideLabel ? '' : $t(label)" :label-for="id">
+      <template #label v-if="required && !hideLabel"><span class="text-danger">*</span> {{ $t(label) }}</template>
       <slot name="before" />
       <b-input-group>
+        <slot name="prepend" />
         <b-form-select
           :disabled="disabled"
           :id="id"
@@ -38,6 +39,10 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    hideLabel: {
       type: Boolean,
       default: false
     },

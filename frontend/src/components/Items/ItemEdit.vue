@@ -6,13 +6,17 @@
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
         <div class="my-2">
-          <icon-submit v-if="item" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
+          <template v-if="item">
+            <icon-submit class="mx-1" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
+            <icon-button class="mx-1" href="/create-item" icon="plus" text="actions.create" variant="success" />
+          </template>
           <icon-submit v-else :disabled="!hasChanges || loading" icon="plus" :loading="loading" text="actions.create" variant="success" />
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
               <category-select class="col" :disabled="Boolean(item)" :required="!item" v-model="category" />
+              <ball-modifier-field v-if="category === 'PokeBall'" class="col" id="defaultModifier" v-model="defaultModifier" />
               <name-field class="col" required v-model="name" />
               <form-field class="col" id="price" label="items.price" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="price" />
             </b-row>
@@ -30,12 +34,14 @@
 
 <script>
 import CategorySelect from './CategorySelect.vue'
+import BallModifierField from './BallModifierField.vue'
 import { createItem, updateItem } from '@/api/items'
 
 export default {
   name: 'ItemEdit',
   components: {
-    CategorySelect
+    CategorySelect,
+    BallModifierField
   },
   props: {
     json: {
@@ -50,6 +56,7 @@ export default {
   data() {
     return {
       category: null,
+      defaultModifier: 0,
       description: null,
       item: null,
       loading: false,
@@ -63,6 +70,7 @@ export default {
     hasChanges() {
       return (
         (!this.item && this.category) ||
+        (this.defaultModifier ?? 0) !== (this.item?.defaultModifier ?? 0) ||
         (this.name ?? '') !== (this.item?.name ?? '') ||
         this.price !== (this.item?.price ?? 0) ||
         (this.description ?? '') !== (this.item?.description ?? '') ||
@@ -72,6 +80,7 @@ export default {
     },
     payload() {
       const payload = {
+        defaultModifier: this.defaultModifier || null,
         name: this.name,
         price: this.price || null,
         description: this.description,
@@ -88,6 +97,7 @@ export default {
     setModel(item) {
       this.item = item
       this.category = item.category
+      this.defaultModifier = item.defaultModifier ?? 0
       this.description = item.description
       this.name = item.name
       this.notes = item.notes

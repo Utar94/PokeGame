@@ -20,8 +20,7 @@ namespace PokeGame.Application.Pokemon
       When(x => x.GenderRatio == null, () =>
         RuleFor(x => x.Gender)
           .Equal(PokemonGender.Unknown)
-      );
-      When(x => x.GenderRatio != null, () =>
+      ).Otherwise(() =>
       {
         When(x => x.GenderRatio!.Value == 0.0, () =>
           RuleFor(x => x.Gender)
@@ -62,6 +61,9 @@ namespace PokeGame.Application.Pokemon
       RuleForEach(x => x.Statistics.Values)
         .InclusiveBetween((short)0, (short)999);
 
+      RuleFor(x => x.CurrentHitPoints)
+        .SetValidator(x => new CurrentHitPointsValidator(x));
+
       RuleFor(x => x.Moves)
         .Must(moves => moves.GroupBy(y => y.MoveId).Count() == moves.Count
           && moves.GroupBy(y => y.Position).Count() == moves.Count);
@@ -74,10 +76,7 @@ namespace PokeGame.Application.Pokemon
           .Null();
         RuleFor(x => x.Position)
           .Null();
-        RuleFor(x => x.Box)
-          .Null();
-      });
-      When(x => x.History != null, () =>
+      }).Otherwise(() =>
       {
         RuleFor(x => x.History!)
           .SetValidator(x => new HistoryValidator(x));
@@ -85,14 +84,9 @@ namespace PokeGame.Application.Pokemon
           .NotNull();
         RuleFor(x => x.Position)
           .NotNull();
-
-        When(x => x.Box == null, () =>
-          RuleFor(x => x.Position)
-            .InclusiveBetween((byte)0, (byte)5)
-        );
-        When(x => x.Box != null, () =>
-          RuleFor(x => x.Position)
-            .InclusiveBetween((byte)0, (byte)31)
+        When(x => x.Position != null, () =>
+          RuleFor(x => x.Position!)
+            .SetValidator(new PokemonPositionValidator())
         );
       });
 

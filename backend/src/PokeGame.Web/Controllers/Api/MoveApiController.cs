@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Models;
 using PokeGame.Application.Moves;
 using PokeGame.Application.Moves.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves.Payloads;
-using PokeGame.Web.Models.Api.Move;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -39,21 +37,15 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<MoveSummary>> GetAsync(string? search, PokemonType? type,
+    public async Task<ActionResult<MoveModel>> GetAsync(string? search, PokemonType? type,
       MoveSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      ListModel<MoveModel> moves = await _service.GetAsync(search, type,
+      return Ok(await _service.GetAsync(search, type,
         sort, desc,
         index, count,
-        cancellationToken);
-
-      return Ok(new ListModel<MoveSummary>
-      {
-        Items = moves.Items.Select(x => new MoveSummary(x)),
-        Total = moves.Total
-      });
+        cancellationToken));
     }
 
     [HttpGet("{id}")]

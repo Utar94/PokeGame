@@ -26,9 +26,9 @@
         <tbody>
           <tr v-for="item in species" :key="item.id">
             <td>
-              <b-link :href="`/species/${item.id}`">{{ item.number }}</b-link>
+              <b-link :href="`/species/${item.id}`">{{ item.name }}</b-link>
             </td>
-            <td v-text="item.name" />
+            <td v-text="item.number" />
             <td>
               {{ $t(`type.options.${item.primaryType}`) }}
               <template v-if="item.secondaryType">
@@ -37,7 +37,7 @@
               </template>
             </td>
             <td v-text="item.category || '—'" />
-            <td><status-cell :actor="item.updatedBy" :date="item.updatedAt" /></td>
+            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal

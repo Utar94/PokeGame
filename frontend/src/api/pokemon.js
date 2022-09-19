@@ -1,5 +1,9 @@
-import { _delete, get, post, put } from '.'
+import { _delete, get, patch, post, put } from '.'
 import { getQueryString } from '@/helpers/queryUtils'
+
+export async function catchPokemon(id, payload) {
+  return await patch(`/api/pokemon/${id}/catch`, payload)
+}
 
 export async function createPokemon(payload) {
   return await post('/api/pokemon', payload)
@@ -17,6 +21,14 @@ export async function getPokemonList(params) {
   return await get('/api/pokemon' + getQueryString(params))
 }
 
+export async function healPokemon(id, payload) {
+  return await patch(`/api/pokemon/${id}/heal`, payload)
+}
+
 export async function updatePokemon(id, payload) {
   return await put(`/api/pokemon/${id}`, payload)
+}
+
+export async function usePokemonMove(id, moveId, payload) {
+  return await patch(`/api/pokemon/${id}/use-move/${moveId}`, payload)
 }

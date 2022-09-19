@@ -33,7 +33,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       return pokemon == null ? null : _mapper.Map<PokemonModel>(pokemon);
     }
 
-    public async Task<ListModel<PokemonModel>> GetPagedAsync(PokemonGender? gender, string? search, Guid? speciesId, Guid? trainerId,
+    public async Task<ListModel<PokemonModel>> GetPagedAsync(PokemonGender? gender, byte? inBox, bool? inParty, bool? isWild, string? search, Guid? speciesId, Guid? trainerId,
       PokemonSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
@@ -49,6 +49,18 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       if (gender.HasValue)
       {
         query = query.Where(x => x.Gender == gender.Value);
+      }
+      if (inBox.HasValue)
+      {
+        query = query.Where(x => x.Box == inBox.Value);
+      }
+      if (inParty.HasValue)
+      {
+        query = query.Where(x => x.Box.HasValue == !inParty.Value);
+      }
+      if (isWild.HasValue)
+      {
+        query = query.Where(x => x.CurrentTrainerId.HasValue == !isWild.Value);
       }
       if (search != null)
       {
@@ -80,6 +92,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         {
           PokemonSort.Level => desc ? query.OrderByDescending(x => x.Level) : query.OrderBy(x => x.Level),
           PokemonSort.Name => desc ? query.OrderByDescending(x => x.Surname ?? x.Species!.Name) : query.OrderBy(x => x.Surname ?? x.Species!.Name),
+          PokemonSort.Position => desc ? query.OrderByDescending(x => x.Position) : query.OrderBy(x => x.Position),
           PokemonSort.UpdatedAt => desc ? query.OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt) : query.OrderBy(x => x.UpdatedAt ?? x.CreatedAt),
           _ => throw new ArgumentException($"The Pokemon sort '{sort}' is not valid.", nameof(sort)),
         };

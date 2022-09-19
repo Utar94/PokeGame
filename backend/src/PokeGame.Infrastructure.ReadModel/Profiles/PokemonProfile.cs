@@ -17,7 +17,12 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
         .ForMember(x => x.EffortValues, x => x.MapFrom(GetEffortValues))
         .ForMember(x => x.History, x => x.MapFrom(GetHistory))
         .ForMember(x => x.IndividualValues, x => x.MapFrom(GetIndividualValues))
-        .ForMember(x => x.Statistics, x => x.MapFrom(GetStatistics));
+        .ForMember(x => x.MaximumHitPoints, x => x.MapFrom(y => GetStatistic(y, Statistic.HP)))
+        .ForMember(x => x.Attack, x => x.MapFrom(y => GetStatistic(y, Statistic.Attack)))
+        .ForMember(x => x.Defense, x => x.MapFrom(y => GetStatistic(y, Statistic.Defense)))
+        .ForMember(x => x.SpecialAttack, x => x.MapFrom(y => GetStatistic(y, Statistic.SpecialAttack)))
+        .ForMember(x => x.SpecialDefense, x => x.MapFrom(y => GetStatistic(y, Statistic.SpecialDefense)))
+        .ForMember(x => x.Speed, x => x.MapFrom(y => GetStatistic(y, Statistic.Speed)));
       CreateMap<PokemonMoveEntity, PokemonMoveModel>();
     }
 
@@ -29,20 +34,11 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
     {
       return ParseStatisticValues(pokemon.IndividualValues);
     }
-    private static IEnumerable<PokemonStatisticModel> GetStatistics(PokemonEntity pokemon, PokemonModel model)
+    private static short GetStatistic(PokemonEntity pokemon, Statistic statistic)
     {
-      string[] pairs = pokemon.Statistics?.Split('|') ?? Array.Empty<string>();
+      IEnumerable<StatisticValueModel> statistics = ParseStatisticValues(pokemon.Statistics);
 
-      return pairs.Select(pair =>
-      {
-        string[] values = pair.Split(':');
-
-        return new PokemonStatisticModel
-        {
-          Statistic = Enum.Parse<Statistic>(values[0]),
-          Value = short.Parse(values[1])
-        };
-      });
+      return statistics.SingleOrDefault(x => x.Statistic == statistic)?.Value ?? 0;
     }
     private static IEnumerable<StatisticValueModel> ParseStatisticValues(string? value)
     {

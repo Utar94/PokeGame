@@ -19,6 +19,7 @@ namespace PokeGame.Infrastructure.ReadModel.Configurations
       builder.HasOne(x => x.OriginalTrainer).WithMany(x => x.OriginalPokemon)
         .HasForeignKey(x => x.OriginalTrainerId);
 
+      builder.Property(x => x.CurrentHitPoints).HasDefaultValue(0);
       builder.Property(x => x.EffortValues).HasMaxLength(100);
       builder.Property(x => x.Experience).HasDefaultValue(0);
       builder.Property(x => x.Gender).HasDefaultValue(default(PokemonGender));
