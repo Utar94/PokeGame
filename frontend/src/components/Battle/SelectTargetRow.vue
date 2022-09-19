@@ -22,7 +22,6 @@
         <item-info :item="pokemon.heldItem" />
       </template>
     </td>
-    <td v-text="accuracy" />
     <template v-if="defensiveStatistic">
       <td>
         <form-field
@@ -70,6 +69,8 @@
           </template>
         </form-field>
       </td>
+      <td v-text="accuracy" />
+      <td v-text="damage" />
     </template>
   </tr>
 </template>
@@ -100,7 +101,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleMoveAttacker', 'battleMoveTargets', 'selectedBattleMove']),
+    ...mapGetters(['battleMoveAttacker', 'battleMoveDamage', 'battleMoveTargets', 'selectedBattleMove']),
     accuracy() {
       return this.selectedBattleMove ? this.$i18n.n(this.selectedBattleMove.accuracy / 100, 'percent') : '—'
     },
@@ -114,6 +115,22 @@ export default {
         return ['table-info']
       }
       return []
+    },
+    damage() {
+      const { level } = this.battleMoveAttacker
+      const { attack, burn, critical, power, random, stab } = this.battleMoveDamage
+      const { effectiveness, otherModifiers } = this.target
+      return Math.round(
+        ((((2 * level) / 5 + 2) * power * (attack / this.defensiveStatisticValue)) / 50 + 2) *
+          this.targetsModifier *
+          this.weatherModifier *
+          (critical ? 1.5 : 1) *
+          (random / 100) *
+          stab *
+          effectiveness *
+          (burn ? 0.5 : 1) *
+          otherModifiers
+      )
     },
     defensiveStatistic() {
       switch (this.selectedBattleMove.category) {
@@ -150,8 +167,26 @@ export default {
     target() {
       return this.battleMoveTargets[this.pokemon.id] ?? null
     },
+    targetsModifier() {
+      return Object.keys(this.battleMoveTargets).length > 1 ? 0.75 : 1
+    },
     trainer() {
       return this.pokemon.history?.trainer ?? null
+    },
+    weatherModifier() {
+      const { type } = this.selectedBattleMove
+      const { weather } = this.battleMoveDamage
+      switch (weather) {
+        case 'HarshSunlight':
+          if (type === 'Fire') return 1.5
+          else if (type === 'Water') return 0.5
+          break
+        case 'Rain':
+          if (type === 'Water') return 1.5
+          else if (type === 'Fire') return 0.5
+          break
+      }
+      return 1
     }
   },
   methods: {

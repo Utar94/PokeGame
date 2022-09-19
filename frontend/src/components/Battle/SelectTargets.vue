@@ -8,11 +8,12 @@
           <th scope="col" v-t="'pokemon.identification'" />
           <th scope="col" v-t="'battle.condition'" />
           <th scope="col" v-t="'battle.abilityAndHeldItem'" />
-          <th scope="col" v-t="'battle.makeMove.accuracy'" />
           <template v-if="defensiveStatistic">
             <th scope="col" v-t="`statistic.options.${defensiveStatistic}`" />
             <th scope="col" v-t="'battle.makeMove.effectiveness.label'" />
             <th scope="col" v-t="'battle.makeMove.otherModifiers'" />
+            <th scope="col" v-t="'battle.makeMove.accuracy'" />
+            <th scope="col" v-t="'battle.makeMove.damage'" />
           </template>
         </tr>
       </thead>
