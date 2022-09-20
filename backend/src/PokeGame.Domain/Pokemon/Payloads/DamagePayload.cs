@@ -2,7 +2,7 @@
 {
   public class DamagePayload
   {
-    public short? Attack { get; set; }
+    public ushort? Attack { get; set; }
     public bool? IsBurnt { get; set; }
     public bool IsCritical { get; set; }
     public byte? Power { get; set; }

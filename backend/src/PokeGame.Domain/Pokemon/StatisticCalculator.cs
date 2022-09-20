@@ -2,7 +2,7 @@
 {
   internal static class PokemonExtensions
   {
-    public static short CalculateStatistic(this Pokemon pokemon, Statistic statistic)
+    public static ushort CalculateStatistic(this Pokemon pokemon, Statistic statistic)
     {
       ArgumentNullException.ThrowIfNull(pokemon);
 
@@ -17,7 +17,7 @@
 
       if (statistic == Statistic.HP)
       {
-        return (short)(value + level + 5);
+        return (ushort)(value + level + 5);
       }
 
       double? modifier = nature.IncreasedStatistic == statistic ? 1.1 : (nature.DecreasedStatistic == statistic ? 0.9 : null);
@@ -26,7 +26,7 @@
         value = (int)(value * modifier.Value);
       }
 
-      return (short)value;
+      return (ushort)value;
     }
   }
 }

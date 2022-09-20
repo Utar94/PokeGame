@@ -16,6 +16,7 @@ namespace PokeGame.Domain.Moves.Payloads
     public IEnumerable<StatisticStagePayload>? StatisticStages { get; set; }
     public short AccuracyStage { get; set; }
     public short EvasionStage { get; set; }
+    public IEnumerable<string>? VolatileConditions { get; set; }
 
     public string? Notes { get; set; }
     public string? Reference { get; set; }

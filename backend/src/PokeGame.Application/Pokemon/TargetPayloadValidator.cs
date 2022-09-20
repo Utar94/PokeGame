@@ -10,7 +10,7 @@ namespace PokeGame.Application.Pokemon
     public TargetPayloadValidator()
     {
       RuleFor(x => x.Defense)
-        .InclusiveBetween((short)0, (short)999);
+        .LessThanOrEqualTo((ushort)999);
 
       RuleFor(x => x.Effectiveness)
         .Must(x => !x.HasValue || _effectiveness.Contains(x.Value));

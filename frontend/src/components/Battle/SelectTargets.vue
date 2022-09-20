@@ -27,6 +27,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import SelectTargetRow from './SelectTargetRow.vue'
+import { getStatisticModifier } from '@/helpers/statisticUtils'
 
 export default {
   name: 'SelectTargets',
@@ -34,10 +35,14 @@ export default {
     SelectTargetRow
   },
   computed: {
-    ...mapGetters(['activeBattlingPokemon', 'selectedBattleMove']),
+    ...mapGetters(['activeBattlingPokemon', 'battleStatus', 'selectedBattleMove']),
     activePokemon() {
       return this.orderBy(
-        this.activeBattlingPokemon.map(pokemon => ({ ...pokemon, sort: `${pokemon.history?.trainer.name ?? this.$i18n.t('pokemon.wild')}|${pokemon.speed}` })),
+        this.activeBattlingPokemon.map(pokemon => {
+          const status = this.battleStatus[pokemon.id] ?? {}
+          const speed = Math.floor(pokemon.speed * getStatisticModifier(status.speed))
+          return { ...pokemon, sort: `${pokemon.history?.trainer.name ?? this.$i18n.t('pokemon.wild')}|${999 - speed}` }
+        }),
         'sort'
       )
     },

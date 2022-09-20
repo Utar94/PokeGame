@@ -12,7 +12,8 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
     {
       CreateMap<MoveEntity, MoveModel>()
         .IncludeBase<Entity, AggregateModel>()
-        .ForMember(x => x.StatisticStages, x => x.MapFrom(GetStatisticStages));
+        .ForMember(x => x.StatisticStages, x => x.MapFrom(GetStatisticStages))
+        .ForMember(x => x.VolatileConditions, x => x.MapFrom(GetVolatileConditions));
     }
 
     private static IEnumerable<StatisticStageModel> GetStatisticStages(MoveEntity move, MoveModel model)
@@ -29,6 +30,11 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
           Value = short.Parse(values[1])
         };
       });
+    }
+
+    private static IEnumerable<string> GetVolatileConditions(MoveEntity move, MoveModel model)
+    {
+      return move.VolatileConditions?.Split('|') ?? Array.Empty<string>();
     }
   }
 }

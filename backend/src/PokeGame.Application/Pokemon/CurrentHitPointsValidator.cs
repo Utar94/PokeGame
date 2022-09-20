@@ -2,12 +2,12 @@
 
 namespace PokeGame.Application.Pokemon
 {
-  internal class CurrentHitPointsValidator : AbstractValidator<short>
+  internal class CurrentHitPointsValidator : AbstractValidator<ushort>
   {
     public CurrentHitPointsValidator(Domain.Pokemon.Pokemon? pokemon = null)
     {
       RuleFor(x => x)
-        .InclusiveBetween((short)0, pokemon?.MaximumHitPoints ?? 0);
+        .LessThanOrEqualTo(pokemon?.MaximumHitPoints ?? 0);
     }
   }
 }

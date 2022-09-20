@@ -20,6 +20,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import BattlingPokemonRow from './BattlingPokemonRow.vue'
+import { getStatisticModifier } from '@/helpers/statisticUtils'
 
 export default {
   name: 'BattlingPokemonTeam',
@@ -35,6 +36,7 @@ export default {
   computed: {
     ...mapGetters([
       'activeBattlingPokemon',
+      'battleStatus',
       'battlingOpponentPokemon',
       'battlingPlayerPokemon',
       'remainingBattlingOpponentPokemon',
@@ -47,8 +49,14 @@ export default {
     pokemonList() {
       const pokemonList = this.team === 'players' ? this.battlingPlayerPokemon : this.battlingOpponentPokemon
       const active = this.orderBy(
-        pokemonList.filter(({ id }) => Boolean(this.activePokemon[id])),
-        'speed',
+        pokemonList
+          .filter(({ id }) => Boolean(this.activePokemon[id]))
+          .map(pokemon => {
+            const status = this.battleStatus[pokemon.id] ?? {}
+            const sort = Math.floor(pokemon.speed * getStatisticModifier(status.speed ?? 0))
+            return { ...pokemon, sort }
+          }),
+        'sort',
         true
       )
       const unactive = this.orderBy(
