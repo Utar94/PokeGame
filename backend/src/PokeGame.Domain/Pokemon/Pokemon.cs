@@ -45,7 +45,7 @@ namespace PokeGame.Domain.Pokemon
     public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new(); // TODO(fpion): update => Moves
-    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Held Item // TODO(fpion): update => Evolution
+    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Evolution
 
     public History? History { get; private set; } // TODO(fpion): update => History
     public Guid? OriginalTrainerId { get; private set; } // TODO(fpion): update => History
@@ -147,7 +147,6 @@ namespace PokeGame.Domain.Pokemon
       {
         Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
       }
-      HeldItemId = payload.HeldItemId;
 
       SetHistory(payload.History);
       Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
@@ -228,6 +227,8 @@ namespace PokeGame.Domain.Pokemon
       }
 
       StatusCondition = payload.StatusCondition;
+
+      HeldItemId = payload.HeldItemId;
     }
 
     private void ComputeStatistics()
@@ -259,7 +260,6 @@ namespace PokeGame.Domain.Pokemon
  * - Gain experience
  * - Level-Up
  * - Moves
- * - Change Held Item (add, remove, update)
  * - Change History => change Current Trainer
  * - Move (Box & Position)
  */

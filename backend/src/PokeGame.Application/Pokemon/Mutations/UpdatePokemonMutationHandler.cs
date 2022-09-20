@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Domain.Items;
+using PokeGame.Domain.Pokemon.Payloads;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
@@ -26,7 +28,14 @@ namespace PokeGame.Application.Pokemon.Mutations
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
-      pokemon.Update(request.Payload);
+      UpdatePokemonPayload payload = request.Payload;
+
+      if (payload.HeldItemId.HasValue && await _repository.LoadAsync<Item>(payload.HeldItemId.Value, cancellationToken) == null)
+      {
+        throw new EntityNotFoundException<Item>(payload.HeldItemId.Value, nameof(payload.HeldItemId));
+      }
+
+      pokemon.Update(payload);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
