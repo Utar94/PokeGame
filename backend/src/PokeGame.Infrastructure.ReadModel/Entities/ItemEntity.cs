@@ -4,19 +4,20 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class ItemEntity : Entity
   {
-    public ItemCategory Category { get; set; }
-    public double? DefaultModifier { get; set; }
+    public ItemCategory Category { get; private set; }
+    public double? DefaultModifier { get; private set; }
 
-    public int? Price { get; set; }
+    public int? Price { get; private set; }
 
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Picture { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
+    public string? Reference { get; private set; }
 
-    public List<InventoryEntity> Inventory { get; set; } = new();
+    public List<EvolutionEntity> Evolutions { get; private set; } = new();
+    public List<InventoryEntity> Inventory { get; private set; } = new();
 
     public void Synchronize(Item item)
     {

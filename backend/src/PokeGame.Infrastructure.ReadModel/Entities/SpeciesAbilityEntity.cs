@@ -2,10 +2,21 @@
 {
   internal class SpeciesAbilityEntity
   {
-    public SpeciesEntity? Species { get; set; }
-    public int SpeciesId { get; set; }
+    public SpeciesAbilityEntity(SpeciesEntity species, AbilityEntity ability)
+    {
+      Species = species ?? throw new ArgumentNullException(nameof(species));
+      SpeciesId = species.Sid;
+      Ability = ability ?? throw new ArgumentNullException(nameof(ability));
+      AbilityId = ability.Sid;
+    }
+    private SpeciesAbilityEntity()
+    {
+    }
 
-    public AbilityEntity? Ability { get; set; }
-    public int AbilityId { get; set; }
+    public SpeciesEntity? Species { get; private set; }
+    public int SpeciesId { get; private set; }
+
+    public AbilityEntity? Ability { get; private set; }
+    public int AbilityId { get; private set; }
   }
 }

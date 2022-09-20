@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using PokeGame.Application.Moves;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Domain.Items;
 using PokeGame.Domain.Moves;

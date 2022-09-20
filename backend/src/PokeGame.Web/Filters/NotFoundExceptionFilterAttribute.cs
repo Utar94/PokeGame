@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using PokeGame.Application;
 using PokeGame.Application.Inventories;
+using PokeGame.Application.Items;
+using PokeGame.Application.Moves;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
 using PokeGame.Domain.Pokemon;
@@ -16,11 +18,13 @@ namespace PokeGame.Web.Filters
       [typeof(AbilitiesNotFoundException)] = HandleAbilitiesNotFound,
       [typeof(EntityNotFoundException)] = HandleEntityNotFound,
       [typeof(InventoryNotFoundException)] = HandleInventoryNotFound,
+      [typeof(ItemsNotFoundException)] = HandleItemsNotFound,
       [typeof(MovesNotFoundException)] = HandleMovesNotFound,
       [typeof(NatureNotFoundException)] = HandleNatureNotFound,
       [typeof(PokedexEntryNotFoundException)] = HandlePokedexEntryNotFound,
       [typeof(PokemonMoveNotFoundException)] = HandlePokemonMoveNotFound,
-      [typeof(PokemonNotFoundException)] = HandlePokemonNotFound
+      [typeof(PokemonNotFoundException)] = HandlePokemonNotFound,
+      [typeof(SpeciesNotFoundException)] = HandleSpeciesNotFound
     };
 
     public override void OnException(ExceptionContext context)
@@ -47,6 +51,9 @@ namespace PokeGame.Web.Filters
         TrainerId = context.Exception.Data["TrainerId"]
       });
 
+    private static ActionResult HandleItemsNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
+
     private static ActionResult HandleMovesNotFound(ExceptionContext context)
       => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
 
@@ -60,6 +67,9 @@ namespace PokeGame.Web.Filters
       => new NotFoundResult();
 
     private static ActionResult HandlePokemonNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
+
+    private static ActionResult HandleSpeciesNotFound(ExceptionContext context)
       => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
   }
 }

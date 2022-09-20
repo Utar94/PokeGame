@@ -41,17 +41,8 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
         return null;
       }
 
-      PokedexEntity? entity = trainerEntity.Pokedex.SingleOrDefault(x => x.SpeciesId == species.Sid);
-      if (entity == null)
-      {
-        entity = new PokedexEntity
-        {
-          Species = species,
-          SpeciesId = species.Sid
-        };
-
-        trainerEntity.Pokedex.Add(entity);
-      }
+      PokedexEntity entity = trainerEntity.Pokedex.SingleOrDefault(x => x.SpeciesId == species.Sid)
+        ?? trainerEntity.AddPokedex(species);
 
       Trainer? trainer = await _trainerRepository.LoadAsync(trainerId, version, cancellationToken);
       if (trainer == null)
@@ -61,8 +52,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
 
       if (trainer.Pokedex.TryGetValue(species.Id, out PokedexEntry? entry))
       {
-        entity.HasCaught = entry.HasCaught;
-        entity.UpdatedAt = entry.UpdatedAt;
+        entity.Synchronize(entry);
       }
       else
       {

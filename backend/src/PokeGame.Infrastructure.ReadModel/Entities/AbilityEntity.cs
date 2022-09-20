@@ -4,14 +4,14 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class AbilityEntity : Entity
   {
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Reference { get; private set; }
 
-    public List<PokemonEntity> Pokemon { get; set; } = new();
-    public List<SpeciesAbilityEntity> SpeciesAbilities { get; set; } = new();
+    public List<PokemonEntity> Pokemon { get; private set; } = new();
+    public List<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = new();
 
     public void Synchronize(Ability ability)
     {

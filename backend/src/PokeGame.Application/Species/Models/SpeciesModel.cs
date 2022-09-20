@@ -33,5 +33,6 @@ namespace PokeGame.Application.Species.Models
     public string? Reference { get; set; }
 
     public IEnumerable<AbilityModel> Abilities { get; set; } = Enumerable.Empty<AbilityModel>();
+    public IEnumerable<EvolutionModel> Evolutions { get; set; } = Enumerable.Empty<EvolutionModel>();
   }
 }

@@ -1,14 +1,33 @@
-﻿namespace PokeGame.Infrastructure.ReadModel.Entities
+﻿using PokeGame.Domain.Pokemon;
+
+namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class PokemonMoveEntity
   {
-    public PokemonEntity? Pokemon { get; set; }
-    public int PokemonId { get; set; }
+    public PokemonMoveEntity(PokemonEntity pokemon, MoveEntity move)
+    {
+      Pokemon = pokemon ?? throw new ArgumentNullException(nameof(pokemon));
+      PokemonId = pokemon.Sid;
+      Move = move ?? throw new ArgumentNullException(nameof(move));
+      MoveId = move.Sid;
+    }
+    private PokemonMoveEntity()
+    {
+    }
 
-    public MoveEntity? Move { get; set; }
-    public int MoveId { get; set; }
+    public PokemonEntity? Pokemon { get; private set; }
+    public int PokemonId { get; private set; }
 
-    public byte Position { get; set; }
-    public byte RemainingPowerPoints { get; set; }
+    public MoveEntity? Move { get; private set; }
+    public int MoveId { get; private set; }
+
+    public byte Position { get; private set; }
+    public byte RemainingPowerPoints { get; private set; }
+
+    public void Synchronize(PokemonMove pokemonMove)
+    {
+      Position = pokemonMove.Position;
+      RemainingPowerPoints = pokemonMove.RemainingPowerPoints;
+    }
   }
 }

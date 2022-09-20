@@ -109,10 +109,8 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
 
         entity.Synchronize(pokemon);
 
-        entity.Species = species;
-        entity.SpeciesId = species.Sid;
-        entity.Ability = ability;
-        entity.AbilityId = ability.Sid;
+        entity.SetSpecies(species);
+        entity.SetAbility(ability);
 
         entity.Moves.Clear();
         if (pokemon.Moves.Any())
@@ -133,24 +131,15 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
           {
             if (moveIndex.TryGetValue(pokemonMove.MoveId, out MoveEntity? move))
             {
-              entity.Moves.Add(new PokemonMoveEntity
-              {
-                Move = move,
-                MoveId = move.Sid,
-                Position = pokemonMove.Position,
-                RemainingPowerPoints = pokemonMove.RemainingPowerPoints
-              });
+              entity.Add(move, pokemonMove);
             }
           }
         }
 
-        entity.HeldItem = heldItem;
-        entity.HeldItemId = heldItem?.Sid;
+        entity.SetHeldItem(heldItem);
 
-        entity.CurrentTrainer = currentTrainer;
-        entity.CurrentTrainerId = currentTrainer?.Sid;
-        entity.OriginalTrainer = originalTrainer;
-        entity.CurrentTrainerId = originalTrainer?.Sid;
+        entity.SetCurrentTrainer(currentTrainer);
+        entity.SetOriginalTrainer(originalTrainer);
 
         await _readContext.SaveChangesAsync(cancellationToken);
       }

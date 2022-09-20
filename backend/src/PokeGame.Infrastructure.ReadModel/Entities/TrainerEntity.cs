@@ -5,26 +5,44 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class TrainerEntity : Entity
   {
-    public Guid? UserId { get; set; }
+    public Guid? UserId { get; private set; }
 
-    public Region Region { get; set; }
-    public int Number { get; set; }
-    public byte Checksum { get; set; }
+    public Region Region { get; private set; }
+    public int Number { get; private set; }
+    public byte Checksum { get; private set; }
 
-    public int Money { get; set; }
+    public int Money { get; private set; }
 
-    public TrainerGender Gender { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public TrainerGender Gender { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Picture { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
+    public string? Reference { get; private set; }
 
-    public List<InventoryEntity> Inventory { get; set; } = new();
-    public List<PokemonEntity> OriginalPokemon { get; set; } = new();
-    public List<PokedexEntity> Pokedex { get; set; } = new();
-    public List<PokemonEntity> Pokemon { get; set; } = new();
+    public List<InventoryEntity> Inventory { get; private set; } = new();
+    public List<PokemonEntity> OriginalPokemon { get; private set; } = new();
+    public List<PokedexEntity> Pokedex { get; private set; } = new();
+    public List<PokemonEntity> Pokemon { get; private set; } = new();
+
+    public InventoryEntity Add(ItemEntity item)
+    {
+      var entity = new InventoryEntity(this, item);
+
+      Inventory.Add(entity);
+
+      return entity;
+    }
+
+    public PokedexEntity AddPokedex(SpeciesEntity species)
+    {
+      var entity = new PokedexEntity(this, species);
+
+      Pokedex.Add(entity);
+
+      return entity;
+    }
 
     public void Synchronize(Trainer trainer)
     {

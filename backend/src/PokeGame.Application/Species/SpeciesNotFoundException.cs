@@ -1,10 +1,10 @@
 ﻿using System.Text;
 
-namespace PokeGame.Application.Pokemon
+namespace PokeGame.Application.Species
 {
-  public class MovesNotFoundException : Exception
+  public class SpeciesNotFoundException : Exception
   {
-    public MovesNotFoundException(IEnumerable<Guid> ids)
+    public SpeciesNotFoundException(IEnumerable<Guid> ids)
       : base(GetMessage(ids))
     {
       Data["Ids"] = ids ?? throw new ArgumentNullException(nameof(ids));
@@ -14,7 +14,7 @@ namespace PokeGame.Application.Pokemon
     {
       var message = new StringBuilder();
 
-      message.AppendLine("The specified moves could not be found.");
+      message.AppendLine("The specified species could not be found.");
       message.AppendLine($"Ids: {string.Join(", ", ids)}");
 
       return message.ToString();

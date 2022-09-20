@@ -18,23 +18,22 @@ namespace PokeGame.Domain.Pokemon
     public Guid SpeciesId { get; private set; } // TODO(fpion): update => Evolution
     public Guid AbilityId { get; private set; } // TODO(fpion): update => Evolution
 
-    public byte BaseFriendship { get; private set; }
-    public LevelingRate LevelingRate { get; private set; }
+    public LevelingRate LevelingRate { get; private set; } // TODO(fpion): update => Evolution
     public byte Level { get; private set; } // TODO(fpion): update => Exp./Lv.
     public int Experience { get; private set; } // TODO(fpion): update => Exp./Lv.
     public byte Friendship { get; private set; }
 
-    public double? GenderRatio { get; private set; }
+    public double? GenderRatio { get; private set; } // TODO(fpion): update => Evolution
     public PokemonGender Gender { get; private set; }
     public Nature Nature { get; private set; } = null!;
-    public string SpeciesName { get; private set; } = null!;
+    public string SpeciesName { get; private set; } = null!; // TODO(fpion): update => Evolution
     public string? Surname { get; private set; }
     public string? Description { get; private set; }
 
-    public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
+    public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new(); // TODO(fpion): update => Evolution
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
-    public Dictionary<Statistic, ushort> Statistics { get; private set; } = new();
+    public Dictionary<Statistic, ushort> Statistics { get; private set; } = new(); // TODO(fpion): update => Evolution
     public ushort MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out ushort maximumHitPoints) ? maximumHitPoints : (ushort)0;
     public ushort Attack => Statistics.TryGetValue(Statistic.Attack, out ushort attack) ? attack : (ushort)0;
     public ushort Defense => Statistics.TryGetValue(Statistic.Defense, out ushort defense) ? defense : (ushort)0;
@@ -42,11 +41,11 @@ namespace PokeGame.Domain.Pokemon
     public ushort SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out ushort specialDefense) ? specialDefense : (ushort)0;
     public ushort Speed => Statistics.TryGetValue(Statistic.Speed, out ushort speed) ? speed : (ushort)0;
 
-    public ushort CurrentHitPoints { get; private set; }
+    public ushort CurrentHitPoints { get; private set; } // TODO(fpion): update => Evolution
     public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new(); // TODO(fpion): update => Moves
-    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Held Item
+    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Held Item // TODO(fpion): update => Evolution
 
     public History? History { get; private set; } // TODO(fpion): update => History
     public Guid? OriginalTrainerId { get; private set; } // TODO(fpion): update => History
@@ -115,11 +114,10 @@ namespace PokeGame.Domain.Pokemon
       SpeciesId = payload.SpeciesId;
       AbilityId = payload.AbilityId;
 
-      BaseFriendship = @event.BaseFriendship;
       LevelingRate = @event.LevelingRate;
       Level = payload.Level;
       Experience = payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
-      Friendship = payload.Friendship ?? BaseFriendship;
+      Friendship = payload.Friendship ?? @event.BaseFriendship;
 
       GenderRatio = @event.GenderRatio;
       Gender = payload.Gender;
@@ -258,9 +256,9 @@ namespace PokeGame.Domain.Pokemon
 /*
  * TODO(fpion):
  * - Evolution (SpeciesId change => AbilityId, BaseStatistics, LevelingRate, SpeciesName can change), Moves, Statistics
- * - Gain experience & effort values
- * - Level-Up, Moves, Statistics
- * - Change Surname
+ * - Gain experience
+ * - Level-Up
+ * - Moves
  * - Change Held Item (add, remove, update)
  * - Change History => change Current Trainer
  * - Move (Box & Position)

@@ -41,17 +41,8 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
         return null;
       }
 
-      InventoryEntity? entity = trainerEntity.Inventory.SingleOrDefault(x => x.ItemId == item.Sid);
-      if (entity == null)
-      {
-        entity = new InventoryEntity
-        {
-          Item = item,
-          ItemId = item.Sid
-        };
-
-        trainerEntity.Inventory.Add(entity);
-      }
+      InventoryEntity entity = trainerEntity.Inventory.SingleOrDefault(x => x.ItemId == item.Sid)
+        ?? trainerEntity.Add(item);
 
       Trainer? trainer = await _trainerRepository.LoadAsync(trainerId, version, cancellationToken);
       if (trainer == null)

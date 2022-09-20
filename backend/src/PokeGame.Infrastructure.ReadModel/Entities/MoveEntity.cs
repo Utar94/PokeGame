@@ -6,27 +6,28 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class MoveEntity : Entity
   {
-    public PokemonType Type { get; set; }
-    public MoveCategory Category { get; set; }
+    public PokemonType Type { get; private set; }
+    public MoveCategory Category { get; private set; }
 
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
 
-    public byte? Accuracy { get; set; }
-    public byte? Power { get; set; }
-    public byte PowerPoints { get; set; }
+    public byte? Accuracy { get; private set; }
+    public byte? Power { get; private set; }
+    public byte PowerPoints { get; private set; }
 
-    public StatusCondition? StatusCondition { get; set; }
-    public byte? StatusChance { get; set; }
-    public string? StatisticStages { get; set; }
-    public short AccuracyStage { get; set; }
-    public short EvasionStage { get; set; }
-    public string? VolatileConditions { get; set; }
+    public StatusCondition? StatusCondition { get; private set; }
+    public byte? StatusChance { get; private set; }
+    public string? StatisticStages { get; private set; }
+    public short AccuracyStage { get; private set; }
+    public short EvasionStage { get; private set; }
+    public string? VolatileConditions { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Reference { get; private set; }
 
-    public List<PokemonMoveEntity> PokemonMoves { get; set; } = new();
+    public List<EvolutionEntity> Evolutions { get; private set; } = new();
+    public List<PokemonMoveEntity> PokemonMoves { get; private set; } = new();
 
     public void Synchronize(Move move)
     {
