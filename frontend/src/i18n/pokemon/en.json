@@ -17,8 +17,14 @@
     "title": "Delete Pokémon"
   },
   "editTitle": "Edit Pokémon: {name}",
+  "effortValues": {
+    "exceeded": "The sum for the EV cannot exceed 510.",
+    "title": "Effort Values (EV)",
+    "totalFormat": "Total EV: {total} (max: 510)"
+  },
   "empty": "This list is empty.",
   "fainted": "Fainted",
+  "friendship": "Friendship",
   "gender": {
     "label": "Gender",
     "options": {

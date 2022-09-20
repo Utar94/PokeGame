@@ -15,13 +15,13 @@ namespace PokeGame.Domain.Pokemon
     {
     }
 
-    public Guid SpeciesId { get; private set; }
-    public Guid AbilityId { get; private set; }
+    public Guid SpeciesId { get; private set; } // TODO(fpion): update => Evolution
+    public Guid AbilityId { get; private set; } // TODO(fpion): update => Evolution
 
     public byte BaseFriendship { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
-    public byte Level { get; private set; }
-    public int Experience { get; private set; }
+    public byte Level { get; private set; } // TODO(fpion): update => Exp./Lv.
+    public int Experience { get; private set; } // TODO(fpion): update => Exp./Lv.
     public byte Friendship { get; private set; }
 
     public double? GenderRatio { get; private set; }
@@ -45,12 +45,12 @@ namespace PokeGame.Domain.Pokemon
     public ushort CurrentHitPoints { get; private set; }
     public StatusCondition? StatusCondition { get; private set; }
 
-    public List<PokemonMove> Moves { get; private set; } = new();
-    public Guid? HeldItemId { get; private set; }
+    public List<PokemonMove> Moves { get; private set; } = new(); // TODO(fpion): update => Moves
+    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Held Item
 
-    public History? History { get; private set; }
-    public Guid? OriginalTrainerId { get; private set; }
-    public PokemonPosition? Position { get; private set; }
+    public History? History { get; private set; } // TODO(fpion): update => History
+    public Guid? OriginalTrainerId { get; private set; } // TODO(fpion): update => History
+    public PokemonPosition? Position { get; private set; } // TODO(fpion): update => Position
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -110,6 +110,7 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonCreated @event)
     {
       CreatePokemonPayload payload = @event.Payload;
+      Apply(payload);
 
       SpeciesId = payload.SpeciesId;
       AbilityId = payload.AbilityId;
@@ -124,8 +125,6 @@ namespace PokeGame.Domain.Pokemon
       Gender = payload.Gender;
       Nature = Nature.GetNature(payload.Nature, nameof(payload.Nature));
       SpeciesName = @event.SpeciesName;
-      Surname = payload.Surname?.CleanTrim();
-      Description = payload.Description?.CleanTrim();
 
       BaseStatistics.Clear();
       foreach (var (statistic, value) in @event.BaseStatistics)
@@ -140,19 +139,10 @@ namespace PokeGame.Domain.Pokemon
           IndividualValues[individualValue.Statistic] = individualValue.Value;
         }
       }
-      EffortValues.Clear();
-      if (payload.EffortValues?.Any() == true)
-      {
-        foreach (StatisticValuePayload effortValue in payload.EffortValues)
-        {
-          EffortValues[effortValue.Statistic] = effortValue.Value;
-        }
-      }
       ComputeStatistics();
 
       CurrentHitPoints = payload.CurrentHitPoints
         ?? (Statistics.TryGetValue(Statistic.HP, out ushort totalHitPoints) ? totalHitPoints : (ushort)0);
-      StatusCondition = payload.StatusCondition;
 
       Moves.Clear();
       if (payload.Moves?.Any() == true)
@@ -163,9 +153,6 @@ namespace PokeGame.Domain.Pokemon
 
       SetHistory(payload.History);
       Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
-
-      Notes = payload.Notes?.CleanTrim();
-      Reference = payload.Reference;
     }
     protected virtual void Apply(PokemonDeleted @event)
     {
@@ -192,11 +179,11 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonUpdated @event)
     {
       UpdatePokemonPayload payload = @event.Payload;
+      Apply(payload);
 
-      Description = payload.Description?.CleanTrim();
+      Friendship = payload.Friendship;
 
-      Notes = payload.Notes?.CleanTrim();
-      Reference = payload.Reference;
+      CurrentHitPoints = payload.CurrentHitPoints;
     }
     protected virtual void Apply(PokemonUsedMove @event)
     {
@@ -223,6 +210,26 @@ namespace PokeGame.Domain.Pokemon
     {
       CurrentHitPoints = @event.Payload.CurrentHitPoints;
       StatusCondition = @event.Payload.StatusCondition;
+    }
+
+    private void Apply(SavePokemonPayload payload)
+    {
+      Surname = payload.Surname?.CleanTrim();
+      Description = payload.Description?.CleanTrim();
+
+      Notes = payload.Notes?.CleanTrim();
+      Reference = payload.Reference;
+
+      EffortValues.Clear();
+      if (payload.EffortValues?.Any() == true)
+      {
+        foreach (StatisticValuePayload effortValue in payload.EffortValues)
+        {
+          EffortValues[effortValue.Statistic] = effortValue.Value;
+        }
+      }
+
+      StatusCondition = payload.StatusCondition;
     }
 
     private void ComputeStatistics()

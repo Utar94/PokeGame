@@ -1,10 +1,9 @@
 ﻿namespace PokeGame.Domain.Pokemon.Payloads
 {
-  public class UpdatePokemonPayload
+  public class UpdatePokemonPayload : SavePokemonPayload
   {
-    public string? Description { get; set; }
+    public byte Friendship { get; set; }
 
-    public string? Notes { get; set; }
-    public string? Reference { get; set; }
+    public ushort CurrentHitPoints { get; set; }
   }
 }
