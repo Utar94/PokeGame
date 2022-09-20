@@ -1,6 +1,7 @@
 ﻿using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Species.Events;
 using PokeGame.Domain.Species.Payloads;
+using System.IO.Pipes;
 
 namespace PokeGame.Domain.Species
 {
@@ -36,6 +37,7 @@ namespace PokeGame.Domain.Species
     public Dictionary<Statistic, byte> EvYield { get; private set; } = new();
 
     public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
     public string? Reference { get; private set; }
 
     public List<Guid> AbilityIds { get; private set; } = new();
@@ -95,6 +97,7 @@ namespace PokeGame.Domain.Species
       }
 
       Notes = payload.Notes?.CleanTrim();
+      Picture = payload.Picture;
       Reference = payload.Reference;
 
       AbilityIds.Clear();

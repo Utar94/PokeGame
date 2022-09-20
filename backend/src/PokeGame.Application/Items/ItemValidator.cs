@@ -27,6 +27,9 @@ namespace PokeGame.Application.Items
       RuleFor(x => x.Description)
         .MaximumLength(1000);
 
+      RuleFor(x => x.Picture)
+        .Must(ValidationRules.BeAValidUrl);
+
       RuleFor(x => x.Reference)
         .Must(ValidationRules.BeAValidUrl);
     }

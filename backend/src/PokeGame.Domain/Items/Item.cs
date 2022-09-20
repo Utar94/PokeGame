@@ -22,6 +22,7 @@ namespace PokeGame.Domain.Items
     public string? Description { get; private set; }
 
     public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
     public string? Reference { get; private set; }
 
     public void Delete() => ApplyChange(new ItemDeleted());
@@ -52,6 +53,7 @@ namespace PokeGame.Domain.Items
       Description = payload.Description?.CleanTrim();
 
       Notes = payload.Notes?.CleanTrim();
+      Picture = payload.Picture;
       Reference = payload.Reference;
     }
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PokeGame.Infrastructure.ReadModel;
@@ -11,9 +12,10 @@ using PokeGame.Infrastructure.ReadModel;
 namespace PokeGame.Infrastructure.ReadModel.Migrations
 {
     [DbContext(typeof(ReadContext))]
-    partial class ReadContextModelSnapshot : ModelSnapshot
+    [Migration("20220920140113_AddedSpeciesPicture")]
+    partial class AddedSpeciesPicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,10 +146,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
-
-                    b.Property<string>("Picture")
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
 
                     b.Property<int?>("Price")
                         .HasColumnType("integer");
@@ -661,10 +659,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Picture")
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
 
                     b.Property<string>("Reference")
                         .HasMaxLength(2048)

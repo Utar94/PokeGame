@@ -14,6 +14,7 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
+            <th scope="col" />
             <th scope="col" v-t="'species.number'" />
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'trainers.pokedex.hasCaught'" />
@@ -24,10 +25,13 @@
         <tbody>
           <tr v-for="(entry, index) in entries" :key="entry.species.number">
             <td>
-              <a :href="`/species/${entry.species.id}`" target="_blank">
+              <b-link :href="`/species/${entry.species.id}`" target="_blank"><pokemon-icon :species="entry.species" /></b-link>
+            </td>
+            <td>
+              <b-link :href="`/species/${entry.species.id}`" target="_blank">
                 {{ entry.species.number }}
                 <font-awesome-icon icon="external-link-alt" />
-              </a>
+              </b-link>
             </td>
             <td v-text="entry.species.name" />
             <td>{{ $t(entry.hasCaught ? 'yes' : 'no') }}</td>

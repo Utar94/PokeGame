@@ -29,6 +29,7 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
+            <th scope="col" />
             <th scope="col" v-t="'pokemon.identification'" />
             <th scope="col" v-t="'species.select.label'" />
             <th scope="col" v-t="'trainers.select.label'" />
@@ -41,23 +42,30 @@
         <tbody>
           <tr v-for="item in pokemon" :key="item.id">
             <td>
-              <a :href="`/pokemon/${item.id}`">
-                <gender-icon :gender="item.gender" />
-                {{ item.surname || item.species.name }}
-                {{ $t('pokemon.levelFormat', { level: item.level }) }}
-              </a>
+              <b-link :href="`/pokemon/${item.id}`"><pokemon-icon :pokemon="item" /></b-link>
             </td>
             <td>
-              <a :href="`/species/${item.species.id}`" target="_blank">
+              <b-link :href="`/pokemon/${item.id}`">
+                <template v-if="item.surname">
+                  {{ item.surname }}
+                  <br />
+                </template>
+                <gender-icon :gender="item.gender" />
+                {{ item.species.name }}
+                {{ $t('pokemon.levelFormat', { level: item.level }) }}
+              </b-link>
+            </td>
+            <td>
+              <b-link :href="`/species/${item.species.id}`" target="_blank">
                 {{ item.species.name }}
                 <font-awesome-icon icon="external-link-alt" />
-              </a>
+              </b-link>
             </td>
             <td>
-              <a v-if="item.history" :href="`/trainers/${item.history.trainer.id}`" target="_blank">
+              <b-link v-if="item.history" :href="`/trainers/${item.history.trainer.id}`" target="_blank">
                 {{ item.history.trainer.name }}
                 <font-awesome-icon icon="external-link-alt" />
-              </a>
+              </b-link>
               <template v-else>&mdash;</template>
             </td>
             <td>
@@ -68,10 +76,10 @@
               <template v-else>&mdash;</template>
             </td>
             <td>
-              <a v-if="item.heldItem" :href="`/items/${item.heldItem.id}`" target="_blank">
+              <b-link v-if="item.heldItem" :href="`/items/${item.heldItem.id}`" target="_blank">
                 {{ item.heldItem.name }}
                 <font-awesome-icon icon="external-link-alt" />
-              </a>
+              </b-link>
               <template v-else>&mdash;</template>
             </td>
             <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>

@@ -1,6 +1,7 @@
 <template>
   <tr :class="{ clickable: true, 'table-info': selected }" @click.prevent="toggle">
     <td><b-form-checkbox :checked="selected" size="lg" /></td>
+    <td><pokemon-icon :pokemon="pokemon" /></td>
     <td>
       <template v-if="trainer"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>

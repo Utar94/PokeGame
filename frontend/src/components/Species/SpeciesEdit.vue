@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1 v-if="species">{{ $t('species.editTitle', { name: species.name }) }}</h1>
+    <h1 v-if="species"><pokemon-icon :species="species" /> {{ $t('species.editTitle', { name: species.name }) }}</h1>
     <h1 v-else v-t="'species.newTitle'" />
     <status-detail v-if="species" :model="species" />
     <validation-observer ref="form">
@@ -250,6 +250,7 @@
           </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
+            <picture-field validate v-model="picture" />
             <notes-field v-model="notes" />
           </b-tab>
         </b-tabs>
@@ -310,6 +311,7 @@ export default {
       name: null,
       notes: null,
       number: 0,
+      picture: null,
       primaryType: null,
       reference: null,
       secondaryType: null,
@@ -339,6 +341,7 @@ export default {
         JSON.stringify(this.payload.evYield) !== JSON.stringify(this.species?.evYield ?? {}) ||
         JSON.stringify(this.payload.baseStatistics) !== JSON.stringify(this.species?.baseStatistics ?? {}) ||
         (this.reference ?? '') !== (this.species?.reference ?? '') ||
+        (this.picture ?? '') !== (this.species?.picture ?? '') ||
         (this.notes ?? '') !== (this.species?.notes ?? '')
       )
     },
@@ -368,6 +371,7 @@ export default {
           .filter(([, value]) => value !== 0)
           .map(([statistic, value]) => ({ statistic, value })),
         reference: this.reference,
+        picture: this.picture || null,
         notes: this.notes
       }
       if (!this.species) {
@@ -404,6 +408,7 @@ export default {
       this.name = species.name
       this.notes = species.notes
       this.number = species.number
+      this.picture = species.picture
       this.primaryType = species.primaryType
       this.reference = species.reference
       this.secondaryType = species.secondaryType

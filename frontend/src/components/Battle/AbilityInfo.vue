@@ -2,7 +2,7 @@
   <span v-b-tooltip.hover :title="title">
     <font-awesome-icon icon="tools" />
     {{ ' ' }}
-    <a v-if="ability.reference" :href="ability.reference" target="_blank">{{ ability.name }} <font-awesome-icon icon="external-link-alt" /></a>
+    <b-link v-if="ability.reference" :href="ability.reference" target="_blank">{{ ability.name }} <font-awesome-icon icon="external-link-alt" /></b-link>
     <template v-else>{{ ability.name }}</template>
   </span>
 </template>

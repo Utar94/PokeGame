@@ -28,6 +28,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? EvYield { get; set; }
 
     public string? Notes { get; set; }
+    public string? Picture { get; set; }
     public string? Reference { get; set; }
 
     public List<PokedexEntity> Pokedex { get; set; } = new();
@@ -66,6 +67,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
         : null;
 
       Notes = species.Notes;
+      Picture = species.Picture;
       Reference = species.Reference;
     }
   }

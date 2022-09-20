@@ -41,6 +41,9 @@ namespace PokeGame.Application.Species
       RuleFor(x => x.CatchRate)
         .GreaterThan((byte)0);
 
+      RuleFor(x => x.Picture)
+        .Must(ValidationRules.BeAValidUrl);
+
       RuleFor(x => x.Reference)
         .Must(ValidationRules.BeAValidUrl);
 

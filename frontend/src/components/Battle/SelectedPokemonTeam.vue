@@ -8,6 +8,7 @@
         <th scope="col">
           <icon-button :icon="allSelected ? 'square' : 'check-square'" size="sm" variant="primary" @click="selectAll(!allSelected)" />
         </th>
+        <th scope="col" />
         <th scope="col" v-t="'pokemon.trainer.title'" />
         <th scope="col" v-t="'pokemon.trainer.position'" />
         <th scope="col" v-t="'pokemon.identification'" />

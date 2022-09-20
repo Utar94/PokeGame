@@ -1,5 +1,6 @@
 <template>
   <tr>
+    <td><trainer-icon :trainer="trainer" /></td>
     <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
     <td v-text="trainer.number" />
     <td>{{ $t(`region.options.${trainer.region}`) }}</td>
@@ -9,9 +10,13 @@
 
 <script>
 import { mapActions } from 'vuex'
+import TrainerIcon from '@/components/Trainers/TrainerIcon.vue'
 
 export default {
   name: 'SelectedTrainerRow',
+  components: {
+    TrainerIcon
+  },
   props: {
     team: {
       type: String,

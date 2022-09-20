@@ -1,6 +1,7 @@
 <template>
   <tr :class="{ 'table-info': active }">
     <td v-text="speed" />
+    <td><pokemon-icon :pokemon="pokemon" /></td>
     <td>
       <template v-if="pokemon.surname">
         {{ pokemon.surname }}
@@ -8,21 +9,21 @@
       </template>
       <gender-icon :gender="pokemon.gender" />
       {{ ' ' }}
-      <a :href="`/pokemon/${pokemon.id}`" target="_blank">
+      <b-link :href="`/pokemon/${pokemon.id}`" target="_blank">
         {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }} <font-awesome-icon icon="external-link-alt" />
-      </a>
+      </b-link>
       <br />
       <template v-if="trainer">
         <gender-icon :gender="trainer.gender" />
         {{ ' ' }}
-        <a :href="`/trainers/${trainer.id}`" target="_blank">
+        <b-link :href="`/trainers/${trainer.id}`" target="_blank">
           {{ trainer.name }} ({{ pokemon.position + 1 }}) <font-awesome-icon icon="external-link-alt" />
-        </a>
+        </b-link>
       </template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
     </td>
     <td>
-      <a href="#" v-b-modal="`editCondition_${pokemon.id}`"><pokemon-condition :pokemon="pokemon" /></a>
+      <b-link href="#" v-b-modal="`editCondition_${pokemon.id}`"><pokemon-condition :pokemon="pokemon" /></b-link>
       <condition-modal :id="`editCondition_${pokemon.id}`" :pokemon="pokemon" />
     </td>
     <td>

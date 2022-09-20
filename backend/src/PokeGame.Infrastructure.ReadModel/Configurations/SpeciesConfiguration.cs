@@ -24,6 +24,7 @@ namespace PokeGame.Infrastructure.ReadModel.Configurations
       builder.Property(x => x.EvYield).HasMaxLength(50);
       builder.Property(x => x.LevelingRate).HasDefaultValue(default(LevelingRate));
       builder.Property(x => x.Name).HasMaxLength(100);
+      builder.Property(x => x.Picture).HasMaxLength(2048);
       builder.Property(x => x.PrimaryType).HasDefaultValue(default(PokemonType));
       builder.Property(x => x.Reference).HasMaxLength(2048);
       builder.Property(x => x.Sid).HasColumnName("SpeciesId");
