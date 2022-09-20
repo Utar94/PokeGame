@@ -324,7 +324,7 @@ export default {
       }
     },
     totalIV() {
-      return Object.values(this.individualValues).reduce((a, b) => a + b, 0)
+      return Object.values(this.individualValues).reduce((a, b) => a + (b || 0), 0)
     }
   },
   methods: {
