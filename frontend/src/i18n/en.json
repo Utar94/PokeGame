@@ -41,6 +41,10 @@
     "label": "Notes",
     "placeholder": "Type some notes about this element"
   },
+  "picture": {
+    "label": "Picture",
+    "placeholder": "Paste the picture URL"
+  },
   "reference": {
     "label": "Reference",
     "placeholder": "Place the link to the reference"

@@ -14,6 +14,8 @@ import IconSubmit from './components/shared/IconSubmit.vue'
 import LocaleSelect from './components/shared/LocaleSelect.vue'
 import NameField from './components/shared/NameField.vue'
 import NotesField from './components/shared/NotesField.vue'
+import PictureField from './components/shared/PictureField.vue'
+import PokemonIcon from './components/shared/PokemonIcon.vue'
 import ReferenceField from './components/shared/ReferenceField.vue'
 import RegionSelect from './components/shared/RegionSelect.vue'
 import SearchField from './components/shared/SearchField.vue'
@@ -37,6 +39,8 @@ Vue.component('icon-submit', IconSubmit)
 Vue.component('locale-select', LocaleSelect)
 Vue.component('name-field', NameField)
 Vue.component('notes-field', NotesField)
+Vue.component('picture-field', PictureField)
+Vue.component('pokemon-icon', PokemonIcon)
 Vue.component('reference-field', ReferenceField)
 Vue.component('region-select', RegionSelect)
 Vue.component('search-field', SearchField)

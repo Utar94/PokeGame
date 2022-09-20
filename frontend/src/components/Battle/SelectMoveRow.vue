@@ -3,7 +3,7 @@
     <td><b-form-checkbox :checked="selected" :disabled="data.remainingPowerPoints === 0" size="lg" @change="toggleBattleMove(move)" /></td>
     <td>
       <span v-b-tooltip.hover :title="move.notes">
-        <a v-if="move.reference" :href="move.reference" target="_blank"> {{ move.name }} <font-awesome-icon icon="external-link-alt" /> </a>
+        <b-link v-if="move.reference" :href="move.reference" target="_blank"> {{ move.name }} <font-awesome-icon icon="external-link-alt" /> </b-link>
         <template v-else>{{ move.name }}</template>
       </span>
     </td>

@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <h1 v-t="'battle.pokemonSelection.title'" />
     <b-row>
       <selected-pokemon-team class="col" team="players" />

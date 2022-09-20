@@ -13,6 +13,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Description { get; set; }
 
     public string? Notes { get; set; }
+    public string? Picture { get; set; }
     public string? Reference { get; set; }
 
     public List<InventoryEntity> Inventory { get; set; } = new();
@@ -30,6 +31,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       Description = item.Description;
 
       Notes = item.Notes;
+      Picture = item.Picture;
       Reference = item.Reference;
     }
   }

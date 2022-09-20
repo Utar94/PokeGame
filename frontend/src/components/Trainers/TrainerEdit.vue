@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1 v-if="trainer">{{ $t('trainers.editTitle', { name: trainer.name }) }}</h1>
+    <h1 v-if="trainer"><trainer-icon :trainer="trainer" /> {{ $t('trainers.editTitle', { name: trainer.name }) }}</h1>
     <h1 v-else v-t="'trainers.newTitle'" />
     <status-detail v-if="trainer" :model="trainer" />
     <validation-observer ref="form">
@@ -34,6 +34,7 @@
           <pokedex-tab v-if="trainer" :trainerId="trainer.id" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
+            <picture-field validate v-model="picture" />
             <notes-field v-model="notes" />
           </b-tab>
         </b-tabs>
@@ -46,6 +47,7 @@
 import GenderSelect from './GenderSelect.vue'
 import InventoryTab from './InventoryTab.vue'
 import PokedexTab from './PokedexTab.vue'
+import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
 import { createTrainer, getTrainer, updateTrainer } from '@/api/trainers'
 
@@ -55,6 +57,7 @@ export default {
     GenderSelect,
     InventoryTab,
     PokedexTab,
+    TrainerIcon,
     UserSelect
   },
   props: {
@@ -76,6 +79,7 @@ export default {
       name: null,
       notes: null,
       number: 123456,
+      picture: null,
       reference: null,
       region: null,
       trainer: null,
@@ -91,6 +95,7 @@ export default {
         (this.name ?? '') !== (this.trainer?.name ?? '') ||
         (this.description ?? '') !== (this.trainer?.description ?? '') ||
         (this.reference ?? '') !== (this.trainer?.reference ?? '') ||
+        (this.picture ?? '') !== (this.trainer?.picture ?? '') ||
         (this.notes ?? '') !== (this.trainer?.notes ?? '')
       )
     },
@@ -101,6 +106,7 @@ export default {
         name: this.name,
         description: this.description,
         reference: this.reference,
+        picture: this.picture,
         notes: this.notes
       }
       if (!this.trainer) {
@@ -157,6 +163,7 @@ export default {
       this.name = trainer.name
       this.notes = trainer.notes
       this.number = trainer.number
+      this.picture = trainer.picture
       this.reference = trainer.reference
       this.region = trainer.region
       this.userId = trainer.userId

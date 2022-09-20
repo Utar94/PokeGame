@@ -19,6 +19,7 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
+            <th scope="col" />
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'trainers.number'" />
             <th scope="col" v-t="'region.label'" />
@@ -28,6 +29,9 @@
         </thead>
         <tbody>
           <tr v-for="trainer in trainers" :key="trainer.id">
+            <td>
+              <b-link :href="`/trainers/${trainer.id}`"><trainer-icon :trainer="trainer" /></b-link>
+            </td>
             <td>
               <b-link :href="`/trainers/${trainer.id}`"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</b-link>
             </td>
@@ -56,6 +60,7 @@
 
 <script>
 import GenderSelect from './GenderSelect.vue'
+import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
 import { deleteTrainer, getTrainers } from '@/api/trainers'
 
@@ -63,6 +68,7 @@ export default {
   name: 'TrainerList',
   components: {
     GenderSelect,
+    TrainerIcon,
     UserSelect
   },
   data() {

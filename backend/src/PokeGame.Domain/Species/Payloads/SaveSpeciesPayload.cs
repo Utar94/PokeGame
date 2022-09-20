@@ -21,6 +21,7 @@ namespace PokeGame.Domain.Species.Payloads
     public IEnumerable<StatisticValuePayload>? EvYield { get; set; }
 
     public string? Notes { get; set; }
+    public string? Picture { get; set; }
     public string? Reference { get; set; }
 
     public IEnumerable<Guid>? AbilityIds { get; set; }

@@ -15,8 +15,9 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
-            <th scope="col" v-t="'species.number'" />
+            <th scope="col" />
             <th scope="col" v-t="'name.label'" />
+            <th scope="col" v-t="'species.number'" />
             <th scope="col" v-t="'type.label'" />
             <th scope="col" v-t="'species.category.label'" />
             <th scope="col" v-t="'updated'" />
@@ -25,6 +26,9 @@
         </thead>
         <tbody>
           <tr v-for="item in species" :key="item.id">
+            <td>
+              <b-link :href="`/species/${item.id}`"><pokemon-icon :species="item" /></b-link>
+            </td>
             <td>
               <b-link :href="`/species/${item.id}`">{{ item.name }}</b-link>
             </td>

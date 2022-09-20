@@ -15,6 +15,7 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
+            <th scope="col" />
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'items.category.label'" />
             <th scope="col" v-t="'items.price'" />
@@ -24,6 +25,9 @@
         </thead>
         <tbody>
           <tr v-for="item in items" :key="item.id">
+            <td>
+              <b-link :href="`/items/${item.id}`"><item-icon :item="item" /></b-link>
+            </td>
             <td>
               <b-link :href="`/items/${item.id}`">{{ item.name }}</b-link>
             </td>
@@ -52,12 +56,14 @@
 
 <script>
 import CategorySelect from './CategorySelect.vue'
+import ItemIcon from './ItemIcon.vue'
 import { deleteItem, getItems } from '@/api/items'
 
 export default {
   name: 'ItemList',
   components: {
-    CategorySelect
+    CategorySelect,
+    ItemIcon
   },
   data() {
     return {

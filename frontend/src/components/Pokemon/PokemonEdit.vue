@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1>{{ $t('pokemon.editTitle', { name }) }}</h1>
+    <h1><pokemon-icon :pokemon="pokemon" /> {{ $t('pokemon.editTitle', { name }) }}</h1>
     <status-detail :model="pokemon" />
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">

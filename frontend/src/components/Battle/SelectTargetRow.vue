@@ -4,6 +4,7 @@
       <strong v-if="attacker" v-t="'battle.makeMove.attacker'" />
       <b-form-checkbox :checked="Boolean(target)" size="lg" @change="toggleBattleMoveTarget(pokemon)" />
     </td>
+    <td><pokemon-icon :pokemon="pokemon" /></td>
     <td>
       <template v-if="pokemon.surname">
         {{ pokemon.surname }}

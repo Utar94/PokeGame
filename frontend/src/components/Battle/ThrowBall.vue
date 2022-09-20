@@ -12,9 +12,13 @@
             placeholder="items.select.placeholder"
             required
             v-model="itemId"
-          />
+          >
+            <template v-if="item" #prepend>
+              <b-input-group-prepend><item-icon class="mx-1" :item="item" /></b-input-group-prepend>
+            </template>
+          </form-select>
           <form-select
-            v-if="Boolean(itemId)"
+            v-if="Boolean(item)"
             :disabled="pokemonOptions.length === 0"
             id="pokemon"
             label="pokemon.select.label"
@@ -22,8 +26,12 @@
             placeholder="pokemon.select.placeholder"
             required
             v-model="pokemonId"
-          />
-          <template v-if="itemId && pokemonId">
+          >
+            <template v-if="pokemon" #prepend>
+              <b-input-group-prepend><pokemon-icon class="mx-1" :pokemon="pokemon" /></b-input-group-prepend>
+            </template>
+          </form-select>
+          <template v-if="item && pokemon">
             <form-field id="restoreHitPoints" label="battle.healing.restoreHitPoints" :minValue="0" :step="1" type="number" v-model.number="restoreHitPoints" />
             <condition-select :disabled="removeAllConditions" label="battle.healing.removeStatusCondition" v-model="statusCondition">
               <template #after>
@@ -55,6 +63,7 @@ import Vue from 'vue'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import BallModifierField from '@/components/Items/BallModifierField.vue'
 import ConditionSelect from '@/components/Pokemon/ConditionSelect.vue'
+import ItemIcon from '@/components/Items/ItemIcon.vue'
 import { catchPokemon } from '@/api/pokemon'
 import { getInventory, removeInventory } from '@/api/inventory'
 
@@ -62,7 +71,8 @@ export default {
   name: 'ThrowBall',
   components: {
     BallModifierField,
-    ConditionSelect
+    ConditionSelect,
+    ItemIcon
   },
   props: {
     trainer: {
@@ -118,6 +128,12 @@ export default {
     id() {
       return `throwBall_${this.trainer.id}`
     },
+    item() {
+      if (!this.itemId) {
+        return null
+      }
+      return this.inventory.find(({ item }) => item.id === this.itemId)?.item ?? null
+    },
     itemOptions() {
       return this.orderBy(
         this.inventory.map(({ item, quantity }) => ({
@@ -126,6 +142,9 @@ export default {
         })),
         'text'
       )
+    },
+    pokemon() {
+      return this.pokemonId ? this.activeBattlingOpponentPokemon.find(({ id }) => id === this.pokemonId) ?? null : null
     },
     pokemonOptions() {
       return this.orderBy(

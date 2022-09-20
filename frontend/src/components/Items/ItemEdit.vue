@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1 v-if="item">{{ $t('items.editTitle', { name: item.name }) }}</h1>
+    <h1 v-if="item"><item-icon :item="item" /> {{ $t('items.editTitle', { name: item.name }) }}</h1>
     <h1 v-else v-t="'items.newTitle'" />
     <status-detail v-if="item" :model="item" />
     <validation-observer ref="form">
@@ -24,6 +24,7 @@
           </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
+            <picture-field validate v-model="picture" />
             <notes-field v-model="notes" />
           </b-tab>
         </b-tabs>
@@ -33,15 +34,17 @@
 </template>
 
 <script>
-import CategorySelect from './CategorySelect.vue'
 import BallModifierField from './BallModifierField.vue'
+import CategorySelect from './CategorySelect.vue'
+import ItemIcon from './ItemIcon.vue'
 import { createItem, updateItem } from '@/api/items'
 
 export default {
   name: 'ItemEdit',
   components: {
+    BallModifierField,
     CategorySelect,
-    BallModifierField
+    ItemIcon
   },
   props: {
     json: {
@@ -62,6 +65,7 @@ export default {
       loading: false,
       name: null,
       notes: null,
+      picture: null,
       price: 0,
       reference: null
     }
@@ -75,6 +79,7 @@ export default {
         this.price !== (this.item?.price ?? 0) ||
         (this.description ?? '') !== (this.item?.description ?? '') ||
         (this.reference ?? '') !== (this.item?.reference ?? '') ||
+        (this.picture ?? '') !== (this.item?.picture ?? '') ||
         (this.notes ?? '') !== (this.item?.notes ?? '')
       )
     },
@@ -85,6 +90,7 @@ export default {
         price: this.price || null,
         description: this.description,
         reference: this.reference,
+        picture: this.picture,
         notes: this.notes
       }
       if (!this.item) {
@@ -101,6 +107,7 @@ export default {
       this.description = item.description
       this.name = item.name
       this.notes = item.notes
+      this.picture = item.picture
       this.price = item.price ?? 0
       this.reference = item.reference
     },

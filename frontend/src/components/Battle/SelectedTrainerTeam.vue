@@ -4,6 +4,7 @@
     <table v-if="trainers.length > 0" class="table table-striped">
       <thead>
         <tr>
+          <th scope="col" />
           <th scope="col" v-t="'name.label'" />
           <th scope="col" v-t="'trainers.number'" />
           <th scope="col" v-t="'region.label'" />

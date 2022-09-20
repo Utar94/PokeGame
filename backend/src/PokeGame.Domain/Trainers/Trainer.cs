@@ -27,6 +27,7 @@ namespace PokeGame.Domain.Trainers
     public string? Description { get; private set; }
 
     public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
     public string? Reference { get; private set; }
 
     public Dictionary<Guid, int> Inventory { get; private set; } = new();
@@ -183,6 +184,7 @@ namespace PokeGame.Domain.Trainers
       Description = payload.Description?.CleanTrim();
 
       Notes = payload.Notes?.CleanTrim();
+      Picture = payload.Picture;
       Reference = payload.Reference;
     }
 

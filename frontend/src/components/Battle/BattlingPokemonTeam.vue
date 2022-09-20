@@ -4,6 +4,7 @@
     <table v-if="pokemonList.length > 0" class="table">
       <thead>
         <th scope="col" v-t="'statistic.options.Speed'" />
+        <th scope="col" />
         <th scope="col" v-t="'pokemon.identification'" />
         <th scope="col" v-t="'battle.condition'" />
         <th scope="col" v-t="'battle.abilityAndHeldItem'" />

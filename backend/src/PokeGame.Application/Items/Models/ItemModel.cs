@@ -14,6 +14,7 @@ namespace PokeGame.Application.Items.Models
     public string? Description { get; set; }
 
     public string? Notes { get; set; }
+    public string? Picture { get; set; }
     public string? Reference { get; set; }
   }
 }
