@@ -8,9 +8,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
   internal class SynchronizeTrainer
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Trainer> _repository;
+    private readonly IRepository _repository;
 
-    public SynchronizeTrainer(ReadContext readContext, IRepository<Trainer> repository)
+    public SynchronizeTrainer(ReadContext readContext, IRepository repository)
     {
       _readContext = readContext;
       _repository = repository;
@@ -28,7 +28,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
         return entity;
       }
 
-      Trainer? trainer = await _repository.LoadAsync(id, version, cancellationToken);
+      Trainer? trainer = await _repository.LoadAsync<Trainer>(id, version, cancellationToken);
       if (trainer != null)
       {
         if (entity == null)

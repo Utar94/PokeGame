@@ -10,12 +10,12 @@ namespace PokeGame.Application.Moves
   internal class MoveService : IMoveService
   {
     private readonly IMoveQuerier _querier;
-    private readonly IRepository<Move> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Move> _validator;
 
     public MoveService(
       IMoveQuerier querier,
-      IRepository<Move> repository,
+      IRepository repository,
       IValidator<Move> validator
     )
     {
@@ -37,7 +37,7 @@ namespace PokeGame.Application.Moves
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      Move move = await _repository.LoadAsync(id, cancellationToken)
+      Move move = await _repository.LoadAsync<Move>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Move>(id);
 
       move.Delete();
@@ -63,7 +63,7 @@ namespace PokeGame.Application.Moves
 
     public async Task<MoveModel> UpdateAsync(Guid id, UpdateMovePayload payload, CancellationToken cancellationToken)
     {
-      Move move = await _repository.LoadAsync(id, cancellationToken)
+      Move move = await _repository.LoadAsync<Move>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Move>(id);
 
       move.Update(payload);

@@ -8,9 +8,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Moves
   internal class SynchronizeMove
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Move> _repository;
+    private readonly IRepository _repository;
 
-    public SynchronizeMove(ReadContext readContext, IRepository<Move> repository)
+    public SynchronizeMove(ReadContext readContext, IRepository repository)
     {
       _readContext = readContext;
       _repository = repository;
@@ -26,7 +26,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Moves
         return entity;
       }
 
-      Move? move = await _repository.LoadAsync(id, version, cancellationToken);
+      Move? move = await _repository.LoadAsync<Move>(id, version, cancellationToken);
       if (move != null)
       {
         if (entity == null)
@@ -49,7 +49,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Moves
         .Where(x => ids.Contains(x.Id))
         .ToDictionaryAsync(x => x.Id, x => x, cancellationToken);
 
-      IEnumerable<Move> moves = await _repository.LoadAsync(ids, cancellationToken);
+      IEnumerable<Move> moves = await _repository.LoadAsync<Move>(ids, cancellationToken);
       foreach (Move move in moves)
       {
         if (entities.TryGetValue(move.Id, out MoveEntity? entity))

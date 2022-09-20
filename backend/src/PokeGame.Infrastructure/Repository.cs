@@ -6,7 +6,7 @@ using PokeGame.Infrastructure.Entities;
 
 namespace PokeGame.Infrastructure
 {
-  internal class Repository<T> : IRepository<T> where T : Aggregate
+  internal class Repository : IRepository
   {
     private readonly EventContext _eventContext;
     private readonly IPublisher _publisher;
@@ -19,9 +19,9 @@ namespace PokeGame.Infrastructure
       _userContext = userContext;
     }
 
-    public async Task<T?> LoadAsync(Guid id, CancellationToken cancellationToken)
-      => await LoadAsync(id, version: null, cancellationToken);
-    public async Task<T?> LoadAsync(Guid id, int? version, CancellationToken cancellationToken)
+    public async Task<T?> LoadAsync<T>(Guid id, CancellationToken cancellationToken) where T : Aggregate
+      => await LoadAsync<T>(id, version: null, cancellationToken);
+    public async Task<T?> LoadAsync<T>(Guid id, int? version, CancellationToken cancellationToken) where T : Aggregate
     {
       string aggregateType = typeof(T).GetName();
 
@@ -35,10 +35,10 @@ namespace PokeGame.Infrastructure
 
       Event[] events = await query.OrderBy(x => x.Version).ToArrayAsync(cancellationToken);
 
-      return Load(events, id);
+      return Load<T>(events, id);
     }
 
-    public async Task<IEnumerable<T>> LoadAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    public async Task<IEnumerable<T>> LoadAsync<T>(IEnumerable<Guid> ids, CancellationToken cancellationToken) where T : Aggregate
     {
       string aggregateType = typeof(T).GetName();
 
@@ -51,7 +51,7 @@ namespace PokeGame.Infrastructure
       var aggregates = new List<T>(capacity: events.Count());
       foreach (IGrouping<Guid, Event> group in events)
       {
-        T? aggregate = Load(group, group.Key);
+        T? aggregate = Load<T>(group, group.Key);
         if (aggregate != null)
         {
           aggregates.Add(aggregate);
@@ -61,7 +61,7 @@ namespace PokeGame.Infrastructure
       return aggregates;
     }
 
-    public async Task SaveAsync(T instance, CancellationToken cancellationToken)
+    public async Task SaveAsync<T>(T instance, CancellationToken cancellationToken) where T : Aggregate
     {
       ArgumentNullException.ThrowIfNull(instance);
 
@@ -86,7 +86,7 @@ namespace PokeGame.Infrastructure
       }
     }
 
-    public async Task SaveAsync(IEnumerable<T> instances, CancellationToken cancellationToken)
+    public async Task SaveAsync<T>(IEnumerable<T> instances, CancellationToken cancellationToken) where T : Aggregate
     {
       ArgumentNullException.ThrowIfNull(instances);
 
@@ -125,7 +125,7 @@ namespace PokeGame.Infrastructure
       }
     }
 
-    private static T? Load(IEnumerable<Event> events, Guid id)
+    private static T? Load<T>(IEnumerable<Event> events, Guid id) where T : Aggregate
     {
       if (!events.Any())
       {

@@ -13,34 +13,31 @@ namespace PokeGame.Application.Inventories
   internal class InventoryService : IInventoryService
   {
     private readonly IItemQuerier _itemQuerier;
-    private readonly IRepository<Item> _itemRepository;
     private readonly IInventoryQuerier _querier;
+    private readonly IRepository _repository;
     private readonly ITrainerQuerier _trainerQuerier;
-    private readonly IRepository<Trainer> _trainerRepository;
     private readonly IValidator<Trainer> _trainerValidator;
 
     public InventoryService(
       IItemQuerier itemQuerier,
-      IRepository<Item> itemRepository,
       IInventoryQuerier querier,
+      IRepository repository,
       ITrainerQuerier trainerQuerier,
-      IRepository<Trainer> trainerRepository,
       IValidator<Trainer> trainerValidator
     )
     {
       _itemQuerier = itemQuerier;
-      _itemRepository = itemRepository;
       _querier = querier;
+      _repository = repository;
       _trainerQuerier = trainerQuerier;
-      _trainerRepository = trainerRepository;
       _trainerValidator = trainerValidator;
     }
 
     public async Task<InventoryModel> AddAsync(Guid trainerId, Guid itemId, ushort quantity, bool buy, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _trainerRepository.LoadAsync(trainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(trainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(trainerId);
-      Item item = await _itemRepository.LoadAsync(itemId, cancellationToken)
+      Item item = await _repository.LoadAsync<Item>(itemId, cancellationToken)
         ?? throw new EntityNotFoundException<Item>(itemId);
 
       if (buy)
@@ -53,7 +50,7 @@ namespace PokeGame.Application.Inventories
       }
       _trainerValidator.ValidateAndThrow(trainer);
 
-      await _trainerRepository.SaveAsync(trainer, cancellationToken);
+      await _repository.SaveAsync(trainer, cancellationToken);
 
       return await _querier.GetAsync(trainer.Id, item.Id, cancellationToken)
         ?? throw new InventoryNotFoundException(trainer.Id, item.Id);
@@ -95,9 +92,9 @@ namespace PokeGame.Application.Inventories
 
     public async Task<InventoryModel> RemoveAsync(Guid trainerId, Guid itemId, ushort quantity, bool sell, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _trainerRepository.LoadAsync(trainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(trainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(trainerId);
-      Item item = await _itemRepository.LoadAsync(itemId, cancellationToken)
+      Item item = await _repository.LoadAsync<Item>(itemId, cancellationToken)
         ?? throw new EntityNotFoundException<Item>(itemId);
 
       if (sell)
@@ -110,7 +107,7 @@ namespace PokeGame.Application.Inventories
       }
       _trainerValidator.ValidateAndThrow(trainer);
 
-      await _trainerRepository.SaveAsync(trainer, cancellationToken);
+      await _repository.SaveAsync(trainer, cancellationToken);
 
       InventoryModel? model = await _querier.GetAsync(trainer.Id, item.Id, cancellationToken);
       if (model == null)

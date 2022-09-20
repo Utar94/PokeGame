@@ -11,20 +11,17 @@ namespace PokeGame.Application.Pokemon.Mutations
   internal class CatchPokemonMutationHandler : IRequestHandler<CatchPokemonMutation, PokemonModel>
   {
     private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
-    private readonly IRepository<Trainer> _trainerRepository;
+    private readonly IRepository _repository;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public CatchPokemonMutationHandler(
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
-      IRepository<Trainer> trainerRepository,
+      IRepository repository,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
       _querier = querier;
       _repository = repository;
-      _trainerRepository = trainerRepository;
       _validator = validator;
     }
 
@@ -32,12 +29,12 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       CatchPokemonPayload payload = request.Payload;
 
-      Trainer trainer = await _trainerRepository.LoadAsync(payload.TrainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(payload.TrainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
 
       PokemonPosition position = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
 
-      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(request.Id, cancellationToken)
+      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
       if (payload.Heal != null)

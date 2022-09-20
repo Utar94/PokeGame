@@ -9,12 +9,12 @@ namespace PokeGame.Application.Items
   internal class ItemService : IItemService
   {
     private readonly IItemQuerier _querier;
-    private readonly IRepository<Item> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Item> _validator;
 
     public ItemService(
       IItemQuerier querier,
-      IRepository<Item> repository,
+      IRepository repository,
       IValidator<Item> validator
     )
     {
@@ -36,7 +36,7 @@ namespace PokeGame.Application.Items
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      Item item = await _repository.LoadAsync(id, cancellationToken)
+      Item item = await _repository.LoadAsync<Item>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Item>(id);
 
       item.Delete();
@@ -62,7 +62,7 @@ namespace PokeGame.Application.Items
 
     public async Task<ItemModel> UpdateAsync(Guid id, UpdateItemPayload payload, CancellationToken cancellationToken)
     {
-      Item item = await _repository.LoadAsync(id, cancellationToken)
+      Item item = await _repository.LoadAsync<Item>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Item>(id);
 
       item.Update(payload);

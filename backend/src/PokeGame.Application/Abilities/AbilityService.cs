@@ -9,12 +9,12 @@ namespace PokeGame.Application.Abilities
   internal class AbilityService : IAbilityService
   {
     private readonly IAbilityQuerier _querier;
-    private readonly IRepository<Ability> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Ability> _validator;
 
     public AbilityService(
       IAbilityQuerier querier,
-      IRepository<Ability> repository,
+      IRepository repository,
       IValidator<Ability> validator
     )
     {
@@ -36,7 +36,7 @@ namespace PokeGame.Application.Abilities
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      Ability ability = await _repository.LoadAsync(id, cancellationToken)
+      Ability ability = await _repository.LoadAsync<Ability>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Ability>(id);
 
       ability.Delete();
@@ -62,7 +62,7 @@ namespace PokeGame.Application.Abilities
 
     public async Task<AbilityModel> UpdateAsync(Guid id, UpdateAbilityPayload payload, CancellationToken cancellationToken)
     {
-      Ability ability = await _repository.LoadAsync(id, cancellationToken)
+      Ability ability = await _repository.LoadAsync<Ability>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Ability>(id);
 
       ability.Update(payload);

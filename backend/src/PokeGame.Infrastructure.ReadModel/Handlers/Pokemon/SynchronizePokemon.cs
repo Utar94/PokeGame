@@ -12,7 +12,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
   internal class SynchronizePokemon
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
+    private readonly IRepository _repository;
     private readonly SynchronizeItem _synchronizeItem;
     private readonly SynchronizeMove _synchronizeMove;
     private readonly SynchronizeSpecies _synchronizeSpecies;
@@ -20,7 +20,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
 
     public SynchronizePokemon(
       ReadContext readContext,
-      IRepository<Domain.Pokemon.Pokemon> repository,
+      IRepository repository,
       SynchronizeItem synchronizeItem,
       SynchronizeMove synchronizeMove,
       SynchronizeSpecies synchronizeSpecies,
@@ -51,7 +51,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         return entity;
       }
 
-      Domain.Pokemon.Pokemon? pokemon = await _repository.LoadAsync(id, version, cancellationToken);
+      Domain.Pokemon.Pokemon? pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(id, version, cancellationToken);
       if (pokemon != null)
       {
         SpeciesEntity? species = await _readContext.Species

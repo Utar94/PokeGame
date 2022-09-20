@@ -11,30 +11,18 @@ namespace PokeGame.Application.Pokemon.Mutations
 {
   internal class CreatePokemonMutationHandler : IRequestHandler<CreatePokemonMutation, PokemonModel>
   {
-    private readonly IRepository<Item> _itemRepository;
-    private readonly IRepository<Move> _moveRepository;
     private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
-    private readonly IRepository<Domain.Species.Species> _speciesRepository;
-    private readonly IRepository<Trainer> _trainerRepository;
+    private readonly IRepository _repository;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public CreatePokemonMutationHandler(
-      IRepository<Item> itemRepository,
-      IRepository<Move> moveRepository,
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
-      IRepository<Domain.Species.Species> speciesRepository,
-      IRepository<Trainer> trainerRepository,
+      IRepository repository,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
-      _itemRepository = itemRepository;
-      _moveRepository = moveRepository;
       _querier = querier;
       _repository = repository;
-      _speciesRepository = speciesRepository;
-      _trainerRepository = trainerRepository;
       _validator = validator;
     }
 
@@ -42,7 +30,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       CreatePokemonPayload payload = request.Payload;
 
-      Domain.Species.Species species = await _speciesRepository.LoadAsync(payload.SpeciesId, cancellationToken)
+      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(payload.SpeciesId, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(payload.SpeciesId, nameof(payload.SpeciesId));
 
       if (!species.AbilityIds.Contains(payload.AbilityId))
@@ -50,7 +38,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         throw new InvalidAbilityException(species, payload.AbilityId);
       }
 
-      if (payload.HeldItemId.HasValue && await _itemRepository.LoadAsync(payload.HeldItemId.Value, cancellationToken) == null)
+      if (payload.HeldItemId.HasValue && await _repository.LoadAsync<Item>(payload.HeldItemId.Value, cancellationToken) == null)
       {
         throw new EntityNotFoundException<Item>(payload.HeldItemId.Value, nameof(payload.HeldItemId));
       }
@@ -58,7 +46,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       if (payload.Moves != null)
       {
         IEnumerable<Guid> moveIds = payload.Moves.Select(x => x.MoveId);
-        Dictionary<Guid, Move> moves = (await _moveRepository.LoadAsync(moveIds, cancellationToken))
+        Dictionary<Guid, Move> moves = (await _repository.LoadAsync<Move>(moveIds, cancellationToken))
           .ToDictionary(x => x.Id, x => x);
 
         var missingIds = new List<Guid>(capacity: moveIds.Count());
@@ -83,7 +71,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         }
       }
 
-      if (payload.History != null && await _trainerRepository.LoadAsync(payload.History.TrainerId, cancellationToken) == null)
+      if (payload.History != null && await _repository.LoadAsync<Trainer>(payload.History.TrainerId, cancellationToken) == null)
       {
         throw new EntityNotFoundException<Trainer>(payload.History.TrainerId, $"{nameof(payload.History)}.{nameof(payload.History.TrainerId)}");
       }

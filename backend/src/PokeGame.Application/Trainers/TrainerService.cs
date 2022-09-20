@@ -10,12 +10,12 @@ namespace PokeGame.Application.Trainers
   internal class TrainerService : ITrainerService
   {
     private readonly ITrainerQuerier _querier;
-    private readonly IRepository<Trainer> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Trainer> _validator;
 
     public TrainerService(
       ITrainerQuerier querier,
-      IRepository<Trainer> repository,
+      IRepository repository,
       IValidator<Trainer> validator
     )
     {
@@ -37,7 +37,7 @@ namespace PokeGame.Application.Trainers
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _repository.LoadAsync(id, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(id);
 
       trainer.Delete();
@@ -63,7 +63,7 @@ namespace PokeGame.Application.Trainers
 
     public async Task<TrainerModel> UpdateAsync(Guid id, UpdateTrainerPayload payload, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _repository.LoadAsync(id, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(id);
 
       trainer.Update(payload);

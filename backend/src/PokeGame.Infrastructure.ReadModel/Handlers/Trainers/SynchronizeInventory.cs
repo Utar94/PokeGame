@@ -9,21 +9,21 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
   internal class SynchronizeInventory
   {
     private readonly ReadContext _readContext;
+    private readonly IRepository _repository;
     private readonly SynchronizeItem _synchronizeItem;
     private readonly SynchronizeTrainer _synchronizeTrainer;
-    private readonly IRepository<Trainer> _trainerRepository;
 
     public SynchronizeInventory(
       ReadContext readContext,
+      IRepository repository,
       SynchronizeItem synchronizeItem,
-      SynchronizeTrainer synchronizeTrainer,
-      IRepository<Trainer> trainerRepository
+      SynchronizeTrainer synchronizeTrainer
     )
     {
       _readContext = readContext;
+      _repository = repository;
       _synchronizeItem = synchronizeItem;
       _synchronizeTrainer = synchronizeTrainer;
-      _trainerRepository = trainerRepository;
     }
 
     public async Task<InventoryEntity?> ExecuteAsync(Guid trainerId, Guid itemId, int version, CancellationToken cancellationToken = default)
@@ -44,7 +44,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
       InventoryEntity entity = trainerEntity.Inventory.SingleOrDefault(x => x.ItemId == item.Sid)
         ?? trainerEntity.Add(item);
 
-      Trainer? trainer = await _trainerRepository.LoadAsync(trainerId, version, cancellationToken);
+      Trainer? trainer = await _repository.LoadAsync<Trainer>(trainerId, version, cancellationToken);
       if (trainer == null)
       {
         return null;

@@ -15,6 +15,7 @@
       <table id="table" class="table table-striped">
         <thead>
           <tr>
+            <th scope="col" />
             <th scope="col" v-t="'trainers.inventory.item'" />
             <th scope="col" v-t="'trainers.inventory.category'" />
             <th scope="col" v-t="'trainers.inventory.price'" />
@@ -24,9 +25,14 @@
         </thead>
         <tbody>
           <tr v-for="(line, index) in lines" :key="line.item.id">
-            <td v-text="line.item.name" />
+            <td>
+              <b-link :href="`/items/${line.item.id}`" target="_blank"><item-icon :item="line.item" /></b-link>
+            </td>
+            <td>
+              <b-link :href="`/items/${line.item.id}`" target="_blank">{{ line.item.name }} <font-awesome-icon icon="external-link-alt" /></b-link>
+            </td>
             <td>{{ $t(`items.category.options.${line.item.category}`) }}</td>
-            <td v-text="line.item.price" />
+            <td v-text="line.item.price || '—'" />
             <td>
               <icon-button :disabled="loading" icon="minus" :loading="loading" size="sm" variant="danger" @click="decreaseQuantity(index)" />
               {{ line.quantity }}
@@ -56,6 +62,7 @@
 import Vue from 'vue'
 import AddItemModal from './AddItemModal.vue'
 import CategorySelect from '@/components/Items/CategorySelect.vue'
+import ItemIcon from '@/components/Items/ItemIcon.vue'
 import RemoveItemModal from './RemoveItemModal.vue'
 import { addInventory, getInventory, removeInventory } from '@/api/inventory'
 
@@ -64,6 +71,7 @@ export default {
   components: {
     AddItemModal,
     CategorySelect,
+    ItemIcon,
     RemoveItemModal
   },
   props: {

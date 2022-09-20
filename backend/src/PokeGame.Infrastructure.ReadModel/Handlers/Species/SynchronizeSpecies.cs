@@ -9,12 +9,12 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
   internal class SynchronizeSpecies
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Domain.Species.Species> _repository;
+    private readonly IRepository _repository;
     private readonly SynchronizeAbility _synchronizeAbility;
 
     public SynchronizeSpecies(
       ReadContext readContext,
-      IRepository<Domain.Species.Species> repository,
+      IRepository repository,
       SynchronizeAbility synchronizeAbility
     )
     {
@@ -34,7 +34,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
         return entity;
       }
 
-      Domain.Species.Species? species = await _repository.LoadAsync(id, version, cancellationToken);
+      Domain.Species.Species? species = await _repository.LoadAsync<Domain.Species.Species>(id, version, cancellationToken);
       if (species != null)
       {
         if (entity == null)

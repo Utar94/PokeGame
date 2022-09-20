@@ -8,9 +8,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Items
   internal class SynchronizeItem
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Item> _repository;
+    private readonly IRepository _repository;
 
-    public SynchronizeItem(ReadContext readContext, IRepository<Item> repository)
+    public SynchronizeItem(ReadContext readContext, IRepository repository)
     {
       _readContext = readContext;
       _repository = repository;
@@ -26,7 +26,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Items
         return entity;
       }
 
-      Item? item = await _repository.LoadAsync(id, version, cancellationToken);
+      Item? item = await _repository.LoadAsync<Item>(id, version, cancellationToken);
       if (item != null)
       {
         if (entity == null)

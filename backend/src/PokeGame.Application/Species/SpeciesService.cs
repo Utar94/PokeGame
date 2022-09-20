@@ -13,25 +13,16 @@ namespace PokeGame.Application.Species
 {
   internal class SpeciesService : ISpeciesService
   {
-    private readonly IRepository<Ability> _abilityRepository;
-    private readonly IRepository<Item> _itemRepository;
-    private readonly IRepository<Move> _moveRepository;
     private readonly ISpeciesQuerier _querier;
-    private readonly IRepository<Domain.Species.Species> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Domain.Species.Species> _validator;
 
     public SpeciesService(
-      IRepository<Ability> abilityRepository,
-      IRepository<Item> itemRepository,
-      IRepository<Move> moveRepository,
       ISpeciesQuerier querier,
-      IRepository<Domain.Species.Species> repository,
+      IRepository repository,
       IValidator<Domain.Species.Species> validator
     )
     {
-      _abilityRepository = abilityRepository;
-      _itemRepository = itemRepository;
-      _moveRepository = moveRepository;
       _querier = querier;
       _repository = repository;
       _validator = validator;
@@ -53,7 +44,7 @@ namespace PokeGame.Application.Species
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      Domain.Species.Species species = await _repository.LoadAsync(id, cancellationToken)
+      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(id);
 
       species.Delete();
@@ -79,7 +70,7 @@ namespace PokeGame.Application.Species
 
     public async Task<SpeciesModel> UpdateAsync(Guid id, UpdateSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      Domain.Species.Species species = await _repository.LoadAsync(id, cancellationToken)
+      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(id);
 
       await ValidateAbilitiesAsync(payload, cancellationToken);
@@ -98,7 +89,7 @@ namespace PokeGame.Application.Species
     {
       if (payload.AbilityIds?.Any() == true)
       {
-        IEnumerable<Ability> abilities = await _abilityRepository.LoadAsync(payload.AbilityIds, cancellationToken);
+        IEnumerable<Ability> abilities = await _repository.LoadAsync<Ability>(payload.AbilityIds, cancellationToken);
         IEnumerable<Guid> missingIds = payload.AbilityIds.Except(abilities.Select(x => x.Id)).Distinct();
         if (missingIds.Any())
         {
@@ -112,7 +103,7 @@ namespace PokeGame.Application.Species
       if (payload.Evolutions?.Any() == true)
       {
         IEnumerable<Guid> speciesIds = payload.Evolutions.Select(x => x.SpeciesId).Distinct();
-        IEnumerable<Domain.Species.Species> species = await _repository.LoadAsync(speciesIds, cancellationToken);
+        IEnumerable<Domain.Species.Species> species = await _repository.LoadAsync<Domain.Species.Species>(speciesIds, cancellationToken);
         IEnumerable<Guid> missingSpeciesIds = speciesIds.Except(species.Select(x => x.Id)).Distinct();
         if (missingSpeciesIds.Any())
         {
@@ -122,7 +113,7 @@ namespace PokeGame.Application.Species
         IEnumerable<Guid> itemIds = payload.Evolutions.Where(x => x.ItemId.HasValue).Select(x => x.ItemId!.Value).Distinct();
         if (itemIds.Any())
         {
-          IEnumerable<Item> items = await _itemRepository.LoadAsync(itemIds, cancellationToken);
+          IEnumerable<Item> items = await _repository.LoadAsync<Item>(itemIds, cancellationToken);
           IEnumerable<Guid> missingItemIds = itemIds.Except(items.Select(x => x.Id)).Distinct();
           if (missingItemIds.Any())
           {
@@ -133,7 +124,7 @@ namespace PokeGame.Application.Species
         IEnumerable<Guid> moveIds = payload.Evolutions.Where(x => x.MoveId.HasValue).Select(x => x.MoveId!.Value).Distinct();
         if (moveIds.Any())
         {
-          IEnumerable<Move> moves = await _moveRepository.LoadAsync(moveIds, cancellationToken);
+          IEnumerable<Move> moves = await _repository.LoadAsync<Move>(moveIds, cancellationToken);
           IEnumerable<Guid> missingMoveIds = moveIds.Except(moves.Select(x => x.Id)).Distinct();
           if (missingMoveIds.Any())
           {

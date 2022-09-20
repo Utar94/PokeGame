@@ -7,12 +7,12 @@ namespace PokeGame.Application.Pokemon.Mutations
   internal class HealPokemonMutationHandler : IRequestHandler<HealPokemonMutation, PokemonModel>
   {
     private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
+    private readonly IRepository _repository;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public HealPokemonMutationHandler(
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
+      IRepository repository,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
@@ -23,7 +23,7 @@ namespace PokeGame.Application.Pokemon.Mutations
 
     public async Task<PokemonModel> Handle(HealPokemonMutation request, CancellationToken cancellationToken)
     {
-      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(request.Id, cancellationToken)
+      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
       pokemon.Heal(request.Payload);
