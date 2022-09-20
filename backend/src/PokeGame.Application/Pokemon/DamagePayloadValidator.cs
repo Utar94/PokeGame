@@ -10,7 +10,7 @@ namespace PokeGame.Application.Pokemon
     public DamagePayloadValidator()
     {
       RuleFor(x => x.Attack)
-       .InclusiveBetween((short)0, (short)999);
+       .LessThanOrEqualTo((ushort)999);
 
       RuleFor(x => x.Random)
         .InclusiveBetween((double)0.85, (double)1.0);

@@ -1,7 +1,7 @@
 <template>
   <span>
     <icon-button :disabled="hasEnded" icon="shopping-cart" text="battle.useItem" variant="warning" v-b-modal="id" />
-    <b-modal :id="id" :title="$t('battle.useItem')" @hidden="reset" @shown="loadInventory">
+    <b-modal :id="id" :title="$t('battle.useItem')" @hidden="reset" @show="loadInventory">
       <validation-observer ref="form">
         <b-form @submit.prevent="submit">
           <form-select

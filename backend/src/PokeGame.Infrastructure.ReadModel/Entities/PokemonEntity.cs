@@ -21,7 +21,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? EffortValues { get; set; }
     public string? Statistics { get; set; }
 
-    public short CurrentHitPoints { get; set; }
+    public ushort CurrentHitPoints { get; set; }
     public StatusCondition? StatusCondition { get; set; }
 
     public List<PokemonMoveEntity> Moves { get; set; } = new();
@@ -55,15 +55,15 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
       IEnumerable<KeyValuePair<Statistic, byte>> individualValues = pokemon.IndividualValues.Where(x => x.Value > 0);
       IndividualValues = individualValues.Any()
-        ? string.Join(" | ", individualValues.Select(pair => string.Join(':', pair.Key, pair.Value)))
+        ? string.Join("|", individualValues.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
       IEnumerable<KeyValuePair<Statistic, byte>> effortValues = pokemon.EffortValues.Where(x => x.Value > 0);
       EffortValues = effortValues.Any()
-        ? string.Join(" | ", effortValues.Select(pair => string.Join(':', pair.Key, pair.Value)))
+        ? string.Join("|", effortValues.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
-      IEnumerable<KeyValuePair<Statistic, short>> statistics = pokemon.Statistics.Where(x => x.Value > 0);
+      IEnumerable<KeyValuePair<Statistic, ushort>> statistics = pokemon.Statistics.Where(x => x.Value > 0);
       Statistics = statistics.Any()
-        ? string.Join(" | ", statistics.Select(pair => string.Join(':', pair.Key, pair.Value)))
+        ? string.Join("|", statistics.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
 
       CurrentHitPoints = pokemon.CurrentHitPoints;

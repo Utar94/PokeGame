@@ -145,6 +145,7 @@
                 <b-input-group-append is-text>{{ $t('moves.statusChance.unit') }}</b-input-group-append>
               </form-field>
             </b-row>
+            <form-field id="volatileConditions" label="moves.volatile.label" placeholder="moves.volatile.placeholder" v-model="volatileConditions" />
           </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
@@ -200,7 +201,8 @@ export default {
       },
       statusChance: 0,
       statusCondition: null,
-      type: null
+      type: null,
+      volatileConditions: null
     }
   },
   computed: {
@@ -221,6 +223,7 @@ export default {
         this.evasionStage !== (this.move?.evasionStage ?? 0) ||
         this.statusCondition !== (this.move?.statusCondition ?? null) ||
         this.statusChance !== (this.move?.statusChance ?? 0) ||
+        JSON.stringify(this.payload.volatileConditions ?? []) !== JSON.stringify(this.move?.volatileConditions ?? []) ||
         (this.reference ?? '') !== (this.move?.reference ?? '') ||
         (this.notes ?? '') !== (this.move?.notes ?? '')
       )
@@ -237,6 +240,11 @@ export default {
         statisticStages: Object.entries(this.stages).map(([statistic, value]) => ({ statistic, value })),
         accuracyStage: this.accuracyStage,
         evasionStage: this.evasionStage,
+        volatileConditions:
+          this.volatileConditions
+            ?.split(',')
+            .map(condition => condition.trim())
+            .filter(condition => condition.length > 0) ?? null,
         reference: this.reference,
         notes: this.notes
       }
@@ -268,6 +276,7 @@ export default {
       this.statusChance = move.statusChance ?? 0
       this.statusCondition = move.statusCondition
       this.type = move.type
+      this.volatileConditions = move.volatileConditions.join(', ') || null
     },
     async submit() {
       if (!this.loading) {

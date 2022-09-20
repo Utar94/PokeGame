@@ -29,6 +29,10 @@ export async function updatePokemon(id, payload) {
   return await put(`/api/pokemon/${id}`, payload)
 }
 
+export async function updatePokemonCondition(id, payload) {
+  return await patch(`/api/pokemon/${id}/condition`, payload)
+}
+
 export async function usePokemonMove(id, moveId, payload) {
   return await patch(`/api/pokemon/${id}/use-move/${moveId}`, payload)
 }

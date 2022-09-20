@@ -1,20 +1,29 @@
 <template>
   <tr :class="{ 'table-info': active }">
-    <td v-text="pokemon.speed" />
+    <td v-text="speed" />
     <td>
       <template v-if="pokemon.surname">
         {{ pokemon.surname }}
         <br />
       </template>
-      <gender-icon :gender="pokemon.gender" /> {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
+      <gender-icon :gender="pokemon.gender" />
+      {{ ' ' }}
+      <a :href="`/pokemon/${pokemon.id}`" target="_blank">
+        {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }} <font-awesome-icon icon="external-link-alt" />
+      </a>
       <br />
-      <template v-if="trainer"><gender-icon :gender="trainer.gender" /> {{ trainer.name }} ({{ pokemon.position + 1 }})</template>
+      <template v-if="trainer">
+        <gender-icon :gender="trainer.gender" />
+        {{ ' ' }}
+        <a :href="`/trainers/${trainer.id}`" target="_blank">
+          {{ trainer.name }} ({{ pokemon.position + 1 }}) <font-awesome-icon icon="external-link-alt" />
+        </a>
+      </template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
     </td>
     <td>
-      <pokemon-condition :pokemon="pokemon" />
-      <!-- TODO(fpion): Volatile Conditions -->
-      <!-- TODO(fpion): Stat Changes -->
+      <a href="#" v-b-modal="`editCondition_${pokemon.id}`"><pokemon-condition :pokemon="pokemon" /></a>
+      <condition-modal :id="`editCondition_${pokemon.id}`" :pokemon="pokemon" />
     </td>
     <td>
       <ability-info :ability="pokemon.ability" />
@@ -41,14 +50,17 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
+import ConditionModal from './ConditionModal.vue'
 import ItemInfo from './ItemInfo.vue'
 import PokemonCondition from './PokemonCondition.vue'
 import SwitchPokemon from './SwitchPokemon.vue'
+import { getStatisticModifier } from '@/helpers/statisticUtils'
 
 export default {
   name: 'BattlingPokemonRow',
   components: {
     AbilityInfo,
+    ConditionModal,
     ItemInfo,
     PokemonCondition,
     SwitchPokemon
@@ -68,7 +80,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['hasEnded', 'isTrainerBattle']),
+    ...mapGetters(['battleStatus', 'hasEnded', 'isTrainerBattle']),
+    speed() {
+      const status = this.battleStatus[this.pokemon.id] ?? {}
+      return Math.floor(this.pokemon.speed * getStatisticModifier(status.speed ?? 0))
+    },
     trainer() {
       return this.pokemon.history?.trainer ?? null
     }

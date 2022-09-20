@@ -14,9 +14,9 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
     {
       CreateMap<PokemonEntity, PokemonModel>()
         .IncludeBase<Entity, AggregateModel>()
-        .ForMember(x => x.EffortValues, x => x.MapFrom(GetEffortValues))
+        .ForMember(x => x.EffortValues, x => x.MapFrom(y => ParseStatisticValues(y.EffortValues)))
         .ForMember(x => x.History, x => x.MapFrom(GetHistory))
-        .ForMember(x => x.IndividualValues, x => x.MapFrom(GetIndividualValues))
+        .ForMember(x => x.IndividualValues, x => x.MapFrom(y => ParseStatisticValues(y.IndividualValues)))
         .ForMember(x => x.MaximumHitPoints, x => x.MapFrom(y => GetStatistic(y, Statistic.HP)))
         .ForMember(x => x.Attack, x => x.MapFrom(y => GetStatistic(y, Statistic.Attack)))
         .ForMember(x => x.Defense, x => x.MapFrom(y => GetStatistic(y, Statistic.Defense)))
@@ -26,34 +26,20 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
       CreateMap<PokemonMoveEntity, PokemonMoveModel>();
     }
 
-    private static IEnumerable<StatisticValueModel> GetEffortValues(PokemonEntity pokemon, PokemonModel model)
+    private static ushort GetStatistic(PokemonEntity pokemon, Statistic statistic)
     {
-      return ParseStatisticValues(pokemon.EffortValues);
-    }
-    private static IEnumerable<StatisticValueModel> GetIndividualValues(PokemonEntity pokemon, PokemonModel model)
-    {
-      return ParseStatisticValues(pokemon.IndividualValues);
-    }
-    private static short GetStatistic(PokemonEntity pokemon, Statistic statistic)
-    {
-      IEnumerable<StatisticValueModel> statistics = ParseStatisticValues(pokemon.Statistics);
+      string[] pairs = pokemon.Statistics?.Split('|') ?? Array.Empty<string>();
 
-      return statistics.SingleOrDefault(x => x.Statistic == statistic)?.Value ?? 0;
-    }
-    private static IEnumerable<StatisticValueModel> ParseStatisticValues(string? value)
-    {
-      string[] pairs = value?.Split('|') ?? Array.Empty<string>();
-
-      return pairs.Select(pair =>
+      foreach (string pair in pairs)
       {
         string[] values = pair.Split(':');
-
-        return new StatisticValueModel
+        if (values[0] == statistic.ToString())
         {
-          Statistic = Enum.Parse<Statistic>(values[0]),
-          Value = byte.Parse(values[1])
-        };
-      });
+          return ushort.Parse(values[1]);
+        }
+      }
+
+      return 0;
     }
 
     private static HistoryModel? GetHistory(PokemonEntity pokemon, PokemonModel model, HistoryModel? member, ResolutionContext context)
@@ -71,6 +57,22 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
       }
 
       return null;
+    }
+
+    private static IEnumerable<StatisticValueModel> ParseStatisticValues(string? value)
+    {
+      string[] pairs = value?.Split('|') ?? Array.Empty<string>();
+
+      return pairs.Select(pair =>
+      {
+        string[] values = pair.Split(':');
+
+        return new StatisticValueModel
+        {
+          Statistic = Enum.Parse<Statistic>(values[0]),
+          Value = byte.Parse(values[1])
+        };
+      });
     }
   }
 }

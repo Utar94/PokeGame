@@ -80,6 +80,7 @@ import { mapActions, mapGetters } from 'vuex'
 import AbilityInfo from './AbilityInfo.vue'
 import ItemInfo from './ItemInfo.vue'
 import PokemonCondition from './PokemonCondition.vue'
+import { getAccuracyEvasionModifier } from '@/helpers/statisticUtils'
 
 export default {
   name: 'SelectTargetRow',
@@ -101,10 +102,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleMoveAttacker', 'battleMoveDamage', 'battleMoveTargets', 'selectedBattleMove']),
+    ...mapGetters(['battleMoveAttacker', 'battleMoveDamage', 'battleMoveTargets', 'battleStatus', 'selectedBattleMove']),
     accuracy() {
-      const { accuracy } = this.selectedBattleMove
-      return accuracy === null ? '—' : this.$i18n.n(accuracy / 100, 'percent')
+      let { accuracy } = this.selectedBattleMove
+      if (accuracy === null) {
+        return '—'
+      }
+      const accuracyStage = this.battleStatus[this.battleMoveAttacker.id]?.accuracy ?? 0
+      const evasionStage = this.battleStatus[this.pokemon.id]?.evasion ?? 0
+      const stage = Math.min(Math.max(accuracyStage - evasionStage, -6), 6)
+      accuracy = Math.min(Math.max(accuracy * getAccuracyEvasionModifier(stage), 1), 100)
+      return this.$i18n.n(accuracy / 100, 'percent')
     },
     attacker() {
       return this.pokemon.id === this.battleMoveAttacker.id

@@ -34,15 +34,15 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
-    public Dictionary<Statistic, short> Statistics { get; private set; } = new();
-    public short MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out short maximumHitPoints) ? maximumHitPoints : (short)0;
-    public short Attack => Statistics.TryGetValue(Statistic.Attack, out short attack) ? attack : (short)0;
-    public short Defense => Statistics.TryGetValue(Statistic.Defense, out short defense) ? defense : (short)0;
-    public short SpecialAttack => Statistics.TryGetValue(Statistic.SpecialAttack, out short specialAttack) ? specialAttack : (short)0;
-    public short SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out short specialDefense) ? specialDefense : (short)0;
-    public short Speed => Statistics.TryGetValue(Statistic.Speed, out short speed) ? speed : (short)0;
+    public Dictionary<Statistic, ushort> Statistics { get; private set; } = new();
+    public ushort MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out ushort maximumHitPoints) ? maximumHitPoints : (ushort)0;
+    public ushort Attack => Statistics.TryGetValue(Statistic.Attack, out ushort attack) ? attack : (ushort)0;
+    public ushort Defense => Statistics.TryGetValue(Statistic.Defense, out ushort defense) ? defense : (ushort)0;
+    public ushort SpecialAttack => Statistics.TryGetValue(Statistic.SpecialAttack, out ushort specialAttack) ? specialAttack : (ushort)0;
+    public ushort SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out ushort specialDefense) ? specialDefense : (ushort)0;
+    public ushort Speed => Statistics.TryGetValue(Statistic.Speed, out ushort speed) ? speed : (ushort)0;
 
-    public short CurrentHitPoints { get; private set; }
+    public ushort CurrentHitPoints { get; private set; }
     public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new();
@@ -68,6 +68,7 @@ namespace PokeGame.Domain.Pokemon
       ApplyChange(new PokemonCaught(location, trainerId, position.Position, position.Box, surname));
     }
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
     public void UseMove(Move move, UsePokemonMovePayload payload)
     {
       ArgumentNullException.ThrowIfNull(move);
@@ -82,7 +83,7 @@ namespace PokeGame.Domain.Pokemon
 
       ApplyChange(new PokemonUsedMove(move.Id, payload));
     }
-    public void Wound(short damage, StatusCondition? statusCondition = null)
+    public void Wound(ushort damage, StatusCondition? statusCondition = null)
     {
       if (CurrentHitPoints == 0)
       {
@@ -150,7 +151,7 @@ namespace PokeGame.Domain.Pokemon
       ComputeStatistics();
 
       CurrentHitPoints = payload.CurrentHitPoints
-        ?? (Statistics.TryGetValue(Statistic.HP, out short totalHitPoints) ? totalHitPoints : (short)0);
+        ?? (Statistics.TryGetValue(Statistic.HP, out ushort totalHitPoints) ? totalHitPoints : (ushort)0);
       StatusCondition = payload.StatusCondition;
 
       Moves.Clear();
@@ -174,10 +175,13 @@ namespace PokeGame.Domain.Pokemon
     {
       HealPokemonPayload payload = @event.Payload;
 
-      CurrentHitPoints += payload.RestoreHitPoints;
-      if (CurrentHitPoints > MaximumHitPoints)
+      if (payload.RestoreHitPoints > MaximumHitPoints || (CurrentHitPoints + payload.RestoreHitPoints > MaximumHitPoints))
       {
         CurrentHitPoints = MaximumHitPoints;
+      }
+      else
+      {
+        CurrentHitPoints += payload.RestoreHitPoints;
       }
 
       if (payload.RemoveAllConditions || payload.StatusCondition == StatusCondition)
@@ -200,12 +204,25 @@ namespace PokeGame.Domain.Pokemon
     }
     protected virtual void Apply(PokemonWounded @event)
     {
-      CurrentHitPoints = (short)((CurrentHitPoints > @event.Damage) ? (CurrentHitPoints - @event.Damage) : 0);
-
-      if (@event.StatusCondition.HasValue)
+      if (CurrentHitPoints > @event.Damage)
       {
-        StatusCondition = @event.StatusCondition.Value;
+        CurrentHitPoints -= @event.Damage;
+
+        if (@event.StatusCondition.HasValue)
+        {
+          StatusCondition = @event.StatusCondition.Value;
+        }
       }
+      else
+      {
+        CurrentHitPoints = 0;
+        StatusCondition = null;
+      }
+    }
+    protected virtual void Apply(UpdatedPokemonCondition @event)
+    {
+      CurrentHitPoints = @event.Payload.CurrentHitPoints;
+      StatusCondition = @event.Payload.StatusCondition;
     }
 
     private void ComputeStatistics()

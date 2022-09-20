@@ -85,6 +85,12 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(await _mediator.Send(new CatchPokemonMutation(id, payload), cancellationToken));
     }
 
+    [HttpPatch("{id}/condition")]
+    public async Task<ActionResult<PokemonModel>> UpdateConditionAsync(Guid id, [FromBody] UpdatePokemonConditionPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new UpdatePokemonConditionMutation(id, payload), cancellationToken));
+    }
+
     [HttpPatch("{id}/heal")]
     public async Task<ActionResult<PokemonModel>> HealAsync(Guid id, [FromBody] HealPokemonPayload payload, CancellationToken cancellationToken)
     {

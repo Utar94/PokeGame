@@ -59,7 +59,7 @@ export default {
                 isBurnt: burn,
                 isCritical: critical,
                 power,
-                random,
+                random: random / 100,
                 stab,
                 weather
               },

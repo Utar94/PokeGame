@@ -21,6 +21,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? StatisticStages { get; set; }
     public short AccuracyStage { get; set; }
     public short EvasionStage { get; set; }
+    public string? VolatileConditions { get; set; }
 
     public string? Notes { get; set; }
     public string? Reference { get; set; }
@@ -49,6 +50,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
         : null;
       AccuracyStage = move.AccuracyStage;
       EvasionStage = move.EvasionStage;
+      VolatileConditions = move.VolatileConditions.Any()
+        ? string.Join('|', move.VolatileConditions)
+        : null;
 
       Notes = move.Notes;
       Reference = move.Reference;

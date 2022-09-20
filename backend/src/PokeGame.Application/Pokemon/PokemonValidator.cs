@@ -59,7 +59,7 @@ namespace PokeGame.Application.Pokemon
         .Must(x => x.Values.Sum(y => y) <= 510);
 
       RuleForEach(x => x.Statistics.Values)
-        .InclusiveBetween((short)0, (short)999);
+        .LessThanOrEqualTo((ushort)999);
 
       RuleFor(x => x.CurrentHitPoints)
         .SetValidator(x => new CurrentHitPointsValidator(x));

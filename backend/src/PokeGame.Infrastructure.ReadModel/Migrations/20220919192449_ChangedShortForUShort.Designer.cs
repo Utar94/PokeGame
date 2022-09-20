@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PokeGame.Infrastructure.ReadModel;
@@ -11,9 +12,10 @@ using PokeGame.Infrastructure.ReadModel;
 namespace PokeGame.Infrastructure.ReadModel.Migrations
 {
     [DbContext(typeof(ReadContext))]
-    partial class ReadContextModelSnapshot : ModelSnapshot
+    [Migration("20220919192449_ChangedShortForUShort")]
+    partial class ChangedShortForUShort
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,9 +265,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
-
-                    b.Property<string>("VolatileConditions")
-                        .HasColumnType("text");
 
                     b.HasKey("Sid");
 

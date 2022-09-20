@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import effectivenessTable from './effectiveness.json'
 import { getPokemonList } from '@/api/pokemon'
+import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
 
 function getStageChange(value, change) {
@@ -95,6 +96,9 @@ export default new Vuex.Store({
     battleMoveTargets({ battle }) {
       return battle.move.targets
     },
+    battleStatus({ battle }) {
+      return battle.status
+    },
     battleStep({ battle }) {
       return battle.step
     },
@@ -136,7 +140,11 @@ export default new Vuex.Store({
     applyBattleMove({ commit, state }) {
       const { battle } = state
       const { accuracy, attack, defense, evasion, specialAttack, specialDefense, speed, volatile } = battle.move.condition
-      const volatileConditions = volatile?.split(',').map(condition => condition.trim()) ?? []
+      const volatileConditions =
+        volatile
+          ?.split(',')
+          .map(condition => condition.trim())
+          .filter(condition => condition.length > 0) ?? []
       for (const id of Object.keys(battle.move.targets)) {
         const status = {
           ...(battle.status[id] ?? {
@@ -231,6 +239,7 @@ export default new Vuex.Store({
       let activePokemon = state.battle.activePokemon
       activePokemon = activePokemon.includes(id) ? activePokemon.filter(pokemon => pokemon !== id) : activePokemon.concat([id])
       commit('setActiveBattlingPokemon', activePokemon)
+      commit('setBattleStatus', { id })
     },
     toggleBattleMove({ commit, state }, move) {
       const { battle } = state
@@ -243,9 +252,15 @@ export default new Vuex.Store({
         commit('setSelectedBattleMove', move)
         if (category === 'Physical' || category === 'Special') {
           const attacker = battle.move.attacker
+          const status = battle.status[attacker.id] ?? {}
+          const attack = Math.floor(
+            category === 'Physical'
+              ? attacker.attack * getStatisticModifier(status.attack ?? 0)
+              : attacker.specialAttack * getStatisticModifier(status.specialAttack ?? 0)
+          )
           const stab = type === attacker.species.primaryType || type === attacker.species.secondaryType
           const damage = {
-            attack: category === 'Physical' ? attacker.attack : attacker.specialAttack,
+            attack,
             burn: attacker.statusCondition === 'Burn' && category === 'Physical' && name !== 'Facade' && attacker.ability.name !== 'Guts',
             critical: false,
             power: power ?? 0,
@@ -273,14 +288,17 @@ export default new Vuex.Store({
       commit('setBattleMoveTargets', null)
     },
     toggleBattleMoveTarget({ commit, state }, pokemon) {
-      const targets = { ...state.battle.move.targets }
+      const { battle } = state
+      const targets = { ...battle.move.targets }
       if (targets[pokemon.id]) {
         delete targets[pokemon.id]
       } else {
-        const modifiers = effectivenessTable[state.battle.move.selected.type] ?? {}
+        const modifiers = effectivenessTable[battle.move.selected.type] ?? {}
         const effectiveness =
           (modifiers[pokemon.species.primaryType] ?? 1) * (pokemon.species.secondaryType ? modifiers[pokemon.species.secondaryType] ?? 1 : 1)
-        const { defense, specialDefense } = pokemon
+        const status = battle.status[pokemon.id] ?? {}
+        const defense = Math.floor(pokemon.defense * getStatisticModifier(status.defense ?? 0))
+        const specialDefense = Math.floor(pokemon.specialDefense * getStatisticModifier(status.specialDefense ?? 0))
         targets[pokemon.id] = { pokemon, defense, specialDefense, effectiveness, otherModifiers: 1 }
       }
       commit('setBattleMoveTargets', targets)
@@ -362,6 +380,22 @@ export default new Vuex.Store({
         target = { ...target, otherModifiers: value }
         commit('setBattleMoveTarget', { id, target })
       }
+    },
+    updateBattlingPokemonStatus({ commit, state }, { id, accuracy, attack, defense, evasion, specialAttack, specialDefense, speed, volatile }) {
+      const status = { ...(state.battle.status[id] ?? {}) }
+      status.accuracy = accuracy ?? status.accuracy
+      status.attack = attack ?? status.attack
+      status.defense = defense ?? status.defense
+      status.evasion = evasion ?? status.evasion
+      status.specialAttack = specialAttack ?? status.specialAttack
+      status.specialDefense = specialDefense ?? status.specialDefense
+      status.speed = speed ?? status.speed
+      status.volatile =
+        volatile
+          ?.split(',')
+          .map(condition => condition.trim())
+          .filter(condition => condition.length > 0) ?? status.volatile
+      commit('setBattleStatus', { id, status })
     },
     updatePokemon({ commit, state }, pokemon) {
       const pokemonList = { ...state.pokemonList }

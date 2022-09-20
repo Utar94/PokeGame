@@ -22,6 +22,7 @@ namespace PokeGame.Application.Moves.Models
     public IEnumerable<StatisticStageModel> StatisticStages { get; set; } = Enumerable.Empty<StatisticStageModel>();
     public short AccuracyStage { get; set; }
     public short EvasionStage { get; set; }
+    public IEnumerable<string> VolatileConditions { get; set; } = Enumerable.Empty<string>();
 
     public string? Notes { get; set; }
     public string? Reference { get; set; }

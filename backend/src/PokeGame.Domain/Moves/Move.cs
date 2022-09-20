@@ -29,6 +29,7 @@ namespace PokeGame.Domain.Moves
     public Dictionary<Statistic, short> StatisticStages { get; private set; } = new();
     public short AccuracyStage { get; private set; }
     public short EvasionStage { get; private set; }
+    public HashSet<string> VolatileConditions { get; private set; } = new();
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -75,6 +76,18 @@ namespace PokeGame.Domain.Moves
 
       AccuracyStage = payload.AccuracyStage;
       EvasionStage = payload.EvasionStage;
+
+      VolatileConditions.Clear();
+      if (payload.VolatileConditions?.Any() == true)
+      {
+        foreach (string condition in payload.VolatileConditions)
+        {
+          if (!string.IsNullOrWhiteSpace(condition))
+          {
+            VolatileConditions.Add(condition.Trim());
+          }
+        }
+      }
 
       Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;

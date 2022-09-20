@@ -75,7 +75,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         Domain.Pokemon.Pokemon targetPokemon = pokemonIndex[target.Id];
 
-        short damage = 0;
+        ushort damage = 0;
         if (move.Category != MoveCategory.Status)
         {
           damage = CalculateDamage(move, pokemon, ability, species, targetPokemon, multipleTargets, payload.Damage!, target);
@@ -91,7 +91,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
     }
 
-    private static short CalculateDamage(
+    private static ushort CalculateDamage(
       Move move,
       Domain.Pokemon.Pokemon attacker,
       Ability ability,
@@ -102,7 +102,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       TargetPayload targetPayload
     )
     {
-      short attack = 0;
+      ushort attack = 0;
       if (payload.Attack.HasValue!)
       {
         attack = payload.Attack.Value;
@@ -116,7 +116,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         attack = attacker.SpecialAttack;
       }
 
-      short defense = 0;
+      ushort defense = 0;
       if (targetPayload.Defense.HasValue)
       {
         defense = targetPayload.Defense.Value;
@@ -193,7 +193,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         damage *= targetPayload.OtherModifiers.Value;
       }
 
-      return (short)Math.Floor(damage);
+      return (ushort)Math.Floor(damage);
     }
   }
 }

@@ -9,18 +9,6 @@
       </condition-select>
       <form-field
         class="col"
-        id="speed"
-        label="statistic.options.Speed"
-        :minValue="-6"
-        :maxValue="6"
-        required
-        :step="1"
-        type="number"
-        :value="battleMoveCondition.speed"
-        @input="updateBattleMoveCondition({ speed: Number($event) })"
-      />
-      <form-field
-        class="col"
         id="accuracy"
         label="battle.makeMove.accuracy"
         :minValue="-6"
@@ -42,6 +30,18 @@
         type="number"
         :value="battleMoveCondition.evasion"
         @input="updateBattleMoveCondition({ evasion: Number($event) })"
+      />
+      <form-field
+        class="col"
+        id="speed"
+        label="statistic.options.Speed"
+        :minValue="-6"
+        :maxValue="6"
+        required
+        :step="1"
+        type="number"
+        :value="battleMoveCondition.speed"
+        @input="updateBattleMoveCondition({ speed: Number($event) })"
       />
     </b-row>
     <b-row>
@@ -96,8 +96,8 @@
     </b-row>
     <form-field
       id="volatile"
-      label="battle.makeMove.volatile.label"
-      placeholder="battle.makeMove.volatile.placeholder"
+      label="moves.volatile.label"
+      placeholder="moves.volatile.placeholder"
       :value="battleMoveCondition.volatile"
       @input="updateBattleMoveCondition({ volatile: $event })"
     />
