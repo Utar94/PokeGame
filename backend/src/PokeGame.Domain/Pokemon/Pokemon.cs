@@ -49,7 +49,8 @@ namespace PokeGame.Domain.Pokemon
 
     public History? History { get; private set; } // TODO(fpion): update => History
     public Guid? OriginalTrainerId { get; private set; } // TODO(fpion): update => History
-    public PokemonPosition? Position { get; private set; } // TODO(fpion): update => Position
+    public byte? Position { get; private set; }
+    public byte? Box { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -57,14 +58,14 @@ namespace PokeGame.Domain.Pokemon
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
 
-    public void Catch(string location, Guid trainerId, PokemonPosition position, string? surname = null)
+    public void Catch(string location, Guid trainerId, byte position, byte? box = null, string? surname = null)
     {
       if (OriginalTrainerId.HasValue || History != null)
       {
         throw new CannotCatchTrainerPokemonException(this);
       }
 
-      ApplyChange(new PokemonCaught(location, trainerId, position.Position, position.Box, surname));
+      ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
     }
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
     public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
@@ -104,7 +105,8 @@ namespace PokeGame.Domain.Pokemon
         TrainerId = @event.TrainerId
       });
 
-      Position = new(@event.Position, @event.Box);
+      Position = @event.Position;
+      Box = @event.Box;
     }
     protected virtual void Apply(PokemonCreated @event)
     {
@@ -147,9 +149,6 @@ namespace PokeGame.Domain.Pokemon
       {
         Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
       }
-
-      SetHistory(payload.History);
-      Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
     }
     protected virtual void Apply(PokemonDeleted @event)
     {
@@ -181,6 +180,8 @@ namespace PokeGame.Domain.Pokemon
       Friendship = payload.Friendship;
 
       CurrentHitPoints = payload.CurrentHitPoints;
+
+      OriginalTrainerId = payload.OriginalTrainerId;
     }
     protected virtual void Apply(PokemonUsedMove @event)
     {
@@ -229,6 +230,10 @@ namespace PokeGame.Domain.Pokemon
       StatusCondition = payload.StatusCondition;
 
       HeldItemId = payload.HeldItemId;
+
+      SetHistory(payload.History);
+      Position = payload.Position;
+      Box = payload.Box;
     }
 
     private void ComputeStatistics()

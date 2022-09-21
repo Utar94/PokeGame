@@ -11,6 +11,35 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
+              <form-field class="col" disabled label="species.select.label" :value="pokemon.species.name">
+                <b-input-group-append>
+                  <icon-button icon="external-link-alt" :href="`/species/${pokemon.species.id}`" target="_blank" variant="info" />
+                </b-input-group-append>
+              </form-field>
+              <form-field class="col" disabled label="abilities.select.label" :value="pokemon.ability.name">
+                <b-input-group-append>
+                  <icon-button icon="external-link-alt" :href="`/abilities/${pokemon.ability.id}`" target="_blank" variant="info" />
+                </b-input-group-append>
+              </form-field>
+            </b-row>
+            <b-row>
+              <form-field class="col" disabled label="pokemon.gender.label" :value="$t(`pokemon.gender.options.${pokemon.gender}`)">
+                <template #prepend>
+                  <b-input-group-prepend is-text><gender-icon :gender="pokemon.gender" /></b-input-group-prepend>
+                </template>
+              </form-field>
+              <form-field class="col" disabled label="pokemon.nature.label" :value="$t(`pokemon.nature.options.${pokemon.nature}`)" />
+            </b-row>
+            <b-row>
+              <form-field class="col" disabled label="pokemon.level" :value="pokemon.level" />
+              <form-field class="col" disabled label="experience" :value="pokemon.experience">
+                <b-input-group-append v-if="pokemon.experienceThreshold" is-text>/&nbsp;{{ pokemon.experienceThreshold }}</b-input-group-append>
+                <b-input-group-append v-if="pokemon.experienceToNextLevel" is-text>
+                  {{ $t('pokemon.experienceToNextLevelFormat', { experience: pokemon.experienceToNextLevel }) }}
+                </b-input-group-append>
+              </form-field>
+            </b-row>
+            <b-row>
               <form-field
                 class="col"
                 id="currentHitPoints"
@@ -40,7 +69,30 @@
               />
               <name-field class="col" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
             </b-row>
+            <item-select id="heldItem" label="pokemon.heldItem" v-model="heldItemId" />
             <description-field v-model="description" />
+          </b-tab>
+          <b-tab :title="$t('pokemon.statistics')">
+            <b-row>
+              <form-field class="col" disabled label="statistic.options.HP" :value="pokemon.maximumHitPoints" />
+              <form-field class="col" disabled label="statistic.options.Attack" :value="pokemon.attack" />
+              <form-field class="col" disabled label="statistic.options.Defense" :value="pokemon.defense" />
+              <form-field class="col" disabled label="statistic.options.SpecialAttack" :value="pokemon.specialAttack" />
+              <form-field class="col" disabled label="statistic.options.SpecialDefense" :value="pokemon.specialDefense" />
+              <form-field class="col" disabled label="statistic.options.Speed" :value="pokemon.speed" />
+            </b-row>
+            <h3 v-t="'pokemon.individualValues.title'" />
+            <b-row>
+              <form-field class="col" disabled label="statistic.options.HP" :value="hpIV" />
+              <form-field class="col" disabled label="statistic.options.Attack" :value="attackIV" />
+              <form-field class="col" disabled label="statistic.options.Defense" :value="defenseIV" />
+              <form-field class="col" disabled label="statistic.options.SpecialAttack" :value="specialAttackIV" />
+              <form-field class="col" disabled label="statistic.options.SpecialDefense" :value="specialDefenseIV" />
+              <form-field class="col" disabled label="statistic.options.Speed" :value="speedIV" />
+            </b-row>
+            <p>
+              <strong>{{ $t('pokemon.individualValues.totalFormat', { total: totalIV }) }}</strong>
+            </p>
             <h3 v-t="'pokemon.effortValues.title'" />
             <span v-if="totalEV > 510" class="text-danger" v-t="'pokemon.effortValues.exceeded'" />
             <b-row>
@@ -116,6 +168,90 @@
               <strong>{{ $t('pokemon.effortValues.totalFormat', { total: totalEV }) }}</strong>
             </p>
           </b-tab>
+          <b-tab :title="$t('pokemon.trainer.title')">
+            <b-row>
+              <trainer-select class="col" id="currentTrainer" label="pokemon.trainer.current" v-model="currentTrainer">
+                <b-input-group-append v-if="currentTrainer">
+                  <icon-button icon="external-link-alt" :href="`/trainers/${currentTrainer.id}`" target="_blank" variant="info" />
+                </b-input-group-append>
+              </trainer-select>
+              <trainer-select
+                class="col"
+                :disabled="!currentTrainer"
+                id="originalTrainer"
+                label="pokemon.trainer.original"
+                :required="Boolean(currentTrainer)"
+                v-model="originalTrainer"
+              >
+                <b-input-group-append v-if="originalTrainer">
+                  <icon-button icon="external-link-alt" :href="`/trainers/${originalTrainer.id}`" target="_blank" variant="info" />
+                </b-input-group-append>
+              </trainer-select>
+            </b-row>
+            <b-row>
+              <form-field
+                class="col"
+                :disabled="!currentTrainer || inParty"
+                id="box"
+                label="pokemon.trainer.box"
+                :minValue="1"
+                :maxValue="32"
+                :required="Boolean(currentTrainer)"
+                :step="1"
+                type="number"
+                v-model.number="box"
+              >
+                <template #after>
+                  <b-form-checkbox ::disabled="!currentTrainer" v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
+                </template>
+              </form-field>
+              <form-field
+                class="col"
+                :disabled="!currentTrainer"
+                id="position"
+                label="pokemon.trainer.position"
+                :minValue="1"
+                :maxValue="inParty ? 6 : 30"
+                :required="Boolean(currentTrainer)"
+                :step="1"
+                type="number"
+                v-model.number="position"
+              />
+            </b-row>
+            <b-row>
+              <form-field
+                class="col"
+                :disabled="!currentTrainer"
+                id="metLevel"
+                label="pokemon.trainer.metLevel"
+                :minValue="1"
+                :maxValue="pokemon.level"
+                :required="Boolean(currentTrainer)"
+                :step="1"
+                type="number"
+                v-model.number="metLevel"
+              />
+              <form-field
+                class="col"
+                :disabled="!currentTrainer"
+                id="metLocation"
+                label="pokemon.trainer.metLocation.label"
+                :maxLength="100"
+                placeholder="pokemon.trainer.metLocation.placeholder"
+                :required="Boolean(currentTrainer)"
+                v-model="metLocation"
+              />
+              <form-datetime
+                class="col"
+                :disabled="!currentTrainer"
+                id="metOn"
+                label="pokemon.trainer.metOn"
+                :required="Boolean(currentTrainer)"
+                validate
+                v-model="metOn"
+              />
+            </b-row>
+          </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <notes-field v-model="notes" />
@@ -129,12 +265,16 @@
 <script>
 import Vue from 'vue'
 import ConditionSelect from './ConditionSelect.vue'
+import ItemSelect from '@/components/Items/ItemSelect.vue'
+import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { updatePokemon } from '@/api/pokemon'
 
 export default {
   name: 'PokemonEdit',
   components: {
-    ConditionSelect
+    ConditionSelect,
+    ItemSelect,
+    TrainerSelect
   },
   props: {
     json: {
@@ -148,7 +288,9 @@ export default {
   },
   data() {
     return {
+      box: 1,
       currentHitPoints: 0,
+      currentTrainer: null,
       description: null,
       effortValues: {
         Attack: 0,
@@ -159,17 +301,31 @@ export default {
         Speed: 0
       },
       friendship: 0,
+      heldItemId: null,
+      inParty: true,
       loading: false,
+      metLevel: 1,
+      metLocation: null,
+      metOn: new Date(),
       notes: null,
+      originalTrainer: null,
       pokemon: null,
+      position: 1,
       reference: null,
+      settingModel: false,
       statusCondition: null,
       surname: null
     }
   },
   computed: {
+    attackIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'Attack')?.value ?? 0
+    },
     canSubmit() {
       return this.totalEV <= 510 && this.hasChanges && !this.loading
+    },
+    defenseIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'Defense')?.value ?? 0
     },
     hasChanges() {
       return (
@@ -177,11 +333,22 @@ export default {
         this.statusCondition !== this.pokemon.statusCondition ||
         this.friendship !== this.pokemon.friendship ||
         (this.surname ?? '') !== (this.pokemon.surname ?? '') ||
+        this.heldItemId !== (this.pokemon.heldItem?.id ?? null) ||
         (this.description ?? '') !== (this.pokemon.description ?? '') ||
+        (this.originalTrainer?.id ?? null) !== (this.pokemon.originalTrainer?.id ?? null) ||
+        (this.currentTrainer?.id ?? null) !== (this.pokemon.history?.trainer.id ?? null) ||
+        (this.inParty ? null : this.box - 1) !== this.pokemon.box ||
+        this.position - 1 !== (this.pokemon.position ?? 0) ||
+        this.metLevel !== (this.pokemon.history?.level ?? 1) ||
+        (this.metLocation ?? '') !== (this.pokemon.history?.location ?? '') ||
+        (this.metOn ?? new Date()) !== (this.pokemon.history?.metOn ?? new Date()) ||
         (this.reference ?? '') !== (this.pokemon.reference ?? '') ||
         (this.notes ?? '') !== (this.pokemon.notes ?? '') ||
         JSON.stringify(this.payload.effortValues) !== JSON.stringify(this.pokemon.effortValues)
       )
+    },
+    hpIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'HP')?.value ?? 0
     },
     name() {
       return `${this.pokemon.surname ?? this.pokemon.species.name} ${this.$i18n.t('pokemon.levelFormat', { level: this.pokemon.level })}`
@@ -191,18 +358,42 @@ export default {
         currentHitPoints: this.currentHitPoints,
         statusCondition: this.statusCondition,
         friendship: this.friendship,
+        heldItemId: this.heldItemId,
         surname: this.surname,
         description: this.description,
         effortValues: Object.entries(this.effortValues)
           .filter(([, value]) => value !== 0)
           .map(([statistic, value]) => ({ statistic, value })),
+        history: this.currentTrainer
+          ? {
+              level: this.metLevel,
+              location: this.metLocation,
+              metOn: this.metOn,
+              trainerId: this.currentTrainer.id
+            }
+          : null,
+        originalTrainerId: this.originalTrainer?.id ?? null,
+        position: this.currentTrainer ? this.position - 1 : null,
+        box: this.currentTrainer && !this.inParty ? this.box - 1 : null,
         reference: this.reference,
         notes: this.notes
       }
       return payload
     },
+    specialAttackIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'SpecialAttack')?.value ?? 0
+    },
+    specialDefenseIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'SpecialDefense')?.value ?? 0
+    },
+    speedIV() {
+      return this.pokemon.individualValues.find(({ statistic }) => statistic === 'Speed')?.value ?? 0
+    },
     totalEV() {
       return Object.values(this.effortValues).reduce((a, b) => a + (b || 0), 0)
+    },
+    totalIV() {
+      return this.pokemon.individualValues.reduce((a, b) => a + (b?.value || 0), 0)
     }
   },
   methods: {
@@ -214,6 +405,7 @@ export default {
     setModel(pokemon) {
       this.pokemon = pokemon
       this.currentHitPoints = pokemon.currentHitPoints
+      this.currentTrainer = pokemon.history?.trainer ?? null
       this.description = pokemon.description
       this.effortValues.Attack = pokemon.effortValues.find(({ statistic }) => statistic === 'Attack')?.value ?? 0
       this.effortValues.Defense = pokemon.effortValues.find(({ statistic }) => statistic === 'Defense')?.value ?? 0
@@ -222,10 +414,21 @@ export default {
       this.effortValues.SpecialDefense = pokemon.effortValues.find(({ statistic }) => statistic === 'SpecialDefense')?.value ?? 0
       this.effortValues.Speed = pokemon.effortValues.find(({ statistic }) => statistic === 'Speed')?.value ?? 0
       this.friendship = pokemon.friendship
+      this.heldItemId = pokemon.heldItem?.id ?? null
+      this.inParty = pokemon.box === null
+      this.metLevel = pokemon.history?.level ?? 1
+      this.metLocation = pokemon.history?.location ?? null
+      this.metOn = pokemon.history?.metOn ?? new Date()
       this.notes = pokemon.notes
+      this.originalTrainer = pokemon.originalTrainer
       this.reference = pokemon.reference
       this.statusCondition = pokemon.statusCondition
       this.surname = pokemon.surname
+
+      Vue.nextTick(() => {
+        this.box = (pokemon.box ?? 0) + 1
+        this.position = (pokemon.position ?? 0) + 1
+      })
     },
     async submit() {
       if (!this.loading) {
@@ -249,6 +452,21 @@ export default {
     this.setModel(JSON.parse(this.json))
     if (this.status === 'created') {
       this.toast('success', 'pokemon.created')
+    }
+  },
+  watch: {
+    currentTrainer(trainer) {
+      if (!trainer) {
+        this.inParty = true
+        this.metLevel = 1
+        this.metLocation = null
+        this.metOn = new Date()
+        this.originalTrainer = null
+      }
+    },
+    inParty() {
+      this.box = 1
+      this.position = 1
     }
   }
 }

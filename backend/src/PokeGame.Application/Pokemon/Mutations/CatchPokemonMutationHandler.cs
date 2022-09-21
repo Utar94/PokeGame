@@ -2,7 +2,6 @@
 using MediatR;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokemon.Models;
-using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Trainers;
 
@@ -32,7 +31,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       Trainer trainer = await _repository.LoadAsync<Trainer>(payload.TrainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
 
-      PokemonPosition position = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
+      Tuple<byte, byte?> positionBox = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
 
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
@@ -41,7 +40,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         pokemon.Heal(payload.Heal);
       }
-      pokemon.Catch(payload.Location, trainer.Id, position, payload.Surname);
+      pokemon.Catch(payload.Location, trainer.Id, positionBox.Item1, positionBox.Item2, payload.Surname);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
@@ -50,7 +49,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
     }
 
-    private async Task<PokemonPosition> FindFirstAvailablePositionAsync(Guid trainerId, CancellationToken cancellationToken)
+    private async Task<Tuple<byte, byte?>> FindFirstAvailablePositionAsync(Guid trainerId, CancellationToken cancellationToken)
     {
       ListModel<PokemonModel> trainerPokemon = await _querier
         .GetPagedAsync(trainerId: trainerId, cancellationToken: cancellationToken);
@@ -58,21 +57,21 @@ namespace PokeGame.Application.Pokemon.Mutations
       HashSet<string> positions = trainerPokemon.Items.Where(x => x.Position.HasValue)
         .Select(x => x.Box.HasValue ? string.Join('_', x.Box.Value, x.Position!.Value) : x.Position!.Value.ToString()).ToHashSet();
 
-      for (int position = 0; position <= 5; position++)
+      for (byte position = 0; position <= 5; position++)
       {
         if (!positions.Contains(position.ToString()))
         {
-          return new PokemonPosition((byte)position);
+          return new(position, null);
         }
       }
 
-      for (int box = 0; box <= 31; box++)
+      for (byte box = 0; box <= 31; box++)
       {
-        for (int position = 0; position <= 29; position++)
+        for (byte position = 0; position <= 29; position++)
         {
           if (!positions.Contains($"{box}_{position}"))
           {
-            return new PokemonPosition((byte)position, (byte)box);
+            return new(position, box);
           }
         }
       }

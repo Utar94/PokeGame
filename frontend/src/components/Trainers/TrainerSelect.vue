@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     onInput($event) {
-      this.$emit('input', this.trainers[$event])
+      this.$emit('input', this.trainers[$event] ?? null)
     }
   },
   async created() {

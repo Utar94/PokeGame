@@ -15,5 +15,9 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public StatusCondition? StatusCondition { get; set; }
 
     public Guid? HeldItemId { get; set; }
+
+    public HistoryPayload? History { get; set; }
+    public byte? Position { get; set; }
+    public byte? Box { get; set; }
   }
 }

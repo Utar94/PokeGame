@@ -23,6 +23,7 @@
     "totalFormat": "Total EV: {total} (max: 510)"
   },
   "empty": "This list is empty.",
+  "experienceToNextLevelFormat": "To Next Level: {experience}",
   "fainted": "Fainted",
   "friendship": "Friendship",
   "gender": {
@@ -90,6 +91,7 @@
       "UpdatedAt": "Updated on"
     }
   },
+  "statistics": "Statistics",
   "surname": {
     "label": "Surname",
     "placeholder": "Enter a surname"
@@ -98,6 +100,7 @@
   "trainer": {
     "box": "Box",
     "boxFormat": "Box {box} ({position})",
+    "current": "Current Trainer",
     "history": "History",
     "inBox": "In Box",
     "location": "Location",
@@ -107,6 +110,7 @@
       "placeholder": "Enter the location"
     },
     "metOn": "Met On",
+    "original": "Original Trainer",
     "party": "In Party",
     "partyFormat": "In Party ({position})",
     "position": "Position",

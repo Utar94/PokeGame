@@ -19,9 +19,5 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public ushort? CurrentHitPoints { get; set; }
 
     public IEnumerable<PokemonMovePayload>? Moves { get; set; }
-
-    public HistoryPayload? History { get; set; }
-    public byte? Position { get; set; }
-    public byte? Box { get; set; }
   }
 }

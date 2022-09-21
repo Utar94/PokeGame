@@ -15,6 +15,7 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
       CreateMap<PokemonEntity, PokemonModel>()
         .IncludeBase<Entity, AggregateModel>()
         .ForMember(x => x.EffortValues, x => x.MapFrom(y => ParseStatisticValues(y.EffortValues)))
+        .ForMember(x => x.ExperienceThreshold, x => x.MapFrom(GetExperienceThreshold))
         .ForMember(x => x.History, x => x.MapFrom(GetHistory))
         .ForMember(x => x.IndividualValues, x => x.MapFrom(y => ParseStatisticValues(y.IndividualValues)))
         .ForMember(x => x.MaximumHitPoints, x => x.MapFrom(y => GetStatistic(y, Statistic.HP)))
@@ -40,6 +41,18 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
       }
 
       return 0;
+    }
+
+    private static int? GetExperienceThreshold(PokemonEntity pokemon, PokemonModel model)
+    {
+      if (pokemon.Species == null)
+      {
+        return null;
+      }
+
+      int threshold = ExperienceTable.GetTotalExperience(pokemon.Species.LevelingRate, pokemon.Level + 1);
+
+      return threshold == 0 ? null : threshold;
     }
 
     private static HistoryModel? GetHistory(PokemonEntity pokemon, PokemonModel model, HistoryModel? member, ResolutionContext context)

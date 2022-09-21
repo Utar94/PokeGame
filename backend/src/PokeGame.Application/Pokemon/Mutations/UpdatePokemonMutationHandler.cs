@@ -3,6 +3,7 @@ using MediatR;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Domain.Items;
 using PokeGame.Domain.Pokemon.Payloads;
+using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
@@ -33,6 +34,16 @@ namespace PokeGame.Application.Pokemon.Mutations
       if (payload.HeldItemId.HasValue && await _repository.LoadAsync<Item>(payload.HeldItemId.Value, cancellationToken) == null)
       {
         throw new EntityNotFoundException<Item>(payload.HeldItemId.Value, nameof(payload.HeldItemId));
+      }
+
+      if (payload.History != null && await _repository.LoadAsync<Trainer>(payload.History.TrainerId, cancellationToken) == null)
+      {
+        throw new EntityNotFoundException<Trainer>(payload.History.TrainerId, $"{nameof(payload.History)}.{nameof(payload.History.TrainerId)}");
+      }
+
+      if (payload.OriginalTrainerId.HasValue && await _repository.LoadAsync<Trainer>(payload.OriginalTrainerId.Value, cancellationToken) == null)
+      {
+        throw new EntityNotFoundException<Trainer>(payload.OriginalTrainerId.Value, nameof(payload.OriginalTrainerId));
       }
 
       pokemon.Update(payload);
