@@ -11,6 +11,7 @@ namespace PokeGame.Web.Filters
     private static readonly Dictionary<Type, string> _codes = new()
     {
       [typeof(CannotCatchTrainerPokemonException)] = "CannotCatchTrainerPokemon",
+      [typeof(CannotSwapPokemonException)] = "CannotSwapPokemon",
       [typeof(CannotWoundFaintedPokemonException)] = "CannotWoundFaintedPokemon",
       [typeof(InsufficientMoneyException)] = "InsufficientMoney",
       [typeof(InsufficientQuantityException)] = "InsufficientQuantity",

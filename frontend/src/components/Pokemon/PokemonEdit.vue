@@ -217,7 +217,12 @@
                 :step="1"
                 type="number"
                 v-model.number="position"
-              />
+              >
+                <b-input-group-append v-if="currentTrainer">
+                  <icon-button icon="exchange-alt" text="pokemon.trainer.swap" variant="primary" v-b-modal.swapModal />
+                  <swap-modal :pokemon="pokemon" :trainerId="currentTrainer.id" @updated="setModel" />
+                </b-input-group-append>
+              </form-field>
             </b-row>
             <b-row>
               <form-field
@@ -267,6 +272,7 @@
 import Vue from 'vue'
 import ConditionSelect from './ConditionSelect.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
+import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { updatePokemon } from '@/api/pokemon'
 
@@ -275,6 +281,7 @@ export default {
   components: {
     ConditionSelect,
     ItemSelect,
+    SwapModal,
     TrainerSelect
   },
   props: {

@@ -28,10 +28,11 @@ namespace PokeGame.Web
       services
         .AddControllersWithViews(options =>
         {
-          options.Filters.Add<ErrorExceptionFilterAttribute>();
           options.Filters.Add<BadRequestExceptionFilterAttribute>();
           options.Filters.Add<ConflictExceptionFilterAttribute>();
+          options.Filters.Add<ErrorExceptionFilterAttribute>();
           options.Filters.Add<NotFoundExceptionFilterAttribute>();
+          options.Filters.Add<ValidationExceptionFilterAttribute>();
         })
         .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
