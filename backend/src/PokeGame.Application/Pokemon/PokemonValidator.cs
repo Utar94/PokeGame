@@ -76,25 +76,19 @@ namespace PokeGame.Application.Pokemon
           .Null();
         RuleFor(x => x.Position)
           .Null();
-        RuleFor(x => x.Box)
-          .Null();
       }).Otherwise(() =>
       {
         RuleFor(x => x.History!)
           .SetValidator(x => new HistoryValidator(x));
         RuleFor(x => x.OriginalTrainerId)
           .NotNull();
-
-        When(x => x.Box == null, () =>
+        
+        RuleFor(x => x.Position)
+          .NotNull();
+        When(x => x.Position != null, () =>
         {
-          RuleFor(x => x.Position)
-            .InclusiveBetween((byte)0, (byte)5);
-        }).Otherwise(() =>
-        {
-          RuleFor(x => x.Box)
-            .InclusiveBetween((byte)0, (byte)31);
-          RuleFor(x => x.Position)
-            .InclusiveBetween((byte)0, (byte)29);
+          RuleFor(x => x.Position!)
+            .SetValidator(new PokemonPositionValidator());
         });
       });
 

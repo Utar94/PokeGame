@@ -133,6 +133,7 @@
           <strong>{{ $t('pokemon.individualValues.totalFormat', { total: totalIV }) }}</strong>
         </p>
         <h3 v-t="'pokemon.trainer.title'" />
+        <b-alert dismissible variant="warning" v-model="positionAlreadyUsed"><strong v-t="'pokemon.trainer.positionAlreadyUsed'" /></b-alert>
         <b-row>
           <trainer-select class="col" v-model="trainer" />
           <form-field
@@ -272,6 +273,7 @@ export default {
       moves: [],
       nature: null,
       position: 1,
+      positionAlreadyUsed: false,
       species: null,
       speciesId: null,
       surname: null,
@@ -319,8 +321,8 @@ export default {
               trainerId: this.trainer.id
             }
           : null,
-        position: this.trainer ? this.position - 1 : null,
-        box: this.trainer && !this.inParty ? this.box - 1 : null
+        position: this.trainer ? this.position : null,
+        box: this.trainer && !this.inParty ? this.box : null
       }
     },
     totalIV() {
@@ -371,13 +373,19 @@ export default {
     async submit() {
       if (!this.loading) {
         this.loading = true
+        this.positionAlreadyUsed = false
         try {
           if (await this.$refs.form.validate()) {
             const { data } = await createPokemon(this.payload)
             window.location.replace(`/pokemon/${data.id}?status=created`)
           }
         } catch (e) {
-          this.handleError(e)
+          const { data, status } = e
+          if (status === 409 && data?.code === 'PositionAlreadyUsed') {
+            this.positionAlreadyUsed = true
+          } else {
+            this.handleError(e)
+          }
         } finally {
           this.loading = false
         }

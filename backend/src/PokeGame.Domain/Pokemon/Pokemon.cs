@@ -45,12 +45,11 @@ namespace PokeGame.Domain.Pokemon
     public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new(); // TODO(fpion): update => Moves
-    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Evolution
+    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Evolution if Method != Item && ItemId != null
 
-    public History? History { get; private set; } // TODO(fpion): update => History
-    public Guid? OriginalTrainerId { get; private set; } // TODO(fpion): update => History
-    public byte? Position { get; private set; }
-    public byte? Box { get; private set; }
+    public History? History { get; private set; }
+    public Guid? OriginalTrainerId { get; private set; }
+    public PokemonPosition? Position { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -105,8 +104,7 @@ namespace PokeGame.Domain.Pokemon
         TrainerId = @event.TrainerId
       });
 
-      Position = @event.Position;
-      Box = @event.Box;
+      Position = new(@event.Position, @event.Box);
     }
     protected virtual void Apply(PokemonCreated @event)
     {
@@ -232,8 +230,7 @@ namespace PokeGame.Domain.Pokemon
       HeldItemId = payload.HeldItemId;
 
       SetHistory(payload.History);
-      Position = payload.Position;
-      Box = payload.Box;
+      Position = payload.Position.HasValue ? new(payload.Position.Value, payload.Box) : null;
     }
 
     private void ComputeStatistics()
@@ -265,6 +262,4 @@ namespace PokeGame.Domain.Pokemon
  * - Gain experience
  * - Level-Up
  * - Moves
- * - Change History => change Current Trainer
- * - Move (Box & Position)
  */

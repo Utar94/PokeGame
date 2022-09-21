@@ -70,8 +70,8 @@
             </td>
             <td>
               <template v-if="item.position !== null">
-                <template v-if="item.box !== null">{{ $t('pokemon.trainer.boxFormat', { box: item.box + 1, position: item.position + 1 }) }}</template>
-                <template v-else>{{ $t('pokemon.trainer.partyFormat', { position: item.position + 1 }) }}</template>
+                <template v-if="item.box !== null">{{ $t('pokemon.trainer.boxFormat', { box: item.box, position: item.position }) }}</template>
+                <template v-else>{{ $t('pokemon.trainer.partyFormat', { position: item.position }) }}</template>
               </template>
               <template v-else>&mdash;</template>
             </td>
@@ -139,7 +139,7 @@ export default {
     params() {
       return {
         gender: this.gender,
-        inBox: this.trainer && this.inBox && this.box >= 1 && this.box <= 32 ? this.box - 1 : null,
+        inBox: this.trainer && this.inBox && this.box >= 1 && this.box <= 32 ? this.box : null,
         inParty: (this.trainer && this.inParty) || null,
         isWild: this.isWild || null,
         search: this.search,

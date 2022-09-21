@@ -25,6 +25,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public List<PokemonEntity> OriginalPokemon { get; private set; } = new();
     public List<PokedexEntity> Pokedex { get; private set; } = new();
     public List<PokemonEntity> Pokemon { get; private set; } = new();
+    public List<PokemonPositionEntity> PokemonPositions { get; private set; } = new();
 
     public InventoryEntity Add(ItemEntity item)
     {

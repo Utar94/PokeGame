@@ -169,6 +169,7 @@
             </p>
           </b-tab>
           <b-tab :title="$t('pokemon.trainer.title')">
+            <b-alert dismissible variant="warning" v-model="positionAlreadyUsed"><strong v-t="'pokemon.trainer.positionAlreadyUsed'" /></b-alert>
             <b-row>
               <trainer-select class="col" id="currentTrainer" label="pokemon.trainer.current" v-model="currentTrainer">
                 <b-input-group-append v-if="currentTrainer">
@@ -202,7 +203,7 @@
                 v-model.number="box"
               >
                 <template #after>
-                  <b-form-checkbox ::disabled="!currentTrainer" v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
+                  <b-form-checkbox :disabled="!currentTrainer" v-model="inParty">{{ $t('pokemon.trainer.party') }}</b-form-checkbox>
                 </template>
               </form-field>
               <form-field
@@ -306,11 +307,12 @@ export default {
       loading: false,
       metLevel: 1,
       metLocation: null,
-      metOn: new Date(),
+      metOn: null,
       notes: null,
       originalTrainer: null,
       pokemon: null,
       position: 1,
+      positionAlreadyUsed: false,
       reference: null,
       settingModel: false,
       statusCondition: null,
@@ -337,11 +339,11 @@ export default {
         (this.description ?? '') !== (this.pokemon.description ?? '') ||
         (this.originalTrainer?.id ?? null) !== (this.pokemon.originalTrainer?.id ?? null) ||
         (this.currentTrainer?.id ?? null) !== (this.pokemon.history?.trainer.id ?? null) ||
-        (this.inParty ? null : this.box - 1) !== this.pokemon.box ||
-        this.position - 1 !== (this.pokemon.position ?? 0) ||
+        (this.inParty ? null : this.box) !== this.pokemon.box ||
+        this.position !== (this.pokemon.position ?? 1) ||
         this.metLevel !== (this.pokemon.history?.level ?? 1) ||
         (this.metLocation ?? '') !== (this.pokemon.history?.location ?? '') ||
-        (this.metOn ?? new Date()) !== (this.pokemon.history?.metOn ?? new Date()) ||
+        this.metOn !== (this.pokemon.history?.metOn ?? null) ||
         (this.reference ?? '') !== (this.pokemon.reference ?? '') ||
         (this.notes ?? '') !== (this.pokemon.notes ?? '') ||
         JSON.stringify(this.payload.effortValues) !== JSON.stringify(this.pokemon.effortValues)
@@ -373,8 +375,8 @@ export default {
             }
           : null,
         originalTrainerId: this.originalTrainer?.id ?? null,
-        position: this.currentTrainer ? this.position - 1 : null,
-        box: this.currentTrainer && !this.inParty ? this.box - 1 : null,
+        position: this.currentTrainer ? this.position : null,
+        box: this.currentTrainer && !this.inParty ? this.box : null,
         reference: this.reference,
         notes: this.notes
       }
@@ -418,7 +420,7 @@ export default {
       this.inParty = pokemon.box === null
       this.metLevel = pokemon.history?.level ?? 1
       this.metLocation = pokemon.history?.location ?? null
-      this.metOn = pokemon.history?.metOn ?? new Date()
+      this.metOn = pokemon.history?.metOn ?? null
       this.notes = pokemon.notes
       this.originalTrainer = pokemon.originalTrainer
       this.reference = pokemon.reference
@@ -426,13 +428,14 @@ export default {
       this.surname = pokemon.surname
 
       Vue.nextTick(() => {
-        this.box = (pokemon.box ?? 0) + 1
-        this.position = (pokemon.position ?? 0) + 1
+        this.box = pokemon.box ?? 1
+        this.position = pokemon.position ?? 1
       })
     },
     async submit() {
       if (!this.loading) {
         this.loading = true
+        this.positionAlreadyUsed = false
         try {
           if (await this.$refs.form.validate()) {
             const { data } = await updatePokemon(this.pokemon.id, this.payload)
@@ -441,7 +444,12 @@ export default {
             this.$refs.form.reset()
           }
         } catch (e) {
-          this.handleError(e)
+          const { data, status } = e
+          if (status === 409 && data?.code == 'PositionAlreadyUsed') {
+            this.positionAlreadyUsed = true
+          } else {
+            this.handleError(e)
+          }
         } finally {
           this.loading = false
         }
@@ -460,7 +468,7 @@ export default {
         this.inParty = true
         this.metLevel = 1
         this.metLocation = null
-        this.metOn = new Date()
+        this.metOn = null
         this.originalTrainer = null
       }
     },

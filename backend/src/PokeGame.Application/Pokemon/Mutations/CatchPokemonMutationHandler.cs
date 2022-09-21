@@ -2,6 +2,7 @@
 using MediatR;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Trainers;
 
@@ -31,7 +32,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       Trainer trainer = await _repository.LoadAsync<Trainer>(payload.TrainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
 
-      Tuple<byte, byte?> positionBox = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
+      PokemonPosition position = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
 
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
@@ -40,7 +41,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         pokemon.Heal(payload.Heal);
       }
-      pokemon.Catch(payload.Location, trainer.Id, positionBox.Item1, positionBox.Item2, payload.Surname);
+      pokemon.Catch(payload.Location, trainer.Id, position.Position, position.Box, payload.Surname);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
@@ -49,7 +50,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
     }
 
-    private async Task<Tuple<byte, byte?>> FindFirstAvailablePositionAsync(Guid trainerId, CancellationToken cancellationToken)
+    private async Task<PokemonPosition> FindFirstAvailablePositionAsync(Guid trainerId, CancellationToken cancellationToken)
     {
       ListModel<PokemonModel> trainerPokemon = await _querier
         .GetPagedAsync(trainerId: trainerId, cancellationToken: cancellationToken);
@@ -61,7 +62,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         if (!positions.Contains(position.ToString()))
         {
-          return new(position, null);
+          return new(position);
         }
       }
 

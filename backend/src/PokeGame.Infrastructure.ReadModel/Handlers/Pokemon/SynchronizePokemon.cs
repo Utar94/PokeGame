@@ -43,6 +43,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         .Include(x => x.HeldItem)
         .Include(x => x.Moves).ThenInclude(x => x.Move)
         .Include(x => x.OriginalTrainer)
+        .Include(x => x.Position)
         .Include(x => x.Species)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -107,10 +108,13 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
           _readContext.Pokemon.Add(entity);
         }
 
-        entity.Synchronize(pokemon);
-
         entity.SetSpecies(species);
         entity.SetAbility(ability);
+        entity.SetHeldItem(heldItem);
+        entity.SetCurrentTrainer(currentTrainer);
+        entity.SetOriginalTrainer(originalTrainer);
+
+        entity.Synchronize(pokemon);
 
         entity.Moves.Clear();
         if (pokemon.Moves.Any())
@@ -135,11 +139,6 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
             }
           }
         }
-
-        entity.SetHeldItem(heldItem);
-
-        entity.SetCurrentTrainer(currentTrainer);
-        entity.SetOriginalTrainer(originalTrainer);
 
         await _readContext.SaveChangesAsync(cancellationToken);
       }

@@ -30,6 +30,7 @@ namespace PokeGame.Web
         {
           options.Filters.Add<ErrorExceptionFilterAttribute>();
           options.Filters.Add<BadRequestExceptionFilterAttribute>();
+          options.Filters.Add<ConflictExceptionFilterAttribute>();
           options.Filters.Add<NotFoundExceptionFilterAttribute>();
         })
         .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

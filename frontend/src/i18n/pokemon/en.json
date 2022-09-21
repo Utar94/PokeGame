@@ -114,6 +114,7 @@
     "party": "In Party",
     "partyFormat": "In Party ({position})",
     "position": "Position",
+    "positionAlreadyUsed": "The Pokémon position (box/party & position) is already used by another Pokémon.",
     "title": "Trainer"
   },
   "updated": "The Pokémon has been updated.",

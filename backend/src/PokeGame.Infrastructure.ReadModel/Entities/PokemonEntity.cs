@@ -36,8 +36,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public int? CurrentTrainerId { get; private set; }
     public TrainerEntity? OriginalTrainer { get; private set; }
     public int? OriginalTrainerId { get; private set; }
-    public byte? Position { get; private set; }
-    public byte? Box { get; private set; }
+    public PokemonPositionEntity? Position { get; private set; }
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
@@ -111,8 +110,13 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       MetAtLevel = pokemon.History?.Level;
       MetLocation = pokemon.History?.Location;
       MetOn = pokemon.History?.MetOn;
-      Position = pokemon.Position;
-      Box = pokemon.Box;
+
+      Position = null;
+      if (this.CurrentTrainer != null && pokemon.Position != null)
+      {
+        Position = new PokemonPositionEntity(this, CurrentTrainer);
+        Position.Synchronize(pokemon.Position);
+      }
 
       Notes = pokemon.Notes;
       Reference = pokemon.Reference;

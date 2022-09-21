@@ -12,7 +12,7 @@
       </template>
       <gender-icon :gender="pokemon.gender" /> {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
       <br />
-      <template v-if="trainer"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</template>
+      <template v-if="trainer"><gender-icon :gender="trainer.gender" /> {{ trainer.name }} ({{ pokemon.position }})</template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
     </td>
     <td><pokemon-condition :pokemon="pokemon" /></td>
