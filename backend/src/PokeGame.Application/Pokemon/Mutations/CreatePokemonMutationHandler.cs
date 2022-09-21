@@ -34,34 +34,7 @@ namespace PokeGame.Application.Pokemon.Mutations
 
       await EnsureHeldItemExistsAsync(payload, cancellationToken);
       await EnsureTrainerExistsAndPositionIsFreeAsync(payload, pokemonId: null, cancellationToken);
-
-      if (payload.Moves != null)
-      {
-        IEnumerable<Guid> moveIds = payload.Moves.Select(x => x.MoveId);
-        Dictionary<Guid, Move> moves = (await Repository.LoadAsync<Move>(moveIds, cancellationToken))
-          .ToDictionary(x => x.Id, x => x);
-
-        var missingIds = new List<Guid>(capacity: moveIds.Count());
-
-        foreach (PokemonMovePayload movePayload in payload.Moves)
-        {
-          if (!moves.TryGetValue(movePayload.MoveId, out Move? move))
-          {
-            missingIds.Add(movePayload.MoveId);
-
-            continue;
-          }
-          else if (movePayload.RemainingPowerPoints > move.PowerPoints)
-          {
-            throw new RemainingPowerPointsExceededException(move, movePayload.RemainingPowerPoints);
-          }
-        }
-
-        if (missingIds.Any())
-        {
-          throw new MovesNotFoundException(missingIds);
-        }
-      }
+      await EnsureMovesAreValidAsync(payload, cancellationToken);
 
       var pokemon = new Domain.Pokemon.Pokemon(payload, species);
       _validator.ValidateAndThrow(pokemon);

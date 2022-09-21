@@ -45,6 +45,7 @@
   "levelFormat": "Lv. {level}",
   "moves": {
     "add": "Add move",
+    "remainingPowerPoints": "Remaining Power Points",
     "title": "Moves"
   },
   "nature": {

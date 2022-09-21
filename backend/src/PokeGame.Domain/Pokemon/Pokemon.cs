@@ -44,7 +44,7 @@ namespace PokeGame.Domain.Pokemon
     public ushort CurrentHitPoints { get; private set; } // TODO(fpion): update => Evolution
     public StatusCondition? StatusCondition { get; private set; }
 
-    public List<PokemonMove> Moves { get; private set; } = new(); // TODO(fpion): update => Moves
+    public List<PokemonMove> Moves { get; private set; } = new();
     public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Evolution if Method != Item && ItemId != null
 
     public History? History { get; private set; }
@@ -143,11 +143,7 @@ namespace PokeGame.Domain.Pokemon
       CurrentHitPoints = payload.CurrentHitPoints
         ?? (Statistics.TryGetValue(Statistic.HP, out ushort totalHitPoints) ? totalHitPoints : (ushort)0);
 
-      Moves.Clear();
-      if (payload.Moves?.Any() == true)
-      {
-        Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
-      }
+      SetMoves(payload);
     }
     protected virtual void Apply(PokemonDeleted @event)
     {
@@ -185,6 +181,11 @@ namespace PokeGame.Domain.Pokemon
       CurrentHitPoints = payload.CurrentHitPoints;
 
       OriginalTrainerId = payload.OriginalTrainerId;
+
+      if (@event.Payload.Moves != null)
+      {
+        SetMoves(@event.Payload);
+      } // TODO(fpion): refactor
     }
     protected virtual void Apply(PokemonUsedMove @event)
     {
@@ -257,6 +258,15 @@ namespace PokeGame.Domain.Pokemon
       }
     }
 
+    private void SetMoves(SavePokemonPayload payload)
+    {
+      Moves.Clear();
+      if (payload.Moves?.Any() == true)
+      {
+        Moves.AddRange(payload.Moves.Select(move => new PokemonMove(move)));
+      }
+    }
+
     public override string ToString() => $"{Surname ?? SpeciesName} | {base.ToString()}";
   }
 }
@@ -266,5 +276,4 @@ namespace PokeGame.Domain.Pokemon
  * - Evolution (SpeciesId change => AbilityId, BaseStatistics, LevelingRate, SpeciesName can change), Moves, Statistics
  * - Gain experience
  * - Level-Up
- * - Moves
  */

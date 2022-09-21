@@ -117,6 +117,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         entity.Synchronize(pokemon);
 
         entity.Moves.Clear();
+
+        await _readContext.SaveChangesAsync(cancellationToken);
+
         if (pokemon.Moves.Any())
         {
           IEnumerable<Guid> moveIds = pokemon.Moves.Select(x => x.MoveId);
@@ -138,9 +141,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
               entity.Add(move, pokemonMove);
             }
           }
-        }
 
-        await _readContext.SaveChangesAsync(cancellationToken);
+          await _readContext.SaveChangesAsync(cancellationToken);
+        }
       }
 
       return entity;

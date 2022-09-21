@@ -330,13 +330,9 @@ export default {
     }
   },
   methods: {
-    async addMove() {
-      try {
-        this.moves.push(this.move)
-        this.move = null
-      } catch (e) {
-        this.handleError(e)
-      }
+    addMove() {
+      this.moves.push(this.move)
+      this.move = null
     },
     randomAbility() {
       const index = Math.floor(Math.random() * this.species.abilities.length)

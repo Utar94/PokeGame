@@ -168,6 +168,55 @@
               <strong>{{ $t('pokemon.effortValues.totalFormat', { total: totalEV }) }}</strong>
             </p>
           </b-tab>
+          <b-tab :title="$t('pokemon.moves.title')">
+            <b-row>
+              <move-select class="col-6" :disabled="moves.length === 4" :exclude="moveIds" v-model="move">
+                <b-input-group-append>
+                  <icon-button :disabled="!move" icon="plus" text="pokemon.moves.add" variant="success" @click="addMove" />
+                </b-input-group-append>
+              </move-select>
+            </b-row>
+            <table v-if="moves.length" class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" />
+                  <th scope="col" v-t="'name.label'" />
+                  <th scope="col" v-t="'type.label'" />
+                  <th scope="col" v-t="'moves.category.label'" />
+                  <th scope="col" v-t="'moves.powerPoints.label'" />
+                  <th scope="col" />
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(move, index) in moves" :key="move.id">
+                  <td>
+                    <icon-button class="mx-1" :disabled="index === 0" icon="arrow-up" variant="primary" @click="swapMoves(index, index - 1)" />
+                    <icon-button class="mx-1" :disabled="index === moves.length - 1" icon="arrow-down" variant="primary" @click="swapMoves(index, index + 1)" />
+                  </td>
+                  <td v-text="move.name" />
+                  <td>{{ $t(`type.options.${move.type}`) }}</td>
+                  <td>{{ $t(`moves.category.options.${move.category}`) }}</td>
+                  <td>
+                    <form-field
+                      hideLabel
+                      :id="`remainingPowerPoints_${index}`"
+                      label="pokemon.moves.remainingPowerPoints"
+                      :minValue="0"
+                      :maxValue="move.powerPoints"
+                      required
+                      :step="1"
+                      type="number"
+                      :value="move.remainingPowerPoints"
+                      @input="updateRemainingPowerPoints(index, $event)"
+                    >
+                      <b-input-group-append is-text>/&nbsp;{{ move.powerPoints }}</b-input-group-append>
+                    </form-field>
+                  </td>
+                  <td><icon-button icon="times" variant="danger" @click="removeMove(index)" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </b-tab>
           <b-tab :title="$t('pokemon.trainer.title')">
             <b-alert dismissible variant="warning" v-model="positionAlreadyUsed"><strong v-t="'pokemon.trainer.positionAlreadyUsed'" /></b-alert>
             <b-row>
@@ -272,6 +321,7 @@
 import Vue from 'vue'
 import ConditionSelect from './ConditionSelect.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
+import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { updatePokemon } from '@/api/pokemon'
@@ -281,6 +331,7 @@ export default {
   components: {
     ConditionSelect,
     ItemSelect,
+    MoveSelect,
     SwapModal,
     TrainerSelect
   },
@@ -315,6 +366,8 @@ export default {
       metLevel: 1,
       metLocation: null,
       metOn: null,
+      move: null,
+      moves: [],
       notes: null,
       originalTrainer: null,
       pokemon: null,
@@ -344,6 +397,8 @@ export default {
         (this.surname ?? '') !== (this.pokemon.surname ?? '') ||
         this.heldItemId !== (this.pokemon.heldItem?.id ?? null) ||
         (this.description ?? '') !== (this.pokemon.description ?? '') ||
+        JSON.stringify(this.payload.effortValues) !== JSON.stringify(this.pokemon.effortValues) ||
+        this.hasMovesChanged ||
         (this.originalTrainer?.id ?? null) !== (this.pokemon.originalTrainer?.id ?? null) ||
         (this.currentTrainer?.id ?? null) !== (this.pokemon.history?.trainer.id ?? null) ||
         (this.inParty ? null : this.box) !== this.pokemon.box ||
@@ -352,12 +407,21 @@ export default {
         (this.metLocation ?? '') !== (this.pokemon.history?.location ?? '') ||
         this.metOn !== (this.pokemon.history?.metOn ?? null) ||
         (this.reference ?? '') !== (this.pokemon.reference ?? '') ||
-        (this.notes ?? '') !== (this.pokemon.notes ?? '') ||
-        JSON.stringify(this.payload.effortValues) !== JSON.stringify(this.pokemon.effortValues)
+        (this.notes ?? '') !== (this.pokemon.notes ?? '')
       )
+    },
+    hasMovesChanged() {
+      const oldMoves = this.orderBy(this.pokemon.moves, 'position')
+        .map(({ move, remainingPowerPoints }) => `${move.id}:${remainingPowerPoints}`)
+        .join('|')
+      const newMoves = this.moves.map(({ id, remainingPowerPoints }) => `${id}:${remainingPowerPoints}`).join('|')
+      return oldMoves !== newMoves
     },
     hpIV() {
       return this.pokemon.individualValues.find(({ statistic }) => statistic === 'HP')?.value ?? 0
+    },
+    moveIds() {
+      return this.moves.map(({ id }) => id)
     },
     name() {
       return `${this.pokemon.surname ?? this.pokemon.species.name} ${this.$i18n.t('pokemon.levelFormat', { level: this.pokemon.level })}`
@@ -373,6 +437,11 @@ export default {
         effortValues: Object.entries(this.effortValues)
           .filter(([, value]) => value !== 0)
           .map(([statistic, value]) => ({ statistic, value })),
+        moves: this.moves.map(({ id, remainingPowerPoints }, position) => ({
+          moveId: id,
+          position,
+          remainingPowerPoints
+        })),
         history: this.currentTrainer
           ? {
               level: this.metLevel,
@@ -406,10 +475,19 @@ export default {
     }
   },
   methods: {
+    addMove() {
+      const move = { ...this.move }
+      move.remainingPowerPoints = move.powerPoints
+      this.moves.push(move)
+      this.move = null
+    },
     clearEV() {
       for (const key of Object.keys(this.effortValues)) {
         Vue.set(this.effortValues, key, 0)
       }
+    },
+    removeMove(index) {
+      Vue.delete(this.moves, index)
     },
     setModel(pokemon) {
       this.pokemon = pokemon
@@ -428,6 +506,7 @@ export default {
       this.metLevel = pokemon.history?.level ?? 1
       this.metLocation = pokemon.history?.location ?? null
       this.metOn = pokemon.history?.metOn ?? null
+      this.moves = this.orderBy(pokemon.moves, 'position').map(({ move, remainingPowerPoints }) => ({ ...move, remainingPowerPoints }))
       this.notes = pokemon.notes
       this.originalTrainer = pokemon.originalTrainer
       this.reference = pokemon.reference
@@ -461,6 +540,16 @@ export default {
           this.loading = false
         }
       }
+    },
+    swapMoves(a, b) {
+      const temp = this.moves[a]
+      Vue.set(this.moves, a, this.moves[b])
+      Vue.set(this.moves, b, temp)
+    },
+    updateRemainingPowerPoints(index, remainingPowerPoints) {
+      const move = { ...this.moves[index] }
+      move.remainingPowerPoints = remainingPowerPoints
+      Vue.set(this.moves, index, move)
     }
   },
   created() {

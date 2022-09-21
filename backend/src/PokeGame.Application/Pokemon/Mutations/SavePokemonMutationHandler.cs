@@ -1,5 +1,7 @@
-﻿using PokeGame.Application.Pokemon.Models;
+﻿using PokeGame.Application.Moves;
+using PokeGame.Application.Pokemon.Models;
 using PokeGame.Domain.Items;
+using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Trainers;
@@ -22,6 +24,37 @@ namespace PokeGame.Application.Pokemon.Mutations
       if (payload.HeldItemId.HasValue && await Repository.LoadAsync<Item>(payload.HeldItemId.Value, cancellationToken) == null)
       {
         throw new EntityNotFoundException<Item>(payload.HeldItemId.Value, nameof(payload.HeldItemId));
+      }
+    }
+
+    protected async Task EnsureMovesAreValidAsync(SavePokemonPayload payload, CancellationToken cancellationToken)
+    {
+      if (payload.Moves != null)
+      {
+        IEnumerable<Guid> moveIds = payload.Moves.Select(x => x.MoveId);
+        Dictionary<Guid, Move> moves = (await Repository.LoadAsync<Move>(moveIds, cancellationToken))
+          .ToDictionary(x => x.Id, x => x);
+
+        var missingIds = new List<Guid>(capacity: moveIds.Count());
+
+        foreach (PokemonMovePayload movePayload in payload.Moves)
+        {
+          if (!moves.TryGetValue(movePayload.MoveId, out Move? move))
+          {
+            missingIds.Add(movePayload.MoveId);
+
+            continue;
+          }
+          else if (movePayload.RemainingPowerPoints > move.PowerPoints)
+          {
+            throw new RemainingPowerPointsExceededException(move, movePayload.RemainingPowerPoints);
+          }
+        }
+
+        if (missingIds.Any())
+        {
+          throw new MovesNotFoundException(missingIds);
+        }
       }
     }
 
