@@ -28,6 +28,7 @@ namespace PokeGame.Application.Pokemon.Mutations
 
       await EnsureHeldItemExistsAsync(payload, cancellationToken);
       await EnsureTrainerExistsAndPositionIsFreeAsync(payload, pokemon.Id, cancellationToken);
+      await EnsureMovesAreValidAsync(payload, cancellationToken);
 
       if (payload.OriginalTrainerId.HasValue && await Repository.LoadAsync<Trainer>(payload.OriginalTrainerId.Value, cancellationToken) == null)
       {
