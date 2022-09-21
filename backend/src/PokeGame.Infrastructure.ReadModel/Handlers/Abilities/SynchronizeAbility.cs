@@ -8,9 +8,9 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Abilities
   internal class SynchronizeAbility
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Ability> _repository;
+    private readonly IRepository _repository;
 
-    public SynchronizeAbility(ReadContext readContext, IRepository<Ability> repository)
+    public SynchronizeAbility(ReadContext readContext, IRepository repository)
     {
       _readContext = readContext;
       _repository = repository;
@@ -26,7 +26,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Abilities
         return entity;
       }
 
-      Ability? ability = await _repository.LoadAsync(id, version, cancellationToken);
+      Ability? ability = await _repository.LoadAsync<Ability>(id, version, cancellationToken);
       if (ability != null)
       {
         if (entity == null)
@@ -49,7 +49,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Abilities
         .Where(x => ids.Contains(x.Id))
         .ToDictionaryAsync(x => x.Id, x => x, cancellationToken);
 
-      IEnumerable<Ability> abilities = await _repository.LoadAsync(ids, cancellationToken);
+      IEnumerable<Ability> abilities = await _repository.LoadAsync<Ability>(ids, cancellationToken);
       foreach (Ability ability in abilities)
       {
         if (entities.TryGetValue(ability.Id, out AbilityEntity? entity))

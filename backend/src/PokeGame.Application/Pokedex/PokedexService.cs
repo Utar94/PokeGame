@@ -8,9 +8,9 @@ namespace PokeGame.Application.Pokedex
   internal class PokedexService : IPokedexService
   {
     private readonly IPokedexQuerier _querier;
-    private readonly IRepository<Trainer> _repository;
+    private readonly IRepository _repository;
 
-    public PokedexService(IPokedexQuerier querier, IRepository<Trainer> repository)
+    public PokedexService(IPokedexQuerier querier, IRepository repository)
     {
       _querier = querier;
       _repository = repository;
@@ -18,7 +18,7 @@ namespace PokeGame.Application.Pokedex
 
     public async Task DeleteAsync(Guid trainerId, Guid speciesId, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _repository.LoadAsync(trainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(trainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(trainerId);
 
       trainer.RemovePokedex(speciesId);
@@ -44,7 +44,7 @@ namespace PokeGame.Application.Pokedex
 
     public async Task<PokedexModel> SaveAsync(Guid trainerId, Guid speciesId, bool hasCaught, CancellationToken cancellationToken)
     {
-      Trainer trainer = await _repository.LoadAsync(trainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(trainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(trainerId);
 
       trainer.SavePokedex(speciesId, hasCaught);

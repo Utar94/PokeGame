@@ -22,6 +22,9 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
     public async Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Item)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Move)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 

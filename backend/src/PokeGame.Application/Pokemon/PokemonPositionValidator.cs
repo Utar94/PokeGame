@@ -7,16 +7,16 @@ namespace PokeGame.Application.Pokemon
   {
     public PokemonPositionValidator()
     {
-      When(x => x.Box == null, () =>
+      When(x => x.Box.HasValue, () =>
       {
+        RuleFor(x => x.Box!.Value)
+          .InclusiveBetween((byte)1, (byte)32);
         RuleFor(x => x.Position)
-          .InclusiveBetween((byte)0, (byte)5);
+          .InclusiveBetween((byte)1, (byte)30);
       }).Otherwise(() =>
       {
-        RuleFor(x => x.Box)
-          .InclusiveBetween((byte)0, (byte)31);
         RuleFor(x => x.Position)
-          .InclusiveBetween((byte)0, (byte)29);
+          .InclusiveBetween((byte)1, (byte)6);
       });
     }
   }

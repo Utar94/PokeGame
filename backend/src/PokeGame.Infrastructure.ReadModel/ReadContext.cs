@@ -14,12 +14,14 @@ namespace PokeGame.Infrastructure.ReadModel
     }
 
     internal DbSet<AbilityEntity> Abilities { get; private set; } = null!;
+    internal DbSet<EvolutionEntity> Evolutions { get; private set; } = null!;
     internal DbSet<InventoryEntity> Inventory { get; private set; } = null!;
     internal DbSet<ItemEntity> Items { get; private set; } = null!;
     internal DbSet<MoveEntity> Moves { get; private set; } = null!;
     internal DbSet<PokedexEntity> Pokedex { get; private set; } = null!;
     internal DbSet<PokemonEntity> Pokemon { get; private set; } = null!;
     internal DbSet<PokemonMoveEntity> PokemonMoves { get; private set; } = null!;
+    internal DbSet<PokemonPositionEntity> PokemonPositions { get; private set; } = null!;
     internal DbSet<SpeciesEntity> Species { get; private set; } = null!;
     internal DbSet<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = null!;
     internal DbSet<TrainerEntity> Trainers { get; private set; } = null!;

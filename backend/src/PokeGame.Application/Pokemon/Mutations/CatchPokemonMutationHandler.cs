@@ -11,20 +11,17 @@ namespace PokeGame.Application.Pokemon.Mutations
   internal class CatchPokemonMutationHandler : IRequestHandler<CatchPokemonMutation, PokemonModel>
   {
     private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
-    private readonly IRepository<Trainer> _trainerRepository;
+    private readonly IRepository _repository;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public CatchPokemonMutationHandler(
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
-      IRepository<Trainer> trainerRepository,
+      IRepository repository,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
       _querier = querier;
       _repository = repository;
-      _trainerRepository = trainerRepository;
       _validator = validator;
     }
 
@@ -32,19 +29,19 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       CatchPokemonPayload payload = request.Payload;
 
-      Trainer trainer = await _trainerRepository.LoadAsync(payload.TrainerId, cancellationToken)
+      Trainer trainer = await _repository.LoadAsync<Trainer>(payload.TrainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
 
       PokemonPosition position = await FindFirstAvailablePositionAsync(trainer.Id, cancellationToken);
 
-      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync(request.Id, cancellationToken)
+      Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
       if (payload.Heal != null)
       {
         pokemon.Heal(payload.Heal);
       }
-      pokemon.Catch(payload.Location, trainer.Id, position, payload.Surname);
+      pokemon.Catch(payload.Location, trainer.Id, position.Position, position.Box, payload.Surname);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
@@ -61,21 +58,21 @@ namespace PokeGame.Application.Pokemon.Mutations
       HashSet<string> positions = trainerPokemon.Items.Where(x => x.Position.HasValue)
         .Select(x => x.Box.HasValue ? string.Join('_', x.Box.Value, x.Position!.Value) : x.Position!.Value.ToString()).ToHashSet();
 
-      for (int position = 0; position <= 5; position++)
+      for (byte position = 0; position <= 5; position++)
       {
         if (!positions.Contains(position.ToString()))
         {
-          return new PokemonPosition((byte)position);
+          return new(position);
         }
       }
 
-      for (int box = 0; box <= 31; box++)
+      for (byte box = 0; box <= 31; box++)
       {
-        for (int position = 0; position <= 29; position++)
+        for (byte position = 0; position <= 29; position++)
         {
           if (!positions.Contains($"{box}_{position}"))
           {
-            return new PokemonPosition((byte)position, (byte)box);
+            return new(position, box);
           }
         }
       }

@@ -17,7 +17,7 @@
         <gender-icon :gender="trainer.gender" />
         {{ ' ' }}
         <b-link :href="`/trainers/${trainer.id}`" target="_blank">
-          {{ trainer.name }} ({{ pokemon.position + 1 }}) <font-awesome-icon icon="external-link-alt" />
+          {{ trainer.name }} ({{ pokemon.position }}) <font-awesome-icon icon="external-link-alt" />
         </b-link>
       </template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>

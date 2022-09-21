@@ -16,6 +16,8 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
         .ForMember(x => x.Abilities, x => x.MapFrom(GetAbilities))
         .ForMember(x => x.BaseStatistics, x => x.MapFrom(GetBaseStatistics))
         .ForMember(x => x.EvYield, x => x.MapFrom(GetEvYield));
+      CreateMap<EvolutionEntity, EvolutionModel>()
+        .ForMember(x => x.Species, x => x.MapFrom(y => y.EvolvedSpecies));
     }
 
     private static IEnumerable<AbilityModel> GetAbilities(SpeciesEntity species, SpeciesModel model, IEnumerable<AbilityModel> abilities, ResolutionContext context)

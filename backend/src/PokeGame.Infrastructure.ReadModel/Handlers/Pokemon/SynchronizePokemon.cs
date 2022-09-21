@@ -12,7 +12,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
   internal class SynchronizePokemon
   {
     private readonly ReadContext _readContext;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
+    private readonly IRepository _repository;
     private readonly SynchronizeItem _synchronizeItem;
     private readonly SynchronizeMove _synchronizeMove;
     private readonly SynchronizeSpecies _synchronizeSpecies;
@@ -20,7 +20,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
 
     public SynchronizePokemon(
       ReadContext readContext,
-      IRepository<Domain.Pokemon.Pokemon> repository,
+      IRepository repository,
       SynchronizeItem synchronizeItem,
       SynchronizeMove synchronizeMove,
       SynchronizeSpecies synchronizeSpecies,
@@ -43,6 +43,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         .Include(x => x.HeldItem)
         .Include(x => x.Moves).ThenInclude(x => x.Move)
         .Include(x => x.OriginalTrainer)
+        .Include(x => x.Position)
         .Include(x => x.Species)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -51,7 +52,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         return entity;
       }
 
-      Domain.Pokemon.Pokemon? pokemon = await _repository.LoadAsync(id, version, cancellationToken);
+      Domain.Pokemon.Pokemon? pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(id, version, cancellationToken);
       if (pokemon != null)
       {
         SpeciesEntity? species = await _readContext.Species
@@ -107,12 +108,13 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
           _readContext.Pokemon.Add(entity);
         }
 
-        entity.Synchronize(pokemon);
+        entity.SetSpecies(species);
+        entity.SetAbility(ability);
+        entity.SetHeldItem(heldItem);
+        entity.SetCurrentTrainer(currentTrainer);
+        entity.SetOriginalTrainer(originalTrainer);
 
-        entity.Species = species;
-        entity.SpeciesId = species.Sid;
-        entity.Ability = ability;
-        entity.AbilityId = ability.Sid;
+        entity.Synchronize(pokemon);
 
         entity.Moves.Clear();
         if (pokemon.Moves.Any())
@@ -133,24 +135,10 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
           {
             if (moveIndex.TryGetValue(pokemonMove.MoveId, out MoveEntity? move))
             {
-              entity.Moves.Add(new PokemonMoveEntity
-              {
-                Move = move,
-                MoveId = move.Sid,
-                Position = pokemonMove.Position,
-                RemainingPowerPoints = pokemonMove.RemainingPowerPoints
-              });
+              entity.Add(move, pokemonMove);
             }
           }
         }
-
-        entity.HeldItem = heldItem;
-        entity.HeldItemId = heldItem?.Sid;
-
-        entity.CurrentTrainer = currentTrainer;
-        entity.CurrentTrainerId = currentTrainer?.Sid;
-        entity.OriginalTrainer = originalTrainer;
-        entity.CurrentTrainerId = originalTrainer?.Sid;
 
         await _readContext.SaveChangesAsync(cancellationToken);
       }

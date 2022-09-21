@@ -9,21 +9,21 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
   internal class SynchronizePokedex
   {
     private readonly ReadContext _readContext;
+    private readonly IRepository _repository;
     private readonly SynchronizeSpecies _synchronizeSpecies;
     private readonly SynchronizeTrainer _synchronizeTrainer;
-    private readonly IRepository<Trainer> _trainerRepository;
 
     public SynchronizePokedex(
       ReadContext readContext,
+      IRepository repository,
       SynchronizeSpecies synchronizeSpecies,
-      SynchronizeTrainer synchronizeTrainer,
-      IRepository<Trainer> trainerRepository
+      SynchronizeTrainer synchronizeTrainer
     )
     {
       _readContext = readContext;
+      _repository = repository;
       _synchronizeSpecies = synchronizeSpecies;
       _synchronizeTrainer = synchronizeTrainer;
-      _trainerRepository = trainerRepository;
     }
 
     public async Task<PokedexEntity?> ExecuteAsync(Guid trainerId, Guid speciesId, int version, CancellationToken cancellationToken = default)
@@ -41,19 +41,10 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
         return null;
       }
 
-      PokedexEntity? entity = trainerEntity.Pokedex.SingleOrDefault(x => x.SpeciesId == species.Sid);
-      if (entity == null)
-      {
-        entity = new PokedexEntity
-        {
-          Species = species,
-          SpeciesId = species.Sid
-        };
+      PokedexEntity entity = trainerEntity.Pokedex.SingleOrDefault(x => x.SpeciesId == species.Sid)
+        ?? trainerEntity.AddPokedex(species);
 
-        trainerEntity.Pokedex.Add(entity);
-      }
-
-      Trainer? trainer = await _trainerRepository.LoadAsync(trainerId, version, cancellationToken);
+      Trainer? trainer = await _repository.LoadAsync<Trainer>(trainerId, version, cancellationToken);
       if (trainer == null)
       {
         return null;
@@ -61,8 +52,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
 
       if (trainer.Pokedex.TryGetValue(species.Id, out PokedexEntry? entry))
       {
-        entity.HasCaught = entry.HasCaught;
-        entity.UpdatedAt = entry.UpdatedAt;
+        entity.Synchronize(entry);
       }
       else
       {

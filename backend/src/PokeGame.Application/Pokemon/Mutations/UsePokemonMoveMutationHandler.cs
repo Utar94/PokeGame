@@ -13,29 +13,20 @@ namespace PokeGame.Application.Pokemon.Mutations
   {
     private static readonly Random _random = new();
 
-    private readonly IRepository<Ability> _abilityRepository;
-    private readonly IRepository<Move> _moveRepository;
     private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
-    private readonly IRepository<Domain.Species.Species> _speciesRepository;
+    private readonly IRepository _repository;
     private readonly IValidator<UsePokemonMovePayload> _usePokemonMoveValidator;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public UsePokemonMoveMutationHandler(
-      IRepository<Ability> abilityRepository,
-      IRepository<Move> moveRepository,
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
-      IRepository<Domain.Species.Species> speciesRepository,
+      IRepository repository,
       IValidator<UsePokemonMovePayload> usePokemonMoveValidator,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
-      _abilityRepository = abilityRepository;
-      _moveRepository = moveRepository;
       _querier = querier;
       _repository = repository;
-      _speciesRepository = speciesRepository;
       _usePokemonMoveValidator = usePokemonMoveValidator;
       _validator = validator;
     }
@@ -44,7 +35,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       UsePokemonMovePayload payload = request.Payload;
 
-      Move move = await _moveRepository.LoadAsync(request.MoveId, cancellationToken)
+      Move move = await _repository.LoadAsync<Move>(request.MoveId, cancellationToken)
         ?? throw new EntityNotFoundException<Move>(request.MoveId);
 
       var context = ValidationContext<UsePokemonMovePayload>.CreateWithOptions(payload, options => options.ThrowOnFailures());
@@ -52,7 +43,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       _usePokemonMoveValidator.Validate(context);
 
       HashSet<Guid> pokemonIds = new[] { request.Id }.Concat(payload.Targets!.Select(x => x.Id)).ToHashSet();
-      Dictionary<Guid, Domain.Pokemon.Pokemon> pokemonIndex = (await _repository.LoadAsync(pokemonIds, cancellationToken))
+      Dictionary<Guid, Domain.Pokemon.Pokemon> pokemonIndex = (await _repository.LoadAsync<Domain.Pokemon.Pokemon>(pokemonIds, cancellationToken))
         .ToDictionary(x => x.Id, x => x);
 
       IEnumerable<Guid> missingIds = pokemonIds.Except(pokemonIndex.Keys).Distinct();
@@ -65,9 +56,9 @@ namespace PokeGame.Application.Pokemon.Mutations
       pokemon.UseMove(move, payload);
       _validator.ValidateAndThrow(pokemon);
 
-      Ability ability = await _abilityRepository.LoadAsync(pokemon.AbilityId, cancellationToken)
+      Ability ability = await _repository.LoadAsync<Ability>(pokemon.AbilityId, cancellationToken)
         ?? throw new EntityNotFoundException<Ability>(pokemon.AbilityId);
-      Domain.Species.Species species = await _speciesRepository.LoadAsync(pokemon.SpeciesId, cancellationToken)
+      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(pokemon.SpeciesId, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(pokemon.SpeciesId);
 
       bool multipleTargets = payload.Targets!.Count() > 1;

@@ -41,6 +41,7 @@ namespace PokeGame.Domain.Species
     public string? Reference { get; private set; }
 
     public List<Guid> AbilityIds { get; private set; } = new();
+    public List<Evolution> Evolutions { get; private set; } = new();
 
     public void Delete() => ApplyChange(new SpeciesDeleted());
     public void Update(UpdateSpeciesPayload payload) => ApplyChange(new SpeciesUpdated(payload));
@@ -104,6 +105,29 @@ namespace PokeGame.Domain.Species
       if (payload.AbilityIds != null)
       {
         AbilityIds.AddRange(payload.AbilityIds);
+      }
+
+      Evolutions.Clear();
+      if (payload.Evolutions != null)
+      {
+        foreach (EvolutionPayload evolution in payload.Evolutions)
+        {
+          switch (evolution.Method)
+          {
+            case EvolutionMethod.Item:
+              Evolutions.Add(Evolution.Item(evolution.SpeciesId, evolution.ItemId ?? default, evolution.Gender, evolution.Region, evolution.Notes));
+              break;
+            case EvolutionMethod.LevelUp:
+              Evolutions.Add(Evolution.LevelUp(evolution.SpeciesId, evolution.Gender, evolution.HighFriendship, evolution.ItemId,
+                evolution.Level, evolution.Location, evolution.MoveId, evolution.Region, evolution.TimeOfDay, evolution.Notes));
+              break;
+            case EvolutionMethod.Trade:
+              Evolutions.Add(Evolution.Trade(evolution.SpeciesId, evolution.ItemId, evolution.Notes));
+              break;
+            default:
+              throw new ArgumentException($"The evolution method '{evolution.Method}' is not supported.", nameof(payload));
+          }
+        }
       }
     }
 

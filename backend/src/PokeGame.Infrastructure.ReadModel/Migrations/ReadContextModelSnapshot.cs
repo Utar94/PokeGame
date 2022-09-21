@@ -84,6 +84,62 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Abilities", "ReadModel");
                 });
 
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.EvolutionEntity", b =>
+                {
+                    b.Property<int>("EvolvingSpeciesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EvolvedSpeciesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("HighFriendship")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Level")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Method")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int?>("MoveId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Region")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TimeOfDay")
+                        .HasColumnType("integer");
+
+                    b.HasKey("EvolvingSpeciesId", "EvolvedSpeciesId");
+
+                    b.HasIndex("EvolvedSpeciesId");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("MoveId");
+
+                    b.ToTable("Evolutions", "ReadModel");
+                });
+
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.InventoryEntity", b =>
                 {
                     b.Property<int>("TrainerId")
@@ -316,9 +372,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Property<int>("AbilityId")
                         .HasColumnType("integer");
 
-                    b.Property<byte?>("Box")
-                        .HasColumnType("smallint");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -395,9 +448,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Property<int?>("OriginalTrainerId")
                         .HasColumnType("integer");
 
-                    b.Property<byte?>("Position")
-                        .HasColumnType("smallint");
-
                     b.Property<string>("Reference")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
@@ -471,6 +521,32 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                         .IsUnique();
 
                     b.ToTable("PokemonMoves", "ReadModel");
+                });
+
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonPositionEntity", b =>
+                {
+                    b.Property<int>("PokemonId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Box")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
+
+                    b.Property<byte>("Position")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PokemonId");
+
+                    b.HasIndex("TrainerId", "Position", "Box")
+                        .IsUnique();
+
+                    b.ToTable("PokemonPositions", "ReadModel");
                 });
 
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbilityEntity", b =>
@@ -708,6 +784,37 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.ToTable("Trainers", "ReadModel");
                 });
 
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.EvolutionEntity", b =>
+                {
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", "EvolvedSpecies")
+                        .WithMany("EvolvedFrom")
+                        .HasForeignKey("EvolvedSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", "EvolvingSpecies")
+                        .WithMany("Evolutions")
+                        .HasForeignKey("EvolvingSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", "Item")
+                        .WithMany("Evolutions")
+                        .HasForeignKey("ItemId");
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.MoveEntity", "Move")
+                        .WithMany("Evolutions")
+                        .HasForeignKey("MoveId");
+
+                    b.Navigation("EvolvedSpecies");
+
+                    b.Navigation("EvolvingSpecies");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Move");
+                });
+
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.InventoryEntity", b =>
                 {
                     b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", "Item")
@@ -802,6 +909,25 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Navigation("Pokemon");
                 });
 
+            modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonPositionEntity", b =>
+                {
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", "Pokemon")
+                        .WithOne("Position")
+                        .HasForeignKey("PokeGame.Infrastructure.ReadModel.Entities.PokemonPositionEntity", "PokemonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.TrainerEntity", "Trainer")
+                        .WithMany("PokemonPositions")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pokemon");
+
+                    b.Navigation("Trainer");
+                });
+
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesAbilityEntity", b =>
                 {
                     b.HasOne("PokeGame.Infrastructure.ReadModel.Entities.AbilityEntity", "Ability")
@@ -830,21 +956,31 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
 
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.ItemEntity", b =>
                 {
+                    b.Navigation("Evolutions");
+
                     b.Navigation("Inventory");
                 });
 
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.MoveEntity", b =>
                 {
+                    b.Navigation("Evolutions");
+
                     b.Navigation("PokemonMoves");
                 });
 
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.PokemonEntity", b =>
                 {
                     b.Navigation("Moves");
+
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("PokeGame.Infrastructure.ReadModel.Entities.SpeciesEntity", b =>
                 {
+                    b.Navigation("Evolutions");
+
+                    b.Navigation("EvolvedFrom");
+
                     b.Navigation("Pokedex");
 
                     b.Navigation("Pokemon");
@@ -861,6 +997,8 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Navigation("Pokedex");
 
                     b.Navigation("Pokemon");
+
+                    b.Navigation("PokemonPositions");
                 });
 #pragma warning restore 612, 618
         }

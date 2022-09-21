@@ -6,7 +6,7 @@
       <template v-if="trainer"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</template>
       <template v-else><font-awesome-icon icon="paw" /> {{ $t('pokemon.wild') }}</template>
     </td>
-    <td v-text="pokemon.position === null ? '—' : pokemon.position + 1" />
+    <td v-text="pokemon.position === null ? '—' : pokemon.position" />
     <td>
       <template v-if="pokemon.surname">
         {{ pokemon.surname }}

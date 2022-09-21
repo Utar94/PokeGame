@@ -14,6 +14,8 @@ namespace PokeGame.Application.Pokemon.Models
 
     public byte Level { get; set; }
     public int Experience { get; set; }
+    public int? ExperienceThreshold { get; set; }
+    public int? ExperienceToNextLevel => ExperienceThreshold.HasValue ? (ExperienceThreshold.Value - Experience) : null;
     public byte Friendship { get; set; }
 
     public PokemonGender Gender { get; set; }

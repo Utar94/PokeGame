@@ -2,12 +2,12 @@
 
 namespace PokeGame.Application
 {
-  public interface IRepository<T> where T : Aggregate
+  public interface IRepository
   {
-    Task<T?> LoadAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<T?> LoadAsync(Guid id, int? version = null, CancellationToken cancellationToken = default);
-    Task<IEnumerable<T>> LoadAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default);
-    Task SaveAsync(T instance, CancellationToken cancellationToken = default);
-    Task SaveAsync(IEnumerable<T> instances, CancellationToken cancellationToken = default);
+    Task<T?> LoadAsync<T>(Guid id, CancellationToken cancellationToken = default) where T : Aggregate;
+    Task<T?> LoadAsync<T>(Guid id, int? version = null, CancellationToken cancellationToken = default) where T : Aggregate;
+    Task<IEnumerable<T>> LoadAsync<T>(IEnumerable<Guid> ids, CancellationToken cancellationToken = default) where T : Aggregate;
+    Task SaveAsync<T>(T instance, CancellationToken cancellationToken = default) where T : Aggregate;
+    Task SaveAsync<T>(IEnumerable<T> instances, CancellationToken cancellationToken = default) where T : Aggregate;
   }
 }

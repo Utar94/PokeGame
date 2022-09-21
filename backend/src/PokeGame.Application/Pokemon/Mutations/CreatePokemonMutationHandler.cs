@@ -1,39 +1,22 @@
 ﻿using FluentValidation;
 using MediatR;
+using PokeGame.Application.Moves;
 using PokeGame.Application.Pokemon.Models;
-using PokeGame.Domain.Items;
 using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon.Payloads;
-using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
-  internal class CreatePokemonMutationHandler : IRequestHandler<CreatePokemonMutation, PokemonModel>
+  internal class CreatePokemonMutationHandler : SavePokemonMutationHandler, IRequestHandler<CreatePokemonMutation, PokemonModel>
   {
-    private readonly IRepository<Item> _itemRepository;
-    private readonly IRepository<Move> _moveRepository;
-    private readonly IPokemonQuerier _querier;
-    private readonly IRepository<Domain.Pokemon.Pokemon> _repository;
-    private readonly IRepository<Domain.Species.Species> _speciesRepository;
-    private readonly IRepository<Trainer> _trainerRepository;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public CreatePokemonMutationHandler(
-      IRepository<Item> itemRepository,
-      IRepository<Move> moveRepository,
       IPokemonQuerier querier,
-      IRepository<Domain.Pokemon.Pokemon> repository,
-      IRepository<Domain.Species.Species> speciesRepository,
-      IRepository<Trainer> trainerRepository,
+      IRepository repository,
       IValidator<Domain.Pokemon.Pokemon> validator
-    )
+    ) : base(querier, repository)
     {
-      _itemRepository = itemRepository;
-      _moveRepository = moveRepository;
-      _querier = querier;
-      _repository = repository;
-      _speciesRepository = speciesRepository;
-      _trainerRepository = trainerRepository;
       _validator = validator;
     }
 
@@ -41,7 +24,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       CreatePokemonPayload payload = request.Payload;
 
-      Domain.Species.Species species = await _speciesRepository.LoadAsync(payload.SpeciesId, cancellationToken)
+      Domain.Species.Species species = await Repository.LoadAsync<Domain.Species.Species>(payload.SpeciesId, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(payload.SpeciesId, nameof(payload.SpeciesId));
 
       if (!species.AbilityIds.Contains(payload.AbilityId))
@@ -49,15 +32,13 @@ namespace PokeGame.Application.Pokemon.Mutations
         throw new InvalidAbilityException(species, payload.AbilityId);
       }
 
-      if (payload.HeldItemId.HasValue && await _itemRepository.LoadAsync(payload.HeldItemId.Value, cancellationToken) == null)
-      {
-        throw new EntityNotFoundException<Item>(payload.HeldItemId.Value, nameof(payload.HeldItemId));
-      }
+      await EnsureHeldItemExistsAsync(payload, cancellationToken);
+      await EnsureTrainerExistsAndPositionIsFreeAsync(payload, pokemonId: null, cancellationToken);
 
       if (payload.Moves != null)
       {
         IEnumerable<Guid> moveIds = payload.Moves.Select(x => x.MoveId);
-        Dictionary<Guid, Move> moves = (await _moveRepository.LoadAsync(moveIds, cancellationToken))
+        Dictionary<Guid, Move> moves = (await Repository.LoadAsync<Move>(moveIds, cancellationToken))
           .ToDictionary(x => x.Id, x => x);
 
         var missingIds = new List<Guid>(capacity: moveIds.Count());
@@ -82,17 +63,12 @@ namespace PokeGame.Application.Pokemon.Mutations
         }
       }
 
-      if (payload.History != null && await _trainerRepository.LoadAsync(payload.History.TrainerId, cancellationToken) == null)
-      {
-        throw new EntityNotFoundException<Trainer>(payload.History.TrainerId, $"{nameof(payload.History)}.{nameof(payload.History.TrainerId)}");
-      }
-
       var pokemon = new Domain.Pokemon.Pokemon(payload, species);
       _validator.ValidateAndThrow(pokemon);
 
-      await _repository.SaveAsync(pokemon, cancellationToken);
+      await Repository.SaveAsync(pokemon, cancellationToken);
 
-      return await _querier.GetAsync(pokemon.Id, cancellationToken)
+      return await Querier.GetAsync(pokemon.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
     }
   }

@@ -27,8 +27,30 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         .Include(x => x.HeldItem)
         .Include(x => x.Moves).ThenInclude(x => x.Move)
         .Include(x => x.OriginalTrainer)
+        .Include(x => x.Position)
         .Include(x => x.Species)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+      return pokemon == null ? null : _mapper.Map<PokemonModel>(pokemon);
+    }
+
+    public async Task<PokemonModel?> GetAsync(Guid trainerId, PokemonPosition position, CancellationToken cancellationToken)
+    {
+      ArgumentNullException.ThrowIfNull(position);
+
+      byte box = position.Box ?? 0;
+
+      PokemonEntity? pokemon = await _pokemon.AsNoTracking()
+        .Include(x => x.Ability)
+        .Include(x => x.CurrentTrainer)
+        .Include(x => x.HeldItem)
+        .Include(x => x.Moves).ThenInclude(x => x.Move)
+        .Include(x => x.OriginalTrainer)
+        .Include(x => x.Position)
+        .Include(x => x.Species)
+        .SingleOrDefaultAsync(x => x.CurrentTrainer!.Id == trainerId
+          && x.Position!.Position == position.Position
+          && x.Position.Box == box, cancellationToken);
 
       return pokemon == null ? null : _mapper.Map<PokemonModel>(pokemon);
     }
@@ -44,6 +66,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         .Include(x => x.HeldItem)
         .Include(x => x.Moves).ThenInclude(x => x.Move)
         .Include(x => x.OriginalTrainer)
+        .Include(x => x.Position)
         .Include(x => x.Species);
 
       if (gender.HasValue)
@@ -52,11 +75,13 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       }
       if (inBox.HasValue)
       {
-        query = query.Where(x => x.Box == inBox.Value);
+        query = query.Where(x => x.Position!.Box == inBox.Value);
       }
       if (inParty.HasValue)
       {
-        query = query.Where(x => x.Box.HasValue == !inParty.Value);
+        query = inParty.Value
+          ? query.Where(x => x.Position!.Box == 0)
+          : query.Where(x => x.Position!.Box > 0);
       }
       if (isWild.HasValue)
       {
@@ -92,7 +117,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         {
           PokemonSort.Level => desc ? query.OrderByDescending(x => x.Level) : query.OrderBy(x => x.Level),
           PokemonSort.Name => desc ? query.OrderByDescending(x => x.Surname ?? x.Species!.Name) : query.OrderBy(x => x.Surname ?? x.Species!.Name),
-          PokemonSort.Position => desc ? query.OrderByDescending(x => x.Position) : query.OrderBy(x => x.Position),
+          PokemonSort.Position => desc ? query.OrderByDescending(x => x.Position!.Position) : query.OrderBy(x => x.Position!.Position),
           PokemonSort.UpdatedAt => desc ? query.OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt) : query.OrderBy(x => x.UpdatedAt ?? x.CreatedAt),
           _ => throw new ArgumentException($"The Pokemon sort '{sort}' is not valid.", nameof(sort)),
         };

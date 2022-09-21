@@ -82,12 +82,14 @@ namespace PokeGame.Application.Pokemon
           .SetValidator(x => new HistoryValidator(x));
         RuleFor(x => x.OriginalTrainerId)
           .NotNull();
+        
         RuleFor(x => x.Position)
           .NotNull();
         When(x => x.Position != null, () =>
+        {
           RuleFor(x => x.Position!)
-            .SetValidator(new PokemonPositionValidator())
-        );
+            .SetValidator(new PokemonPositionValidator());
+        });
       });
 
       RuleFor(x => x.Reference)

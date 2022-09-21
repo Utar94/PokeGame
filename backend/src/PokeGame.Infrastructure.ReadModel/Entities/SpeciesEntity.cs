@@ -6,34 +6,44 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class SpeciesEntity : Entity
   {
-    public int Number { get; set; }
+    public int Number { get; private set; }
 
-    public PokemonType PrimaryType { get; set; }
-    public PokemonType? SecondaryType { get; set; }
+    public PokemonType PrimaryType { get; private set; }
+    public PokemonType? SecondaryType { get; private set; }
 
-    public string Name { get; set; } = string.Empty;
-    public string? Category { get; set; }
-    public string? Description { get; set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Category { get; private set; }
+    public string? Description { get; private set; }
 
-    public double? GenderRatio { get; set; }
-    public double? Height { get; set; }
-    public double? Weight { get; set; }
+    public double? GenderRatio { get; private set; }
+    public double? Height { get; private set; }
+    public double? Weight { get; private set; }
 
-    public int? BaseExperienceYield { get; set; }
-    public byte BaseFriendship { get; set; }
-    public byte? CatchRate { get; set; }
-    public LevelingRate LevelingRate { get; set; }
+    public int? BaseExperienceYield { get; private set; }
+    public byte BaseFriendship { get; private set; }
+    public byte? CatchRate { get; private set; }
+    public LevelingRate LevelingRate { get; private set; }
 
-    public string? BaseStatistics { get; set; }
-    public string? EvYield { get; set; }
+    public string? BaseStatistics { get; private set; }
+    public string? EvYield { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Picture { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Picture { get; private set; }
+    public string? Reference { get; private set; }
 
-    public List<PokedexEntity> Pokedex { get; set; } = new();
-    public List<PokemonEntity> Pokemon { get; set; } = new();
-    public List<SpeciesAbilityEntity> SpeciesAbilities { get; set; } = new();
+    public List<EvolutionEntity> EvolvedFrom { get; private set; } = new();
+    public List<EvolutionEntity> Evolutions { get; private set; } = new();
+    public List<PokedexEntity> Pokedex { get; private set; } = new();
+    public List<PokemonEntity> Pokemon { get; private set; } = new();
+    public List<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = new();
+
+    public void Add(AbilityEntity ability) => SpeciesAbilities.Add(new SpeciesAbilityEntity(this, ability));
+    public void Add(SpeciesEntity species, Evolution evolution, ItemEntity? item = null, MoveEntity? move = null)
+    {
+      var entity = new EvolutionEntity(this, species, item, move);
+      entity.Synchronize(evolution);
+      Evolutions.Add(entity);
+    }
 
     public void Synchronize(Species species)
     {

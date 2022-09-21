@@ -4,43 +4,79 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class PokemonEntity : Entity
   {
-    public SpeciesEntity? Species { get; set; }
-    public int SpeciesId { get; set; }
-    public AbilityEntity? Ability { get; set; }
-    public int AbilityId { get; set; }
+    public SpeciesEntity? Species { get; private set; }
+    public int SpeciesId { get; private set; }
+    public AbilityEntity? Ability { get; private set; }
+    public int AbilityId { get; private set; }
 
-    public byte Level { get; set; }
-    public int Experience { get; set; }
-    public byte Friendship { get; set; }
+    public byte Level { get; private set; }
+    public int Experience { get; private set; }
+    public byte Friendship { get; private set; }
 
-    public PokemonGender Gender { get; set; }
-    public string Nature { get; set; } = null!;
-    public string? Surname { get; set; }
-    public string? Description { get; set; }
+    public PokemonGender Gender { get; private set; }
+    public string Nature { get; private set; } = null!;
+    public string? Surname { get; private set; }
+    public string? Description { get; private set; }
 
-    public string? IndividualValues { get; set; }
-    public string? EffortValues { get; set; }
-    public string? Statistics { get; set; }
+    public string? IndividualValues { get; private set; }
+    public string? EffortValues { get; private set; }
+    public string? Statistics { get; private set; }
 
-    public ushort CurrentHitPoints { get; set; }
-    public StatusCondition? StatusCondition { get; set; }
+    public ushort CurrentHitPoints { get; private set; }
+    public StatusCondition? StatusCondition { get; private set; }
 
-    public List<PokemonMoveEntity> Moves { get; set; } = new();
-    public ItemEntity? HeldItem { get; set; }
-    public int? HeldItemId { get; set; }
+    public List<PokemonMoveEntity> Moves { get; private set; } = new();
+    public ItemEntity? HeldItem { get; private set; }
+    public int? HeldItemId { get; private set; }
 
-    public byte? MetAtLevel { get; set; }
-    public string? MetLocation { get; set; }
-    public DateTime? MetOn { get; set; }
-    public TrainerEntity? CurrentTrainer { get; set; }
-    public int? CurrentTrainerId { get; set; }
-    public TrainerEntity? OriginalTrainer { get; set; }
-    public int? OriginalTrainerId { get; set; }
-    public byte? Position { get; set; }
-    public byte? Box { get; set; }
+    public byte? MetAtLevel { get; private set; }
+    public string? MetLocation { get; private set; }
+    public DateTime? MetOn { get; private set; }
+    public TrainerEntity? CurrentTrainer { get; private set; }
+    public int? CurrentTrainerId { get; private set; }
+    public TrainerEntity? OriginalTrainer { get; private set; }
+    public int? OriginalTrainerId { get; private set; }
+    public PokemonPositionEntity? Position { get; private set; }
 
-    public string? Notes { get; set; }
-    public string? Reference { get; set; }
+    public string? Notes { get; private set; }
+    public string? Reference { get; private set; }
+
+    public void Add(MoveEntity move, PokemonMove pokemonMove)
+    {
+      var entity = new PokemonMoveEntity(this, move);
+      entity.Synchronize(pokemonMove);
+      Moves.Add(entity);
+    }
+
+    public void SetAbility(AbilityEntity ability)
+    {
+      Ability = ability ?? throw new ArgumentNullException(nameof(ability));
+      AbilityId = ability.Sid;
+    }
+
+    public void SetCurrentTrainer(TrainerEntity? currentTrainer)
+    {
+      CurrentTrainer = currentTrainer;
+      CurrentTrainerId = currentTrainer?.Sid;
+    }
+
+    public void SetHeldItem(ItemEntity? heldItem)
+    {
+      HeldItem = heldItem;
+      HeldItemId = heldItem?.Sid;
+    }
+
+    public void SetOriginalTrainer(TrainerEntity? originalTrainer)
+    {
+      OriginalTrainer = originalTrainer;
+      OriginalTrainerId = originalTrainer?.Sid;
+    }
+
+    public void SetSpecies(SpeciesEntity species)
+    {
+      Species = species ?? throw new ArgumentNullException(nameof(species));
+      SpeciesId = species.Sid;
+    }
 
     public void Synchronize(Pokemon pokemon)
     {
@@ -74,8 +110,13 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       MetAtLevel = pokemon.History?.Level;
       MetLocation = pokemon.History?.Location;
       MetOn = pokemon.History?.MetOn;
-      Position = pokemon.Position?.Position;
-      Box = pokemon.Position?.Box;
+
+      Position = null;
+      if (this.CurrentTrainer != null && pokemon.Position != null)
+      {
+        Position = new PokemonPositionEntity(this, CurrentTrainer);
+        Position.Synchronize(pokemon.Position);
+      }
 
       Notes = pokemon.Notes;
       Reference = pokemon.Reference;
