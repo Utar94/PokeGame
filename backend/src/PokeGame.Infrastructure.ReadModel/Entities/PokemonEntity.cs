@@ -111,10 +111,13 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       MetLocation = pokemon.History?.Location;
       MetOn = pokemon.History?.MetOn;
 
-      Position = null;
-      if (this.CurrentTrainer != null && pokemon.Position != null)
+      if (CurrentTrainer == null || pokemon.Position == null)
       {
-        Position = new PokemonPositionEntity(this, CurrentTrainer);
+        Position = null;
+      }
+      else
+      {
+        Position ??= new PokemonPositionEntity(this, CurrentTrainer);
         Position.Synchronize(pokemon.Position);
       }
 

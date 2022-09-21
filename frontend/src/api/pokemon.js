@@ -25,6 +25,10 @@ export async function healPokemon(id, payload) {
   return await patch(`/api/pokemon/${id}/heal`, payload)
 }
 
+export async function swapPokemon(id, otherId) {
+  return await patch(`/api/pokemon/${id}/swap/${otherId}`)
+}
+
 export async function updatePokemon(id, payload) {
   return await put(`/api/pokemon/${id}`, payload)
 }

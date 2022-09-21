@@ -115,6 +115,9 @@
     "partyFormat": "In Party ({position})",
     "position": "Position",
     "positionAlreadyUsed": "The Pokémon position (box/party & position) is already used by another Pokémon.",
+    "swap": "Swap",
+    "swapped": "The selected Pokémon have been swapped.",
+    "swapTitle": "Swap Pokémon",
     "title": "Trainer"
   },
   "updated": "The Pokémon has been updated.",

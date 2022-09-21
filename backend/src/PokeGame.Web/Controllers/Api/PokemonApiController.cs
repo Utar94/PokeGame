@@ -97,6 +97,12 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(await _mediator.Send(new HealPokemonMutation(id, payload), cancellationToken));
     }
 
+    [HttpPatch("{id}/swap/{otherId}")]
+    public async Task<ActionResult<PokemonModel>> SwapAsync(Guid id, Guid otherId, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new SwapPokemonMutation(id, otherId), cancellationToken));
+    }
+
     [HttpPatch("{id}/use-move/{moveId}")]
     public async Task<ActionResult<PokemonModel>> UseMoveAsync(Guid id, Guid moveId, [FromBody] UsePokemonMovePayload payload, CancellationToken cancellationToken)
     {

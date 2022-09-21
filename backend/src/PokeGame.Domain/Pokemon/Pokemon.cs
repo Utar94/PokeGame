@@ -67,6 +67,7 @@ namespace PokeGame.Domain.Pokemon
       ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
     }
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void Move(PokemonPosition? position) => ApplyChange(new PokemonMoved(position?.Position, position?.Box));
     public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
     public void UseMove(Move move, UsePokemonMovePayload payload)
     {
@@ -169,6 +170,10 @@ namespace PokeGame.Domain.Pokemon
       {
         StatusCondition = null;
       }
+    }
+    protected virtual void Apply(PokemonMoved @event)
+    {
+      Position = @event.Position.HasValue ? new(@event.Position.Value, @event.Box) : null;
     }
     protected virtual void Apply(PokemonUpdated @event)
     {
