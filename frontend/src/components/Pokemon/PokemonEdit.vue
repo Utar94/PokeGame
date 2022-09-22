@@ -35,7 +35,11 @@
               <form-field class="col" disabled label="experience" :value="pokemon.experience">
                 <b-input-group-append v-if="pokemon.experienceThreshold" is-text>/&nbsp;{{ pokemon.experienceThreshold }}</b-input-group-append>
                 <b-input-group-append v-if="pokemon.experienceToNextLevel" is-text>
-                  {{ $t('pokemon.experienceToNextLevelFormat', { experience: pokemon.experienceToNextLevel }) }}
+                  {{ $t('pokemon.experience.toNextLevelFormat', { experience: pokemon.experienceToNextLevel }) }}
+                </b-input-group-append>
+                <b-input-group-append v-if="pokemon.experienceToNextLevel">
+                  <icon-button icon="plus" text="pokemon.experience.add" variant="success" v-b-modal.addExperience />
+                  <experience-modal :pokemon="pokemon" @updated="onExperienceUpdated" />
                 </b-input-group-append>
               </form-field>
             </b-row>
@@ -325,6 +329,7 @@
 <script>
 import Vue from 'vue'
 import ConditionSelect from './ConditionSelect.vue'
+import ExperienceModal from './ExperienceModal.vue'
 import HeldItemModal from './HeldItemModal.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
 import MoveSelect from '@/components/Moves/MoveSelect.vue'
@@ -336,6 +341,7 @@ export default {
   name: 'PokemonEdit',
   components: {
     ConditionSelect,
+    ExperienceModal,
     HeldItemModal,
     ItemSelect,
     MoveSelect,
@@ -492,6 +498,10 @@ export default {
       for (const key of Object.keys(this.effortValues)) {
         Vue.set(this.effortValues, key, 0)
       }
+    },
+    onExperienceUpdated(pokemon) {
+      this.pokemon = pokemon
+      this.currentHitPoints = pokemon.currentHitPoints
     },
     onHeldItemSaved(pokemon) {
       this.pokemon = pokemon

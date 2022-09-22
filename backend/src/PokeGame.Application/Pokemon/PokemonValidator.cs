@@ -12,7 +12,7 @@ namespace PokeGame.Application.Pokemon
 
       RuleFor(x => x.Experience)
         .GreaterThanOrEqualTo(x => ExperienceTable.GetTotalExperience(x.LevelingRate, x.Level))
-        .LessThan(x => ExperienceTable.GetTotalExperience(x.LevelingRate, x.Level < 100 ? (x.Level + 1) : 100));
+        .LessThan(x => ExperienceTable.GetTotalExperience(x.LevelingRate, (byte)(x.Level < 100 ? (x.Level + 1) : 100)));
 
       RuleFor(x => x.GenderRatio)
         .InclusiveBetween(0.0, 100.0);
