@@ -207,7 +207,7 @@
                       :step="1"
                       type="number"
                       :value="move.remainingPowerPoints"
-                      @input="updateRemainingPowerPoints(index, $event)"
+                      @input="updateRemainingPowerPoints(index, Number($event))"
                     >
                       <b-input-group-append is-text>/&nbsp;{{ move.powerPoints }}</b-input-group-append>
                     </form-field>

@@ -30,7 +30,7 @@ export default {
     },
     id: {
       type: String,
-      default: 'ability'
+      default: 'move'
     },
     label: {
       type: String,

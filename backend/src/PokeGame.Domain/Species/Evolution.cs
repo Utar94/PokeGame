@@ -4,15 +4,12 @@ namespace PokeGame.Domain.Species
 {
   public class Evolution
   {
-    private Evolution(Guid speciesId, EvolutionMethod method, Guid? itemId, string? notes)
+    private Evolution(EvolutionMethod method, Guid? itemId, string? notes)
     {
-      SpeciesId = speciesId;
       Method = method;
       ItemId = itemId;
       Notes = notes?.CleanTrim();
     }
-
-    public Guid SpeciesId { get; private set; }
 
     public EvolutionMethod Method { get; private set; }
 
@@ -27,15 +24,15 @@ namespace PokeGame.Domain.Species
 
     public string? Notes { get; private set; }
 
-    public static Evolution Item(Guid speciesId, Guid itemId, PokemonGender? gender = null, Region? region = null, string? notes = null)
-      => new(speciesId, EvolutionMethod.Item, itemId, notes)
+    public static Evolution Item(Guid itemId, PokemonGender? gender = null, Region? region = null, string? notes = null)
+      => new(EvolutionMethod.Item, itemId, notes)
       {
         Gender = gender,
         Region = region
       };
-    public static Evolution LevelUp(Guid speciesId, PokemonGender? gender = null, bool highFriendship = false, Guid? itemId = null,
+    public static Evolution LevelUp(PokemonGender? gender = null, bool highFriendship = false, Guid? itemId = null,
       byte level = 0, string? location = null, Guid? moveId = null, Region? region = null, TimeOfDay? timeOfDay = null, string? notes = null)
-      => new(speciesId, EvolutionMethod.LevelUp, itemId, notes)
+      => new(EvolutionMethod.LevelUp, itemId, notes)
       {
         Gender = gender,
         HighFriendship = highFriendship,
@@ -45,7 +42,7 @@ namespace PokeGame.Domain.Species
         Region = region,
         TimeOfDay = timeOfDay
       };
-    public static Evolution Trade(Guid speciesId, Guid? itemId = null, string? notes = null)
-      => new(speciesId, EvolutionMethod.Trade, itemId, notes);
+    public static Evolution Trade(Guid? itemId = null, string? notes = null)
+      => new(EvolutionMethod.Trade, itemId, notes);
   }
 }

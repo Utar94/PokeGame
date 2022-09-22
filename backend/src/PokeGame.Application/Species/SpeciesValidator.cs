@@ -53,7 +53,7 @@ namespace PokeGame.Application.Species
       RuleFor(x => x.EvYield)
         .Must(x => x.Values.Sum(y => y) <= 3);
 
-      RuleForEach(x => x.Evolutions)
+      RuleForEach(x => x.Evolutions.Values)
         .SetValidator(new EvolutionValidator());
     }
   }

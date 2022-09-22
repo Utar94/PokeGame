@@ -6,16 +6,12 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 {
   internal class EvolutionEntity
   {
-    public EvolutionEntity(SpeciesEntity evolvingSpecies, SpeciesEntity evolvedSpecies, ItemEntity? item = null, MoveEntity? move = null)
+    public EvolutionEntity(SpeciesEntity evolvingSpecies, SpeciesEntity evolvedSpecies)
     {
       EvolvingSpecies = evolvingSpecies ?? throw new ArgumentNullException(nameof(evolvingSpecies));
       EvolvingSpeciesId = evolvingSpecies.Sid;
       EvolvedSpecies = evolvedSpecies ?? throw new ArgumentNullException(nameof(evolvedSpecies));
       EvolvedSpeciesId = evolvedSpecies.Sid;
-      Item = item;
-      ItemId = item?.Sid;
-      Move = move;
-      MoveId = move?.Sid;
     }
     private EvolutionEntity()
     {
@@ -41,14 +37,18 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public string? Notes { get; private set; }
 
-    public void Synchronize(Evolution evolution)
+    public void Synchronize(Evolution evolution, ItemEntity? item = null, MoveEntity? move = null)
     {
       Method = evolution.Method;
 
       Gender = evolution.Gender;
       HighFriendship = evolution.HighFriendship;
+      Item = item;
+      ItemId = item?.Sid;
       Level = evolution.Level;
       Location = evolution.Location;
+      Move = move;
+      MoveId = move?.Sid;
       Region = evolution.Region;
       TimeOfDay = evolution.TimeOfDay;
 
