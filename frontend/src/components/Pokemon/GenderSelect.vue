@@ -21,6 +21,10 @@ export default {
       type: Boolean,
       default: false
     },
+    exclude: {
+      type: Array,
+      default: () => []
+    },
     id: {
       type: String,
       default: 'gender'
@@ -42,7 +46,9 @@ export default {
   computed: {
     options() {
       return this.orderBy(
-        Object.entries(this.$i18n.t('pokemon.gender.options')).map(([value, text]) => ({ text, value })),
+        Object.entries(this.$i18n.t('pokemon.gender.options'))
+          .map(([value, text]) => ({ text, value }))
+          .filter(({ value }) => !this.exclude.includes(value)),
         'text'
       )
     }

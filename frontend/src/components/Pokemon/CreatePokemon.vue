@@ -22,7 +22,7 @@
         </b-row>
         <b-row>
           <form-field class="col" id="level" label="pokemon.level" :minValue="1" :maxValue="100" required :step="1" type="number" v-model.number="level" />
-          <gender-select class="col" :disabled="!species || isFixedGender" required v-model="gender">
+          <gender-select class="col" :disabled="!species || isFixedGender" :exclude="excludedGenders" required v-model="gender">
             <b-input-group-append>
               <icon-button :disabled="!species || isFixedGender" icon="dice" variant="primary" @click="randomGender" />
             </b-input-group-append>
@@ -283,6 +283,9 @@ export default {
   computed: {
     abilityOptions() {
       return this.orderBy(this.species?.abilities.map(({ id, name }) => ({ text: name, value: id })) ?? [], 'text')
+    },
+    excludedGenders() {
+      return this.species?.genderRatio === null ? ['Male', 'Female'] : ['Unknown']
     },
     isFixedGender() {
       return !this.species || !this.species.genderRatio || this.species.genderRatio === 100
