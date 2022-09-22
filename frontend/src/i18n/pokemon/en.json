@@ -23,7 +23,14 @@
     "totalFormat": "Total EV: {total} (max: 510)"
   },
   "empty": "This list is empty.",
-  "experienceToNextLevelFormat": "To Next Level: {experience}",
+  "experience": {
+    "add": "Add",
+    "gained": "The Pokémon has gained experience.",
+    "leveledUp": "The Pokémon has leveled-up. Be sure to checkout its newly learnt moves and possible evolutions.",
+    "title": "Add Experience",
+    "toNextLevelFormat": "To Next Level: {experience}",
+    "warning": "The Pokémon will level-up."
+  },
   "fainted": "Fainted",
   "friendship": "Friendship",
   "gender": {

@@ -45,14 +45,14 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
       return 0;
     }
 
-    private static int? GetExperienceThreshold(PokemonEntity pokemon, PokemonModel model)
+    private static uint? GetExperienceThreshold(PokemonEntity pokemon, PokemonModel model)
     {
       if (pokemon.Species == null)
       {
         return null;
       }
 
-      int threshold = ExperienceTable.GetTotalExperience(pokemon.Species.LevelingRate, pokemon.Level + 1);
+      uint threshold = ExperienceTable.GetTotalExperience(pokemon.Species.LevelingRate, (byte)(pokemon.Level + 1));
 
       return threshold == 0 ? null : threshold;
     }

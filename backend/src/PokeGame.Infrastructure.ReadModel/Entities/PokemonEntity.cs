@@ -83,7 +83,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       base.Synchronize(pokemon);
 
       Level = pokemon.Level;
-      Experience = pokemon.Experience;
+      Experience = (int)pokemon.Experience;
       Friendship = pokemon.Friendship;
 
       Gender = pokemon.Gender;

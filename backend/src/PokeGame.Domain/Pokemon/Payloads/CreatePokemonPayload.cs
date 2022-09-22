@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public Guid AbilityId { get; set; }
 
     public byte Level { get; set; }
-    public int? Experience { get; set; }
+    public uint? Experience { get; set; }
     public byte? Friendship { get; set; }
 
     public PokemonGender Gender { get; set; }

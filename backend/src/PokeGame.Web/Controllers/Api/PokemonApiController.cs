@@ -5,10 +5,8 @@ using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Pokemon.Mutations;
 using PokeGame.Application.Pokemon.Queries;
-using PokeGame.Domain.Items;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
-using System.Threading;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -91,6 +89,12 @@ namespace PokeGame.Web.Controllers.Api
     public async Task<ActionResult<PokemonModel>> UpdateConditionAsync(Guid id, [FromBody] UpdatePokemonConditionPayload payload, CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new UpdatePokemonConditionMutation(id, payload), cancellationToken));
+    }
+
+    [HttpPatch("{id}/gain")]
+    public async Task<ActionResult<PokemonModel>> GainAsync(Guid id, [FromBody] ExperienceGainPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new PokemonGainMutation(id, payload), cancellationToken));
     }
 
     [HttpPatch("{id}/heal")]

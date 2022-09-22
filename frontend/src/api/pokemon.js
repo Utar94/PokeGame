@@ -13,6 +13,10 @@ export async function deletePokemon(id) {
   return await _delete(`/api/pokemon/${id}`)
 }
 
+export async function gainExperience(id, payload) {
+  return await patch(`/api/pokemon/${id}/gain`, payload)
+}
+
 export async function getPokemon(id) {
   return await get(`/api/pokemon/${id}`)
 }

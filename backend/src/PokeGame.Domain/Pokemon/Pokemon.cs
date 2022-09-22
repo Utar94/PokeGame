@@ -20,8 +20,8 @@ namespace PokeGame.Domain.Pokemon
     public Guid AbilityId { get; private set; } // TODO(fpion): update => Evolution
 
     public LevelingRate LevelingRate { get; private set; } // TODO(fpion): update => Evolution
-    public byte Level { get; private set; } // TODO(fpion): update => Exp./Lv.
-    public int Experience { get; private set; } // TODO(fpion): update => Exp./Lv.
+    public byte Level { get; private set; }
+    public uint Experience { get; private set; }
     public byte Friendship { get; private set; }
 
     public double? GenderRatio { get; private set; } // TODO(fpion): update => Evolution
@@ -67,6 +67,7 @@ namespace PokeGame.Domain.Pokemon
 
       ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
     }
+    public void GainedExperience(ExperienceGainPayload payload) => ApplyChange(new PokemonGainedExperience(payload));
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
     public void HoldItem(Item? item) => ApplyChange(new PokemonHeldItem(item?.Id));
     public void Move(PokemonPosition? position) => ApplyChange(new PokemonMoved(position?.Position, position?.Box));
@@ -151,18 +152,62 @@ namespace PokeGame.Domain.Pokemon
     {
       Delete(@event);
     }
+    protected virtual void Apply(PokemonGainedExperience @event)
+    {
+      ExperienceGainPayload payload = @event.Payload;
+
+      uint maximumExperience = ExperienceTable.GetTotalExperience(LevelingRate, 100);
+      uint experience = Experience + payload.Experience;
+      Experience = (experience < Experience || experience > maximumExperience)
+        ? maximumExperience
+        : experience;
+
+      ushort hitPointsLost = (ushort)(MaximumHitPoints - CurrentHitPoints);
+      byte previousLevel = Level;
+      for (byte level = (byte)(Level + 1); level <= 100; level++)
+      {
+        if (Experience < ExperienceTable.GetTotalExperience(LevelingRate, level))
+        {
+          break;
+        }
+
+        Level = level;
+      }
+      if (Level > previousLevel)
+      {
+        ComputeStatistics();
+        CurrentHitPoints = (ushort)(MaximumHitPoints - hitPointsLost);
+      }
+
+      byte friendship = (byte)(Friendship + payload.Friendship);
+      Friendship = friendship < Friendship ? byte.MaxValue : Friendship;
+
+      if (payload.EffortValues != null)
+      {
+        foreach (StatisticValuePayload effortValue in payload.EffortValues)
+        {
+          if (EffortValues.TryGetValue(effortValue.Statistic, out byte value))
+          {
+            value += effortValue.Value;
+            EffortValues[effortValue.Statistic] = value < EffortValues[effortValue.Statistic]
+              ? byte.MaxValue
+              : value;
+          }
+          else
+          {
+            EffortValues.Add(effortValue.Statistic, effortValue.Value);
+          }
+        }
+      }
+    }
     protected virtual void Apply(PokemonHealed @event)
     {
       HealPokemonPayload payload = @event.Payload;
 
-      if (payload.RestoreHitPoints > MaximumHitPoints || (CurrentHitPoints + payload.RestoreHitPoints > MaximumHitPoints))
-      {
-        CurrentHitPoints = MaximumHitPoints;
-      }
-      else
-      {
-        CurrentHitPoints += payload.RestoreHitPoints;
-      }
+      ushort currentHitPoints = (ushort)(CurrentHitPoints + payload.RestoreHitPoints);
+      CurrentHitPoints = (currentHitPoints < CurrentHitPoints || currentHitPoints > MaximumHitPoints)
+        ? MaximumHitPoints
+        : currentHitPoints;
 
       if (payload.RemoveAllConditions || payload.StatusCondition == StatusCondition)
       {
@@ -276,10 +321,3 @@ namespace PokeGame.Domain.Pokemon
     public override string ToString() => $"{Surname ?? SpeciesName} | {base.ToString()}";
   }
 }
-
-/*
- * TODO(fpion):
- * - Evolution (SpeciesId change => AbilityId, BaseStatistics, LevelingRate, SpeciesName can change), Moves, Statistics
- * - Gain experience
- * - Level-Up
- */
