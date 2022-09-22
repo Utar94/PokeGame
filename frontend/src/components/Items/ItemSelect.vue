@@ -1,14 +1,7 @@
 <template>
-  <form-select
-    :disabled="disabled"
-    :id="id"
-    :label="label"
-    :options="options"
-    :placeholder="placeholder"
-    :required="required"
-    :value="value"
-    @input="onInput"
-  />
+  <form-select :disabled="disabled" :id="id" :label="label" :options="options" :placeholder="placeholder" :required="required" :value="value" @input="onInput">
+    <slot />
+  </form-select>
 </template>
 
 <script>

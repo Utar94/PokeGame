@@ -25,6 +25,10 @@ export async function healPokemon(id, payload) {
   return await patch(`/api/pokemon/${id}/heal`, payload)
 }
 
+export async function holdItem(id, itemId = null) {
+  return await patch(`/api/pokemon/${id}/hold-item/${itemId ?? 'remove'}`)
+}
+
 export async function swapPokemon(id, otherId) {
   return await patch(`/api/pokemon/${id}/swap/${otherId}`)
 }

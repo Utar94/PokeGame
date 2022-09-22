@@ -35,7 +35,13 @@
     },
     "placeholder": "Select a gender"
   },
-  "heldItem": "Held Item",
+  "heldItem": {
+    "current": "Current Held Item: ",
+    "label": "Held Item",
+    "placeholder": "No held item",
+    "saved": "The held item has been saved.",
+    "title": "Manage Held Item"
+  },
   "identification": "Identification",
   "individualValues": {
     "title": "Individual Values (IV)",

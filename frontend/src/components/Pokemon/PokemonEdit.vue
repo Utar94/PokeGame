@@ -69,7 +69,12 @@
               />
               <name-field class="col" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
             </b-row>
-            <item-select id="heldItem" label="pokemon.heldItem" v-model="heldItemId" />
+            <item-select id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId">
+              <b-input-group-append v-if="pokemon.history">
+                <icon-button icon="shopping-cart" text="trainers.inventory.label" variant="primary" v-b-modal.heldItem />
+                <held-item-modal :item="pokemon.heldItem" :pokemonId="pokemon.id" :trainerId="pokemon.history.trainer.id" @saved="onHeldItemSaved" />
+              </b-input-group-append>
+            </item-select>
             <description-field v-model="description" />
           </b-tab>
           <b-tab :title="$t('pokemon.statistics')">
@@ -320,6 +325,7 @@
 <script>
 import Vue from 'vue'
 import ConditionSelect from './ConditionSelect.vue'
+import HeldItemModal from './HeldItemModal.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
 import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import SwapModal from './SwapModal.vue'
@@ -330,6 +336,7 @@ export default {
   name: 'PokemonEdit',
   components: {
     ConditionSelect,
+    HeldItemModal,
     ItemSelect,
     MoveSelect,
     SwapModal,
@@ -485,6 +492,10 @@ export default {
       for (const key of Object.keys(this.effortValues)) {
         Vue.set(this.effortValues, key, 0)
       }
+    },
+    onHeldItemSaved(pokemon) {
+      this.pokemon = pokemon
+      this.heldItemId = pokemon.heldItem?.id ?? null
     },
     removeMove(index) {
       Vue.delete(this.moves, index)

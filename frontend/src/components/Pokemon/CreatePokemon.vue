@@ -29,7 +29,7 @@
           </gender-select>
         </b-row>
         <b-row>
-          <item-select class="col" id="heldItem" label="pokemon.heldItem" v-model="heldItemId" />
+          <item-select class="col" id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId" />
           <form-select
             class="col"
             id="nature"
