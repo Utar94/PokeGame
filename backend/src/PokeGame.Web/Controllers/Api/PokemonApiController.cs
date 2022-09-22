@@ -5,8 +5,10 @@ using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Pokemon.Mutations;
 using PokeGame.Application.Pokemon.Queries;
+using PokeGame.Domain.Items;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
+using System.Threading;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -95,6 +97,18 @@ namespace PokeGame.Web.Controllers.Api
     public async Task<ActionResult<PokemonModel>> HealAsync(Guid id, [FromBody] HealPokemonPayload payload, CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new HealPokemonMutation(id, payload), cancellationToken));
+    }
+
+    [HttpPatch("{id}/hold-item/remove")]
+    public async Task<ActionResult<PokemonModel>> RemoveHoldItemAsync(Guid id, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new HoldItemPokemonMutation(id), cancellationToken));
+    }
+
+    [HttpPatch("{id}/hold-item/{itemId}")]
+    public async Task<ActionResult<PokemonModel>> HoldItemAsync(Guid id, Guid itemId, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new HoldItemPokemonMutation(id, itemId), cancellationToken));
     }
 
     [HttpPatch("{id}/swap/{otherId}")]

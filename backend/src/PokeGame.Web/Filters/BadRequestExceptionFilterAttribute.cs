@@ -19,7 +19,8 @@ namespace PokeGame.Web.Filters
       [typeof(ItemPriceRequiredException)] = "ItemPriceRequired",
       [typeof(NoAvailablePositionException)] = "NoAvailablePosition",
       [typeof(NoRemainingPowerPointException)] = "NoRemainingPowerPoint",
-      [typeof(RemainingPowerPointsExceededException)] = "RemainingPowerPointsExceeded"
+      [typeof(RemainingPowerPointsExceededException)] = "RemainingPowerPointsExceeded",
+      [typeof(TrainerIsRequiredException)] = "TrainerIsRequired"
     };
 
     public override void OnException(ExceptionContext context)

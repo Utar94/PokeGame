@@ -1,4 +1,5 @@
-﻿using PokeGame.Domain.Moves;
+﻿using PokeGame.Domain.Items;
+using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon.Events;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Species.Payloads;
@@ -67,6 +68,7 @@ namespace PokeGame.Domain.Pokemon
       ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
     }
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void HoldItem(Item? item) => ApplyChange(new PokemonHeldItem(item?.Id));
     public void Move(PokemonPosition? position) => ApplyChange(new PokemonMoved(position?.Position, position?.Box));
     public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
     public void UseMove(Move move, UsePokemonMovePayload payload)
@@ -166,6 +168,10 @@ namespace PokeGame.Domain.Pokemon
       {
         StatusCondition = null;
       }
+    }
+    protected virtual void Apply(PokemonHeldItem @event)
+    {
+      HeldItemId = @event.ItemId;
     }
     protected virtual void Apply(PokemonMoved @event)
     {

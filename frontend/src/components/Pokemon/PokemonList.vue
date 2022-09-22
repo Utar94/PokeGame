@@ -34,7 +34,7 @@
             <th scope="col" v-t="'species.select.label'" />
             <th scope="col" v-t="'trainers.select.label'" />
             <th scope="col" v-t="'pokemon.trainer.location'" />
-            <th scope="col" v-t="'pokemon.heldItem'" />
+            <th scope="col" v-t="'pokemon.heldItem.label'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
           </tr>
