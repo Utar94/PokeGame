@@ -15,6 +15,52 @@
   },
   "editTitle": "Edit species: {name}",
   "empty": "This list is empty.",
+  "evolutions": {
+    "add": "Add Evolution",
+    "atLevel": "At Level",
+    "conditions": "Conditions",
+    "delete": {
+      "confirm": "Do you really want to delete the following evolution?",
+      "success": "The evolution has been deleted.",
+      "title": "Delete evolution"
+    },
+    "edit": "Edit Evolution",
+    "empty": "This list is empty.",
+    "genderFormat": "Gender: {gender}",
+    "highFriendship": "High Friendship (220+)",
+    "holdingItem": "Holding Item",
+    "holdingItemFormat": "Holding a {item}",
+    "itemFormat": "Using a {item}",
+    "levelFormat": "From level {level}",
+    "location": {
+      "format": "At location: {location}",
+      "label": "At Location",
+      "placeholder": "Enter the required location"
+    },
+    "method": {
+      "label": "Method",
+      "options": {
+        "Item": "Using an Item",
+        "LevelUp": "Leveling Up",
+        "Trade": "Trading"
+      },
+      "placeholder": "Select an evolution method"
+    },
+    "moveFormat": "Knowing move {move}",
+    "notes": "Notes",
+    "regionFormat": "In region: {region}",
+    "saved": "The evolution has been saved.",
+    "timeOfDay": {
+      "format": "At {timeOfDay}",
+      "label": "Time of Day",
+      "options": {
+        "Day": "Day",
+        "Night": "Night"
+      },
+      "placeholder": "Select a time of day"
+    },
+    "title": "Evolutions"
+  },
   "evYield": {
     "exceeded": "The sum for the EV yield cannot exceed 3.",
     "label": "EV Yield"

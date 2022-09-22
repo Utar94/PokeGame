@@ -10,11 +10,13 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 {
   internal class SpeciesQuerier : ISpeciesQuerier
   {
+    private readonly DbSet<EvolutionEntity> _evolutions;
     private readonly IMapper _mapper;
     private readonly DbSet<SpeciesEntity> _species;
 
     public SpeciesQuerier(IMapper mapper, ReadContext readContext)
     {
+      _evolutions = readContext.Evolutions;
       _mapper = mapper;
       _species = readContext.Species;
     }
@@ -22,13 +24,33 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
     public async Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
-        .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies)
-        .Include(x => x.Evolutions).ThenInclude(x => x.Item)
-        .Include(x => x.Evolutions).ThenInclude(x => x.Move)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return species == null ? null : _mapper.Map<SpeciesModel>(species);
+    }
+
+    public async Task<EvolutionModel?> GetEvolutionAsync(Guid id, Guid speciesId, CancellationToken cancellationToken)
+    {
+      EvolutionEntity? evolution = await _evolutions.AsNoTracking()
+        .Include(x => x.EvolvingSpecies)
+        .Include(x => x.EvolvedSpecies)
+        .Include(x => x.Item)
+        .Include(x => x.Move)
+        .SingleOrDefaultAsync(x => x.EvolvingSpecies!.Id == id && x.EvolvedSpecies!.Id == speciesId, cancellationToken);
+
+      return evolution == null ? null : _mapper.Map<EvolutionModel>(evolution);
+    }
+
+    public async Task<IEnumerable<EvolutionModel>?> GetEvolutionsAsync(Guid id, CancellationToken cancellationToken)
+    {
+      SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Item)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Move)
+        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+      return species == null ? null : _mapper.Map<IEnumerable<EvolutionModel>>(species.Evolutions);
     }
 
     public async Task<ListModel<SpeciesModel>> GetPagedAsync(string? search, PokemonType? type,

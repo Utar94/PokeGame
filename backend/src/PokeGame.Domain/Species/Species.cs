@@ -1,7 +1,6 @@
 ﻿using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Species.Events;
 using PokeGame.Domain.Species.Payloads;
-using System.IO.Pipes;
 
 namespace PokeGame.Domain.Species
 {
@@ -41,10 +40,28 @@ namespace PokeGame.Domain.Species
     public string? Reference { get; private set; }
 
     public List<Guid> AbilityIds { get; private set; } = new();
-    public List<Evolution> Evolutions { get; private set; } = new();
+    public Dictionary<Guid, Evolution> Evolutions { get; private set; } = new();
 
     public void Delete() => ApplyChange(new SpeciesDeleted());
     public void Update(UpdateSpeciesPayload payload) => ApplyChange(new SpeciesUpdated(payload));
+
+    public void RemoveEvolution(Species evolvedSpecies)
+    {
+      ArgumentNullException.ThrowIfNull(evolvedSpecies);
+
+      if (!Evolutions.ContainsKey(evolvedSpecies.Id))
+      {
+        throw new SpeciesEvolutionNotFoundException(Id, evolvedSpecies.Id);
+      }
+
+      ApplyChange(new SpeciesEvolutionRemoved(evolvedSpecies.Id));
+    }
+    public void SaveEvolution(Species evolvedSpecies, SaveEvolutionPayload payload)
+    {
+      ArgumentNullException.ThrowIfNull(evolvedSpecies);
+
+      ApplyChange(new SpeciesEvolutionSaved(evolvedSpecies.Id, payload));
+    }
 
     protected virtual void Apply(SpeciesCreated @event)
     {
@@ -58,6 +75,23 @@ namespace PokeGame.Domain.Species
     protected virtual void Apply(SpeciesDeleted @event)
     {
       Delete(@event);
+    }
+    protected virtual void Apply(SpeciesEvolutionRemoved @event)
+    {
+      Evolutions.Remove(@event.SpeciesId);
+    }
+    protected virtual void Apply(SpeciesEvolutionSaved @event)
+    {
+      SaveEvolutionPayload payload = @event.Payload;
+
+      Evolutions[@event.SpeciesId] = payload.Method switch
+      {
+        EvolutionMethod.Item => Evolution.Item(payload.ItemId ?? default, payload.Gender, payload.Region, payload.Notes),
+        EvolutionMethod.LevelUp => Evolution.LevelUp(payload.Gender, payload.HighFriendship, payload.ItemId,
+          payload.Level, payload.Location, payload.MoveId, payload.Region, payload.TimeOfDay, payload.Notes),
+        EvolutionMethod.Trade => Evolution.Trade(payload.ItemId, payload.Notes),
+        _ => throw new ArgumentException($"The evolution method '{payload.Method}' is not supported.", nameof(@event)),
+      };
     }
     protected virtual void Apply(SpeciesUpdated @event)
     {
@@ -105,29 +139,6 @@ namespace PokeGame.Domain.Species
       if (payload.AbilityIds != null)
       {
         AbilityIds.AddRange(payload.AbilityIds);
-      }
-
-      Evolutions.Clear();
-      if (payload.Evolutions != null)
-      {
-        foreach (EvolutionPayload evolution in payload.Evolutions)
-        {
-          switch (evolution.Method)
-          {
-            case EvolutionMethod.Item:
-              Evolutions.Add(Evolution.Item(evolution.SpeciesId, evolution.ItemId ?? default, evolution.Gender, evolution.Region, evolution.Notes));
-              break;
-            case EvolutionMethod.LevelUp:
-              Evolutions.Add(Evolution.LevelUp(evolution.SpeciesId, evolution.Gender, evolution.HighFriendship, evolution.ItemId,
-                evolution.Level, evolution.Location, evolution.MoveId, evolution.Region, evolution.TimeOfDay, evolution.Notes));
-              break;
-            case EvolutionMethod.Trade:
-              Evolutions.Add(Evolution.Trade(evolution.SpeciesId, evolution.ItemId, evolution.Notes));
-              break;
-            default:
-              throw new ArgumentException($"The evolution method '{evolution.Method}' is not supported.", nameof(payload));
-          }
-        }
       }
     }
 

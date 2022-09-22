@@ -248,6 +248,7 @@
             </b-row>
             <p>{{ $t('species.totalFormat', { total: totalBaseStatistics }) }}</p>
           </b-tab>
+          <evolution-tab v-if="species" :id="species.id" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <picture-field validate v-model="picture" />
@@ -261,12 +262,14 @@
 
 <script>
 import AbilitySelect from '@/components/Abilities/AbilitySelect.vue'
+import EvolutionTab from './EvolutionTab.vue'
 import { createSpecies, updateSpecies } from '@/api/species'
 
 export default {
   name: 'SpeciesEdit',
   components: {
-    AbilitySelect
+    AbilitySelect,
+    EvolutionTab
   },
   props: {
     json: {

@@ -38,11 +38,12 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public List<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = new();
 
     public void Add(AbilityEntity ability) => SpeciesAbilities.Add(new SpeciesAbilityEntity(this, ability));
-    public void Add(SpeciesEntity species, Evolution evolution, ItemEntity? item = null, MoveEntity? move = null)
+    public EvolutionEntity Add(SpeciesEntity species)
     {
-      var entity = new EvolutionEntity(this, species, item, move);
-      entity.Synchronize(evolution);
+      var entity = new EvolutionEntity(this, species);
       Evolutions.Add(entity);
+
+      return entity;
     }
 
     public void Synchronize(Species species)

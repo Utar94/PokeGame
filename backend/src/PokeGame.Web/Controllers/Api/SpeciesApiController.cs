@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Species;
 using PokeGame.Application.Species.Models;
+using PokeGame.Application.Species.Mutations;
+using PokeGame.Application.Species.Queries;
 using PokeGame.Domain;
 using PokeGame.Domain.Species.Payloads;
 
@@ -12,17 +15,17 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/species")]
   public class SpeciesApiController : ControllerBase
   {
-    private readonly ISpeciesService _service;
+    private readonly IMediator _mediator;
 
-    public SpeciesApiController(ISpeciesService service)
+    public SpeciesApiController(IMediator mediator)
     {
-      _service = service;
+      _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<ActionResult<SpeciesModel>> CreateAsync([FromBody] CreateSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      SpeciesModel species = await _service.CreateAsync(payload, cancellationToken);
+      SpeciesModel species = await _mediator.Send(new CreateSpeciesMutation(payload), cancellationToken);
       var uri = new Uri($"/api/species/{species.Id}", UriKind.Relative);
 
       return Created(uri, species);
@@ -31,7 +34,15 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<SpeciesModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      await _service.DeleteAsync(id, cancellationToken);
+      await _mediator.Send(new DeleteSpeciesMutation(id), cancellationToken);
+
+      return NoContent();
+    }
+
+    [HttpDelete("{id}/evolutions/{speciesId}")]
+    public async Task<ActionResult> RemoveEvolutionAsync(Guid id, Guid speciesId, CancellationToken cancellationToken)
+    {
+      await _mediator.Send(new RemoveSpeciesEvolutionMutation(id, speciesId), cancellationToken);
 
       return NoContent();
     }
@@ -42,16 +53,21 @@ namespace PokeGame.Web.Controllers.Api
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return Ok(await _service.GetAsync(search, type,
-        sort, desc,
-        index, count,
-        cancellationToken));
+      return Ok(await _mediator.Send(new GetSpeciesListQuery
+      {
+        Search = search,
+        Type = type,
+        Sort = sort,
+        Desc = desc,
+        Index = index,
+        Count = count
+      }, cancellationToken));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<SpeciesModel>> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      SpeciesModel? species = await _service.GetAsync(id, cancellationToken);
+      SpeciesModel? species = await _mediator.Send(new GetSpeciesQuery(id), cancellationToken);
       if (species == null)
       {
         return NotFound();
@@ -60,10 +76,22 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(species);
     }
 
+    [HttpGet("{id}/evolutions")]
+    public async Task<ActionResult<IEnumerable<EvolutionModel>>> GetEvolutionsAsync(Guid id, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new GetSpeciesEvolutionsQuery(id), cancellationToken));
+    }
+
     [HttpPut("{id}")]
     public async Task<ActionResult<SpeciesModel>> UpdateAsync(Guid id, [FromBody] UpdateSpeciesPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.UpdateAsync(id, payload, cancellationToken));
+      return Ok(await _mediator.Send(new UpdateSpeciesMutation(id, payload), cancellationToken));
+    }
+
+    [HttpPut("{id}/evolutions/{speciesId}")]
+    public async Task<ActionResult<EvolutionModel>> SaveEvolutionAsync(Guid id, Guid speciesId, [FromBody] SaveEvolutionPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new SaveSpeciesEvolutionMutation(id, speciesId, payload), cancellationToken));
     }
   }
 }

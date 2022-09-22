@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Species;
 using PokeGame.Application.Species.Models;
+using PokeGame.Application.Species.Queries;
 
 namespace PokeGame.Web.Controllers
 {
@@ -10,11 +11,11 @@ namespace PokeGame.Web.Controllers
   [Route("species")]
   public class SpeciesController : Controller
   {
-    private readonly ISpeciesService _speciesService;
+    private readonly IMediator _mediator;
 
-    public SpeciesController(ISpeciesService speciesService)
+    public SpeciesController(IMediator mediator)
     {
-      _speciesService = speciesService;
+      _mediator = mediator;
     }
 
     [HttpGet("/create-species")]
@@ -32,7 +33,7 @@ namespace PokeGame.Web.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult> SpeciesEdit(Guid id, CancellationToken cancellationToken = default)
     {
-      SpeciesModel? species = await _speciesService.GetAsync(id, cancellationToken);
+      SpeciesModel? species = await _mediator.Send(new GetSpeciesQuery(id), cancellationToken);
       if (species == null)
       {
         return NotFound();

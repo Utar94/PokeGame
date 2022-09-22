@@ -2,10 +2,8 @@
 
 namespace PokeGame.Domain.Species.Payloads
 {
-  public class EvolutionPayload
+  public class SaveEvolutionPayload
   {
-    public Guid SpeciesId { get; set; }
-
     public EvolutionMethod Method { get; set; }
 
     public PokemonGender? Gender { get; set; }

@@ -7,6 +7,8 @@ namespace PokeGame.Application.Species
   public interface ISpeciesQuerier
   {
     Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<EvolutionModel?> GetEvolutionAsync(Guid id, Guid speciesId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<EvolutionModel>?> GetEvolutionsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<ListModel<SpeciesModel>> GetPagedAsync(string? search = null, PokemonType? type = null,
       SpeciesSort? sort = null, bool desc = false,
       int? index = null, int? count = null,
