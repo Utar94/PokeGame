@@ -7,6 +7,7 @@
         <div class="my-2">
           <icon-submit class="mx-1" :disabled="!canSubmit" icon="save" :loading="loading" text="actions.save" variant="primary" />
           <icon-button class="mx-1" href="/create-pokemon" icon="plus" text="actions.create" variant="success" />
+          <pokemon-evolution class="mx-1" :evolutions="evolutions" :pokemon="pokemon" @updated="onPokemonEvolved" />
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
@@ -333,9 +334,11 @@ import ExperienceModal from './ExperienceModal.vue'
 import HeldItemModal from './HeldItemModal.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
 import MoveSelect from '@/components/Moves/MoveSelect.vue'
+import PokemonEvolution from './PokemonEvolution.vue'
 import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { updatePokemon } from '@/api/pokemon'
+import { getSpeciesEvolutions } from '@/api/species'
 
 export default {
   name: 'PokemonEdit',
@@ -345,6 +348,7 @@ export default {
     HeldItemModal,
     ItemSelect,
     MoveSelect,
+    PokemonEvolution,
     SwapModal,
     TrainerSelect
   },
@@ -372,6 +376,7 @@ export default {
         SpecialDefense: 0,
         Speed: 0
       },
+      evolutions: [],
       friendship: 0,
       heldItemId: null,
       inParty: true,
@@ -499,6 +504,14 @@ export default {
         Vue.set(this.effortValues, key, 0)
       }
     },
+    async loadEvolutions() {
+      try {
+        const { data } = await getSpeciesEvolutions(this.pokemon.species.id)
+        this.evolutions = data
+      } catch (e) {
+        this.handleError(e)
+      }
+    },
     onExperienceUpdated(pokemon) {
       this.pokemon = pokemon
       this.currentHitPoints = pokemon.currentHitPoints
@@ -506,6 +519,12 @@ export default {
     onHeldItemSaved(pokemon) {
       this.pokemon = pokemon
       this.heldItemId = pokemon.heldItem?.id ?? null
+    },
+    async onPokemonEvolved(pokemon) {
+      this.pokemon = pokemon
+      this.currentHitPoints = pokemon.currentHitPoints
+      this.heldItemId = pokemon.heldItem?.id ?? null
+      await this.loadEvolutions()
     },
     removeMove(index) {
       Vue.delete(this.moves, index)
@@ -573,11 +592,12 @@ export default {
       Vue.set(this.moves, index, move)
     }
   },
-  created() {
+  async created() {
     this.setModel(JSON.parse(this.json))
     if (this.status === 'created') {
       this.toast('success', 'pokemon.created')
     }
+    await this.loadEvolutions()
   },
   watch: {
     currentTrainer(trainer) {

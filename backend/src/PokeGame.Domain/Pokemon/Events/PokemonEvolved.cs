@@ -3,38 +3,38 @@ using PokeGame.Domain.Pokemon.Payloads;
 
 namespace PokeGame.Domain.Pokemon.Events
 {
-  public class PokemonCreated : DomainEvent, INotification
+  public class PokemonEvolved : DomainEvent, INotification
   {
-    public PokemonCreated(
-      byte baseFriendship,
+    public PokemonEvolved(
       Dictionary<Statistic, byte> baseStatistics,
       double? genderRatio,
       LevelingRate levelingRate,
-      CreatePokemonPayload payload,
+      EvolvePokemonPayload payload,
+      bool removeHeldItem,
       string speciesName
     )
     {
-      BaseFriendship = baseFriendship;
       BaseStatistics = baseStatistics;
       GenderRatio = genderRatio;
       LevelingRate = levelingRate;
-      Payload = payload;
+      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      RemoveHeldItem = removeHeldItem;
       SpeciesName = speciesName;
     }
 
-    public byte BaseFriendship { get; private set; }
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; }
     public double? GenderRatio { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
-    public CreatePokemonPayload Payload { get; private set; }
+    public EvolvePokemonPayload Payload { get; private set; }
+    public bool RemoveHeldItem { get; private set; }
     public string SpeciesName { get; private set; }
 
-    public static PokemonCreated Create(CreatePokemonPayload payload, Species.Species species)
+    public static PokemonEvolved Create(EvolvePokemonPayload payload, Species.Species species, bool removeHeldItem)
     {
       ArgumentNullException.ThrowIfNull(payload);
       ArgumentNullException.ThrowIfNull(species);
 
-      return new(species.BaseFriendship, species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, species.Name);
+      return new(species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, removeHeldItem, species.Name);
     }
   }
 }

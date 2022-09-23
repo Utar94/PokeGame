@@ -16,25 +16,25 @@ namespace PokeGame.Domain.Pokemon
     {
     }
 
-    public Guid SpeciesId { get; private set; } // TODO(fpion): update => Evolution
-    public Guid AbilityId { get; private set; } // TODO(fpion): update => Evolution
+    public Guid SpeciesId { get; private set; }
+    public Guid AbilityId { get; private set; }
 
-    public LevelingRate LevelingRate { get; private set; } // TODO(fpion): update => Evolution
+    public LevelingRate LevelingRate { get; private set; }
     public byte Level { get; private set; }
     public uint Experience { get; private set; }
     public byte Friendship { get; private set; }
 
-    public double? GenderRatio { get; private set; } // TODO(fpion): update => Evolution
+    public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
     public Nature Nature { get; private set; } = null!;
-    public string SpeciesName { get; private set; } = null!; // TODO(fpion): update => Evolution
+    public string SpeciesName { get; private set; } = null!;
     public string? Surname { get; private set; }
     public string? Description { get; private set; }
 
-    public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new(); // TODO(fpion): update => Evolution
+    public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
-    public Dictionary<Statistic, ushort> Statistics { get; private set; } = new(); // TODO(fpion): update => Evolution
+    public Dictionary<Statistic, ushort> Statistics { get; private set; } = new();
     public ushort MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out ushort maximumHitPoints) ? maximumHitPoints : (ushort)0;
     public ushort Attack => Statistics.TryGetValue(Statistic.Attack, out ushort attack) ? attack : (ushort)0;
     public ushort Defense => Statistics.TryGetValue(Statistic.Defense, out ushort defense) ? defense : (ushort)0;
@@ -42,11 +42,11 @@ namespace PokeGame.Domain.Pokemon
     public ushort SpecialDefense => Statistics.TryGetValue(Statistic.SpecialDefense, out ushort specialDefense) ? specialDefense : (ushort)0;
     public ushort Speed => Statistics.TryGetValue(Statistic.Speed, out ushort speed) ? speed : (ushort)0;
 
-    public ushort CurrentHitPoints { get; private set; } // TODO(fpion): update => Evolution
+    public ushort CurrentHitPoints { get; private set; }
     public StatusCondition? StatusCondition { get; private set; }
 
     public List<PokemonMove> Moves { get; private set; } = new();
-    public Guid? HeldItemId { get; private set; } // TODO(fpion): update => Evolution if Method != Item && ItemId != null
+    public Guid? HeldItemId { get; private set; }
 
     public History? History { get; private set; }
     public Guid? OriginalTrainerId { get; private set; }
@@ -67,6 +67,7 @@ namespace PokeGame.Domain.Pokemon
 
       ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
     }
+    public void Evolve(EvolvePokemonPayload payload, Species.Species species, bool removeHeldItem = false) => ApplyChange(PokemonEvolved.Create(payload, species, removeHeldItem));
     public void GainedExperience(ExperienceGainPayload payload) => ApplyChange(new PokemonGainedExperience(payload));
     public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
     public void HoldItem(Item? item) => ApplyChange(new PokemonHeldItem(item?.Id));
@@ -151,6 +152,33 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonDeleted @event)
     {
       Delete(@event);
+    }
+    protected virtual void Apply(PokemonEvolved @event)
+    {
+      EvolvePokemonPayload payload = @event.Payload;
+
+      SpeciesId = payload.SpeciesId;
+      AbilityId = payload.AbilityId;
+
+      LevelingRate = @event.LevelingRate;
+
+      GenderRatio = @event.GenderRatio;
+      SpeciesName = @event.SpeciesName;
+
+      BaseStatistics.Clear();
+      foreach (var (statistic, value) in @event.BaseStatistics)
+      {
+        BaseStatistics[statistic] = value;
+      }
+
+      ushort hitPointsLost = (ushort)(MaximumHitPoints - CurrentHitPoints);
+      ComputeStatistics();
+      CurrentHitPoints = (ushort)(MaximumHitPoints - hitPointsLost);
+
+      if (@event.RemoveHeldItem)
+      {
+        HeldItemId = null;
+      }
     }
     protected virtual void Apply(PokemonGainedExperience @event)
     {

@@ -23,6 +23,15 @@
     "totalFormat": "Total EV: {total} (max: 510)"
   },
   "empty": "This list is empty.",
+  "evolution": {
+    "condition": "Condition",
+    "current": "Current",
+    "empty": "This Pokémon has no evolution.",
+    "evolve": "Evolve",
+    "evolved": "The Pokémon has evolved.",
+    "success": "Success",
+    "title": "Evolve Pokémon"
+  },
   "experience": {
     "add": "Add",
     "gained": "The Pokémon has gained experience.",

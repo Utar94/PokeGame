@@ -30,6 +30,15 @@ namespace PokeGame.Web.Filters
         context.ExceptionHandled = true;
         context.Result = new BadRequestObjectResult(new { code });
       }
+      else if (context.Exception is PokemonCannotEvolveException)
+      {
+        context.ExceptionHandled = true;
+        context.Result = new BadRequestObjectResult(new
+        {
+          Code = "PokemonCannotEvolve",
+          Errors = context.Exception.Data["Errors"]
+        });
+      }
     }
   }
 }

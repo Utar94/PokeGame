@@ -9,6 +9,6 @@ namespace PokeGame.Domain.Pokemon.Events
       ItemId = itemId;
     }
 
-    public Guid? ItemId { get; }
+    public Guid? ItemId { get; private set; }
   }
 }
