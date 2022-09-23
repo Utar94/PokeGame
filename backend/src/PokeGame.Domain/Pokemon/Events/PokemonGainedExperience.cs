@@ -10,6 +10,6 @@ namespace PokeGame.Domain.Pokemon.Events
       Payload = payload ?? throw new ArgumentNullException(nameof(payload));
     }
 
-    public ExperienceGainPayload Payload { get; }
+    public ExperienceGainPayload Payload { get; private set; }
   }
 }

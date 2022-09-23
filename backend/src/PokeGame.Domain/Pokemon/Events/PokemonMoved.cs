@@ -10,7 +10,7 @@ namespace PokeGame.Domain.Pokemon.Events
       Box = box;
     }
 
-    public byte? Position { get; }
-    public byte? Box { get; }
+    public byte? Position { get; private set; }
+    public byte? Box { get; private set; }
   }
 }
