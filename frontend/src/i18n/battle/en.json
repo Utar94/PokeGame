@@ -22,6 +22,22 @@
     "confirm": "Are you sure you want to escape the battle?",
     "label": "Escape"
   },
+  "experience": {
+    "canEvolve": "Can evolve (×1.2)",
+    "defeatedPokemon": "Defeated Pokémon",
+    "hasParticipated": "Has participated in battle (×1 if true; ×0.5 otherwise)",
+    "highFriendship": "Friendship 220+ (×1.2)",
+    "label": "Experience",
+    "levelUp": "Level Up!",
+    "leveledUp": "The Pokémon have gained experience. Be sure to check the moves and evolution of leveled-up Pokémon.",
+    "luckyEgg": "Holding Lucky Egg (×1.5)",
+    "modifiers": "Modifiers",
+    "options": "Options",
+    "otherModifiers": "Other Modifiers",
+    "title": "Distribute Experience",
+    "traded": "Traded Pokémon (×1.5)",
+    "trainerBattle": "Trainer Battle (×1.5)"
+  },
   "healing": {
     "removeAllConditions": "Remove All Conditions",
     "removeStatusCondition": "Remove Status Condition",

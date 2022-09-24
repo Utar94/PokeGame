@@ -1,6 +1,10 @@
 import { _delete, get, patch, post, put } from '.'
 import { getQueryString } from '@/helpers/queryUtils'
 
+export async function battleGain(payload) {
+  return await patch('/api/pokemon/battle/gain', payload)
+}
+
 export async function catchPokemon(id, payload) {
   return await patch(`/api/pokemon/${id}/catch`, payload)
 }

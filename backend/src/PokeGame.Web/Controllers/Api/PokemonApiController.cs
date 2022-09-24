@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Pokemon.Mutations;
+using PokeGame.Application.Pokemon.Payloads;
 using PokeGame.Application.Pokemon.Queries;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
@@ -77,6 +78,12 @@ namespace PokeGame.Web.Controllers.Api
     public async Task<ActionResult<PokemonModel>> UpdateAsync(Guid id, [FromBody] UpdatePokemonPayload payload, CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new UpdatePokemonMutation(id, payload), cancellationToken));
+    }
+
+    [HttpPatch("battle/gain")]
+    public async Task<ActionResult<IEnumerable<PokemonModel>>> BattleGainAsync([FromBody] BattleGainPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new BattleGainMutation(payload), cancellationToken));
     }
 
     [HttpPatch("{id}/catch")]

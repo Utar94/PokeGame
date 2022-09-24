@@ -23,6 +23,7 @@ namespace PokeGame.Domain.Pokemon
     public byte Level { get; private set; }
     public uint Experience { get; private set; }
     public byte Friendship { get; private set; }
+    public bool HasHighFriendshid => Friendship >= 220;
 
     public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
@@ -51,6 +52,7 @@ namespace PokeGame.Domain.Pokemon
     public History? History { get; private set; }
     public Guid? OriginalTrainerId { get; private set; }
     public PokemonPosition? Position { get; private set; }
+    public bool IsTraded => History?.TrainerId != OriginalTrainerId;
 
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
