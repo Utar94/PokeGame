@@ -19,17 +19,18 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       _mapper = mapper;
     }
 
+    protected IQueryable<PokemonEntity> BaseQuery => _pokemon.AsNoTracking()
+      .Include(x => x.Ability)
+      .Include(x => x.CurrentTrainer)
+      .Include(x => x.HeldItem)
+      .Include(x => x.Moves).ThenInclude(x => x.Move)
+      .Include(x => x.OriginalTrainer)
+      .Include(x => x.Position)
+      .Include(x => x.Species);
+
     public async Task<PokemonModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      PokemonEntity? pokemon = await _pokemon.AsNoTracking()
-        .Include(x => x.Ability)
-        .Include(x => x.CurrentTrainer)
-        .Include(x => x.HeldItem)
-        .Include(x => x.Moves).ThenInclude(x => x.Move)
-        .Include(x => x.OriginalTrainer)
-        .Include(x => x.Position)
-        .Include(x => x.Species)
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      PokemonEntity? pokemon = await BaseQuery.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return pokemon == null ? null : _mapper.Map<PokemonModel>(pokemon);
     }
@@ -40,19 +41,21 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
       byte box = position.Box ?? 0;
 
-      PokemonEntity? pokemon = await _pokemon.AsNoTracking()
-        .Include(x => x.Ability)
-        .Include(x => x.CurrentTrainer)
-        .Include(x => x.HeldItem)
-        .Include(x => x.Moves).ThenInclude(x => x.Move)
-        .Include(x => x.OriginalTrainer)
-        .Include(x => x.Position)
-        .Include(x => x.Species)
-        .SingleOrDefaultAsync(x => x.CurrentTrainer!.Id == trainerId
-          && x.Position!.Position == position.Position
-          && x.Position.Box == box, cancellationToken);
+      PokemonEntity? pokemon = await BaseQuery.SingleOrDefaultAsync(x
+        => x.CurrentTrainer!.Id == trainerId
+        && x.Position!.Position == position.Position
+        && x.Position.Box == box, cancellationToken);
 
       return pokemon == null ? null : _mapper.Map<PokemonModel>(pokemon);
+    }
+
+    public async Task<IEnumerable<PokemonModel>> GetAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    {
+      PokemonEntity[] pokemon = await BaseQuery
+        .Where(x => ids.Contains(x.Id))
+        .ToArrayAsync(cancellationToken);
+
+      return _mapper.Map<IEnumerable<PokemonModel>>(pokemon);
     }
 
     public async Task<ListModel<PokemonModel>> GetPagedAsync(PokemonGender? gender, byte? inBox, bool? inParty, bool? isWild, string? search, Guid? speciesId, Guid? trainerId,
@@ -60,14 +63,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<PokemonEntity> query = _pokemon.AsNoTracking()
-        .Include(x => x.Ability)
-        .Include(x => x.CurrentTrainer)
-        .Include(x => x.HeldItem)
-        .Include(x => x.Moves).ThenInclude(x => x.Move)
-        .Include(x => x.OriginalTrainer)
-        .Include(x => x.Position)
-        .Include(x => x.Species);
+      IQueryable<PokemonEntity> query = BaseQuery;
 
       if (gender.HasValue)
       {

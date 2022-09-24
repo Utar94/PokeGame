@@ -15,9 +15,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 import DefeatedPokemon from './DefeatedPokemon.vue'
 import WinningPokemonTable from './WinningPokemonTable.vue'
+import { battleGain } from '@/api/pokemon'
 
 export default {
   name: 'DistributeExperience',
@@ -31,21 +33,35 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleExperienceWinners']),
+    ...mapGetters(['battleExperienceDefeatedPokemon', 'battleExperienceWinners', 'isTrainerBattle']),
     canSubmit() {
       return !this.loading && Object.keys(this.battleExperienceWinners).length > 0
+    },
+    payload() {
+      return {
+        defeatedId: this.battleExperienceDefeatedPokemon.id,
+        isTrainerBattle: this.isTrainerBattle,
+        winners: Object.values(this.battleExperienceWinners).map(({ pokemon, canEvolve, hasParticipated, otherModifiers }) => ({
+          id: pokemon.id,
+          canEvolve,
+          hasParticipated,
+          otherModifiers
+        }))
+      }
     }
   },
   methods: {
-    ...mapActions(['battlePrevious', 'loadPokemonList']),
+    ...mapActions(['battlePrevious', 'loadPokemonList', 'updatePokemon']),
     async submit() {
       if (!this.loading) {
         this.loading = true
         try {
           if (await this.$refs.form.validate()) {
-            // await usePokemonMove(this.battleMoveAttacker.id, this.selectedBattleMove.id, this.payload)
-            this.loadPokemonList()
-            // this.toast('success', 'pokemon.updated')
+            const { data } = await battleGain(this.payload)
+            for (const pokemon of data) {
+              this.updatePokemon(pokemon)
+            }
+            Vue.nextTick(() => this.toast('warning', 'battle.experience.leveledUp', 'warning'))
             this.$refs.form.reset()
             this.battlePrevious()
           }

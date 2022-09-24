@@ -74,7 +74,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         errors.Add($"Gender: (Expected={evolution.Gender}, Actual={pokemon.Gender})");
       }
-      if (evolution.HighFriendship && pokemon.Friendship < 220)
+      if (evolution.HighFriendship && !pokemon.HasHighFriendshid)
       {
         errors.Add($"HighFriendship: (Friendship={pokemon.Friendship})");
       }

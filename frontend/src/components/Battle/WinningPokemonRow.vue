@@ -91,7 +91,7 @@ export default {
     ...mapGetters(['battleExperienceDefeatedPokemon', 'battleExperienceWinners', 'isTrainerBattle']),
     experience() {
       const { level, species } = this.battleExperienceDefeatedPokemon
-      let experience = (species.baseExperienceYield * level) / 5
+      let experience = ((species.baseExperienceYield ?? 0) * level) / 5
       if (!this.winner.hasParticipated) {
         experience /= 2
       }

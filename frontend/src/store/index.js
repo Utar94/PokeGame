@@ -273,7 +273,7 @@ export default new Vuex.Store({
         delete winners[pokemon.id]
       } else {
         const hasParticipated = battle.activePokemon.includes(pokemon.id)
-        winners[pokemon.id] = { pokemon, canEvolve: 0, hasParticipated, otherModifiers: 1 }
+        winners[pokemon.id] = { pokemon, canEvolve: false, hasParticipated, otherModifiers: 1 }
       }
       commit('setBattleExperienceWinners', winners)
     },
