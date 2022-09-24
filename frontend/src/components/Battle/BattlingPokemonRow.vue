@@ -35,15 +35,22 @@
     </td>
     <td>
       <icon-button
-        v-if="active"
+        v-if="active && !hasEnded && pokemon.currentHitPoints > 0"
         class="mx-1"
-        :disabled="hasEnded || pokemon.currentHitPoints === 0"
         icon="magic"
         text="battle.makeMove.label"
         variant="danger"
-        @click="makeMove"
+        @click="makeBattleMove(pokemon)"
       />
       <switch-pokemon v-if="isTrainerBattle || team === 'players'" :active="active" :pokemon="pokemon" />
+      <icon-button
+        v-if="pokemon.currentHitPoints === 0 && team === 'opponents'"
+        class="mx-1"
+        icon="level-up-alt"
+        text="battle.experience.label"
+        variant="info"
+        @click="distributeExperience(pokemon)"
+      />
     </td>
   </tr>
 </template>
@@ -91,10 +98,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['makeBattleMove']),
-    makeMove() {
-      this.makeBattleMove(this.pokemon)
-    }
+    ...mapActions(['distributeExperience', 'makeBattleMove'])
   }
 }
 </script>
