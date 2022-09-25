@@ -69,12 +69,12 @@ namespace PokeGame.Application.Pokemon.Mutations
 
         var gainPayload = new ExperienceGainPayload
         {
-          EffortValues = defeatedSpecies.EvYield.Select(pair => new StatisticValuePayload(pair)),
+          EffortValues = defeatedSpecies.EvYield.Select(pair => StatisticValuePayload.Create(pair)),
           Experience = CalculateExperienceGain(defeatedPokemon, defeatedSpecies, winnerPayload, winnerPokemon, heldItem, payload.IsTrainerBattle)
         };
 
         winnerPokemon.GainedExperience(gainPayload);
-        _validator.Validate(winnerPokemon);
+        _validator.ValidateAndThrow(winnerPokemon);
       }
 
       await _repository.SaveAsync(pokemonIndex.Values, cancellationToken);

@@ -35,6 +35,7 @@ namespace PokeGame.Domain.Pokemon
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public Dictionary<Statistic, byte> IndividualValues { get; private set; } = new();
     public Dictionary<Statistic, byte> EffortValues { get; private set; } = new();
+    public int RemainingEffortValues => 510 - EffortValues.Sum(x => x.Value);
     public Dictionary<Statistic, ushort> Statistics { get; private set; } = new();
     public ushort MaximumHitPoints => Statistics.TryGetValue(Statistic.HP, out ushort maximumHitPoints) ? maximumHitPoints : (ushort)0;
     public ushort Attack => Statistics.TryGetValue(Statistic.Attack, out ushort attack) ? attack : (ushort)0;
@@ -212,20 +213,27 @@ namespace PokeGame.Domain.Pokemon
       byte friendship = (byte)(Friendship + payload.Friendship);
       Friendship = friendship < Friendship ? byte.MaxValue : Friendship;
 
-      if (payload.EffortValues != null)
+      if (payload.EffortValues != null && RemainingEffortValues > 0)
       {
         foreach (StatisticValuePayload effortValue in payload.EffortValues)
         {
+          byte gain = (byte)Math.Min(effortValue.Value, RemainingEffortValues);
+
           if (EffortValues.TryGetValue(effortValue.Statistic, out byte value))
           {
-            value += effortValue.Value;
+            value += gain;
             EffortValues[effortValue.Statistic] = value < EffortValues[effortValue.Statistic]
               ? byte.MaxValue
               : value;
           }
           else
           {
-            EffortValues.Add(effortValue.Statistic, effortValue.Value);
+            EffortValues.Add(effortValue.Statistic, gain);
+          }
+          
+          if (RemainingEffortValues < 1)
+          {
+            break;
           }
         }
       }
