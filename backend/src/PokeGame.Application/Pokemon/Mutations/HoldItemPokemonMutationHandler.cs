@@ -54,7 +54,7 @@ namespace PokeGame.Application.Pokemon.Mutations
 
         trainer.AddItem(heldItem, quantity: 1);
       }
-      _trainerValidator.Validate(trainer);
+      _trainerValidator.ValidateAndThrow(trainer);
       await _repository.SaveAsync(trainer, cancellationToken);
 
       pokemon.HoldItem(item);
