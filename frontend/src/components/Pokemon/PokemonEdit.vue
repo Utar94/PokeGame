@@ -77,7 +77,7 @@
             <item-select id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId">
               <b-input-group-append v-if="pokemon.history">
                 <icon-button icon="shopping-cart" text="trainers.inventory.label" variant="primary" v-b-modal.heldItem />
-                <held-item-modal :item="pokemon.heldItem" :pokemonId="pokemon.id" :trainerId="pokemon.history.trainer.id" @saved="onHeldItemSaved" />
+                <held-item-modal :pokemon="pokemon" @saved="onHeldItemSaved" />
               </b-input-group-append>
             </item-select>
             <description-field v-model="description" />
@@ -284,6 +284,7 @@
               </form-field>
             </b-row>
             <b-row>
+              <item-select category="PokeBall" class="col" id="ballId" label="pokemon.caughtWithBall" :required="Boolean(currentTrainer)" v-model="ballId" />
               <form-field
                 class="col"
                 :disabled="!currentTrainer"
@@ -364,6 +365,7 @@ export default {
   },
   data() {
     return {
+      ballId: null,
       box: 1,
       currentHitPoints: 0,
       currentTrainer: null,
@@ -421,6 +423,7 @@ export default {
         (this.currentTrainer?.id ?? null) !== (this.pokemon.history?.trainer.id ?? null) ||
         (this.inParty ? null : this.box) !== this.pokemon.box ||
         this.position !== (this.pokemon.position ?? 1) ||
+        this.ballId !== (this.pokemon.history?.ball.id ?? null) ||
         this.metLevel !== (this.pokemon.history?.level ?? 1) ||
         (this.metLocation ?? '') !== (this.pokemon.history?.location ?? '') ||
         this.metOn !== (this.pokemon.history?.metOn ?? null) ||
@@ -462,6 +465,7 @@ export default {
         })),
         history: this.currentTrainer
           ? {
+              ballId: this.ballId,
               level: this.metLevel,
               location: this.metLocation,
               metOn: this.metOn,
@@ -531,6 +535,7 @@ export default {
     },
     setModel(pokemon) {
       this.pokemon = pokemon
+      this.ballId = pokemon.history?.ball?.id ?? null
       this.currentHitPoints = pokemon.currentHitPoints
       this.currentTrainer = pokemon.history?.trainer ?? null
       this.description = pokemon.description
@@ -600,13 +605,17 @@ export default {
     await this.loadEvolutions()
   },
   watch: {
-    currentTrainer(trainer) {
+    currentTrainer(trainer, previous) {
       if (!trainer) {
         this.inParty = true
+        this.ballId = null
         this.metLevel = 1
         this.metLocation = null
         this.metOn = null
         this.originalTrainer = null
+      } else if (!previous) {
+        this.metLevel = this.pokemon.level
+        this.metOn = new Date()
       }
     },
     inParty() {

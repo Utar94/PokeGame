@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PokeGame.Application.Items.Models;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Species.Models;
@@ -59,11 +60,12 @@ namespace PokeGame.Infrastructure.ReadModel.Profiles
 
     private static HistoryModel? GetHistory(PokemonEntity pokemon, PokemonModel model, HistoryModel? member, ResolutionContext context)
     {
-      if (pokemon.MetAtLevel.HasValue && pokemon.MetLocation != null
+      if (pokemon.Ball != null && pokemon.MetAtLevel.HasValue && pokemon.MetLocation != null
         && pokemon.MetOn.HasValue && pokemon.CurrentTrainer != null)
       {
         return new HistoryModel
         {
+          Ball = pokemon.Ball == null ? null : context.Mapper.Map<ItemModel>(pokemon.Ball),
           Level = pokemon.MetAtLevel.Value,
           Location = pokemon.MetLocation,
           MetOn = pokemon.MetOn.Value,

@@ -61,17 +61,18 @@ namespace PokeGame.Domain.Pokemon
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
 
-    public void Catch(string location, Guid trainerId, byte position, byte? box = null, byte? friendship = null, string? surname = null)
+    public void Catch(Guid ballId, string location, Guid trainerId, byte position, byte? box = null, byte? friendship = null, string? surname = null)
     {
       if (OriginalTrainerId.HasValue || History != null)
       {
         throw new CannotCatchTrainerPokemonException(this);
       }
 
-      ApplyChange(new PokemonCaught(location, trainerId, position, box, friendship, surname));
+      ApplyChange(new PokemonCaught(ballId, location, trainerId, position, box, friendship, surname));
     }
     public void Evolve(EvolvePokemonPayload payload, Species.Species species, bool removeHeldItem = false) => ApplyChange(PokemonEvolved.Create(payload, species, removeHeldItem));
-    public void GainedExperience(ExperienceGainPayload payload, bool isHoldingSootheBell) => ApplyChange(new PokemonGainedExperience(payload, isHoldingSootheBell));
+    public void GainedExperience(ExperienceGainPayload payload, bool hasBeenCaughtWithLuxuryBall, bool isHoldingSootheBell)
+      => ApplyChange(new PokemonGainedExperience(payload, hasBeenCaughtWithLuxuryBall, isHoldingSootheBell));
     public void Heal(HealPokemonPayload payload, IEnumerable<Move>? moves = null) => ApplyChange(new PokemonHealed(payload, moves?.ToDictionary(x => x.Id, x => x.PowerPoints)));
     public void HoldItem(Item? item) => ApplyChange(new PokemonHeldItem(item?.Id));
     public void Move(PokemonPosition? position) => ApplyChange(new PokemonMoved(position?.Position, position?.Box));
@@ -110,6 +111,7 @@ namespace PokeGame.Domain.Pokemon
 
       SetHistory(new HistoryPayload
       {
+        BallId = @event.BallId,
         Level = Level,
         Location = @event.Location,
         MetOn = DateTime.UtcNow,
@@ -208,18 +210,18 @@ namespace PokeGame.Domain.Pokemon
 
         Level = level;
 
-        if (Friendship < 100)
+        byte gain = (byte)(Friendship < 100 ? 5 : (Friendship < 200 ? 3 : 2));
+
+        if (@event.HasBeenCaughtWithLuxuryBall)
         {
-          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 7 : 5, byte.MaxValue - Friendship);
+          gain *= 2;
         }
-        else if (Friendship < 200)
+        if (@event.IsHoldingSootheBell)
         {
-          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 4 : 3, byte.MaxValue - Friendship);
+          gain = (byte)Math.Floor(gain * 1.5);
         }
-        else
-        {
-          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 3 : 2, byte.MaxValue - Friendship);
-        }
+
+        Friendship += (byte)Math.Min(gain, byte.MaxValue - Friendship);
       }
       if (Level > previousLevel)
       {

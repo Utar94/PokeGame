@@ -208,6 +208,7 @@ export default {
                       statusCondition: this.statusCondition
                     }
                   : null,
+                ballId: this.itemId,
                 friendship: this.friendship || null,
                 surname: this.surname,
                 location: this.battleLocation,

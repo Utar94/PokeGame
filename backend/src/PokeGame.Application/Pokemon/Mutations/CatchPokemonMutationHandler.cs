@@ -2,6 +2,7 @@
 using MediatR;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Domain.Items;
 using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
@@ -30,6 +31,9 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       CatchPokemonPayload payload = request.Payload;
 
+      Item ball = await _repository.LoadAsync<Item>(payload.BallId, cancellationToken)
+        ?? throw new EntityNotFoundException<Item>(payload.BallId, nameof(payload.BallId));
+
       Trainer trainer = await _repository.LoadAsync<Trainer>(payload.TrainerId, cancellationToken)
         ?? throw new EntityNotFoundException<Trainer>(payload.TrainerId, nameof(payload.TrainerId));
 
@@ -51,7 +55,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         IEnumerable<Move> moves = await _repository.LoadAsync<Move>(moveIds, cancellationToken);
         pokemon.Heal(healPayload, moves);
       }
-      pokemon.Catch(payload.Location, trainer.Id, position.Position, position.Box, payload.Friendship, payload.Surname);
+      pokemon.Catch(ball.Id, payload.Location, trainer.Id, position.Position, position.Box, payload.Friendship, payload.Surname);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);

@@ -29,6 +29,8 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public ItemEntity? HeldItem { get; private set; }
     public int? HeldItemId { get; private set; }
 
+    public ItemEntity? Ball { get; private set; }
+    public int? BallId { get; private set; }
     public byte? MetAtLevel { get; private set; }
     public string? MetLocation { get; private set; }
     public DateTime? MetOn { get; private set; }
@@ -52,6 +54,12 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     {
       Ability = ability ?? throw new ArgumentNullException(nameof(ability));
       AbilityId = ability.Sid;
+    }
+
+    public void SetBall(ItemEntity? ball)
+    {
+      Ball = ball;
+      BallId = ball?.Sid;
     }
 
     public void SetCurrentTrainer(TrainerEntity? currentTrainer)

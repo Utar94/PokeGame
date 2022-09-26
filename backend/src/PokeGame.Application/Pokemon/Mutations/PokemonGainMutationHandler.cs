@@ -27,6 +27,15 @@ namespace PokeGame.Application.Pokemon.Mutations
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
+      bool hasBeenCaughtWithLuxuryBall = false;
+      if (pokemon.History != null)
+      {
+        Item ball = await _repository.LoadAsync<Item>(pokemon.History.BallId, cancellationToken)
+          ?? throw new EntityNotFoundException<Item>(pokemon.History.BallId);
+
+        hasBeenCaughtWithLuxuryBall = ball.Name == "Luxury Ball";
+      }
+
       bool isHoldingSootheBell = false;
       if (pokemon.HeldItemId.HasValue)
       {
@@ -36,7 +45,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         isHoldingSootheBell = heldItem.Name == "Soothe Bell";
       }
 
-      pokemon.GainedExperience(request.Payload, isHoldingSootheBell);
+      pokemon.GainedExperience(request.Payload, hasBeenCaughtWithLuxuryBall, isHoldingSootheBell);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
