@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 v-t="'battle.experience.defeatedPokemon'" />
+    <h3 v-t="`battle.experience.${pokemon.currentHitPoints > 0 ? 'caughtPokemon' : 'faintedPokemon'}`" />
     <table class="table">
       <thead>
         <tr>
@@ -62,7 +62,7 @@ export default {
       return this.pokemon.species
     },
     trainer() {
-      return this.pokemon.trainer
+      return this.pokemon.history?.trainer ?? null
     }
   }
 }

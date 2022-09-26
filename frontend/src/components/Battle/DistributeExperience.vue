@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['battlePrevious', 'loadPokemonList', 'updatePokemon']),
+    ...mapActions(['battlePrevious', 'loadPokemonList', 'toggleBattlingPlayerPokemon', 'updatePokemon']),
     async submit() {
       if (!this.loading) {
         this.loading = true
@@ -60,6 +60,10 @@ export default {
             const { data } = await battleGain(this.payload)
             for (const pokemon of data) {
               this.updatePokemon(pokemon)
+            }
+            const { box, currentHitPoints } = this.battleExperienceDefeatedPokemon
+            if (currentHitPoints > 0 && box === null) {
+              this.toggleBattlingPlayerPokemon(this.battleExperienceDefeatedPokemon.id)
             }
             Vue.nextTick(() => this.toast('warning', 'battle.experience.leveledUp', 'warning'))
             this.$refs.form.reset()
@@ -70,6 +74,14 @@ export default {
         } finally {
           this.loading = false
         }
+      }
+    }
+  },
+  mounted() {
+    if (this.battleExperienceDefeatedPokemon) {
+      const { box, currentHitPoints } = this.battleExperienceDefeatedPokemon
+      if (currentHitPoints > 0) {
+        this.toast('success', `battle.throwBall.caughtToast.${box === null ? 'party' : 'box'}`)
       }
     }
   }

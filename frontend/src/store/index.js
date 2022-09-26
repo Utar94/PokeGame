@@ -576,16 +576,16 @@ export default new Vuex.Store({
       state.battle.escapeAttempts = escapeAttempts ?? 0
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
-      state.battle.experience.defeatedPokemon = defeatedPokemon || null
+      state.battle.experience.defeatedPokemon = defeatedPokemon ?? null
     },
     setPokemonList(state, pokemonList) {
-      state.pokemonList = pokemonList || {}
+      state.pokemonList = pokemonList ?? {}
     },
     setSelectedBattleMove(state, selected) {
       state.battle.move.selected = selected ?? null
     },
     setTrainers(state, trainers) {
-      state.trainers = trainers || {}
+      state.trainers = trainers ?? {}
     }
   }
 })
