@@ -373,7 +373,7 @@ export default {
         baseStatistics: Object.entries(this.baseStatistics)
           .filter(([, value]) => value !== 0)
           .map(([statistic, value]) => ({ statistic, value })),
-        reference: this.reference,
+        reference: this.reference || null,
         picture: this.picture || null,
         notes: this.notes
       }

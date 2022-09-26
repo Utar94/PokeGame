@@ -471,7 +471,7 @@ export default {
         originalTrainerId: this.originalTrainer?.id ?? null,
         position: this.currentTrainer ? this.position : null,
         box: this.currentTrainer && !this.inParty ? this.box : null,
-        reference: this.reference,
+        reference: this.reference || null,
         notes: this.notes
       }
       return payload

@@ -2,6 +2,7 @@
 using MediatR;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
 using PokeGame.Domain.Trainers;
@@ -37,11 +38,20 @@ namespace PokeGame.Application.Pokemon.Mutations
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
-      if (payload.Heal != null)
+      if (payload.Heal != null || position.Box.HasValue)
       {
-        pokemon.Heal(payload.Heal);
+        HealPokemonPayload healPayload = payload.Heal ?? new()
+        {
+          RemoveAllConditions = true,
+          RestoreAllPowerPoints = true,
+          RestoreHitPoints = 999
+        };
+
+        IEnumerable<Guid> moveIds = pokemon.Moves.Select(x => x.MoveId);
+        IEnumerable<Move> moves = await _repository.LoadAsync<Move>(moveIds, cancellationToken);
+        pokemon.Heal(healPayload, moves);
       }
-      pokemon.Catch(payload.Location, trainer.Id, position.Position, position.Box, payload.Surname);
+      pokemon.Catch(payload.Location, trainer.Id, position.Position, position.Box, payload.Friendship, payload.Surname);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
@@ -58,7 +68,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       HashSet<string> positions = trainerPokemon.Items.Where(x => x.Position.HasValue)
         .Select(x => x.Box.HasValue ? string.Join('_', x.Box.Value, x.Position!.Value) : x.Position!.Value.ToString()).ToHashSet();
 
-      for (byte position = 0; position <= 5; position++)
+      for (byte position = 1; position <= 6; position++)
       {
         if (!positions.Contains(position.ToString()))
         {
@@ -66,9 +76,9 @@ namespace PokeGame.Application.Pokemon.Mutations
         }
       }
 
-      for (byte box = 0; box <= 31; box++)
+      for (byte box = 1; box <= 32; box++)
       {
-        for (byte position = 0; position <= 29; position++)
+        for (byte position = 1; position <= 30; position++)
         {
           if (!positions.Contains($"{box}_{position}"))
           {

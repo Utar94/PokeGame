@@ -52,14 +52,14 @@ namespace PokeGame.Application.Pokemon.Mutations
         throw new PokemonNotFoundException(missingIds);
       }
 
-      Domain.Pokemon.Pokemon pokemon = pokemonIndex[request.Id];
-      pokemon.UseMove(move, payload);
-      _validator.ValidateAndThrow(pokemon);
+      Domain.Pokemon.Pokemon attacker = pokemonIndex[request.Id];
+      attacker.UseMove(move, payload);
+      _validator.ValidateAndThrow(attacker);
 
-      Ability ability = await _repository.LoadAsync<Ability>(pokemon.AbilityId, cancellationToken)
-        ?? throw new EntityNotFoundException<Ability>(pokemon.AbilityId);
-      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(pokemon.SpeciesId, cancellationToken)
-        ?? throw new EntityNotFoundException<Domain.Species.Species>(pokemon.SpeciesId);
+      Ability ability = await _repository.LoadAsync<Ability>(attacker.AbilityId, cancellationToken)
+        ?? throw new EntityNotFoundException<Ability>(attacker.AbilityId);
+      Domain.Species.Species species = await _repository.LoadAsync<Domain.Species.Species>(attacker.SpeciesId, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Species.Species>(attacker.SpeciesId);
 
       bool multipleTargets = payload.Targets!.Count() > 1;
       foreach (TargetPayload target in payload.Targets!)
@@ -69,17 +69,17 @@ namespace PokeGame.Application.Pokemon.Mutations
         ushort damage = 0;
         if (move.Category != MoveCategory.Status)
         {
-          damage = CalculateDamage(move, pokemon, ability, species, targetPokemon, multipleTargets, payload.Damage!, target);
+          damage = CalculateDamage(move, attacker, ability, species, targetPokemon, multipleTargets, payload.Damage!, target);
         }
 
-        targetPokemon.Wound(damage, payload.StatusCondition);
+        targetPokemon.Wound(damage, attacker.Level, payload.StatusCondition);
         _validator.ValidateAndThrow(targetPokemon);
       }
 
       await _repository.SaveAsync(pokemonIndex.Values, cancellationToken);
 
-      return await _querier.GetAsync(pokemon.Id, cancellationToken)
-        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
+      return await _querier.GetAsync(attacker.Id, cancellationToken)
+        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(attacker.Id);
     }
 
     private static ushort CalculateDamage(

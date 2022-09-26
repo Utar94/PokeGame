@@ -73,7 +73,8 @@ namespace PokeGame.Application.Pokemon.Mutations
           Experience = CalculateExperienceGain(defeatedPokemon, defeatedSpecies, winnerPayload, winnerPokemon, heldItem, payload.IsTrainerBattle)
         };
 
-        winnerPokemon.GainedExperience(gainPayload);
+        bool isHoldingSootheBell = heldItem?.Name == "Soothe Bell";
+        winnerPokemon.GainedExperience(gainPayload, isHoldingSootheBell);
         _validator.ValidateAndThrow(winnerPokemon);
       }
 

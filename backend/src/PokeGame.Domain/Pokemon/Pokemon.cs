@@ -61,18 +61,18 @@ namespace PokeGame.Domain.Pokemon
     public void Delete() => ApplyChange(new PokemonDeleted());
     public void Update(UpdatePokemonPayload payload) => ApplyChange(new PokemonUpdated(payload));
 
-    public void Catch(string location, Guid trainerId, byte position, byte? box = null, string? surname = null)
+    public void Catch(string location, Guid trainerId, byte position, byte? box = null, byte? friendship = null, string? surname = null)
     {
       if (OriginalTrainerId.HasValue || History != null)
       {
         throw new CannotCatchTrainerPokemonException(this);
       }
 
-      ApplyChange(new PokemonCaught(location, trainerId, position, box, surname));
+      ApplyChange(new PokemonCaught(location, trainerId, position, box, friendship, surname));
     }
     public void Evolve(EvolvePokemonPayload payload, Species.Species species, bool removeHeldItem = false) => ApplyChange(PokemonEvolved.Create(payload, species, removeHeldItem));
-    public void GainedExperience(ExperienceGainPayload payload) => ApplyChange(new PokemonGainedExperience(payload));
-    public void Heal(HealPokemonPayload payload) => ApplyChange(new PokemonHealed(payload));
+    public void GainedExperience(ExperienceGainPayload payload, bool isHoldingSootheBell) => ApplyChange(new PokemonGainedExperience(payload, isHoldingSootheBell));
+    public void Heal(HealPokemonPayload payload, IEnumerable<Move>? moves = null) => ApplyChange(new PokemonHealed(payload, moves?.ToDictionary(x => x.Id, x => x.PowerPoints)));
     public void HoldItem(Item? item) => ApplyChange(new PokemonHeldItem(item?.Id));
     public void Move(PokemonPosition? position) => ApplyChange(new PokemonMoved(position?.Position, position?.Box));
     public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
@@ -90,18 +90,22 @@ namespace PokeGame.Domain.Pokemon
 
       ApplyChange(new PokemonUsedMove(move.Id, payload));
     }
-    public void Wound(ushort damage, StatusCondition? statusCondition = null)
+    public void Wound(ushort damage, byte attackerLevel, StatusCondition? statusCondition = null)
     {
       if (CurrentHitPoints == 0)
       {
         throw new CannotWoundFaintedPokemonException(this);
       }
 
-      ApplyChange(new PokemonWounded(damage, statusCondition));
+      ApplyChange(new PokemonWounded(damage, statusCondition, attackerLevel));
     }
 
     protected virtual void Apply(PokemonCaught @event)
     {
+      if (@event.Friendship.HasValue)
+      {
+        Friendship = Math.Max(Friendship, @event.Friendship.Value);
+      }
       Surname = @event.Surname?.CleanTrim();
 
       SetHistory(new HistoryPayload
@@ -203,6 +207,19 @@ namespace PokeGame.Domain.Pokemon
         }
 
         Level = level;
+
+        if (Friendship < 100)
+        {
+          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 7 : 5, byte.MaxValue - Friendship);
+        }
+        else if (Friendship < 200)
+        {
+          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 4 : 3, byte.MaxValue - Friendship);
+        }
+        else
+        {
+          Friendship += (byte)Math.Min(@event.IsHoldingSootheBell ? 3 : 2, byte.MaxValue - Friendship);
+        }
       }
       if (Level > previousLevel)
       {
@@ -230,7 +247,7 @@ namespace PokeGame.Domain.Pokemon
           {
             EffortValues.Add(effortValue.Statistic, gain);
           }
-          
+
           if (RemainingEffortValues < 1)
           {
             break;
@@ -241,6 +258,17 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonHealed @event)
     {
       HealPokemonPayload payload = @event.Payload;
+
+      if (payload.RestoreAllPowerPoints && @event.MovePowerPoints?.Any() == true)
+      {
+        foreach (PokemonMove move in Moves)
+        {
+          if (@event.MovePowerPoints.TryGetValue(move.MoveId, out byte powerPoints))
+          {
+            move.Restore(powerPoints);
+          }
+        }
+      }
 
       ushort currentHitPoints = (ushort)(CurrentHitPoints + payload.RestoreHitPoints);
       CurrentHitPoints = (currentHitPoints < CurrentHitPoints || currentHitPoints > MaximumHitPoints)
@@ -295,6 +323,33 @@ namespace PokeGame.Domain.Pokemon
       {
         CurrentHitPoints = 0;
         StatusCondition = null;
+
+        if (@event.AttackerLevel.HasValue)
+        {
+          if (Level + 30 <= @event.AttackerLevel.Value)
+          {
+            if (Friendship >= 200)
+            {
+              Friendship -= 10;
+            }
+            else if (Friendship >= 5)
+            {
+              Friendship -= 5;
+            }
+            else
+            {
+              Friendship = 0;
+            }
+          }
+          else if (Friendship >= 1)
+          {
+            Friendship -= 1;
+          }
+          else
+          {
+            Friendship = 0;
+          }
+        }
       }
     }
     protected virtual void Apply(UpdatedPokemonCondition @event)

@@ -65,7 +65,7 @@ export default {
       const payload = {
         name: this.name,
         description: this.description,
-        reference: this.reference,
+        reference: this.reference || null,
         notes: this.notes
       }
       return payload

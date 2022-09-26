@@ -245,7 +245,7 @@ export default {
             ?.split(',')
             .map(condition => condition.trim())
             .filter(condition => condition.length > 0) ?? null,
-        reference: this.reference,
+        reference: this.reference || null,
         notes: this.notes
       }
       if (!this.move) {
