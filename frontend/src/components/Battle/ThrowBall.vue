@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import BallModifierField from '@/components/Items/BallModifierField.vue'
 import ConditionSelect from '@/components/Pokemon/ConditionSelect.vue'
@@ -177,7 +176,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['toggleBattlingOpponentPokemon', 'toggleBattlingPlayerPokemon', 'updatePokemon']),
+    ...mapActions(['distributeExperience', 'toggleBattlingOpponentPokemon', 'toggleBattlingPlayerPokemon', 'updatePokemon']),
     async loadInventory() {
       try {
         const { data } = await getInventory(this.trainer.id)
@@ -216,10 +215,7 @@ export default {
               })
               this.updatePokemon(data)
               this.toggleBattlingOpponentPokemon(data.id)
-              if (data.box === null) {
-                this.toggleBattlingPlayerPokemon(data.id)
-              }
-              Vue.nextTick(() => this.toast('success', `battle.throwBall.caughtToast.${data.box === null ? 'party' : 'box'}`))
+              this.distributeExperience(data)
             }
             this.$refs.form.reset()
             if (typeof callback === 'function') {

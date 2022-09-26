@@ -24,7 +24,8 @@
   },
   "experience": {
     "canEvolve": "Can evolve (×1.2)",
-    "defeatedPokemon": "Defeated Pokémon",
+    "caughtPokemon": "Caught Pokémon",
+    "faintedPokemon": "Fainted Pokémon",
     "hasParticipated": "Has participated in battle (×1 if true; ×0.5 otherwise)",
     "highFriendship": "Friendship 220+ (×1.2)",
     "label": "Experience",
