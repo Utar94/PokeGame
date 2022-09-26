@@ -215,7 +215,7 @@ export default {
               })
               this.updatePokemon(data)
               this.toggleBattlingOpponentPokemon(data.id)
-              this.distributeExperience(data)
+              this.distributeExperience([data])
             }
             this.$refs.form.reset()
             if (typeof callback === 'function') {

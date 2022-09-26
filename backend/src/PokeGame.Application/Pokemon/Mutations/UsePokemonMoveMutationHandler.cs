@@ -9,7 +9,7 @@ using PokeGame.Domain.Pokemon.Payloads;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
-  internal class UsePokemonMoveMutationHandler : IRequestHandler<UsePokemonMoveMutation, PokemonModel>
+  internal class UsePokemonMoveMutationHandler : IRequestHandler<UsePokemonMoveMutation, IEnumerable<PokemonModel>>
   {
     private static readonly Random _random = new();
 
@@ -31,7 +31,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       _validator = validator;
     }
 
-    public async Task<PokemonModel> Handle(UsePokemonMoveMutation request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<PokemonModel>> Handle(UsePokemonMoveMutation request, CancellationToken cancellationToken)
     {
       UsePokemonMovePayload payload = request.Payload;
 
@@ -78,8 +78,7 @@ namespace PokeGame.Application.Pokemon.Mutations
 
       await _repository.SaveAsync(pokemonIndex.Values, cancellationToken);
 
-      return await _querier.GetAsync(attacker.Id, cancellationToken)
-        ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(attacker.Id);
+      return await _querier.GetAsync(pokemonIds, cancellationToken);
     }
 
     private static ushort CalculateDamage(

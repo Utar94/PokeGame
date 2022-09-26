@@ -49,7 +49,7 @@
         icon="level-up-alt"
         text="battle.experience.label"
         variant="info"
-        @click="distributeExperience(pokemon)"
+        @click="distributeExperience([pokemon])"
       />
     </td>
   </tr>
