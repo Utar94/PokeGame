@@ -165,6 +165,15 @@
         </b-row>
         <h4 v-t="'pokemon.trainer.history'" />
         <b-row>
+          <item-select
+            category="PokeBall"
+            class="col"
+            :disabled="!trainer"
+            id="ballId"
+            label="pokemon.caughtWithBall"
+            :required="Boolean(trainer)"
+            v-model="ballId"
+          />
           <form-field
             class="col"
             :disabled="!trainer"
@@ -252,6 +261,7 @@ export default {
   data() {
     return {
       abilityId: null,
+      ballId: null,
       box: 1,
       gender: null,
       heldItemId: null,
@@ -318,6 +328,7 @@ export default {
         heldItemId: this.heldItemId,
         history: this.trainer
           ? {
+              ballId: this.ballId,
               level: this.metLevel,
               location: this.metLocation,
               metOn: this.metOn,
@@ -423,6 +434,7 @@ export default {
     trainer(trainer) {
       if (!trainer) {
         this.inParty = true
+        this.ballId = null
         this.metLevel = 1
         this.metLocation = null
         this.metOn = new Date()

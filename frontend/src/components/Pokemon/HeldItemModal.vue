@@ -2,7 +2,7 @@
   <b-modal :id="id" :title="$t('pokemon.heldItem.title')" @show="reset">
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
-        <p v-if="item">{{ $t('pokemon.heldItem.current') }} <strong v-text="item.name" /></p>
+        <p v-if="heldItem">{{ $t('pokemon.heldItem.current') }} <strong v-text="heldItem.name" /></p>
         <form-select id="heldItem" label="pokemon.heldItem.label" :options="options" placeholder="pokemon.heldItem.placeholder" v-model="itemId" />
       </b-form>
     </validation-observer>
@@ -24,16 +24,8 @@ export default {
       type: String,
       default: 'heldItem'
     },
-    item: {
+    pokemon: {
       type: Object,
-      default: null
-    },
-    pokemonId: {
-      type: String,
-      required: true
-    },
-    trainerId: {
-      type: String,
       required: true
     }
   },
@@ -46,7 +38,10 @@ export default {
   },
   computed: {
     hasChanges() {
-      return this.item?.id !== this.itemId
+      return this.heldItem?.id !== this.itemId
+    },
+    heldItem() {
+      return this.pokemon.heldItem
     },
     options() {
       return this.orderBy(
@@ -60,11 +55,17 @@ export default {
   },
   methods: {
     async refresh(trainerId = null) {
-      if (trainerId || this.trainerId) {
+      if (trainerId || this.pokemon?.history?.trainer.id) {
         try {
           const { data } = await getInventory(trainerId ?? this.trainerId)
           this.inventory = data.items
-          this.itemId = this.item?.id ?? null
+          this.reset()
+          if (this.heldItem) {
+            const item = this.inventory.find(({ item }) => item.id === this.heldItem.id)
+            if (!item) {
+              this.inventory.push({ item: this.heldItem, quantity: 0 })
+            }
+          }
         } catch (e) {
           this.handleError(e)
         }
@@ -73,14 +74,14 @@ export default {
       }
     },
     reset() {
-      this.itemId = this.item?.id ?? null
+      this.itemId = this.heldItem?.id ?? null
     },
     async submit(callback = null) {
       if (!this.loading) {
         this.loading = true
         try {
           if (await this.$refs.form.validate()) {
-            const { data } = await holdItem(this.pokemonId, this.itemId)
+            const { data } = await holdItem(this.pokemon.id, this.itemId)
             await this.refresh()
             this.$emit('saved', data)
             this.toast('success', 'pokemon.heldItem.saved')
@@ -98,10 +99,11 @@ export default {
     }
   },
   watch: {
-    trainerId: {
+    pokemon: {
+      deep: true,
       immediate: true,
-      async handler(trainerId) {
-        await this.refresh(trainerId)
+      async handler(pokemon) {
+        await this.refresh(pokemon?.history?.trainer.id ?? null)
       }
     }
   }

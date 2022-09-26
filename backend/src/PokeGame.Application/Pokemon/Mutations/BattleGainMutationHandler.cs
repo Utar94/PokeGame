@@ -44,8 +44,8 @@ namespace PokeGame.Application.Pokemon.Mutations
         throw new PokemonNotFoundException(missingIds);
       }
 
-      IEnumerable<Guid> itemIds = pokemonIndex.Values.Where(x => x.HeldItemId.HasValue)
-        .Select(x => x.HeldItemId!.Value)
+      IEnumerable<Guid> itemIds = pokemonIndex.Values.Where(x => x.HeldItemId.HasValue).Select(x => x.HeldItemId!.Value)
+        .Concat(pokemonIndex.Values.Where(x => x.History != null).Select(x => x.History!.BallId))
         .Distinct();
       Dictionary<Guid, Item> items = itemIds.Any()
         ? (await _repository.LoadAsync<Item>(itemIds, cancellationToken)).ToDictionary(x => x.Id, x => x)
@@ -65,6 +65,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         Domain.Pokemon.Pokemon winnerPokemon = pokemonIndex[winnerPayload.Id];
 
+        Item? ball = winnerPokemon.History != null ? items[winnerPokemon.History.BallId] : null;
         Item? heldItem = winnerPokemon.HeldItemId.HasValue ? items[winnerPokemon.HeldItemId.Value] : null;
 
         var gainPayload = new ExperienceGainPayload
@@ -73,8 +74,9 @@ namespace PokeGame.Application.Pokemon.Mutations
           Experience = CalculateExperienceGain(defeatedPokemon, defeatedSpecies, winnerPayload, winnerPokemon, heldItem, payload.IsTrainerBattle)
         };
 
+        bool hasBeenCaughtWithLuxuryBall = ball?.Name == "Luxury Ball";
         bool isHoldingSootheBell = heldItem?.Name == "Soothe Bell";
-        winnerPokemon.GainedExperience(gainPayload, isHoldingSootheBell);
+        winnerPokemon.GainedExperience(gainPayload, hasBeenCaughtWithLuxuryBall, isHoldingSootheBell);
         _validator.ValidateAndThrow(winnerPokemon);
       }
 

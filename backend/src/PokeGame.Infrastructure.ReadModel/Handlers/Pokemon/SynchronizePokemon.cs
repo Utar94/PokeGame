@@ -39,6 +39,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
     {
       PokemonEntity? entity = await _readContext.Pokemon
         .Include(x => x.Ability)
+        .Include(x => x.Ball)
         .Include(x => x.CurrentTrainer)
         .Include(x => x.HeldItem)
         .Include(x => x.Moves).ThenInclude(x => x.Move)
@@ -68,6 +69,17 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
         if (ability == null)
         {
           return null;
+        }
+
+        ItemEntity? ball = null;
+        if (pokemon.History != null)
+        {
+          ball = await _readContext.Items.SingleOrDefaultAsync(x => x.Id == pokemon.History.BallId, cancellationToken)
+            ?? await _synchronizeItem.ExecuteAsync(pokemon.History.BallId, version: null, cancellationToken);
+          if (ball == null)
+          {
+            return null;
+          }
         }
 
         ItemEntity? heldItem = null;
@@ -110,6 +122,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Pokemon
 
         entity.SetSpecies(species);
         entity.SetAbility(ability);
+        entity.SetBall(ball);
         entity.SetHeldItem(heldItem);
         entity.SetCurrentTrainer(currentTrainer);
         entity.SetOriginalTrainer(originalTrainer);
