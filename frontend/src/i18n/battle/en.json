@@ -41,6 +41,7 @@
   "healing": {
     "removeAllConditions": "Remove All Conditions",
     "removeStatusCondition": "Remove Status Condition",
+    "restoreAllPowerPoints": "Restore All PP",
     "restoreHitPoints": "Restore HP"
   },
   "hpFormat": "HP: {current}/{max}",

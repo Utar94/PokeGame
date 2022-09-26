@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using PokeGame.Application.Pokemon.Models;
+using PokeGame.Domain.Items;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
@@ -26,7 +27,16 @@ namespace PokeGame.Application.Pokemon.Mutations
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
-      pokemon.GainedExperience(request.Payload);
+      bool isHoldingSootheBell = false;
+      if (pokemon.HeldItemId.HasValue)
+      {
+        Item heldItem = await _repository.LoadAsync<Item>(pokemon.HeldItemId.Value, cancellationToken)
+          ?? throw new EntityNotFoundException<Item>(pokemon.HeldItemId.Value);
+
+        isHoldingSootheBell = heldItem.Name == "Soothe Bell";
+      }
+
+      pokemon.GainedExperience(request.Payload, isHoldingSootheBell);
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);

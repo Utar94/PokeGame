@@ -32,7 +32,11 @@
             </template>
           </form-select>
           <template v-if="item && pokemon">
-            <form-field id="restoreHitPoints" label="battle.healing.restoreHitPoints" :minValue="0" :step="1" type="number" v-model.number="restoreHitPoints" />
+            <form-field id="restoreHitPoints" label="battle.healing.restoreHitPoints" :minValue="0" :step="1" type="number" v-model.number="restoreHitPoints">
+              <template #after>
+                <b-form-checkbox v-model="restoreAllPowerPoints">{{ $t('battle.healing.restoreAllPowerPoints') }}</b-form-checkbox>
+              </template>
+            </form-field>
             <condition-select :disabled="removeAllConditions" label="battle.healing.removeStatusCondition" v-model="statusCondition">
               <template #after>
                 <b-form-checkbox v-model="removeAllConditions">{{ $t('battle.healing.removeAllConditions') }}</b-form-checkbox>
@@ -79,6 +83,7 @@ export default {
       loading: false,
       pokemonId: null,
       removeAllConditions: false,
+      restoreAllPowerPoints: false,
       restoreHitPoints: 0,
       statusCondition: null
     }
@@ -149,6 +154,7 @@ export default {
             await removeInventory(this.trainer.id, this.itemId, 1)
             if (this.applyHealing) {
               const { data } = await healPokemon(this.pokemonId, {
+                restoreAllPowerPoints: this.restoreAllPowerPoints,
                 restoreHitPoints: this.restoreHitPoints,
                 removeAllConditions: this.removeAllConditions,
                 statusCondition: this.statusCondition
@@ -171,6 +177,7 @@ export default {
   watch: {
     itemId() {
       this.removeAllConditions = false
+      this.restoreAllPowerPoints = false
       this.restoreHitPoints = 0
       this.statusCondition = null
     },

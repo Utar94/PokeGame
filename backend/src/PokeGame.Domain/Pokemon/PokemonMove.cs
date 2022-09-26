@@ -17,6 +17,11 @@ namespace PokeGame.Domain.Pokemon
     public byte Position { get; private set; }
     public byte RemainingPowerPoints { get; private set; }
 
+    public void Restore(byte remainingPowerPoints)
+    {
+      RemainingPowerPoints = remainingPowerPoints;
+    }
+
     public void Use()
     {
       if (RemainingPowerPoints == 0)

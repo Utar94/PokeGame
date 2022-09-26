@@ -89,8 +89,8 @@ export default {
         name: this.name,
         price: this.price || null,
         description: this.description,
-        reference: this.reference,
-        picture: this.picture,
+        reference: this.reference || null,
+        picture: this.picture || null,
         notes: this.notes
       }
       if (!this.item) {

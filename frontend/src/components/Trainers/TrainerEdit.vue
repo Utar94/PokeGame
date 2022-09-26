@@ -105,8 +105,8 @@ export default {
         money: this.money,
         name: this.name,
         description: this.description,
-        reference: this.reference,
-        picture: this.picture,
+        reference: this.reference || null,
+        picture: this.picture || null,
         notes: this.notes
       }
       if (!this.trainer) {

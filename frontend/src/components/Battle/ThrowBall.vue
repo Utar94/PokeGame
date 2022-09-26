@@ -32,12 +32,6 @@
             </template>
           </form-select>
           <template v-if="item && pokemon">
-            <form-field id="restoreHitPoints" label="battle.healing.restoreHitPoints" :minValue="0" :step="1" type="number" v-model.number="restoreHitPoints" />
-            <condition-select :disabled="removeAllConditions" label="battle.healing.removeStatusCondition" v-model="statusCondition">
-              <template #after>
-                <b-form-checkbox v-model="removeAllConditions">{{ $t('battle.healing.removeAllConditions') }}</b-form-checkbox>
-              </template>
-            </condition-select>
             <ball-modifier-field v-model="ballModifier">
               <b-input-group-append>
                 <b-input-group-text>{{ $t('dcFormat', { dc: catchDC }) }}</b-input-group-text>
@@ -46,7 +40,28 @@
                 <b-form-checkbox id="catchSuccess" v-model="catchSuccess">{{ $t('battle.throwBall.catchSuccess') }}</b-form-checkbox>
               </template>
             </ball-modifier-field>
-            <name-field v-if="catchSuccess" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
+            <template v-if="catchSuccess">
+              <form-field id="friendship" label="pokemon.friendship" :minValue="0" :maxValue="255" :step="1" type="number" v-model.number="friendship" />
+              <name-field v-if="catchSuccess" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
+              <form-field
+                id="restoreHitPoints"
+                label="battle.healing.restoreHitPoints"
+                :minValue="0"
+                :maxValue="999"
+                :step="1"
+                type="number"
+                v-model.number="restoreHitPoints"
+              >
+                <template #after>
+                  <b-form-checkbox v-model="restoreAllPowerPoints">{{ $t('battle.healing.restoreAllPowerPoints') }}</b-form-checkbox>
+                </template>
+              </form-field>
+              <condition-select :disabled="removeAllConditions" label="battle.healing.removeStatusCondition" v-model="statusCondition">
+                <template #after>
+                  <b-form-checkbox v-model="removeAllConditions">{{ $t('battle.healing.removeAllConditions') }}</b-form-checkbox>
+                </template>
+              </condition-select>
+            </template>
           </template>
         </b-form>
       </validation-observer>
@@ -84,11 +99,13 @@ export default {
     return {
       ballModifier: 1,
       catchSuccess: false,
+      friendship: 0,
       inventory: [],
       itemId: null,
       loading: false,
       pokemonId: null,
       removeAllConditions: false,
+      restoreAllPowerPoints: false,
       restoreHitPoints: 0,
       statusCondition: null,
       surname: null
@@ -185,11 +202,13 @@ export default {
               const { data } = await catchPokemon(this.pokemonId, {
                 heal: this.applyHealing
                   ? {
+                      restoreAllPowerPoints: this.restoreAllPowerPoints,
                       restoreHitPoints: this.restoreHitPoints,
                       removeAllConditions: this.removeAllConditions,
                       statusCondition: this.statusCondition
                     }
                   : null,
+                friendship: this.friendship || null,
                 surname: this.surname,
                 location: this.battleLocation,
                 trainerId: this.trainer.id
@@ -216,14 +235,23 @@ export default {
   },
   watch: {
     catchSuccess() {
+      this.friendship = this.item?.name === 'Friend Ball' ? 200 : 0
       this.surname = null
+      if (this.item?.name === 'Heal Ball') {
+        this.removeAllConditions = true
+        this.restoreAllPowerPoints = true
+        this.restoreHitPoints = 999
+        this.statusCondition = null
+      } else {
+        this.removeAllConditions = false
+        this.restoreAllPowerPoints = false
+        this.restoreHitPoints = 0
+        this.statusCondition = null
+      }
     },
     itemId() {
-      this.ballModifier = 1
+      this.ballModifier = this.item?.defaultModifier || 1
       this.catchSuccess = false
-      this.removeAllConditions = false
-      this.restoreHitPoints = 0
-      this.statusCondition = null
     },
     removeAllConditions(value) {
       if (value) {

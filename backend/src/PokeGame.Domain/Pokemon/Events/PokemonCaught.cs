@@ -4,15 +4,17 @@ namespace PokeGame.Domain.Pokemon.Events
 {
   public class PokemonCaught : DomainEvent, INotification
   {
-    public PokemonCaught(string location, Guid trainerId, byte position, byte? box = null, string? surname = null)
+    public PokemonCaught(string location, Guid trainerId, byte position, byte? box = null, byte? friendship = null, string? surname = null)
     {
       Box = box;
       Location = location ?? throw new ArgumentNullException(nameof(location));
       Position = position;
+      Friendship = friendship;
       Surname = surname;
       TrainerId = trainerId;
     }
 
+    public byte? Friendship { get; private set; }
     public string? Surname { get; private set; }
 
     public string Location { get; private set; }
