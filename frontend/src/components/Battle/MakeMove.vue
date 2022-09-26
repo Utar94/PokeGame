@@ -10,7 +10,7 @@
           <move-damage v-if="dealsDamage" />
         </template>
         <div class="my-2">
-          <icon-button class="mx-1" icon="ban" text="actions.cancel" @click="resetBattleMove" />
+          <icon-button class="mx-1" icon="ban" text="actions.cancel" @click="resetBattleMove()" />
           <icon-submit :disabled="!canSubmit" icon="magic" :loading="loading" text="battle.makeMove.label" variant="danger" />
         </div>
       </b-form>
@@ -40,7 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['battleMoveAttacker', 'battleMoveCondition', 'battleMoveDamage', 'battleMoveTargets', 'selectedBattleMove']),
+    ...mapGetters(['battleMoveAttacker', 'battleMoveCondition', 'battleMoveDamage', 'battleMoveTargets', 'battlingOpponentPokemon', 'selectedBattleMove']),
     canSubmit() {
       return !this.loading && this.selectedBattleMove && Object.keys(this.battleMoveTargets).length > 0
     },
@@ -82,17 +82,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['applyBattleMove', 'loadPokemonList', 'resetBattleMove']),
+    ...mapActions(['applyBattleMove', 'distributeExperience', 'resetBattleMove', 'updatePokemon']),
     async submit() {
       if (!this.loading) {
         this.loading = true
         try {
           if (await this.$refs.form.validate()) {
-            await usePokemonMove(this.battleMoveAttacker.id, this.selectedBattleMove.id, this.payload)
-            this.loadPokemonList()
+            const { data } = await usePokemonMove(this.battleMoveAttacker.id, this.selectedBattleMove.id, this.payload)
+            const defeated = []
+            const opponents = Object.fromEntries(this.battlingOpponentPokemon.map(pokemon => [pokemon.id, pokemon]))
+            for (const pokemon of data) {
+              this.updatePokemon(pokemon)
+              if (pokemon.currentHitPoints < 1 && Boolean(opponents[pokemon.id])) {
+                defeated.push(pokemon)
+              }
+            }
             this.applyBattleMove()
             this.$refs.form.reset()
-            this.resetBattleMove()
+            if (defeated.length > 0) {
+              this.resetBattleMove(true)
+              this.distributeExperience(defeated)
+            } else {
+              this.resetBattleMove()
+            }
           }
         } catch (e) {
           this.handleError(e)

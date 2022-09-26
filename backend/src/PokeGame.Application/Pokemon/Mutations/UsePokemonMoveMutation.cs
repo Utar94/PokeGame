@@ -4,7 +4,7 @@ using PokeGame.Domain.Pokemon.Payloads;
 
 namespace PokeGame.Application.Pokemon.Mutations
 {
-  public class UsePokemonMoveMutation : IRequest<PokemonModel>
+  public class UsePokemonMoveMutation : IRequest<IEnumerable<PokemonModel>>
   {
     public UsePokemonMoveMutation(Guid id, Guid moveId, UsePokemonMovePayload payload)
     {

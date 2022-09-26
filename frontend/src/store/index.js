@@ -29,7 +29,7 @@ export default new Vuex.Store({
       activePokemon: [],
       escapeAttempts: 0,
       experience: {
-        defeatedPokemon: null,
+        defeatedPokemon: [],
         winners: {}
       },
       location: null,
@@ -86,7 +86,7 @@ export default new Vuex.Store({
       return battle.escapeAttempts
     },
     battleExperienceDefeatedPokemon({ battle }) {
-      return battle.experience.defeatedPokemon
+      return battle.experience.defeatedPokemon[0] ?? null
     },
     battleExperienceWinners({ battle }) {
       return battle.experience.winners
@@ -208,15 +208,17 @@ export default new Vuex.Store({
           break
       }
     },
-    distributeExperience({ commit, dispatch, getters, state }, pokemon) {
-      commit('setExperienceDefeatedPokemon', pokemon)
-      const active = Object.fromEntries(state.battle.activePokemon.map(id => [id, true]))
-      for (const pokemon of getters.battlingPlayerPokemon) {
-        if (active[pokemon.id] || pokemon.heldItem?.name === 'Exp. Share') {
-          dispatch('toggleBattleExperienceWinner', pokemon)
+    distributeExperience({ commit, dispatch, getters, state }, pokemonList) {
+      if (pokemonList.length > 0) {
+        commit('setExperienceDefeatedPokemon', pokemonList)
+        const active = Object.fromEntries(state.battle.activePokemon.map(id => [id, true]))
+        for (const pokemon of getters.battlingPlayerPokemon) {
+          if (pokemon.currentHitPoints > 0 && (active[pokemon.id] || pokemon.heldItem?.name === 'Exp. Share')) {
+            dispatch('toggleBattleExperienceWinner', pokemon)
+          }
         }
+        commit('setBattleStep', 'Experience')
       }
-      commit('setBattleStep', 'Experience')
     },
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
@@ -244,6 +246,14 @@ export default new Vuex.Store({
       }
       commit('setBattleStep', 'MakeMove')
     },
+    nextExperienceDistribution({ commit, dispatch, state }) {
+      const defeatedPokemon = state.battle.experience.defeatedPokemon.slice(1)
+      if (defeatedPokemon.length > 0) {
+        commit('setExperienceDefeatedPokemon', defeatedPokemon)
+      } else {
+        dispatch('battlePrevious')
+      }
+    },
     resetBattle({ commit }) {
       commit('resetBattleMove')
       commit('resetBattleStatus')
@@ -256,9 +266,11 @@ export default new Vuex.Store({
       commit('setEscapeAttempts', 0)
       commit('setBattleStep', 'TrainerSelection')
     },
-    resetBattleMove({ commit }) {
+    resetBattleMove({ commit }, keepCurrentStep = false) {
       commit('resetBattleMove')
-      commit('setBattleStep', 'Battle')
+      if (!keepCurrentStep) {
+        commit('setBattleStep', 'Battle')
+      }
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -463,7 +475,7 @@ export default new Vuex.Store({
   mutations: {
     resetBattleExperienceDistribution(state) {
       state.battle.experience = {
-        defeatedPokemon: null,
+        defeatedPokemon: [],
         winners: {}
       }
     },
@@ -576,7 +588,7 @@ export default new Vuex.Store({
       state.battle.escapeAttempts = escapeAttempts ?? 0
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
-      state.battle.experience.defeatedPokemon = defeatedPokemon ?? null
+      state.battle.experience.defeatedPokemon = defeatedPokemon ?? []
     },
     setPokemonList(state, pokemonList) {
       state.pokemonList = pokemonList ?? {}

@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['battlePrevious', 'loadPokemonList', 'toggleBattlingPlayerPokemon', 'updatePokemon']),
+    ...mapActions(['battlePrevious', 'nextExperienceDistribution', 'toggleBattlingPlayerPokemon', 'updatePokemon']),
     async submit() {
       if (!this.loading) {
         this.loading = true
@@ -67,7 +67,7 @@ export default {
             }
             Vue.nextTick(() => this.toast('warning', 'battle.experience.leveledUp', 'warning'))
             this.$refs.form.reset()
-            this.battlePrevious()
+            this.nextExperienceDistribution()
           }
         } catch (e) {
           this.handleError(e)

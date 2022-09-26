@@ -135,7 +135,7 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpPatch("{id}/use-move/{moveId}")]
-    public async Task<ActionResult<PokemonModel>> UseMoveAsync(Guid id, Guid moveId, [FromBody] UsePokemonMovePayload payload, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<PokemonModel>>> UseMoveAsync(Guid id, Guid moveId, [FromBody] UsePokemonMovePayload payload, CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new UsePokemonMoveMutation(id, moveId, payload), cancellationToken));
     }
