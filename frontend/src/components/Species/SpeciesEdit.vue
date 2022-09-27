@@ -14,6 +14,7 @@
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
+            <b-alert dismissible variant="warning" v-model="numberAlreadyUsed"><strong v-t="'species.number.alreadyUsed'" /></b-alert>
             <b-row>
               <name-field class="col" required v-model="name" />
               <form-field
@@ -28,7 +29,7 @@
                 class="col"
                 :disabled="Boolean(species)"
                 id="number"
-                label="species.number"
+                label="species.number.label"
                 :minValue="1"
                 :maxValue="999"
                 :required="!species"
@@ -128,126 +129,11 @@
                 v-model.number="baseFriendship"
               />
             </b-row>
-            <strong v-t="'species.evYield.label'" />
-            <template v-if="evYieldExceeded">
-              <br />
-              <span class="text-danger" v-t="'species.evYield.exceeded'" />
-            </template>
-            <b-row>
-              <form-field
-                class="col"
-                id="hpEvYield"
-                label="statistic.options.HP"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.HP"
-              />
-              <form-field
-                class="col"
-                id="attackEvYield"
-                label="statistic.options.Attack"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.Attack"
-              />
-              <form-field
-                class="col"
-                id="defenseEvYield"
-                label="statistic.options.Defense"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.Defense"
-              />
-              <form-field
-                class="col"
-                id="specialAttackEvYield"
-                label="statistic.options.SpecialAttack"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.SpecialAttack"
-              />
-              <form-field
-                class="col"
-                id="specialDefenseEvYield"
-                label="statistic.options.SpecialDefense"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.SpecialDefense"
-              />
-              <form-field
-                class="col"
-                id="speedEvYield"
-                label="statistic.options.Speed"
-                :minValue="0"
-                :maxValue="3"
-                :step="1"
-                type="number"
-                v-model.number="evYield.Speed"
-              />
-            </b-row>
-            <p>{{ $t('species.totalFormat', { total: totalEvYield }) }}</p>
+            <ev-yield :exceeded="evYieldExceeded" :total="totalEvYield" v-model="evYield" />
             <description-field v-model="description" />
-            <strong v-t="'species.baseStatistics'" />
-            <b-row>
-              <form-field class="col" id="baseHP" label="statistic.options.HP" :minValue="0" :step="1" type="number" v-model.number="baseStatistics.HP" />
-              <form-field
-                class="col"
-                id="baseAttack"
-                label="statistic.options.Attack"
-                :minValue="0"
-                :step="1"
-                type="number"
-                v-model.number="baseStatistics.Attack"
-              />
-              <form-field
-                class="col"
-                id="baseDefense"
-                label="statistic.options.Defense"
-                :minValue="0"
-                :step="1"
-                type="number"
-                v-model.number="baseStatistics.Defense"
-              />
-              <form-field
-                class="col"
-                id="baseSpecialAttack"
-                label="statistic.options.SpecialAttack"
-                :minValue="0"
-                :step="1"
-                type="number"
-                v-model.number="baseStatistics.SpecialAttack"
-              />
-              <form-field
-                class="col"
-                id="baseSpecialDefense"
-                label="statistic.options.SpecialDefense"
-                :minValue="0"
-                :step="1"
-                type="number"
-                v-model.number="baseStatistics.SpecialDefense"
-              />
-              <form-field
-                class="col"
-                id="baseSpeed"
-                label="statistic.options.Speed"
-                :minValue="0"
-                :step="1"
-                type="number"
-                v-model.number="baseStatistics.Speed"
-              />
-            </b-row>
-            <p>{{ $t('species.totalFormat', { total: totalBaseStatistics }) }}</p>
+            <base-statistics v-model="baseStatistics" />
           </b-tab>
+          <regional-tab :conflict="regionalNumbersAlreadyUsed" v-model="regionalNumbers" @dismissed="regionalNumbersAlreadyUsed = $event" />
           <evolution-tab v-if="species" :id="species.id" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
@@ -262,14 +148,20 @@
 
 <script>
 import AbilitySelect from '@/components/Abilities/AbilitySelect.vue'
+import BaseStatistics from './BaseStatistics.vue'
 import EvolutionTab from './EvolutionTab.vue'
+import EvYield from './EvYield.vue'
+import RegionalTab from './RegionalTab.vue'
 import { createSpecies, updateSpecies } from '@/api/species'
 
 export default {
   name: 'SpeciesEdit',
   components: {
     AbilitySelect,
-    EvolutionTab
+    BaseStatistics,
+    EvolutionTab,
+    EvYield,
+    RegionalTab
   },
   props: {
     json: {
@@ -314,9 +206,22 @@ export default {
       name: null,
       notes: null,
       number: 0,
+      numberAlreadyUsed: false,
       picture: null,
       primaryType: null,
       reference: null,
+      regionalNumbers: {
+        Alola: 0,
+        Galar: 0,
+        Hoenn: 0,
+        Indigo: 0,
+        Johto: 0,
+        Kalos: 0,
+        Kanto: 0,
+        Sinnoh: 0,
+        Unova: 0
+      },
+      regionalNumbersAlreadyUsed: false,
       secondaryType: null,
       species: null,
       weight: 0
@@ -343,6 +248,7 @@ export default {
         (this.description ?? '') !== (this.species?.description ?? '') ||
         JSON.stringify(this.payload.evYield) !== JSON.stringify(this.species?.evYield ?? {}) ||
         JSON.stringify(this.payload.baseStatistics) !== JSON.stringify(this.species?.baseStatistics ?? {}) ||
+        JSON.stringify(this.payload.regionalNumbers) !== JSON.stringify(this.species?.regionalNumbers ?? {}) ||
         (this.reference ?? '') !== (this.species?.reference ?? '') ||
         (this.picture ?? '') !== (this.species?.picture ?? '') ||
         (this.notes ?? '') !== (this.species?.notes ?? '')
@@ -368,11 +274,14 @@ export default {
         baseFriendship: this.baseFriendship,
         description: this.description,
         evYield: Object.entries(this.evYield)
-          .filter(([, value]) => value !== 0)
+          .filter(([, value]) => value > 0)
           .map(([statistic, value]) => ({ statistic, value })),
         baseStatistics: Object.entries(this.baseStatistics)
-          .filter(([, value]) => value !== 0)
+          .filter(([, value]) => value > 0)
           .map(([statistic, value]) => ({ statistic, value })),
+        regionalNumbers: Object.entries(this.regionalNumbers)
+          .filter(([, number]) => number > 0)
+          .map(([region, number]) => ({ region, number })),
         reference: this.reference || null,
         picture: this.picture || null,
         notes: this.notes
@@ -386,9 +295,6 @@ export default {
     },
     evYieldExceeded() {
       return this.totalEvYield > 3
-    },
-    totalBaseStatistics() {
-      return Object.values(this.baseStatistics).reduce((a, b) => a + b, 0) || 0
     },
     totalEvYield() {
       return Object.values(this.evYield).reduce((a, b) => a + b, 0) || 0
@@ -432,10 +338,23 @@ export default {
       this.baseStatistics.SpecialAttack = baseStatistics.SpecialAttack ?? 0
       this.baseStatistics.SpecialDefense = baseStatistics.SpecialDefense ?? 0
       this.baseStatistics.Speed = baseStatistics.Speed ?? 0
+
+      const regionalNumbers = Object.fromEntries(species.regionalNumbers.map(({ region, number }) => [region, number]))
+      this.regionalNumbers.Kanto = regionalNumbers.Kanto ?? 0
+      this.regionalNumbers.Johto = regionalNumbers.Johto ?? 0
+      this.regionalNumbers.Hoenn = regionalNumbers.Hoenn ?? 0
+      this.regionalNumbers.Sinnoh = regionalNumbers.Sinnoh ?? 0
+      this.regionalNumbers.Unova = regionalNumbers.Unova ?? 0
+      this.regionalNumbers.Kalos = regionalNumbers.Kalos ?? 0
+      this.regionalNumbers.Alola = regionalNumbers.Alola ?? 0
+      this.regionalNumbers.Galar = regionalNumbers.Galar ?? 0
+      this.regionalNumbers.Indigo = regionalNumbers.Indigo ?? 0
     },
     async submit() {
       if (!this.loading) {
         this.loading = true
+        this.numberAlreadyUsed = false
+        this.regionalNumbersAlreadyUsed = false
         try {
           if (await this.$refs.form.validate()) {
             if (this.species) {
@@ -449,6 +368,16 @@ export default {
             }
           }
         } catch (e) {
+          const { data, status } = e
+          if (status === 409) {
+            if (data?.field === 'Number') {
+              this.numberAlreadyUsed = true
+              return
+            } else if (data?.field === 'RegionalNumbers') {
+              this.regionalNumbersAlreadyUsed = true
+              return
+            }
+          }
           this.handleError(e)
         } finally {
           this.loading = false

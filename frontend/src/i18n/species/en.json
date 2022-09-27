@@ -87,8 +87,15 @@
     "placeholder": "Select a leveling rate"
   },
   "newTitle": "Create species",
-  "number": "Number",
+  "number": {
+    "alreadyUsed": "The species number is already used.",
+    "label": "Number"
+  },
   "primaryType": "Primary Type",
+  "regional": {
+    "numbersAlreadyUsed": "Some regional numbers are already used.",
+    "title": "Regional"
+  },
   "secondaryType": "Secondary Type",
   "select": {
     "label": "Species",

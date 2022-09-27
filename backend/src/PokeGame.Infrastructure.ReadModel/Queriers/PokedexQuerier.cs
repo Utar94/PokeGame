@@ -29,18 +29,22 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       return pokedex == null ? null : _mapper.Map<PokedexModel>(pokedex);
     }
 
-    public async Task<ListModel<PokedexModel>> GetPagedAsync(Guid trainerId, bool? hasCaught, string? search, PokemonType? type,
+    public async Task<ListModel<PokedexModel>> GetPagedAsync(Guid trainerId, bool? hasCaught, Region? region, string? search, PokemonType? type,
       PokedexSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
       IQueryable<PokedexEntity> query = _pokedex.AsNoTracking()
-        .Include(x => x.Species)
+        .Include(x => x.Species).ThenInclude(x => x!.RegionalSpecies)
         .Where(x => x.Trainer!.Id == trainerId);
 
       if (hasCaught.HasValue)
       {
         query = query.Where(x => x.HasCaught == hasCaught.Value);
+      }
+      if (region.HasValue)
+      {
+        query = query.Where(x => x.Species!.RegionalSpecies.Any(y => y.Region == region.Value));
       }
       if (search != null)
       {

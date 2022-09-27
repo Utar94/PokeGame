@@ -25,5 +25,7 @@ namespace PokeGame.Domain.Species.Payloads
     public string? Reference { get; set; }
 
     public IEnumerable<Guid>? AbilityIds { get; set; }
+
+    public IEnumerable<RegionalNumberPayload>? RegionalNumbers { get; set; }
   }
 }

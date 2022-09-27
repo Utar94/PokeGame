@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokedex;
 using PokeGame.Application.Pokedex.Models;
+using PokeGame.Application.Pokedex.Mutations;
+using PokeGame.Application.Pokedex.Queries;
 using PokeGame.Domain;
 using PokeGame.Web.Models.Api.Pokedex;
 
@@ -13,37 +16,45 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/trainers/{trainerId}/pokedex")]
   public class PokedexApiController : ControllerBase
   {
-    private readonly IPokedexService _service;
+    private readonly IMediator _mediator;
 
-    public PokedexApiController(IPokedexService service)
+    public PokedexApiController(IMediator mediator)
     {
-      _service = service;
+      _mediator = mediator;
     }
 
     [HttpDelete("{speciesId}")]
     public async Task<ActionResult<PokedexModel>> DeleteAsync(Guid trainerId, Guid speciesId, CancellationToken cancellationToken)
     {
-      await _service.DeleteAsync(trainerId, speciesId, cancellationToken);
+      await _mediator.Send(new DeletePokedexEntryMutation(trainerId, speciesId), cancellationToken);
 
       return NoContent();
     }
 
     [HttpGet]
-    public async Task<ActionResult<ListModel<PokedexModel>>> GetAsync(Guid trainerId, bool? hasCaught, string? search, PokemonType? type,
+    public async Task<ActionResult<ListModel<PokedexModel>>> GetAsync(Guid trainerId, bool? hasCaught, Region? region, string? search, PokemonType? type,
       PokedexSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return Ok(await _service.GetAsync(trainerId, hasCaught, search, type,
-        sort, desc,
-        index, count,
-        cancellationToken));
+      return Ok(await _mediator.Send(new GetPokedexEntriesQuery
+      {
+        TrainerId = trainerId,
+        HasCaught = hasCaught,
+        Region = region,
+        Search = search,
+        Type = type,
+        Sort = sort,
+        Desc = desc,
+        Index = index,
+        Count = count
+      }, cancellationToken));
     }
 
     [HttpGet("{speciesId}")]
     public async Task<ActionResult<PokedexModel>> GetAsync(Guid trainerId, Guid speciesId, CancellationToken cancellationToken)
     {
-      PokedexModel? model = await _service.GetAsync(trainerId, speciesId, cancellationToken);
+      PokedexModel? model = await _mediator.Send(new GetPokedexEntryQuery(trainerId, speciesId), cancellationToken);
       if (model == null)
       {
         return NotFound();
@@ -55,7 +66,7 @@ namespace PokeGame.Web.Controllers.Api
     [HttpPut("{speciesId}")]
     public async Task<ActionResult<PokedexModel>> SaveAsync(Guid trainerId, Guid speciesId, [FromBody] PokedexPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.SaveAsync(trainerId, speciesId, payload.HasCaught, cancellationToken));
+      return Ok(await _mediator.Send(new SavePokedexEntryMutation(trainerId, speciesId, payload.HasCaught), cancellationToken));
     }
   }
 }

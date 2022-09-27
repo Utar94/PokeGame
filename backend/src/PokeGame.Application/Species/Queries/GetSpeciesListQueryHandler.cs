@@ -15,7 +15,7 @@ namespace PokeGame.Application.Species.Queries
 
     public async Task<ListModel<SpeciesModel>> Handle(GetSpeciesListQuery request, CancellationToken cancellationToken)
     {
-      return await _querier.GetPagedAsync(request.Search, request.Type,
+      return await _querier.GetPagedAsync(request.Region, request.Search, request.Type,
         request.Sort, request.Desc,
         request.Index, request.Count,
         cancellationToken);

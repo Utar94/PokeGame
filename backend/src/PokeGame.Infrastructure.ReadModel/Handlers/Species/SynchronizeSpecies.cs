@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
+using PokeGame.Domain;
 using PokeGame.Infrastructure.ReadModel.Entities;
 using PokeGame.Infrastructure.ReadModel.Handlers.Abilities;
 
@@ -28,6 +29,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
         .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies)
         .Include(x => x.Evolutions).ThenInclude(x => x.Item)
         .Include(x => x.Evolutions).ThenInclude(x => x.Move)
+        .Include(x => x.RegionalSpecies)
         .Include(x => x.SpeciesAbilities)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -63,6 +65,26 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
           foreach (AbilityEntity ability in abilities)
           {
             entity.Add(ability);
+          }
+        }
+
+        Dictionary<Region, RegionalSpeciesEntity> regionalSpecies = entity.RegionalSpecies.ToDictionary(x => x.Region, x => x);
+        foreach (var (region, number) in species.RegionalNumbers)
+        {
+          if (!regionalSpecies.TryGetValue(region, out RegionalSpeciesEntity? regionalEntity))
+          {
+            regionalEntity = new(entity, region);
+            entity.RegionalSpecies.Add(regionalEntity);
+          }
+
+          regionalEntity.Number = number;
+        }
+
+        foreach (RegionalSpeciesEntity regionalEntity in entity.RegionalSpecies)
+        {
+          if (!species.RegionalNumbers.ContainsKey(regionalEntity.Region))
+          {
+            entity.RegionalSpecies.Remove(regionalEntity);
           }
         }
 

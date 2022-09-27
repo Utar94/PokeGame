@@ -5,7 +5,6 @@ using PokeGame.Application.Abilities;
 using PokeGame.Application.Inventories;
 using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
-using PokeGame.Application.Pokedex;
 using PokeGame.Application.Trainers;
 using System.Reflection;
 
@@ -30,7 +29,6 @@ namespace PokeGame.Application
         .AddScoped<IInventoryService, InventoryService>()
         .AddScoped<IItemService, ItemService>()
         .AddScoped<IMoveService, MoveService>()
-        .AddScoped<IPokedexService, PokedexService>()
         .AddScoped<ITrainerService, TrainerService>();
     }
   }

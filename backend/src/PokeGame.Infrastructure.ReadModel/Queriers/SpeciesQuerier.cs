@@ -12,20 +12,33 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
   {
     private readonly DbSet<EvolutionEntity> _evolutions;
     private readonly IMapper _mapper;
+    private readonly DbSet<RegionalSpeciesEntity> _regionalSpecies;
     private readonly DbSet<SpeciesEntity> _species;
 
     public SpeciesQuerier(IMapper mapper, ReadContext readContext)
     {
       _evolutions = readContext.Evolutions;
       _mapper = mapper;
+      _regionalSpecies = readContext.RegionalSpecies;
       _species = readContext.Species;
     }
 
     public async Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.RegionalSpecies)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+      return species == null ? null : _mapper.Map<SpeciesModel>(species);
+    }
+
+    public async Task<SpeciesModel?> GetAsync(int number, CancellationToken cancellationToken)
+    {
+      SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.RegionalSpecies)
+        .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
+        .SingleOrDefaultAsync(x => x.Number == number, cancellationToken);
 
       return species == null ? null : _mapper.Map<SpeciesModel>(species);
     }
@@ -53,13 +66,18 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       return species == null ? null : _mapper.Map<IEnumerable<EvolutionModel>>(species.Evolutions);
     }
 
-    public async Task<ListModel<SpeciesModel>> GetPagedAsync(string? search, PokemonType? type,
+    public async Task<ListModel<SpeciesModel>> GetPagedAsync(Region? region, string? search, PokemonType? type,
       SpeciesSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      IQueryable<SpeciesEntity> query = _species.AsNoTracking();
+      IQueryable<SpeciesEntity> query = _species.AsNoTracking()
+        .Include(x => x.RegionalSpecies);
 
+      if (region.HasValue)
+      {
+        query = query.Where(x => x.RegionalSpecies.Any(y => y.Region == region.Value));
+      }
       if (search != null)
       {
         foreach (string term in search.Split())
@@ -101,6 +119,20 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         Items = _mapper.Map<IEnumerable<SpeciesModel>>(species),
         Total = total
       };
+    }
+
+    public async Task<Dictionary<Region, HashSet<int>>> GetRegionalNumbersAsync(IEnumerable<Region>? regions, CancellationToken cancellationToken)
+    {
+      IQueryable<RegionalSpeciesEntity> query = _regionalSpecies.AsNoTracking();
+
+      if (regions != null)
+      {
+        query = query.Where(x => regions.Contains(x.Region));
+      }
+
+      RegionalSpeciesEntity[] regionalSpecies = await query.ToArrayAsync(cancellationToken);
+
+      return regionalSpecies.GroupBy(x => x.Region).ToDictionary(x => x.Key, x => x.Select(y => y.Number).ToHashSet());
     }
   }
 }

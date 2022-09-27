@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PokeGame.Application.Species
 {
@@ -55,6 +56,9 @@ namespace PokeGame.Application.Species
 
       RuleForEach(x => x.Evolutions.Values)
         .SetValidator(new EvolutionValidator());
+
+      RuleForEach(x => x.RegionalNumbers.Values)
+        .InclusiveBetween(1, 999);
     }
   }
 }
