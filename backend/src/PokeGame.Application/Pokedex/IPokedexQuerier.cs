@@ -7,7 +7,7 @@ namespace PokeGame.Application.Pokedex
   public interface IPokedexQuerier
   {
     Task<PokedexModel?> GetAsync(Guid trainerId, Guid speciesId, CancellationToken cancellationToken = default);
-    Task<ListModel<PokedexModel>> GetPagedAsync(Guid trainerId, bool? hasCaught = null, string? search = null, PokemonType? type = null,
+    Task<ListModel<PokedexModel>> GetPagedAsync(Guid trainerId, bool? hasCaught = null, Region? region = null, string? search = null, PokemonType? type = null,
       PokedexSort? sort = null, bool desc = false,
       int? index = null, int? count = null,
       CancellationToken cancellationToken = default);

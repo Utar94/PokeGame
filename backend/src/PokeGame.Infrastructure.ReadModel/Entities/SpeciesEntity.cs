@@ -35,6 +35,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public List<EvolutionEntity> Evolutions { get; private set; } = new();
     public List<PokedexEntity> Pokedex { get; private set; } = new();
     public List<PokemonEntity> Pokemon { get; private set; } = new();
+    public List<RegionalSpeciesEntity> RegionalSpecies { get; private set; } = new();
     public List<SpeciesAbilityEntity> SpeciesAbilities { get; private set; } = new();
 
     public void Add(AbilityEntity ability) => SpeciesAbilities.Add(new SpeciesAbilityEntity(this, ability));

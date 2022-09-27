@@ -6,8 +6,11 @@
       <icon-button class="mx-1" href="/create-species" icon="plus" text="actions.create" variant="success" />
     </div>
     <b-row>
-      <search-field class="col" v-model="search" />
       <type-select class="col" v-model="type" />
+      <region-select class="col" v-model="region" />
+    </b-row>
+    <b-row>
+      <search-field class="col" v-model="search" />
       <sort-select class="col" :desc="desc" :options="sortOptions" v-model="sort" @desc="desc = $event" />
       <count-select class="col" v-model="count" />
     </b-row>
@@ -17,7 +20,7 @@
           <tr>
             <th scope="col" />
             <th scope="col" v-t="'name.label'" />
-            <th scope="col" v-t="'species.number'" />
+            <th scope="col" v-t="'species.number.label'" />
             <th scope="col" v-t="'type.label'" />
             <th scope="col" v-t="'species.category.label'" />
             <th scope="col" v-t="'updated'" />
@@ -25,35 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in species" :key="item.id">
-            <td>
-              <b-link :href="`/species/${item.id}`"><pokemon-icon :species="item" /></b-link>
-            </td>
-            <td>
-              <b-link :href="`/species/${item.id}`">{{ item.name }}</b-link>
-            </td>
-            <td v-text="item.number" />
-            <td>
-              {{ $t(`type.options.${item.primaryType}`) }}
-              <template v-if="item.secondaryType">
-                <br />
-                {{ $t(`type.options.${item.secondaryType}`) }}
-              </template>
-            </td>
-            <td v-text="item.category || '—'" />
-            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
-            <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
-              <delete-modal
-                confirm="species.delete.confirm"
-                :displayName="`No. ${item.number.toString().padStart(3, '0')} ${item.name}`"
-                :id="`delete_${item.id}`"
-                :loading="loading"
-                title="species.delete.title"
-                @ok="onDelete(item, $event)"
-              />
-            </td>
-          </tr>
+          <species-row v-for="item in species" :key="item.id" :loading="loading" :region="region" :species="item" @deleted="onDelete" />
         </tbody>
       </table>
       <b-pagination v-model="page" :total-rows="total" :per-page="count" aria-controls="table" />
@@ -63,16 +38,21 @@
 </template>
 
 <script>
+import SpeciesRow from './SpeciesRow.vue'
 import { deleteSpecies, getSpeciesList } from '@/api/species'
 
 export default {
   name: 'SpeciesList',
+  components: {
+    SpeciesRow
+  },
   data() {
     return {
       count: 10,
       desc: false,
       loading: false,
       page: 1,
+      region: null,
       search: null,
       sort: 'Number',
       species: [],
@@ -83,6 +63,7 @@ export default {
   computed: {
     params() {
       return {
+        region: this.region,
         search: this.search,
         type: this.type,
         sort: this.sort,
@@ -143,7 +124,11 @@ export default {
       deep: true,
       immediate: true,
       async handler(newValue, oldValue) {
-        if (newValue?.index && oldValue && (newValue.search !== oldValue.search || newValue.type !== oldValue.type || newValue.count !== oldValue.count)) {
+        if (
+          newValue?.index &&
+          oldValue &&
+          (newValue.region !== oldValue.region || newValue.search !== oldValue.search || newValue.type !== oldValue.type || newValue.count !== oldValue.count)
+        ) {
           this.page = 1
           await this.refresh()
         } else {

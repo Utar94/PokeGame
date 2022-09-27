@@ -34,5 +34,6 @@ namespace PokeGame.Application.Species.Models
 
     public IEnumerable<AbilityModel> Abilities { get; set; } = Enumerable.Empty<AbilityModel>();
     public IEnumerable<EvolutionModel> Evolutions { get; set; } = Enumerable.Empty<EvolutionModel>();
+    public IEnumerable<RegionalNumberModel> RegionalNumbers { get; set; } = Enumerable.Empty<RegionalNumberModel>();
   }
 }

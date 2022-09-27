@@ -7,6 +7,7 @@
     </div>
     <b-row>
       <search-field class="col" v-model="search" />
+      <region-select class="col" v-model="region" />
       <sort-select class="col" :desc="desc" :options="sortOptions" v-model="sort" @desc="desc = $event" />
       <count-select class="col" v-model="count" />
     </b-row>
@@ -15,7 +16,7 @@
         <thead>
           <tr>
             <th scope="col" />
-            <th scope="col" v-t="'species.number'" />
+            <th scope="col" v-t="'species.number.label'" />
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'trainers.pokedex.hasCaught'" />
             <th scope="col" v-t="'updated'" />
@@ -23,33 +24,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entry, index) in entries" :key="entry.species.number">
-            <td>
-              <b-link :href="`/species/${entry.species.id}`" target="_blank"><pokemon-icon :species="entry.species" /></b-link>
-            </td>
-            <td>
-              <b-link :href="`/species/${entry.species.id}`" target="_blank">
-                {{ entry.species.number }}
-                <font-awesome-icon icon="external-link-alt" />
-              </b-link>
-            </td>
-            <td v-text="entry.species.name" />
-            <td>{{ $t(entry.hasCaught ? 'yes' : 'no') }}</td>
-            <td><status-cell :date="entry.updatedAt" /></td>
-            <td>
-              <icon-button class="mx-1" icon="edit" text="trainers.pokedex.edit" variant="primary" v-b-modal="`edit_${index}`" />
-              <edit-entry-modal :entry="entry" :id="`edit_${index}`" :trainerId="trainerId" @updated="refresh()" />
-              <icon-button class="mx-1" icon="trash-alt" text="trainers.pokedex.remove.text" variant="danger" v-b-modal="`remove_${index}`" />
-              <delete-modal
-                confirm="trainers.pokedex.remove.confirm"
-                :displayName="entry.species.name"
-                :id="`remove_${index}`"
-                :loading="loading"
-                title="trainers.pokedex.remove.text"
-                @ok="onRemove(entry, $event)"
-              />
-            </td>
-          </tr>
+          <pokedex-entry
+            v-for="entry in entries"
+            :key="entry.species.number"
+            :entry="entry"
+            :loading="loading"
+            :region="region"
+            :trainerId="trainerId"
+            @removed="onRemove(entry, $event)"
+            @updated="refresh()"
+          />
         </tbody>
       </table>
       <b-pagination v-model="page" :total-rows="total" :per-page="count" aria-controls="table" />
@@ -60,12 +44,14 @@
 
 <script>
 import EditEntryModal from './EditEntryModal.vue'
+import PokedexEntry from './PokedexEntry.vue'
 import { deleteEntry, getEntries } from '@/api/pokedex'
 
 export default {
   name: 'PokedexTab',
   components: {
-    EditEntryModal
+    EditEntryModal,
+    PokedexEntry
   },
   props: {
     trainerId: {
@@ -81,6 +67,7 @@ export default {
       hasCaught: null,
       loading: false,
       page: 1,
+      region: null,
       search: null,
       sort: 'Number',
       type: null
@@ -90,6 +77,7 @@ export default {
     params() {
       return {
         hasCaught: this.hasCaught,
+        region: this.region,
         search: this.search,
         type: this.type,
         sort: this.sort,
@@ -156,7 +144,10 @@ export default {
         if (
           newValue?.index &&
           oldValue &&
-          (newValue.hasCaught !== oldValue.hasCaught || newValue.search !== oldValue.search || newValue.type !== oldValue.type)
+          (newValue.hasCaught !== oldValue.hasCaught ||
+            newValue.region !== oldValue.region ||
+            newValue.search !== oldValue.search ||
+            newValue.type !== oldValue.type)
         ) {
           this.page = 1
           await this.refresh()
