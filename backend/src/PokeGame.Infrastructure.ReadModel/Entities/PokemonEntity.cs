@@ -12,6 +12,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public byte Level { get; private set; }
     public int Experience { get; private set; }
     public byte Friendship { get; private set; }
+    public ushort RemainingHatchSteps { get; private set; }
 
     public PokemonGender Gender { get; private set; }
     public string Nature { get; private set; } = null!;
@@ -93,6 +94,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       Level = pokemon.Level;
       Experience = (int)pokemon.Experience;
       Friendship = pokemon.Friendship;
+      RemainingHatchSteps = pokemon.RemainingHatchSteps;
 
       Gender = pokemon.Gender;
       Nature = pokemon.Nature.Name;

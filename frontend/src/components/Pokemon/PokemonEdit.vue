@@ -61,6 +61,7 @@
               <condition-select class="col" v-model="statusCondition" />
             </b-row>
             <b-row>
+              <name-field class="col" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
               <form-field
                 class="col"
                 id="friendship"
@@ -72,7 +73,12 @@
                 type="number"
                 v-model.number="friendship"
               />
-              <name-field class="col" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
+              <form-field class="col" disabled label="pokemon.remainingHatchSteps" :value="pokemon.remainingHatchSteps">
+                <b-input-group-append v-if="pokemon.remainingHatchSteps > 0">
+                  <icon-button icon="walking" text="pokemon.walkEgg.label" variant="primary" v-b-modal.walkEgg />
+                  <walk-egg-modal :pokemon="pokemon" @updated="pokemon = $event" />
+                </b-input-group-append>
+              </form-field>
             </b-row>
             <item-select id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId">
               <b-input-group-append v-if="pokemon.history">
@@ -284,7 +290,15 @@
               </form-field>
             </b-row>
             <b-row>
-              <item-select category="PokeBall" class="col" id="ballId" label="pokemon.caughtWithBall" :required="Boolean(currentTrainer)" v-model="ballId" />
+              <item-select
+                category="PokeBall"
+                class="col"
+                :disabled="!currentTrainer"
+                id="ballId"
+                label="pokemon.caughtWithBall"
+                :required="Boolean(currentTrainer)"
+                v-model="ballId"
+              />
               <form-field
                 class="col"
                 :disabled="!currentTrainer"
@@ -338,6 +352,7 @@ import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import PokemonEvolution from './PokemonEvolution.vue'
 import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
+import WalkEggModal from './WalkEggModal.vue'
 import { updatePokemon } from '@/api/pokemon'
 import { getSpeciesEvolutions } from '@/api/species'
 
@@ -351,7 +366,8 @@ export default {
     MoveSelect,
     PokemonEvolution,
     SwapModal,
-    TrainerSelect
+    TrainerSelect,
+    WalkEggModal
   },
   props: {
     json: {

@@ -103,6 +103,7 @@
     "placeholder": "Select a nature"
   },
   "newTitle": "Create Pokémon",
+  "remainingHatchSteps": "Remaining Hatch Steps",
   "select": {
     "label": "Pokémon",
     "placeholder": "Select a Pokémon"
@@ -145,5 +146,12 @@
     "title": "Trainer"
   },
   "updated": "The Pokémon has been updated.",
+  "walkEgg": {
+    "hatched": "The Pokémon egg has hatched! Please review this Pokémon details.",
+    "label": "Walk",
+    "steps": "Steps",
+    "title": "Walk Egg",
+    "walked": "The Pokémon egg has been walked."
+  },
   "wild": "Wild Pokémon"
 }

@@ -46,7 +46,8 @@ import {
   faUser,
   faUsers,
   faVenus,
-  faVial
+  faVial,
+  faWalking
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -96,7 +97,8 @@ library.add(
   faUser,
   faUsers,
   faVenus,
-  faVial
+  faVial,
+  faWalking
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
