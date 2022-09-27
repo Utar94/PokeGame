@@ -56,3 +56,7 @@ export async function updatePokemonCondition(id, payload) {
 export async function usePokemonMove(id, moveId, payload) {
   return await patch(`/api/pokemon/${id}/use-move/${moveId}`, payload)
 }
+
+export async function walkPokemonEgg(id, payload) {
+  return await patch(`/api/pokemon/${id}/walk-egg`, payload)
+}

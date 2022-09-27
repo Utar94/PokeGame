@@ -28,6 +28,7 @@ namespace PokeGame.Infrastructure.ReadModel.Configurations
       builder.Property(x => x.MetLocation).HasMaxLength(100);
       builder.Property(x => x.Nature).HasMaxLength(10);
       builder.Property(x => x.Reference).HasMaxLength(2048);
+      builder.Property(x => x.RemainingHatchSteps).HasDefaultValue(0);
       builder.Property(x => x.Sid).HasColumnName("PokemonId");
       builder.Property(x => x.Statistics).HasMaxLength(100);
       builder.Property(x => x.Surname).HasMaxLength(100);

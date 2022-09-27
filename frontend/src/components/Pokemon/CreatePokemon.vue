@@ -44,7 +44,31 @@
             </b-input-group-append>
           </form-select>
         </b-row>
-        <name-field id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
+        <b-row>
+          <name-field class="col" id="surname" label="pokemon.surname.label" placeholder="pokemon.surname.placeholder" v-model="surname" />
+          <form-field
+            class="col"
+            id="friendship"
+            label="pokemon.friendship"
+            :minValue="0"
+            :maxValue="255"
+            :step="1"
+            type="number"
+            v-model.number="friendship"
+          />
+          <form-field
+            class="col"
+            :disabled="level > 1 || Boolean(heldItemId)"
+            id="remainingHatchSteps"
+            label="pokemon.remainingHatchSteps"
+            :minValue="0"
+            :maxValue="65535"
+            required
+            :step="1"
+            type="number"
+            v-model.number="remainingHatchSteps"
+          />
+        </b-row>
         <h3 v-t="'pokemon.individualValues.title'" />
         <b-row>
           <form-field
@@ -263,6 +287,7 @@ export default {
       abilityId: null,
       ballId: null,
       box: 1,
+      friendship: 0,
       gender: null,
       heldItemId: null,
       individualValues: {
@@ -284,6 +309,7 @@ export default {
       nature: null,
       position: 1,
       positionAlreadyUsed: false,
+      remainingHatchSteps: 0,
       species: null,
       speciesId: null,
       surname: null,
@@ -317,6 +343,8 @@ export default {
         gender: this.gender,
         nature: this.nature,
         surname: this.surname,
+        friendship: this.friendship || null,
+        remainingHatchSteps: this.remainingHatchSteps,
         individualValues: Object.entries(this.individualValues)
           .filter(([, value]) => value !== 0)
           .map(([statistic, value]) => ({ statistic, value })),
@@ -412,9 +440,19 @@ export default {
     this.randomIV()
   },
   watch: {
+    heldItemId(id) {
+      if (id !== null) {
+        this.remainingHatchSteps = 0
+      }
+    },
     inParty() {
       this.box = 1
       this.position = 1
+    },
+    level(level) {
+      if (level > 1) {
+        this.remainingHatchSteps = 0
+      }
     },
     async speciesId(speciesId) {
       this.abilityId = null
@@ -426,17 +464,22 @@ export default {
             this.randomAbility()
             this.randomGender()
           }
+          this.friendship = this.species.baseFriendship
         } catch (e) {
           this.handleError(e)
         }
       }
     },
-    trainer(trainer) {
+    trainer(trainer, previous) {
       if (!trainer) {
         this.inParty = true
         this.ballId = null
         this.metLevel = 1
         this.metLocation = null
+        this.metOn = null
+        this.originalTrainer = null
+      } else if (!previous) {
+        this.metLevel = this.level
         this.metOn = new Date()
       }
     }

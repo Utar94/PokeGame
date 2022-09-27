@@ -48,14 +48,17 @@ export default {
     },
     pokemonList() {
       if (this.team === 'opponents' && this.battlingOpponentTrainers.length === 0) {
-        return this.$store.getters.pokemonList.filter(({ history }) => history === null)
+        return this.$store.getters.pokemonList.filter(({ history, remainingHatchSteps }) => history === null && remainingHatchSteps === 0)
       }
       const trainers = Object.fromEntries(
         (this.team === 'players' ? this.battlingPlayerTrainers : this.battlingOpponentTrainers).map(trainer => [trainer.id, trainer])
       )
       return this.orderBy(
         this.$store.getters.pokemonList
-          .filter(({ box, history, position }) => box === null && history !== null && position !== null && Boolean(trainers[history.trainer.id]))
+          .filter(
+            ({ box, history, position, remainingHatchSteps }) =>
+              box === null && history !== null && position !== null && Boolean(trainers[history.trainer.id]) && remainingHatchSteps === 0
+          )
           .map(pokemon => ({ ...pokemon, sort: `${pokemon.history.trainer.name}|${pokemon.position}` })),
         'sort'
       )

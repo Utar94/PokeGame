@@ -19,6 +19,7 @@ namespace PokeGame.Web.Filters
       [typeof(ItemPriceRequiredException)] = "ItemPriceRequired",
       [typeof(NoAvailablePositionException)] = "NoAvailablePosition",
       [typeof(NoRemainingPowerPointException)] = "NoRemainingPowerPoint",
+      [typeof(PokemonEggAlreadyHatchedException)] = "PokemonEggAlreadyHatched",
       [typeof(RemainingPowerPointsExceededException)] = "RemainingPowerPointsExceeded",
       [typeof(TrainerIsRequiredException)] = "TrainerIsRequired"
     };

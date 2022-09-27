@@ -23,6 +23,7 @@ namespace PokeGame.Domain.Pokemon
     public byte Level { get; private set; }
     public uint Experience { get; private set; }
     public byte Friendship { get; private set; }
+    public ushort RemainingHatchSteps { get; private set; }
     public bool HasHighFriendshid => Friendship >= 220;
 
     public double? GenderRatio { get; private set; }
@@ -91,6 +92,15 @@ namespace PokeGame.Domain.Pokemon
 
       ApplyChange(new PokemonUsedMove(move.Id, payload));
     }
+    public void WalkEgg(ushort steps)
+    {
+      if (RemainingHatchSteps == 0)
+      {
+        throw new PokemonEggAlreadyHatchedException(this);
+      }
+
+      ApplyChange(new PokemonEggWalked(steps));
+    }
     public void Wound(ushort damage, byte attackerLevel, StatusCondition? statusCondition = null)
     {
       if (CurrentHitPoints == 0)
@@ -132,6 +142,7 @@ namespace PokeGame.Domain.Pokemon
       Level = payload.Level;
       Experience = payload.Experience ?? ExperienceTable.GetTotalExperience(LevelingRate, Level);
       Friendship = payload.Friendship ?? @event.BaseFriendship;
+      RemainingHatchSteps = payload.RemainingHatchSteps;
 
       GenderRatio = @event.GenderRatio;
       Gender = payload.Gender;
@@ -161,6 +172,12 @@ namespace PokeGame.Domain.Pokemon
     protected virtual void Apply(PokemonDeleted @event)
     {
       Delete(@event);
+    }
+    protected virtual void Apply(PokemonEggWalked @event)
+    {
+      RemainingHatchSteps = (RemainingHatchSteps < @event.Steps)
+        ? (ushort)0
+        : (ushort)(RemainingHatchSteps - @event.Steps);
     }
     protected virtual void Apply(PokemonEvolved @event)
     {

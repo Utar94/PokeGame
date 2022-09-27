@@ -139,5 +139,11 @@ namespace PokeGame.Web.Controllers.Api
     {
       return Ok(await _mediator.Send(new UsePokemonMoveMutation(id, moveId, payload), cancellationToken));
     }
+
+    [HttpPatch("{id}/walk-egg")]
+    public async Task<ActionResult<PokemonModel>> WalkEggAsync(Guid id, [FromBody] WalkPokemonEggPayload payload, CancellationToken cancellationToken)
+    {
+      return Ok(await _mediator.Send(new WalkPokemonEggMutation(id, payload), cancellationToken));
+    }
   }
 }

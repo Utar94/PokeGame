@@ -10,9 +10,21 @@ namespace PokeGame.Application.Pokemon
       RuleFor(x => x.Level)
         .InclusiveBetween((byte)1, (byte)100);
 
+      When(x => x.Level > 1, () =>
+      {
+        RuleFor(x => x.RemainingHatchSteps)
+          .Equal((ushort)0);
+      });
+
       RuleFor(x => x.Experience)
         .GreaterThanOrEqualTo(x => ExperienceTable.GetTotalExperience(x.LevelingRate, x.Level))
         .LessThan(x => ExperienceTable.GetTotalExperience(x.LevelingRate, (byte)(x.Level < 100 ? (x.Level + 1) : 100)));
+
+      When(x => x.RemainingHatchSteps > 0, () =>
+      {
+        RuleFor(x => x.HeldItemId)
+          .Null();
+      });
 
       RuleFor(x => x.GenderRatio)
         .InclusiveBetween(0.0, 100.0);
