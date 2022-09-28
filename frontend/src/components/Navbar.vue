@@ -12,7 +12,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item v-if="environment === 'development'" href="/swagger" target="_blank"><font-awesome-icon icon="vial" /> Swagger</b-nav-item>
-          <template v-if="currentUser.isAuthenticated">
+          <template v-if="currentUser.isAdministrator">
             <b-nav-item href="/abilities">
               <font-awesome-icon icon="tools" />
               {{ $t('abilities.title') }}

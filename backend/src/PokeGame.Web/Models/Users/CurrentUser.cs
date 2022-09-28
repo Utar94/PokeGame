@@ -2,10 +2,11 @@
 
 namespace PokeGame.Web.Models.Users
 {
-  internal class CurrentUser
+  public class CurrentUser
   {
-    public CurrentUser(UserModel? user)
+    public CurrentUser(UserModel? user = null, bool isAdministrator = false)
     {
+      IsAdministrator = isAdministrator;
       IsAuthenticated = user != null;
 
       Email = user?.Email;
@@ -14,6 +15,7 @@ namespace PokeGame.Web.Models.Users
       Username = user?.Username;
     }
 
+    public bool IsAdministrator { get; }
     public bool IsAuthenticated { get; }
 
     public string? Email { get; }

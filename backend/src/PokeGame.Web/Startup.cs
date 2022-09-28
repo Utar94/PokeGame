@@ -73,6 +73,7 @@ namespace PokeGame.Web
       services.AddSingleton<IAuthorizationHandler, AdministratorAuthorizationHandler>();
       services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
       services.AddSingleton<IUserContext, HttpUserContext>();
+      services.AddSingleton<UserService>();
       services.AddScoped<IConfigurationService, ConfigurationService>();
 
       services.AddPokeGameApplication();
