@@ -25,7 +25,13 @@
             </b-row>
             <b-row>
               <user-select class="col" v-model="userId" />
-              <form-field class="col" id="money" label="trainers.money" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="money" />
+              <form-field class="col" id="money" label="trainers.money" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="money">
+                <template #prepend>
+                  <b-input-group-prepend is-text>
+                    <pokemon-dollar />
+                  </b-input-group-prepend>
+                </template>
+              </form-field>
             </b-row>
             <name-field required v-model="name" />
             <description-field v-model="description" />
@@ -201,7 +207,7 @@ export default {
   },
   watch: {
     gender(gender) {
-      if (gender) {
+      if (gender && !this.trainer) {
         this.generateNumber()
       }
     }

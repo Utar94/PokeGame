@@ -15,6 +15,7 @@ import LocaleSelect from './components/shared/LocaleSelect.vue'
 import NameField from './components/shared/NameField.vue'
 import NotesField from './components/shared/NotesField.vue'
 import PictureField from './components/shared/PictureField.vue'
+import PokemonDollar from './components/shared/PokemonDollar.vue'
 import PokemonIcon from './components/shared/PokemonIcon.vue'
 import ReferenceField from './components/shared/ReferenceField.vue'
 import RegionSelect from './components/shared/RegionSelect.vue'
@@ -40,6 +41,7 @@ Vue.component('locale-select', LocaleSelect)
 Vue.component('name-field', NameField)
 Vue.component('notes-field', NotesField)
 Vue.component('picture-field', PictureField)
+Vue.component('pokemon-dollar', PokemonDollar)
 Vue.component('pokemon-icon', PokemonIcon)
 Vue.component('reference-field', ReferenceField)
 Vue.component('region-select', RegionSelect)

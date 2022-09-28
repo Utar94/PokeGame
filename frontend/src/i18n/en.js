@@ -2,6 +2,7 @@ import shared from './en.json'
 import abilities from './abilities/en.json'
 import battle from './battle/en.json'
 import configurations from './configurations/en.json'
+import game from './game/en.json'
 import items from './items/en.json'
 import moves from './moves/en.json'
 import pokemon from './pokemon/en.json'
@@ -14,6 +15,7 @@ export default {
   abilities,
   battle,
   configurations,
+  game,
   items,
   moves,
   pokemon,

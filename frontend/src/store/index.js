@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import effectivenessTable from './effectiveness.json'
+import { getGameTrainers } from '@/api/game'
 import { getPokemonList } from '@/api/pokemon'
 import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
@@ -69,6 +70,11 @@ export default new Vuex.Store({
       status: {},
       step: 'TrainerSelection'
     },
+    game: {
+      page: null,
+      trainer: null,
+      trainers: {}
+    },
     pokemonList: {},
     trainers: {}
   },
@@ -123,6 +129,15 @@ export default new Vuex.Store({
     },
     battlingPlayerTrainers({ battle, trainers }) {
       return battle.players.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    gamePage({ game }) {
+      return game.page
+    },
+    gameTrainer({ game }) {
+      return game.trainer
+    },
+    gameTrainers({ game }) {
+      return Object.values(game.trainers)
     },
     hasEnded(_, { remainingBattlingOpponentPokemon, remainingBattlingPlayerPokemon }) {
       return remainingBattlingPlayerPokemon.length === 0 || remainingBattlingOpponentPokemon.length === 0
@@ -223,6 +238,17 @@ export default new Vuex.Store({
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
     },
+    async loadGameTrainers({ commit, dispatch, state }) {
+      const { data } = await getGameTrainers()
+      const trainers = {}
+      for (const trainer of data) {
+        trainers[trainer.id] = trainer
+      }
+      commit('setGameTrainers', trainers)
+      if (state.game.trainer && !trainers[state.game.trainer.id]) {
+        dispatch('setGameTrainer', null)
+      }
+    },
     async loadPokemonList({ commit }) {
       const { data } = await getPokemonList()
       const pokemonList = {}
@@ -245,6 +271,9 @@ export default new Vuex.Store({
         commit('setBattleMoveAttacker', pokemon)
       }
       commit('setBattleStep', 'MakeMove')
+    },
+    navigateGame({ commit }, page) {
+      commit('setGamePage', page)
     },
     nextExperienceDistribution({ commit, dispatch, state }) {
       const defeatedPokemon = state.battle.experience.defeatedPokemon.slice(1)
@@ -271,6 +300,10 @@ export default new Vuex.Store({
       if (!keepCurrentStep) {
         commit('setBattleStep', 'Battle')
       }
+    },
+    setGameTrainer({ commit }, trainer) {
+      commit('setGameTrainer', trainer)
+      commit('setGamePage', null)
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -589,6 +622,15 @@ export default new Vuex.Store({
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
       state.battle.experience.defeatedPokemon = defeatedPokemon ?? []
+    },
+    setGamePage(state, page) {
+      state.game.page = page ?? null
+    },
+    setGameTrainer(state, trainer) {
+      state.game.trainer = trainer ?? null
+    },
+    setGameTrainers(state, trainers) {
+      state.game.trainers = trainers ?? {}
     },
     setPokemonList(state, pokemonList) {
       state.pokemonList = pokemonList ?? {}

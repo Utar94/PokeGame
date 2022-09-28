@@ -7,6 +7,7 @@ export default {
   AppFooter,
   BattleSimulator: () => import(/* webpackChunkName: "battleSimulator" */ './Battle/BattleSimulator.vue'),
   CreatePokemon: () => import(/* webpackChunkName: "createPokemon" */ './Pokemon/CreatePokemon.vue'),
+  Game: () => import(/* webpackChunkName: "game" */ './Game/Game.vue'),
   ItemEdit: () => import(/* webpackChunkName: "itemEdit" */ './Items/ItemEdit.vue'),
   ItemList: () => import(/* webpackChunkName: "itemList" */ './Items/ItemList.vue'),
   MoveEdit: () => import(/* webpackChunkName: "moveEdit" */ './Moves/MoveEdit.vue'),

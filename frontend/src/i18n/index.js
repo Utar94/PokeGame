@@ -7,6 +7,11 @@ Vue.use(VueI18n)
 export default new VueI18n({
   dateTimeFormats: {
     en: {
+      card: {
+        year: 'numeric',
+        month: '2-digit',
+        day: 'numeric'
+      },
       medium: {
         year: 'numeric',
         month: 'short',

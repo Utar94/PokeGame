@@ -11,6 +11,7 @@ namespace PokeGame.Web.Models.Api.Game
       ArgumentNullException.ThrowIfNull(model);
 
       Id = model.Id;
+      CreatedOn = model.CreatedAt;
 
       Region = model.Region;
       Number = model.Number;
@@ -24,6 +25,7 @@ namespace PokeGame.Web.Models.Api.Game
     }
 
     public Guid Id { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     public Region Region { get; set; }
     public int Number { get; set; }
