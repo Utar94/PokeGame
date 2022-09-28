@@ -19,7 +19,18 @@ namespace PokeGame.Web.Controllers
     {
       if (await _configurationService.IsInitializedAsync(cancellationToken))
       {
-        return RedirectToAction(actionName: "SignIn", controllerName: "Account");
+        return RedirectToAction(actionName: "Index", controllerName: "Game");
+      }
+
+      return RedirectToAction("Startup");
+    }
+
+    [HttpGet("startup")]
+    public async Task<IActionResult> Startup(CancellationToken cancellationToken)
+    {
+      if (await _configurationService.IsInitializedAsync(cancellationToken))
+      {
+        return RedirectToAction(actionName: "Index", controllerName: "Game");
       }
 
       return View();

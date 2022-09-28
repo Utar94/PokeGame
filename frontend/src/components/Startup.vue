@@ -40,7 +40,7 @@ import UsernameField from './Users/UsernameField.vue'
 import { initialize } from '@/api/configurations'
 
 export default {
-  name: 'Home',
+  name: 'Startup',
   components: {
     EmailField,
     FirstNameField,
