@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
+using PokeGame.Application.Trainers.Mutations;
+using PokeGame.Application.Trainers.Queries;
 using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 using PokeGame.Domain.Trainers.Payloads;
@@ -13,17 +16,17 @@ namespace PokeGame.Web.Controllers.Api
   [Route("api/trainers")]
   public class TrainerApiController : ControllerBase
   {
-    private readonly ITrainerService _service;
+    private readonly IMediator _mediator;
 
-    public TrainerApiController(ITrainerService service)
+    public TrainerApiController(IMediator mediator)
     {
-      _service = service;
+      _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<ActionResult<TrainerModel>> CreateAsync([FromBody] CreateTrainerPayload payload, CancellationToken cancellationToken)
     {
-      TrainerModel trainer = await _service.CreateAsync(payload, cancellationToken);
+      TrainerModel trainer = await _mediator.Send(new CreateTrainerMutation(payload), cancellationToken);
       var uri = new Uri($"/api/trainers/{trainer.Id}", UriKind.Relative);
 
       return Created(uri, trainer);
@@ -32,7 +35,7 @@ namespace PokeGame.Web.Controllers.Api
     [HttpDelete("{id}")]
     public async Task<ActionResult<TrainerModel>> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-      await _service.DeleteAsync(id, cancellationToken);
+      await _mediator.Send(new DeleteTrainerMutation(id), cancellationToken);
 
       return NoContent();
     }
@@ -43,16 +46,23 @@ namespace PokeGame.Web.Controllers.Api
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return Ok(await _service.GetAsync(gender, region, search, userId,
-        sort, desc,
-        index, count,
-        cancellationToken));
+      return Ok(await _mediator.Send(new GetTrainersQuery
+      {
+        Gender = gender,
+        Region = region,
+        Search = search,
+        UserId = userId,
+        Sort = sort,
+        Desc = desc,
+        Index = index,
+        Count = count
+      }, cancellationToken));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<TrainerModel>> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-      TrainerModel? trainer = await _service.GetAsync(id, cancellationToken);
+      TrainerModel? trainer = await _mediator.Send(new GetTrainerQuery(id), cancellationToken);
       if (trainer == null)
       {
         return NotFound();
@@ -64,7 +74,7 @@ namespace PokeGame.Web.Controllers.Api
     [HttpPut("{id}")]
     public async Task<ActionResult<TrainerModel>> UpdateAsync(Guid id, [FromBody] UpdateTrainerPayload payload, CancellationToken cancellationToken)
     {
-      return Ok(await _service.UpdateAsync(id, payload, cancellationToken));
+      return Ok(await _mediator.Send(new UpdateTrainerMutation(id, payload), cancellationToken));
     }
   }
 }
