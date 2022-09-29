@@ -37,7 +37,7 @@ namespace PokeGame.Web.Controllers.Api
         Desc = false,
       }, cancellationToken);
 
-      return Ok(trainers.Items.Select(trainer => new GameTrainerModel(trainer)));
+      return Ok(trainers.Items.Select(trainer => new GameTrainerModel(trainer, 0))); // TODO(fpion): implement Pokédex Count
     }
 
     [HttpGet("trainers/{id}/inventory")]

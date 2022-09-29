@@ -1,64 +1,91 @@
 <template>
-  <b-card class="mb-2" :img-alt="trainer.name" :img-src="src" img-top tag="article" @click="setGameTrainer(trainer)">
-    <template #header>
-      <h4 class="mb-0"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</h4>
-    </template>
-    <table class="table">
-      <tr>
-        <th scope="row" v-t="'trainers.number'" />
-        <td v-text="trainer.number" />
-      </tr>
-      <tr>
-        <th scope="row" v-t="'region.label'" />
-        <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-      </tr>
-      <tr>
-        <th scope="row" v-t="'trainers.money'" />
-        <td><pokemon-dollar /> {{ trainer.money }}</td>
-      </tr>
-      <tr>
-        <th scope="row" v-t="'game.adventureStarted'" />
-        <td>{{ $d(new Date(trainer.createdOn), 'card') }}</td>
-      </tr>
-    </table>
+  <b-card :class="{ clickable, 'overflow-hidden': true, 'trainer-card': true }" no-body @click="onClick">
+    <b-row no-gutters>
+      <b-col md="8">
+        <b-card-body>
+          <h4>
+            <img alt="Poké Ball Logo" height="20" src="@/assets/poke-ball-logo.svg" /> {{ $t('game.trainerCard') }}
+            <img alt="Poké Ball Logo" height="20" src="@/assets/poke-ball-logo.svg" />
+          </h4>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th scope="row" v-t="'game.trainerNumber'" />
+                <td v-text="trainer.number" />
+              </tr>
+              <tr>
+                <th scope="row" v-t="'name.label'" />
+                <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
+              </tr>
+              <tr>
+                <th scope="row" v-t="'trainers.money'" />
+                <td><pokemon-dollar /> {{ trainer.money }}</td>
+              </tr>
+              <tr>
+                <th scope="row" v-t="'trainers.pokedex.label'" />
+                <td v-text="trainer.pokedex" />
+              </tr>
+              <tr>
+                <th scope="row" v-t="'game.playTime'" />
+                <td v-text="trainer.playTime" />
+              </tr>
+              <tr>
+                <th scope="row" v-t="'game.adventureStarted'" />
+                <td>{{ $d(new Date(trainer.adventureStarted), 'card') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </b-card-body>
+      </b-col>
+      <b-col md="4" class="text-center">
+        <b-card-img :alt="trainer.name" class="rounded-0" :src="trainer.picture || '/img/trainer-placeholder.png'" />
+      </b-col>
+    </b-row>
   </b-card>
 </template>
 
 <script>
 /* TODO(fpion):
- * Horizontal card with picture to the right
- * ID No.
- * Name
- * Pokédex (number of Pokémon)
- * Play time
  * Flip to Back
  * View Badges
  */
 
-import { mapActions } from 'vuex'
-
 export default {
   name: 'TrainerCard',
   props: {
+    clickable: {
+      type: Boolean,
+      default: false
+    },
     trainer: {
       type: Object,
       required: true
     }
   },
-  computed: {
-    src() {
-      return this.trainer.picture ?? '/img/trainer-placeholder.png'
-    }
-  },
   methods: {
-    ...mapActions(['setGameTrainer'])
+    onClick($event) {
+      if (this.clickable) {
+        this.$emit('click', $event)
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-.card {
+.card-img {
+  width: auto;
+  max-height: 360px;
+}
+
+.clickable {
   cursor: pointer;
-  max-width: 20rem;
+}
+.clickable:hover {
+  background-color: #ececec;
+}
+
+.trainer-card {
+  max-width: 720px;
 }
 </style>

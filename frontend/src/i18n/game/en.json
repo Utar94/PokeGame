@@ -1,7 +1,10 @@
 {
   "adventureStarted": "Adventure started",
+  "back": "Back",
   "bag": "Bag",
+  "close": "Close",
   "exit": "Exit",
-  "menu": "Menu",
-  "trainerCard": "Trainer Card"
+  "playTime": "Play time",
+  "trainerCard": "Trainer Card",
+  "trainerNumber": "ID No."
 }

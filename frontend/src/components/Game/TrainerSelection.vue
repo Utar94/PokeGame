@@ -2,9 +2,11 @@
   <b-container fluid>
     <h1 v-t="'trainers.title'" />
     <p v-if="gameTrainers.length === 0" v-t="'trainers.empty'" />
-    <b-card-group v-else deck>
-      <trainer-card v-for="trainer in gameTrainers" :key="trainer.id" :trainer="trainer" />
-    </b-card-group>
+    <b-row v-else>
+      <b-col lg="6" class="my-2" v-for="trainer in gameTrainers" :key="trainer.id">
+        <trainer-card class="mx-auto" clickable :trainer="trainer" @click="setGameTrainer(trainer)" />
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
@@ -21,7 +23,7 @@ export default {
     ...mapGetters(['gameTrainers'])
   },
   methods: {
-    ...mapActions(['loadGameTrainers'])
+    ...mapActions(['loadGameTrainers', 'setGameTrainer'])
   },
   async created() {
     try {
