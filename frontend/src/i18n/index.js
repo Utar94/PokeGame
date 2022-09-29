@@ -10,7 +10,7 @@ export default new VueI18n({
       card: {
         year: 'numeric',
         month: '2-digit',
-        day: 'numeric'
+        day: '2-digit'
       },
       medium: {
         year: 'numeric',

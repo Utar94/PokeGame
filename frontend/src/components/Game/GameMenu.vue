@@ -23,7 +23,9 @@
         </template>
       </b-card>
     </b-card-group>
-    <icon-button class="my-3" icon="sign-out-alt" text="game.exit" variant="danger" @click="setGameTrainer(null)" />
+    <div class="my-3">
+      <icon-button icon="sign-out-alt" text="game.exit" variant="danger" @click="setGameTrainer(null)" />
+    </div>
   </b-container>
 </template>
 

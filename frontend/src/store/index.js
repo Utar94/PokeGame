@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import effectivenessTable from './effectiveness.json'
-import { getGameTrainers } from '@/api/game'
+import { getGameInventory, getGameTrainers } from '@/api/game'
 import { getPokemonList } from '@/api/pokemon'
 import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
@@ -71,6 +71,7 @@ export default new Vuex.Store({
       step: 'TrainerSelection'
     },
     game: {
+      inventory: {},
       page: null,
       trainer: null,
       trainers: {}
@@ -129,6 +130,9 @@ export default new Vuex.Store({
     },
     battlingPlayerTrainers({ battle, trainers }) {
       return battle.players.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    gameInventory({ game }) {
+      return game.inventory
     },
     gamePage({ game }) {
       return game.page
@@ -238,6 +242,10 @@ export default new Vuex.Store({
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
     },
+    async loadGameInventory({ commit, state }) {
+      const { data } = await getGameInventory(state.game.trainer.id)
+      commit('setGameInventory', data)
+    },
     async loadGameTrainers({ commit, dispatch, state }) {
       const { data } = await getGameTrainers()
       const trainers = {}
@@ -304,6 +312,7 @@ export default new Vuex.Store({
     setGameTrainer({ commit }, trainer) {
       commit('setGameTrainer', trainer)
       commit('setGamePage', null)
+      commit('setGameInventory', null)
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -622,6 +631,9 @@ export default new Vuex.Store({
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
       state.battle.experience.defeatedPokemon = defeatedPokemon ?? []
+    },
+    setGameInventory(state, inventory) {
+      state.game.inventory = inventory ?? {}
     },
     setGamePage(state, page) {
       state.game.page = page ?? null
