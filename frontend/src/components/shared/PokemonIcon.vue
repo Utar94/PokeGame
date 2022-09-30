@@ -23,7 +23,7 @@ export default {
     },
     src() {
       if ((this.pokemon?.remainingHatchSteps ?? 0) > 0) {
-        return '/egg.webp'
+        return '/img/egg.webp'
       }
       const species = this.species ?? this.pokemon?.species ?? null
       return species?.picture ?? null

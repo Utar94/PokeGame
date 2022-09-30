@@ -43,6 +43,16 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       return species == null ? null : _mapper.Map<SpeciesModel>(species);
     }
 
+    public async Task<SpeciesModel?> GetAsync(Region region, int number, CancellationToken cancellationToken)
+    {
+      SpeciesEntity? species = await _species.AsNoTracking()
+        .Include(x => x.RegionalSpecies)
+        .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
+        .SingleOrDefaultAsync(x => x.RegionalSpecies.Any(y => y.Region == region && y.Number == number), cancellationToken);
+
+      return species == null ? null : _mapper.Map<SpeciesModel>(species);
+    }
+
     public async Task<EvolutionModel?> GetEvolutionAsync(Guid id, Guid speciesId, CancellationToken cancellationToken)
     {
       EvolutionEntity? evolution = await _evolutions.AsNoTracking()
@@ -119,20 +129,6 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
         Items = _mapper.Map<IEnumerable<SpeciesModel>>(species),
         Total = total
       };
-    }
-
-    public async Task<Dictionary<Region, HashSet<int>>> GetRegionalNumbersAsync(IEnumerable<Region>? regions, CancellationToken cancellationToken)
-    {
-      IQueryable<RegionalSpeciesEntity> query = _regionalSpecies.AsNoTracking();
-
-      if (regions != null)
-      {
-        query = query.Where(x => regions.Contains(x.Region));
-      }
-
-      RegionalSpeciesEntity[] regionalSpecies = await query.ToArrayAsync(cancellationToken);
-
-      return regionalSpecies.GroupBy(x => x.Region).ToDictionary(x => x.Key, x => x.Select(y => y.Number).ToHashSet());
     }
   }
 }

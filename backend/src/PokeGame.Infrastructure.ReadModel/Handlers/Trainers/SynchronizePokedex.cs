@@ -34,7 +34,8 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
         return null;
       }
 
-      SpeciesEntity? species = await _readContext.Species.SingleOrDefaultAsync(x => x.Id == speciesId, cancellationToken)
+      SpeciesEntity? species = await _readContext.Species.Include(x => x.RegionalSpecies)
+        .SingleOrDefaultAsync(x => x.Id == speciesId, cancellationToken)
         ?? await _synchronizeSpecies.ExecuteAsync(speciesId, version: null, cancellationToken);
       if (species == null)
       {
@@ -53,6 +54,12 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
       if (trainer.Pokedex.TryGetValue(species.Id, out PokedexEntry? entry))
       {
         entity.Synchronize(entry);
+
+        int regionalCount = await _readContext.RegionalSpecies.AsNoTracking()
+          .Where(x => x.Region == trainerEntity.Region)
+          .CountAsync(cancellationToken);
+
+        trainerEntity.UpdatePokedex(regionalCount);
       }
       else
       {

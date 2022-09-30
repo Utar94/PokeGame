@@ -74,13 +74,15 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Species
           if (!regionalSpecies.TryGetValue(region, out RegionalSpeciesEntity? regionalEntity))
           {
             regionalEntity = new(entity, region);
+            regionalSpecies.Add(region, regionalEntity);
+
             entity.RegionalSpecies.Add(regionalEntity);
           }
 
           regionalEntity.Number = number;
         }
 
-        foreach (RegionalSpeciesEntity regionalEntity in entity.RegionalSpecies)
+        foreach (RegionalSpeciesEntity regionalEntity in regionalSpecies.Values)
         {
           if (!species.RegionalNumbers.ContainsKey(regionalEntity.Region))
           {

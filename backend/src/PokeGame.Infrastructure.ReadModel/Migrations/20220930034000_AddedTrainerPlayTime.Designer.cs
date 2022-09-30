@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PokeGame.Infrastructure.ReadModel;
@@ -11,9 +12,10 @@ using PokeGame.Infrastructure.ReadModel;
 namespace PokeGame.Infrastructure.ReadModel.Migrations
 {
     [DbContext(typeof(ReadContext))]
-    partial class ReadContextModelSnapshot : ModelSnapshot
+    [Migration("20220930034000_AddedTrainerPlayTime")]
+    partial class AddedTrainerPlayTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -761,11 +763,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<bool>("NationalPokedex")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -777,11 +774,6 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                         .HasColumnType("character varying(2048)");
 
                     b.Property<int>("PlayTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("PokedexCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(0);

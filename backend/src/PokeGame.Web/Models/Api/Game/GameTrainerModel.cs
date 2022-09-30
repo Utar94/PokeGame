@@ -6,7 +6,7 @@ namespace PokeGame.Web.Models.Api.Game
 {
   public class GameTrainerModel
   {
-    public GameTrainerModel(TrainerModel model, long pokedex)
+    public GameTrainerModel(TrainerModel model)
     {
       ArgumentNullException.ThrowIfNull(model);
 
@@ -20,9 +20,9 @@ namespace PokeGame.Web.Models.Api.Game
 
       Money = model.Money;
 
-      Pokedex = pokedex;
+      Pokedex = model.PokedexCount;
 
-      PlayTime = "0:00"; // TODO(fpion): implement trainer PlayTime
+      PlayTime = model.PlayTime;
       AdventureStarted = model.CreatedAt;
 
       Picture = model.Picture;
@@ -40,7 +40,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public long Pokedex { get; set; }
 
-    public string PlayTime { get; set; }
+    public int PlayTime { get; set; }
     public DateTime AdventureStarted { get; set; }
 
     public string? Picture { get; set; }

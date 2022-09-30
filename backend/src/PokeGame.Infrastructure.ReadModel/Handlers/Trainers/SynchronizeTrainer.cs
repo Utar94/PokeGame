@@ -20,7 +20,7 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
     {
       TrainerEntity? entity = await _readContext.Trainers
         .Include(x => x.Inventory).ThenInclude(x => x.Item)
-        .Include(x => x.Pokedex).ThenInclude(x => x.Species)
+        .Include(x => x.Pokedex).ThenInclude(x => x.Species).ThenInclude(x => x!.RegionalSpecies)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       if (entity != null && version.HasValue && entity.Version >= version.Value)

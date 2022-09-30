@@ -46,6 +46,7 @@
   "money": "Money",
   "newTitle": "Create trainer",
   "number": "Number",
+  "playTime": "Play Time (Minutes)",
   "pokedex": {
     "add": "Add entry",
     "edit": "Edit entry",

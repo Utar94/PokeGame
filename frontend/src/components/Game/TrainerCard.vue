@@ -27,7 +27,7 @@
               </tr>
               <tr>
                 <th scope="row" v-t="'game.playTime'" />
-                <td v-text="trainer.playTime" />
+                <td v-text="formattedPlayTime" />
               </tr>
               <tr>
                 <th scope="row" v-t="'game.adventureStarted'" />
@@ -60,6 +60,13 @@ export default {
     trainer: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    formattedPlayTime() {
+      const hours = Math.floor(this.trainer.playTime / 60)
+      const minutes = this.trainer.playTime % 60
+      return [isNaN(hours) ? 0 : hours, (isNaN(minutes) ? 0 : minutes).toString().padStart(2, '0')].join(':')
     }
   },
   methods: {

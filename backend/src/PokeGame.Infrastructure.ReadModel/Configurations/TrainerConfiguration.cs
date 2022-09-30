@@ -22,7 +22,10 @@ namespace PokeGame.Infrastructure.ReadModel.Configurations
       builder.Property(x => x.Gender).HasDefaultValue(default(TrainerGender));
       builder.Property(x => x.Money).HasDefaultValue(0);
       builder.Property(x => x.Name).HasMaxLength(100);
+      builder.Property(x => x.NationalPokedex).HasDefaultValue(false);
       builder.Property(x => x.Picture).HasMaxLength(2048);
+      builder.Property(x => x.PlayTime).HasDefaultValue(0);
+      builder.Property(x => x.PokedexCount).HasDefaultValue(0);
       builder.Property(x => x.Reference).HasMaxLength(2048);
       builder.Property(x => x.Region).HasDefaultValue(default(Region));
       builder.Property(x => x.Sid).HasColumnName("TrainerId");

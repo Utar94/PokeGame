@@ -5,6 +5,7 @@
     public Guid? UserId { get; set; }
 
     public int Money { get; set; }
+    public int PlayTime { get; set; }
 
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
