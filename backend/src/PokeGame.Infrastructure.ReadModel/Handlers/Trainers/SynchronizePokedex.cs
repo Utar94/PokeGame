@@ -54,17 +54,17 @@ namespace PokeGame.Infrastructure.ReadModel.Handlers.Trainers
       if (trainer.Pokedex.TryGetValue(species.Id, out PokedexEntry? entry))
       {
         entity.Synchronize(entry);
-
-        int regionalCount = await _readContext.RegionalSpecies.AsNoTracking()
-          .Where(x => x.Region == trainerEntity.Region)
-          .CountAsync(cancellationToken);
-
-        trainerEntity.UpdatePokedex(regionalCount);
       }
       else
       {
         trainerEntity.Pokedex.Remove(entity);
       }
+
+      int regionalCount = await _readContext.RegionalSpecies.AsNoTracking()
+          .Where(x => x.Region == trainerEntity.Region)
+          .CountAsync(cancellationToken);
+
+      trainerEntity.UpdatePokedex(regionalCount);
 
       await _readContext.SaveChangesAsync(cancellationToken);
 

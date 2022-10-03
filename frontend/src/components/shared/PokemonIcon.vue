@@ -19,7 +19,7 @@ export default {
   computed: {
     alt() {
       const species = this.species ?? this.pokemon?.species ?? null
-      return species ? `No. ${species.number.toFixed(3)} ${species.name}` : null
+      return species ? `${this.$i18n.t('number')} ${species.number.toString().padStart(3, '0')} ${species.name}` : null
     },
     src() {
       if ((this.pokemon?.remainingHatchSteps ?? 0) > 0) {

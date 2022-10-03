@@ -15,7 +15,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public ushort RemainingHatchSteps { get; private set; }
 
     public PokemonGender Gender { get; private set; }
-    public string Nature { get; private set; } = null!;
+    public string Nature { get; private set; } = string.Empty;
     public string? Surname { get; private set; }
     public string? Description { get; private set; }
 

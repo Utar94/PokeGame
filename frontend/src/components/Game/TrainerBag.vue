@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1 v-t="'game.bag'" />
+    <h1 v-t="'game.bag.title'" />
     <div class="my-2">
       <icon-button icon="arrow-left" text="game.back" variant="danger" @click="navigateGame(null)" />
     </div>
@@ -14,7 +14,7 @@
       <bag-tab :items="gameInventory.treasures || []" title="items.category.options.Treasure" @selected="onItemSelected" />
       <bag-tab :items="gameInventory.keyItems || []" title="items.category.options.KeyItem" @selected="onItemSelected" />
     </b-tabs>
-    <b-modal v-model="showSidebar" title="Item Modal">
+    <b-modal v-model="showModal" :title="$t('game.bag.itemDetail')">
       <template #modal-header="{ close }">
         <h5 class="modal-title"><item-icon :item="selectedItem" /> {{ selectedItem.name }}</h5>
         <button aria-label="close" class="close" type="button" @click="close()">&times;</button>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       selectedItem: null,
-      showSidebar: false
+      showModal: false
     }
   },
   computed: {
@@ -51,7 +51,7 @@ export default {
     ...mapActions(['loadGameInventory', 'navigateGame']),
     onItemSelected(item) {
       this.selectedItem = item
-      this.showSidebar = true
+      this.showModal = true
     }
   },
   async created() {

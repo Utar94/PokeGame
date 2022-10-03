@@ -1,10 +1,17 @@
 {
   "adventureStarted": "Adventure started",
   "back": "Back",
-  "bag": "Bag",
+  "bag": {
+    "itemDetail": "Item Detail",
+    "title": "Bag"
+  },
   "close": "Close",
   "exit": "Exit",
   "playTime": "Play time",
+  "pokedex": {
+    "caught": "Caught: {caught}",
+    "seen": "Seen: {seen}"
+  },
   "trainerCard": "Trainer Card",
   "trainerNumber": "ID No."
 }

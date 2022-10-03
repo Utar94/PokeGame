@@ -4,6 +4,7 @@
   "baseStatistics": "Base Statistics",
   "catchRate": "Catch Rate",
   "category": {
+    "format": "{category} Pokémon",
     "label": "Category",
     "placeholder": "Enter a category"
   },
@@ -71,6 +72,7 @@
     "unit": "%"
   },
   "height": {
+    "format": "{height} m",
     "label": "Height",
     "unit": "m"
   },
@@ -113,6 +115,7 @@
   "totalFormat": "Total: {total}",
   "updated": "The species has been updated.",
   "weight": {
+    "format": "{weight} kg",
     "label": "Weight",
     "unit": "kg"
   }
