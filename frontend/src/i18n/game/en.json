@@ -10,6 +10,7 @@
   "playTime": "Play time",
   "pokedex": {
     "caught": "Caught: {caught}",
+    "national": "National Pokédex",
     "seen": "Seen: {seen}"
   },
   "trainerCard": "Trainer Card",

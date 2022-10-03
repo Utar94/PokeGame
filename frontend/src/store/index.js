@@ -253,8 +253,8 @@ export default new Vuex.Store({
       const { data } = await getGameInventory(state.game.trainer.id)
       commit('setGameInventory', data)
     },
-    async loadGamePokedex({ commit, state }) {
-      const { data } = await getGamePokedex(state.game.trainer.id)
+    async loadGamePokedex({ commit, state }, national = false) {
+      const { data } = await getGamePokedex(state.game.trainer.id, { national })
       commit('setGamePokedex', data)
     },
     async loadGameTrainers({ commit, dispatch, state }) {

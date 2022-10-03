@@ -18,26 +18,29 @@ namespace PokeGame.Web.Models.Api.Game
         ? species.RegionalNumbers.Single(x => x.Region == region.Value).Number
         : species.Number;
 
-      PrimaryType = species.PrimaryType;
-      SecondaryType = species.SecondaryType;
-
       Name = species.Name;
-      Category = species.Category;
-      Description = species.Description;
-      
+
       GenderRatio = species.GenderRatio;
-      Height = species.Height;
-      Weight = species.Weight;
 
       Picture = species.Picture;
+
+      if (model.HasCaught)
+      {
+        Types = string.Join(", ", new[] { species.PrimaryType, species.SecondaryType }.Where(x => x != null));
+
+        Category = species.Category;
+        Description = species.Description;
+
+        Height = species.Height;
+        Weight = species.Weight;
+      }
     }
 
     public bool HasCaught { get; set; }
 
     public int Number { get; set; }
 
-    public PokemonType PrimaryType { get; set; }
-    public PokemonType? SecondaryType { get; set; }
+    public string? Types { get; set; }
 
     public string Name { get; set; } = string.Empty;
     public string? Category { get; set; }

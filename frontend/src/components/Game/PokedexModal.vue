@@ -20,22 +20,22 @@
           <tbody>
             <tr>
               <th scope="row" v-t="'species.category.label'" />
-              <td v-if="entry.hasCaught && entry.category">{{ $t('species.category.format', { category: entry.category }) }}</td>
+              <td v-if="entry.category">{{ $t('species.category.format', { category: entry.category }) }}</td>
               <td v-else>???</td>
             </tr>
             <tr>
               <th scope="row" v-t="'type.label'" />
-              <td v-if="entry.hasCaught" v-text="type" />
+              <td v-if="entry.types" v-text="entry.types" />
               <td v-else>???</td>
             </tr>
             <tr>
               <th scope="row" v-t="'species.height.label'" />
-              <td v-if="entry.hasCaught && entry.height">{{ $t('species.height.format', { height: entry.height.toFixed(1) }) }}</td>
+              <td v-if="entry.height">{{ $t('species.height.format', { height: entry.height.toFixed(1) }) }}</td>
               <td v-else>???</td>
             </tr>
             <tr>
               <th scope="row" v-t="'species.weight.label'" />
-              <td v-if="entry.hasCaught && entry.weight">{{ $t('species.weight.format', { weight: entry.weight.toFixed(1) }) }}</td>
+              <td v-if="entry.weight">{{ $t('species.weight.format', { weight: entry.weight.toFixed(1) }) }}</td>
               <td v-else>???</td>
             </tr>
           </tbody>

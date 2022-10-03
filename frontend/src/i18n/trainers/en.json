@@ -66,7 +66,8 @@
         "UpdatedAt": "Updated on",
         "Weight": "Weight"
       }
-    }
+    },
+    "updated": "The Pokédex entry has been updated."
   },
   "select": {
     "label": "Trainer",
