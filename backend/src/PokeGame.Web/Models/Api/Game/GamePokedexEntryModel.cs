@@ -40,7 +40,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public int Number { get; set; }
 
-    public string? Types { get; set; }
+    public string? Types { get; set; } // TODO(fpion): refactor
 
     public string Name { get; set; } = string.Empty;
     public string? Category { get; set; }

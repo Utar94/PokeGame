@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import effectivenessTable from './effectiveness.json'
-import { getGameInventory, getGamePokedex, getGameTrainers } from '@/api/game'
+import { getGameInventory, getGamePokedex, getGamePokemon, getGameTrainers } from '@/api/game'
 import { getPokemonList } from '@/api/pokemon'
 import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
@@ -77,6 +77,7 @@ export default new Vuex.Store({
         entries: [],
         hasNational: false
       },
+      pokemon: [],
       trainer: null,
       trainers: {}
     },
@@ -143,6 +144,9 @@ export default new Vuex.Store({
     },
     gamePokedex({ game }) {
       return game.pokedex
+    },
+    gamePokemon({ game }) {
+      return game.pokemon
     },
     gameTrainer({ game }) {
       return game.trainer
@@ -256,6 +260,10 @@ export default new Vuex.Store({
     async loadGamePokedex({ commit, state }, national = false) {
       const { data } = await getGamePokedex(state.game.trainer.id, { national })
       commit('setGamePokedex', data)
+    },
+    async loadGamePokemon({ commit, state }) {
+      const { data } = await getGamePokemon(state.game.trainer.id)
+      commit('setGamePokemon', data)
     },
     async loadGameTrainers({ commit, dispatch, state }) {
       const { data } = await getGameTrainers()
@@ -654,6 +662,9 @@ export default new Vuex.Store({
         entries: [],
         hasNational: false
       }
+    },
+    setGamePokemon(state, pokemon) {
+      state.game.pokemon = pokemon ?? []
     },
     setGameTrainer(state, trainer) {
       state.game.trainer = trainer ?? null

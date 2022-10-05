@@ -27,7 +27,7 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
       .Include(x => x.Moves).ThenInclude(x => x.Move)
       .Include(x => x.OriginalTrainer)
       .Include(x => x.Position)
-      .Include(x => x.Species);
+      .Include(x => x.Species).ThenInclude(x => x!.RegionalSpecies);
 
     public async Task<PokemonModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {

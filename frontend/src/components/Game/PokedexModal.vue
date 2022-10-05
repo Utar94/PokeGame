@@ -78,3 +78,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+img {
+  max-width: 360px;
+}
+</style>

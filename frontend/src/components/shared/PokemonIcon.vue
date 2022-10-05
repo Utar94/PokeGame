@@ -26,7 +26,7 @@ export default {
         return '/img/egg.webp'
       }
       const species = this.species ?? this.pokemon?.species ?? null
-      return species?.picture ?? null
+      return species?.picture ?? this.pokemon?.picture ?? null
     }
   }
 }

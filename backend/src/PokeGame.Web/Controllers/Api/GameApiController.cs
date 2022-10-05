@@ -7,6 +7,9 @@ using PokeGame.Application.Inventories.Queries;
 using PokeGame.Application.Models;
 using PokeGame.Application.Pokedex.Models;
 using PokeGame.Application.Pokedex.Queries;
+using PokeGame.Application.Pokemon;
+using PokeGame.Application.Pokemon.Models;
+using PokeGame.Application.Pokemon.Queries;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Application.Trainers.Queries;
@@ -67,7 +70,7 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet("trainers/{id}/pokedex")]
-    public async Task<ActionResult<IEnumerable<GamePokedexModel>>> GetTrainerPokedexAsync(Guid id, bool national, CancellationToken cancellationToken)
+    public async Task<ActionResult<GamePokedexModel>> GetTrainerPokedexAsync(Guid id, bool national, CancellationToken cancellationToken)
     {
       TrainerModel? trainer = await _mediator.Send(new GetTrainerQuery(id), cancellationToken);
       if (trainer == null)
@@ -88,6 +91,46 @@ namespace PokeGame.Web.Controllers.Api
       }, cancellationToken);
 
       return Ok(new GamePokedexModel(pokedex.Items, trainer.NationalPokedex, region));
+    }
+
+    [HttpGet("trainers/{id}/pokemon")]
+    public async Task<ActionResult<IEnumerable<GamePokemonModel>>> GetTrainerPokemonAsync(Guid id, CancellationToken cancellationToken)
+    {
+      TrainerModel? trainer = await _mediator.Send(new GetTrainerQuery(id), cancellationToken);
+      if (trainer == null)
+      {
+        return NotFound();
+      }
+      else if (trainer.UserId != _userContext.Id)
+      {
+        return Forbid();
+      }
+
+      ListModel<PokemonModel> pokemonList = await _mediator.Send(new GetPokemonListQuery
+      {
+        TrainerId = trainer.Id,
+        Sort = PokemonSort.Position,
+        Desc = false
+      }, cancellationToken);
+
+      return Ok(pokemonList.Items.Where(x => x.Position.HasValue && x.History?.Trainer != null && x.Species != null)
+        .Select(x => new GamePokemonModel(x)));
+    }
+
+    [HttpGet("trainers/pokemon/{id}")]
+    public async Task<ActionResult<PokemonSummary>> GetPokemonSummaryAsync(Guid id, CancellationToken cancellationToken)
+    {
+      PokemonModel? pokemon = await _mediator.Send(new GetPokemonQuery(id), cancellationToken);
+      if (pokemon == null)
+      {
+        return NotFound();
+      }
+      else if (pokemon.History?.Trainer?.UserId != _userContext.Id)
+      {
+        return Forbid();
+      }
+
+      return Ok(new PokemonSummary(pokemon));
     }
   }
 }
