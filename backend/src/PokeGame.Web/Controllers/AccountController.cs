@@ -40,6 +40,23 @@ namespace PokeGame.Web.Controllers
       return View(new ProfileModel(user));
     }
 
+    [HttpGet("recover-password")]
+    public IActionResult RecoverPassword()
+    {
+      return View();
+    }
+
+    [HttpGet("reset-password")]
+    public IActionResult ResetPassword(string? token)
+    {
+      if (string.IsNullOrWhiteSpace(token))
+      {
+        return RedirectToAction(actionName: "SignIn");
+      }
+
+      return View(new ResetPasswordModel(token));
+    }
+
     [HttpGet("sign-in")]
     public IActionResult SignIn()
     {
@@ -64,8 +81,13 @@ namespace PokeGame.Web.Controllers
     }
 
     [HttpGet("sign-up")]
-    public async Task<ActionResult> SignUp(string token, CancellationToken cancellationToken)
+    public async Task<ActionResult> SignUp(string? token, CancellationToken cancellationToken)
     {
+      if (string.IsNullOrWhiteSpace(token))
+      {
+        return RedirectToAction(actionName: "SignIn");
+      }
+
       var validateTokenPayload = new ValidateTokenPayload
       {
         Purpose = Constants.CreateUser.Purpose,

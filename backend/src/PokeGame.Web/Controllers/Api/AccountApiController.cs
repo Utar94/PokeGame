@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Client;
+using Logitar.Portal.Core;
 using Logitar.Portal.Core.Accounts.Payloads;
 using Logitar.Portal.Core.Sessions.Models;
 using Logitar.Portal.Core.Tokens.Models;
@@ -43,6 +44,28 @@ namespace PokeGame.Web.Controllers.Api
       UserModel user = await _accountService.ChangePasswordAsync(_userContext.SessionId, payload, cancellationToken);
 
       return Ok(new ProfileModel(user));
+    }
+
+    [HttpPost("password/recover")]
+    public async Task<ActionResult> RecoverPasswordAsync([FromBody] RecoverPasswordPayload payload, CancellationToken cancellationToken)
+    {
+      try
+      {
+        await _accountService.RecoverPasswordAsync(Constants.Realm, payload, cancellationToken);
+      }
+      catch (ErrorException)
+      {
+      }
+
+      return NoContent();
+    }
+
+    [HttpPost("password/reset")]
+    public async Task<ActionResult> ResetPasswordAsync([FromBody] ResetPasswordPayload payload, CancellationToken cancellationToken)
+    {
+      await _accountService.ResetPasswordAsync(Constants.Realm, payload, cancellationToken);
+
+      return NoContent();
     }
 
     [Authorize(Policy = Constants.Policies.AuthenticatedUser)]
