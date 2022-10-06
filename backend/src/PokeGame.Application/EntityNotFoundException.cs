@@ -8,8 +8,8 @@ namespace PokeGame.Application
     public EntityNotFoundException(Type type, string id, string? paramName = null)
       : base(GetMessage(type, id, paramName))
     {
-      Data["Type"] = type ?? throw new ArgumentNullException(nameof(type));
-      Data["Id"] = id ?? throw new ArgumentNullException(nameof(id));
+      Data["Type"] = type.GetName();
+      Data["Id"] = id;
 
       if (paramName != null)
       {
@@ -22,11 +22,13 @@ namespace PokeGame.Application
       var message = new StringBuilder();
 
       message.AppendLine("The specified entity could not be found.");
-      message.AppendLine($"Type: {type?.GetName()}");
+      message.AppendLine($"Type: {type.GetName()}");
       message.AppendLine($"Id: {id}");
 
       if (paramName != null)
+      {
         message.AppendLine($"ParamName: {paramName}");
+      }
 
       return message.ToString();
     }

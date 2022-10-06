@@ -4,8 +4,6 @@
   {
     public static ushort CalculateStatistic(this Pokemon pokemon, Statistic statistic)
     {
-      ArgumentNullException.ThrowIfNull(pokemon);
-
       byte level = pokemon.Level;
       Nature nature = pokemon.Nature;
 

@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Pokemon.Events
     public PokemonHealed(HealPokemonPayload payload, Dictionary<Guid, byte>? movePowerPoints = null)
     {
       MovePowerPoints = movePowerPoints;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Dictionary<Guid, byte>? MovePowerPoints { get; private set; }

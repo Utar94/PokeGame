@@ -53,7 +53,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public void SetAbility(AbilityEntity ability)
     {
-      Ability = ability ?? throw new ArgumentNullException(nameof(ability));
+      Ability = ability;
       AbilityId = ability.Sid;
     }
 
@@ -83,7 +83,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
 
     public void SetSpecies(SpeciesEntity species)
     {
-      Species = species ?? throw new ArgumentNullException(nameof(species));
+      Species = species;
       SpeciesId = species.Sid;
     }
 

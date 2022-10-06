@@ -6,8 +6,6 @@ namespace PokeGame.Web.Models.Users
   {
     public ProfileModel(UserModel user)
     {
-      ArgumentNullException.ThrowIfNull(user);
-
       CreatedAt = user.CreatedAt;
       PasswordChangedAt = user.PasswordChangedAt;
       SignedInAt = user.SignedInAt;

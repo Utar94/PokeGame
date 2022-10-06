@@ -7,7 +7,7 @@ namespace PokeGame.Application.Moves
     public MovesNotFoundException(IEnumerable<Guid> ids)
       : base(GetMessage(ids))
     {
-      Data["Ids"] = ids ?? throw new ArgumentNullException(nameof(ids));
+      Data["Ids"] = ids;
     }
 
     private static string GetMessage(IEnumerable<Guid> ids)

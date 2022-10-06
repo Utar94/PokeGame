@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Moves.Events
   {
     public MoveUpdated(UpdateMovePayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public UpdateMovePayload Payload { get; private set; }

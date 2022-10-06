@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Pokemon.Events
     public PokemonUsedMove(Guid moveId, UsePokemonMovePayload payload)
     {
       MoveId = moveId;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid MoveId { get; private set; }

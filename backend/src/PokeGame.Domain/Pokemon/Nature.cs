@@ -33,7 +33,7 @@
 
     private Nature(string name)
     {
-      Name = name ?? throw new ArgumentNullException(nameof(name));
+      Name = name;
     }
     private Nature(string name, Statistic increasedStatistic, Statistic decreasedStatistic)
       : this(name)

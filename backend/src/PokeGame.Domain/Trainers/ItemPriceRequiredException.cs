@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Trainers
     public ItemPriceRequiredException(Item item)
       : base($"The item '{item}' price is required.")
     {
-      Data["Item"] = item ?? throw new ArgumentNullException(nameof(item));
+      Data["ItemId"] = item.Id;
     }
   }
 }

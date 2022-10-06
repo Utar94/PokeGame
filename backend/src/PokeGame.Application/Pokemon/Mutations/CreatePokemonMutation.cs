@@ -8,7 +8,7 @@ namespace PokeGame.Application.Pokemon.Mutations
   {
     public CreatePokemonMutation(CreatePokemonPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreatePokemonPayload Payload { get; }

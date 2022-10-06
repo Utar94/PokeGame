@@ -13,8 +13,6 @@ namespace PokeGame.Web
     public static SessionModel? GetSession(this HttpContext context) => context.GetItem<SessionModel>(SessionKey);
     private static T? GetItem<T>(this HttpContext context, object key)
     {
-      ArgumentNullException.ThrowIfNull(context);
-
       if (context.Items.TryGetValue(key, out object? value))
       {
         return (T?)value;
@@ -26,8 +24,6 @@ namespace PokeGame.Web
     public static bool SetSession(this HttpContext context, SessionModel? session) => context.SetItem(SessionKey, session);
     private static bool SetItem<T>(this HttpContext context, object key, T? value)
     {
-      ArgumentNullException.ThrowIfNull(context);
-
       if (context.Items.ContainsKey(key))
       {
         if (!context.Items.Remove(key))
@@ -42,8 +38,6 @@ namespace PokeGame.Web
     public static bool HasSession(this HttpContext context) => context.ReadSession() != null;
     public static SessionModel? ReadSession(this HttpContext context)
     {
-      ArgumentNullException.ThrowIfNull(context);
-
       if (context.Session.TryGetValue(SessionKey, out byte[]? bytes))
       {
         string json = Encoding.UTF8.GetString(bytes);
@@ -55,9 +49,6 @@ namespace PokeGame.Web
     }
     public static void SignIn(this HttpContext context, SessionModel session)
     {
-      ArgumentNullException.ThrowIfNull(context);
-      ArgumentNullException.ThrowIfNull(session);
-
       context.SetSession(SessionKey, session);
 
       if (session.RenewToken != null)

@@ -37,16 +37,9 @@ namespace PokeGame.Domain.Trainers
     public void Delete() => ApplyChange(new TrainerDeleted());
     public void Update(UpdateTrainerPayload payload) => ApplyChange(new TrainerUpdated(payload));
 
-    public void AddItem(Item item, ushort quantity)
-    {
-      ArgumentNullException.ThrowIfNull(item);
-
-      ApplyChange(new AddedItem(item.Id, quantity));
-    }
+    public void AddItem(Item item, ushort quantity) => ApplyChange(new AddedItem(item.Id, quantity));
     public void BuyItem(Item item, ushort quantity)
     {
-      ArgumentNullException.ThrowIfNull(item);
-
       if (!item.Price.HasValue)
       {
         throw new ItemPriceRequiredException(item);
@@ -62,8 +55,6 @@ namespace PokeGame.Domain.Trainers
     }
     public void RemoveItem(Item item, ushort quantity)
     {
-      ArgumentNullException.ThrowIfNull(item);
-
       int inventory = Inventory.ContainsKey(item.Id) ? Inventory[item.Id] : 0;
       int missingQuantity = inventory - quantity;
       if (missingQuantity < 0)
@@ -75,8 +66,6 @@ namespace PokeGame.Domain.Trainers
     }
     public void SellItem(Item item, ushort quantity)
     {
-      ArgumentNullException.ThrowIfNull(item);
-
       if (!item.Price.HasValue)
       {
         throw new ItemPriceRequiredException(item);

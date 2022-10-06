@@ -8,8 +8,8 @@ namespace PokeGame.Domain.Pokemon
     public NoRemainingPowerPointException(Pokemon pokemon, Move move)
       : base(GetMessage(pokemon, move))
     {
-      Data["PokemonId"] = pokemon?.Id ?? throw new ArgumentNullException(nameof(pokemon));
-      Data["MoveId"] = move?.Id ?? throw new ArgumentNullException(nameof(move));
+      Data["PokemonId"] = pokemon.Id;
+      Data["MoveId"] = move.Id;
     }
 
     private static string GetMessage(Pokemon pokemon, Move move)

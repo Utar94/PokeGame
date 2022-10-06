@@ -5,7 +5,7 @@
     public PokemonEggAlreadyHatchedException(Pokemon pokemon)
       : base($"The Pokémon '{pokemon}' has already hatched.")
     {
-      Data["PokemonId"] = pokemon?.Id ?? throw new ArgumentNullException(nameof(pokemon));
+      Data["PokemonId"] = pokemon.Id;
     }
   }
 }

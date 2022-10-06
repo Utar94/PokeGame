@@ -8,9 +8,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
   {
     public EvolutionEntity(SpeciesEntity evolvingSpecies, SpeciesEntity evolvedSpecies)
     {
-      EvolvingSpecies = evolvingSpecies ?? throw new ArgumentNullException(nameof(evolvingSpecies));
+      EvolvingSpecies = evolvingSpecies;
       EvolvingSpeciesId = evolvingSpecies.Sid;
-      EvolvedSpecies = evolvedSpecies ?? throw new ArgumentNullException(nameof(evolvedSpecies));
+      EvolvedSpecies = evolvedSpecies;
       EvolvedSpeciesId = evolvedSpecies.Sid;
     }
     private EvolutionEntity()

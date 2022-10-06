@@ -10,7 +10,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     {
       Id = id;
       MoveId = moveId;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid Id { get; }

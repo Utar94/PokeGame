@@ -8,8 +8,6 @@ namespace PokeGame.Web.Models.Api.Game
   {
     public GamePokedexEntryModel(PokedexModel model, Region? region = null)
     {
-      ArgumentNullException.ThrowIfNull(model);
-
       HasCaught = model.HasCaught;
 
       SpeciesModel species = model.Species ?? throw new ArgumentException($"The {nameof(model.Species)} is required.", nameof(model));

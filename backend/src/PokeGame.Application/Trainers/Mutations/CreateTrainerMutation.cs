@@ -8,7 +8,7 @@ namespace PokeGame.Application.Trainers.Mutations
   {
     public CreateTrainerMutation(CreateTrainerPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreateTrainerPayload Payload { get; }

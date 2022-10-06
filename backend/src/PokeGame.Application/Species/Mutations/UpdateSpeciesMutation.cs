@@ -9,7 +9,7 @@ namespace PokeGame.Application.Species.Mutations
     public UpdateSpeciesMutation(Guid id, UpdateSpeciesPayload payload)
     {
       Id = id;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid Id { get; }

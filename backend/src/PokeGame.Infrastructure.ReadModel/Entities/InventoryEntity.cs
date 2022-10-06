@@ -4,9 +4,9 @@
   {
     public InventoryEntity(TrainerEntity trainer, ItemEntity item)
     {
-      Trainer = trainer ?? throw new ArgumentNullException(nameof(trainer));
+      Trainer = trainer;
       TrainerId = trainer.Sid;
-      Item = item ?? throw new ArgumentNullException(nameof(item));
+      Item = item;
       ItemId = item.Sid;
     }
     private InventoryEntity()

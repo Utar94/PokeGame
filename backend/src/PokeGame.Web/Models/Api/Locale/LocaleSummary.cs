@@ -6,8 +6,6 @@ namespace PokeGame.Web.Models.Api.Locale
   {
     public LocaleSummary(CultureInfo culture)
     {
-      ArgumentNullException.ThrowIfNull(culture);
-
       Code = culture.Name;
       DisplayName = culture.EnglishName;
     }

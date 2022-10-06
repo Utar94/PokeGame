@@ -7,7 +7,7 @@ namespace PokeGame.Application.Pokemon
     public InvalidAbilityException(Domain.Species.Species species, Guid abilityId)
       : base(GetMessage(species, abilityId))
     {
-      Data["Species"] = species ?? throw new ArgumentNullException(nameof(species));
+      Data["SpeciesId"] = species.Id;
       Data["AbilityId"] = abilityId;
     }
 

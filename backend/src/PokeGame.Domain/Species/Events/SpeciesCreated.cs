@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Species.Events
   {
     public SpeciesCreated(CreateSpeciesPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreateSpeciesPayload Payload { get; private set; }

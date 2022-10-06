@@ -8,7 +8,7 @@ namespace PokeGame.Application.Species
       : base(GetMessage(number, paramName))
     {
       Data["Number"] = number;
-      Data["ParamName"] = paramName ?? throw new ArgumentNullException(nameof(paramName));
+      Data["ParamName"] = paramName;
     }
 
     private static string GetMessage(int number, string paramName)
@@ -17,11 +17,7 @@ namespace PokeGame.Application.Species
 
       message.AppendLine("The specified species number is already used.");
       message.AppendLine($"Number: {number}");
-
-      if (paramName != null)
-      {
-        message.AppendLine($"ParamName: {paramName}");
-      }
+      message.AppendLine($"ParamName: {paramName}");
 
       return message.ToString();
     }

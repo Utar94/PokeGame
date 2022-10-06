@@ -80,8 +80,6 @@ namespace PokeGame.Domain.Pokemon
     public void UpdateCondition(UpdatePokemonConditionPayload payload) => ApplyChange(new UpdatedPokemonCondition(payload));
     public void UseMove(Move move, UsePokemonMovePayload payload)
     {
-      ArgumentNullException.ThrowIfNull(move);
-
       PokemonMove pokemonMove = Moves.SingleOrDefault(x => x.MoveId == move.Id)
         ?? throw new PokemonMoveNotFoundException(this, move);
 

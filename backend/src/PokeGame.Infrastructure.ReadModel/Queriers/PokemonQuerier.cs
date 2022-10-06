@@ -38,8 +38,6 @@ namespace PokeGame.Infrastructure.ReadModel.Queriers
 
     public async Task<PokemonModel?> GetAsync(Guid trainerId, PokemonPosition position, CancellationToken cancellationToken)
     {
-      ArgumentNullException.ThrowIfNull(position);
-
       byte box = position.Box ?? 0;
 
       PokemonEntity? pokemon = await BaseQuery.SingleOrDefaultAsync(x

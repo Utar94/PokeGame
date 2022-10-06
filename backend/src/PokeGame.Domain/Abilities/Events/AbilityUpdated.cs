@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Abilities.Events
   {
     public AbilityUpdated(UpdateAbilityPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public UpdateAbilityPayload Payload { get; private set; }

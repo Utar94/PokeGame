@@ -6,8 +6,6 @@ namespace PokeGame.Domain.Pokemon
   {
     public History(HistoryPayload payload)
     {
-      ArgumentNullException.ThrowIfNull(payload);
-
       BallId = payload.BallId;
       Level = payload.Level;
       Location = payload.Location;

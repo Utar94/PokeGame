@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Trainers
     public PokedexEntryNotFoundException(Trainer trainer, Guid speciesId)
        : base(GetMessage(trainer, speciesId))
     {
-      Data["TrainerId"] = trainer?.Id ?? throw new ArgumentNullException(nameof(trainer));
+      Data["TrainerId"] = trainer.Id;
       Data["SpeciesId"] = speciesId;
     }
 

@@ -6,7 +6,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
   {
     public RegionalSpeciesEntity(SpeciesEntity species, Region region)
     {
-      Species = species ?? throw new ArgumentNullException(nameof(species));
+      Species = species;
       SpeciesId = species.Sid;
       Region = region;
     }

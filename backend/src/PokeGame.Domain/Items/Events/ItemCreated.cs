@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Items.Events
   {
     public ItemCreated(CreateItemPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreateItemPayload Payload { get; private set; }

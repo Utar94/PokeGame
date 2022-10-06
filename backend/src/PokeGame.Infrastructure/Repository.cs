@@ -63,8 +63,6 @@ namespace PokeGame.Infrastructure
 
     public async Task SaveAsync<T>(T instance, CancellationToken cancellationToken) where T : Aggregate
     {
-      ArgumentNullException.ThrowIfNull(instance);
-
       if (instance.HasChanges)
       {
         foreach (DomainEvent change in instance.Changes)
@@ -88,8 +86,6 @@ namespace PokeGame.Infrastructure
 
     public async Task SaveAsync<T>(IEnumerable<T> instances, CancellationToken cancellationToken) where T : Aggregate
     {
-      ArgumentNullException.ThrowIfNull(instances);
-
       var changes = new List<DomainEvent>();
       var entities = new List<Event>();
 

@@ -9,7 +9,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     public WalkPokemonEggMutation(Guid id, WalkPokemonEggPayload payload)
     {
       Id = id;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid Id { get; private set; }

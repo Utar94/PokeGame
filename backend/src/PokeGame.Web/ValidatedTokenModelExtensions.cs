@@ -8,8 +8,6 @@ namespace PokeGame.Web
   {
     public static void EnsureHasSucceeded(this ValidatedTokenModel validatedToken)
     {
-      ArgumentNullException.ThrowIfNull(validatedToken);
-
       if (!validatedToken.Succeeded)
       {
         var message = new StringBuilder();

@@ -7,7 +7,7 @@ namespace PokeGame.Application.Pokemon
     public PokemonCannotEvolveException(Domain.Pokemon.Pokemon pokemon, Guid speciesId, IEnumerable<string>? errors = null)
       : base(GetMessage(pokemon, speciesId, errors))
     {
-      Data["PokemonId"] = pokemon?.Id ?? throw new ArgumentNullException(nameof(pokemon));
+      Data["PokemonId"] = pokemon.Id;
       Data["SpeciesId"] = speciesId;
 
       if (errors != null)

@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Pokemon.Events
     {
       BallId = ballId;
       Box = box;
-      Location = location ?? throw new ArgumentNullException(nameof(location));
+      Location = location;
       Position = position;
       Friendship = friendship;
       Surname = surname;

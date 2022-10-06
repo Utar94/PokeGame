@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Trainers
     public InsufficientQuantityException(Item item, int missingQuantity)
       : base(GetMessage(item, missingQuantity))
     {
-      Data["Item"] = item ?? throw new ArgumentNullException(nameof(item));
+      Data["ItemId"] = item.Id;
       Data["MissingQuantity"] = missingQuantity;
     }
 

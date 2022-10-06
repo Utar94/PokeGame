@@ -4,8 +4,8 @@
   {
     public SignUpModel(string email, string token)
     {
-      Email = email ?? throw new ArgumentNullException(nameof(email));
-      Token = token ?? throw new ArgumentNullException(nameof(token));
+      Email = email;
+      Token = token;
     }
 
     public string Email { get; }

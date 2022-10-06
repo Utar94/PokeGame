@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Trainers.Events
   {
     public TrainerCreated(CreateTrainerPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreateTrainerPayload Payload { get; private set; }

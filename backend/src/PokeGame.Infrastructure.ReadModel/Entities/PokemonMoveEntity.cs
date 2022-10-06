@@ -6,9 +6,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
   {
     public PokemonMoveEntity(PokemonEntity pokemon, MoveEntity move)
     {
-      Pokemon = pokemon ?? throw new ArgumentNullException(nameof(pokemon));
+      Pokemon = pokemon;
       PokemonId = pokemon.Sid;
-      Move = move ?? throw new ArgumentNullException(nameof(move));
+      Move = move;
       MoveId = move.Sid;
     }
     private PokemonMoveEntity()

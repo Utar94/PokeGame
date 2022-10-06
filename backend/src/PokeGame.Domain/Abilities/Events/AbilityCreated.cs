@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Abilities.Events
   {
     public AbilityCreated(CreateAbilityPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public CreateAbilityPayload Payload { get; private set; }
