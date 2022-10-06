@@ -8,6 +8,13 @@
   "boxFormat": "Box {box}",
   "close": "Close",
   "exit": "Exit",
+  "flavors": {
+    "Bitter": "bitter",
+    "Dry": "dry",
+    "Sour": "sour",
+    "Spicy": "spicy",
+    "Sweet": "sweet"
+  },
   "playTime": "Play time",
   "pokedex": {
     "caught": "Caught: {caught}",
@@ -18,8 +25,10 @@
   "pokemon": {
     "battleMoves": "Battle Moves",
     "currentExperience": "Current Exp. Points",
+    "eatAnything": "It happily eats anything.",
     "egg": "Egg",
     "eggWatch": "\"The Egg Watch\"<br />What Pokémon will hatch from this Egg?",
+    "flavorFormat": "It likes <span class=\"text-danger\">{flavor}</span> food.",
     "info": "Pokémon Info",
     "metEgg": "A mysterious Pokémon Egg that I was given on {date}.",
     "metFormat": "We first met one another on <span class=\"text-danger\">{date}</span>, and it was <span class=\"text-danger\">{location}</span>!",

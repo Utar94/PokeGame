@@ -2,7 +2,7 @@
   <b-tab :disabled="pokemon.isEgg" :title="$t('game.pokemon.battleMoves')">
     <table class="table table-hover">
       <tbody>
-        <tr v-for="move in sortedMoves" :key="move.position" @click="selectMove(move)">
+        <tr v-for="move in sortedMoves" :key="move.position" class="clickable" @click="selectMove(move)">
           <td>{{ $t(`type.options.${move.type}`) }}</td>
           <td v-text="move.name" />
           <td>{{ move.remainingPowerPoints }}/{{ move.powerPoints }}</td>
@@ -11,7 +11,7 @@
     </table>
     <template v-if="move">
       <h6 v-text="move.name" />
-      <table class="table table-striped">
+      <table class="table">
         <tbody>
           <tr>
             <th scope="row" v-t="'moves.category.label'" />
@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     sortedMoves() {
-      return this.orderBy(this.pokemon.moves, 'position')
+      return this.orderBy(this.pokemon.moves ?? [], 'position')
     }
   },
   methods: {
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style scoped>
-tr {
+.clickable {
   cursor: pointer;
 }
 </style>

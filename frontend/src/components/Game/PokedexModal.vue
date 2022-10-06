@@ -16,7 +16,7 @@
     <b-row v-if="entry">
       <b-col lg="6"><b-img :alt="alt" fluid :src="src" /></b-col>
       <b-col lg="6">
-        <table class="table table-striped">
+        <table class="table">
           <tbody>
             <tr>
               <th scope="row" v-t="'species.category.label'" />
