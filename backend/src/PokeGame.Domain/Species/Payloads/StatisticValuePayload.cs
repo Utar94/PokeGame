@@ -7,15 +7,10 @@ namespace PokeGame.Domain.Species.Payloads
     public Statistic Statistic { get; set; }
     public byte Value { get; set; }
 
-    public static StatisticValuePayload Create(KeyValuePair<Statistic, byte> pair)
+    public static StatisticValuePayload Create(KeyValuePair<Statistic, byte> pair) => new()
     {
-      ArgumentNullException.ThrowIfNull(pair);
-
-      return new()
-      {
-        Statistic = pair.Key,
-        Value = pair.Value
-      };
-    }
+      Statistic = pair.Key,
+      Value = pair.Value
+    };
   }
 }

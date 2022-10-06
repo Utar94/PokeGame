@@ -24,8 +24,6 @@ namespace PokeGame.Domain
 
     public static T LoadFromHistory<T>(IEnumerable<DomainEvent> history, Guid id) where T : Aggregate
     {
-      ArgumentNullException.ThrowIfNull(history);
-
       ConstructorInfo constructor = typeof(T).GetTypeInfo()
         .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, Array.Empty<Type>())
         ?? throw new MissingMethodException(typeof(T).GetName(), "ctor()");
@@ -46,8 +44,6 @@ namespace PokeGame.Domain
 
     protected void ApplyChange(DomainEvent change)
     {
-      ArgumentNullException.ThrowIfNull(change);
-
       change.AggregateId = Id;
       change.OccurredAt = DateTime.UtcNow;
       change.Version = Version + 1;
@@ -83,8 +79,6 @@ namespace PokeGame.Domain
 
     protected void Delete(DomainEvent @event)
     {
-      ArgumentNullException.ThrowIfNull(@event);
-
       DeletedAt = @event.OccurredAt;
       DeletedById = @event.UserId;
     }

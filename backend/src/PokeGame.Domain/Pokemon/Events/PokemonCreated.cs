@@ -31,9 +31,6 @@ namespace PokeGame.Domain.Pokemon.Events
 
     public static PokemonCreated Create(CreatePokemonPayload payload, Species.Species species)
     {
-      ArgumentNullException.ThrowIfNull(payload);
-      ArgumentNullException.ThrowIfNull(species);
-
       return new(species.BaseFriendship, species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, species.Name);
     }
   }

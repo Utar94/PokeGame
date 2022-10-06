@@ -8,10 +8,8 @@ namespace PokeGame.Application.Species
     public RegionalNumbersAlreadyUsedException(IEnumerable<KeyValuePair<Region, int>> regionalNumbers, string paramName)
       : base(GetMessage(regionalNumbers, paramName))
     {
-      ArgumentNullException.ThrowIfNull(regionalNumbers);
-
       Data["RegionalNumbers"] = new Dictionary<Region, int>(regionalNumbers);
-      Data["ParamName"] = paramName ?? throw new ArgumentNullException(nameof(paramName));
+      Data["ParamName"] = paramName;
     }
 
     private static string GetMessage(IEnumerable<KeyValuePair<Region, int>> regionalNumbers, string paramName)
@@ -20,7 +18,7 @@ namespace PokeGame.Application.Species
 
       message.AppendLine("The specified regional numbers are already used.");
 
-      if (regionalNumbers?.Any() == true)
+      if (regionalNumbers.Any())
       {
         message.AppendLine("Regional Numbers:");
         foreach (KeyValuePair<Region, int> pair in regionalNumbers)
@@ -29,10 +27,7 @@ namespace PokeGame.Application.Species
         }
       }
 
-      if (paramName != null)
-      {
-        message.AppendLine($"ParamName: {paramName}");
-      }
+      message.AppendLine($"ParamName: {paramName}");
 
       return message.ToString();
     }

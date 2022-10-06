@@ -17,7 +17,7 @@ namespace PokeGame.Domain.Pokemon.Events
       BaseStatistics = baseStatistics;
       GenderRatio = genderRatio;
       LevelingRate = levelingRate;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
       RemoveHeldItem = removeHeldItem;
       SpeciesName = speciesName;
     }
@@ -31,9 +31,6 @@ namespace PokeGame.Domain.Pokemon.Events
 
     public static PokemonEvolved Create(EvolvePokemonPayload payload, Species.Species species, bool removeHeldItem)
     {
-      ArgumentNullException.ThrowIfNull(payload);
-      ArgumentNullException.ThrowIfNull(species);
-
       return new(species.BaseStatistics, species.GenderRatio, species.LevelingRate, payload, removeHeldItem, species.Name);
     }
   }

@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Pokemon
     public NatureNotFoundException(string name, string paramName)
       : base(GetMessage(name, paramName))
     {
-      Data["Name"] = name ?? throw new ArgumentNullException(nameof(name));
+      Data["Name"] = name;
       Data["ParamName"] = paramName;
     }
 

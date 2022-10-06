@@ -9,7 +9,7 @@ namespace PokeGame.Domain.Pokemon.Events
     {
       HasBeenCaughtWithLuxuryBall = hasBeenCaughtWithLuxuryBall;
       IsHoldingSootheBell = isHoldingSootheBell;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public bool HasBeenCaughtWithLuxuryBall { get; private set; }

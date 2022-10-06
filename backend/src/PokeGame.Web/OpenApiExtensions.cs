@@ -6,8 +6,6 @@ namespace PokeGame.Web
   {
     public static IServiceCollection AddOpenApi(this IServiceCollection services)
     {
-      ArgumentNullException.ThrowIfNull(services);
-
       return services.AddSwaggerGen(config =>
       {
         config.SwaggerDoc(name: $"v{Constants.Version.Split('.').First()}", new OpenApiInfo

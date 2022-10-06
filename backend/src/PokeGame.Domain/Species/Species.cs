@@ -48,8 +48,6 @@ namespace PokeGame.Domain.Species
 
     public void RemoveEvolution(Species evolvedSpecies)
     {
-      ArgumentNullException.ThrowIfNull(evolvedSpecies);
-
       if (!Evolutions.ContainsKey(evolvedSpecies.Id))
       {
         throw new SpeciesEvolutionNotFoundException(Id, evolvedSpecies.Id);
@@ -57,12 +55,7 @@ namespace PokeGame.Domain.Species
 
       ApplyChange(new SpeciesEvolutionRemoved(evolvedSpecies.Id));
     }
-    public void SaveEvolution(Species evolvedSpecies, SaveEvolutionPayload payload)
-    {
-      ArgumentNullException.ThrowIfNull(evolvedSpecies);
-
-      ApplyChange(new SpeciesEvolutionSaved(evolvedSpecies.Id, payload));
-    }
+    public void SaveEvolution(Species evolvedSpecies, SaveEvolutionPayload payload) => ApplyChange(new SpeciesEvolutionSaved(evolvedSpecies.Id, payload));
 
     protected virtual void Apply(SpeciesCreated @event)
     {

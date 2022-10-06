@@ -8,7 +8,7 @@ namespace PokeGame.Application.Pokemon
     public RemainingPowerPointsExceededException(Move move, byte remainingPowerPoints)
       : base(GetMessage(move, remainingPowerPoints))
     {
-      Data["Move"] = move ?? throw new ArgumentNullException(nameof(move));
+      Data["MoveId"] = move.Id;
       Data["RemainingPowerPoints"] = remainingPowerPoints;
     }
 
@@ -17,7 +17,7 @@ namespace PokeGame.Application.Pokemon
       var message = new StringBuilder();
 
       message.AppendLine("The remaining power points exceed the move power points.");
-      message.AppendLine($"Move: {move} (PP={move?.PowerPoints})");
+      message.AppendLine($"Move: {move} (PP={move.PowerPoints})");
       message.AppendLine($"Remaining power points: {remainingPowerPoints}");
 
       return message.ToString();

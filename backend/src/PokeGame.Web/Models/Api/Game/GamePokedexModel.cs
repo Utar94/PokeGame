@@ -7,7 +7,7 @@ namespace PokeGame.Web.Models.Api.Game
   {
     public GamePokedexModel(IEnumerable<PokedexModel> entries, bool hasNational = false, Region? region = null)
     {
-      Entries = entries?.Select(entry => new GamePokedexEntryModel(entry, region)) ?? throw new ArgumentNullException(nameof(entries));
+      Entries = entries.Select(entry => new GamePokedexEntryModel(entry, region));
       HasNational = hasNational;
     }
 

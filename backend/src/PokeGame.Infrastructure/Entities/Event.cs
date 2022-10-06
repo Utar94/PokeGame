@@ -24,7 +24,7 @@ namespace PokeGame.Infrastructure.Entities
 
     public static IEnumerable<Event> FromChanges(Aggregate aggregate)
     {
-      Type aggregateType = aggregate?.GetType() ?? throw new ArgumentNullException(nameof(aggregate));
+      Type aggregateType = aggregate.GetType();
 
       return aggregate.Changes.Select(change =>
       {

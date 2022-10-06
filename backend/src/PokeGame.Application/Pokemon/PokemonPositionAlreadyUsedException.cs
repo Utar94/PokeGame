@@ -9,9 +9,9 @@ namespace PokeGame.Application.Pokemon
     public PokemonPositionAlreadyUsedException(Trainer trainer, PokemonPosition position)
       : base(GetMessage(trainer, position))
     {
-      Data["TrainerId"] = trainer?.Id ?? throw new ArgumentNullException(nameof(trainer));
+      Data["TrainerId"] = trainer.Id;
       Data["Box"] = position.Box;
-      Data["Position"] = position?.Position ?? throw new ArgumentNullException(nameof(position));
+      Data["Position"] = position.Position;
     }
 
     private static string GetMessage(Trainer trainer, PokemonPosition position)

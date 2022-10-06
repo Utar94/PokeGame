@@ -4,8 +4,6 @@
   {
     public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, int? index, int? count)
     {
-      ArgumentNullException.ThrowIfNull(query);
-
       if (index.HasValue)
       {
         query = query.Skip(index.Value);

@@ -7,8 +7,6 @@ namespace PokeGame.Web.Models.Api.Game
   {
     public GameInventoryLineModel(InventoryModel model)
     {
-      ArgumentNullException.ThrowIfNull(model);
-
       ItemModel item = model.Item ?? throw new ArgumentException($"The {nameof(model.Item)} is required.", nameof(model));
 
       Id = item.Id;

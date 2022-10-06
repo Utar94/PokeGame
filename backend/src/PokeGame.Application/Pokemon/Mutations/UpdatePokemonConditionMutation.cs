@@ -9,7 +9,7 @@ namespace PokeGame.Application.Pokemon.Mutations
     public UpdatePokemonConditionMutation(Guid id, UpdatePokemonConditionPayload payload)
     {
       Id = id;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid Id { get; }

@@ -8,8 +8,6 @@ namespace PokeGame.Web.Models.Api.Game
   {
     public GameInventoryModel(ListModel<InventoryModel> inventory)
     {
-      ArgumentNullException.ThrowIfNull(inventory);
-
       Dictionary<ItemCategory, IEnumerable<GameInventoryLineModel>> items = inventory.Items.Where(x => x.Item != null)
         .GroupBy(x => x.Item!.Category)
         .ToDictionary(x => x.Key, x => x.Select(y => new GameInventoryLineModel(y)));

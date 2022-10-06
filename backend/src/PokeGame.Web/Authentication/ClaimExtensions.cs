@@ -7,8 +7,6 @@ namespace PokeGame.Web.Authentication
   {
     public static ClaimsIdentity GetClaimsIdentity(this UserModel user, string? authenticationScheme = null)
     {
-      ArgumentNullException.ThrowIfNull(user);
-
       var identity = new ClaimsIdentity(authenticationScheme);
 
       identity.AddClaim(new(Rfc7519ClaimTypes.Subject, user.Id.ToString()));

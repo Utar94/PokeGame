@@ -7,8 +7,8 @@ namespace PokeGame.Application.Pokemon
     public CannotSwapPokemonException(Domain.Pokemon.Pokemon pokemon, Domain.Pokemon.Pokemon other)
       : base(GetMessage(pokemon, other))
     {
-      Data["PokemonId"] = pokemon?.Id ?? throw new ArgumentNullException(nameof(pokemon));
-      Data["OtherPokemonId"] = other?.Id ?? throw new ArgumentNullException(nameof(other));
+      Data["PokemonId"] = pokemon.Id;
+      Data["OtherPokemonId"] = other.Id;
     }
 
     private static string GetMessage(Domain.Pokemon.Pokemon pokemon, Domain.Pokemon.Pokemon other)

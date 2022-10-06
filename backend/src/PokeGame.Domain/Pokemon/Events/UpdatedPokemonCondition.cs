@@ -7,7 +7,7 @@ namespace PokeGame.Domain.Pokemon.Events
   {
     public UpdatedPokemonCondition(UpdatePokemonConditionPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public UpdatePokemonConditionPayload Payload { get; private set; }

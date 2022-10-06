@@ -4,8 +4,6 @@
   {
     public static byte Checksum(this string s)
     {
-      ArgumentNullException.ThrowIfNull(s);
-
       int sum = 0;
 
       char[] chars = s.ToCharArray();

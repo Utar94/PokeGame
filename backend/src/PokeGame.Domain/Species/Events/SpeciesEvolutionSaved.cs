@@ -8,7 +8,7 @@ namespace PokeGame.Domain.Species.Events
     public SpeciesEvolutionSaved(Guid speciesId, SaveEvolutionPayload payload)
     {
       SpeciesId = speciesId;
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public Guid SpeciesId { get; }

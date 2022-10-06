@@ -4,9 +4,9 @@
   {
     public SpeciesAbilityEntity(SpeciesEntity species, AbilityEntity ability)
     {
-      Species = species ?? throw new ArgumentNullException(nameof(species));
+      Species = species;
       SpeciesId = species.Sid;
-      Ability = ability ?? throw new ArgumentNullException(nameof(ability));
+      Ability = ability;
       AbilityId = ability.Sid;
     }
     private SpeciesAbilityEntity()

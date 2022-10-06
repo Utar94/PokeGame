@@ -6,9 +6,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
   {
     public PokemonPositionEntity(PokemonEntity pokemon, TrainerEntity trainer)
     {
-      Pokemon = pokemon ?? throw new ArgumentNullException(nameof(pokemon));
+      Pokemon = pokemon;
       PokemonId = pokemon.Sid;
-      Trainer = trainer ?? throw new ArgumentNullException(nameof(trainer));
+      Trainer = trainer;
       TrainerId = trainer.Sid;
     }
     private PokemonPositionEntity()

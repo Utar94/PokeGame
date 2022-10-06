@@ -6,9 +6,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
   {
     public PokedexEntity(TrainerEntity trainer, SpeciesEntity species)
     {
-      Trainer = trainer ?? throw new ArgumentNullException(nameof(trainer));
+      Trainer = trainer;
       TrainerId = trainer.Sid;
-      Species = species ?? throw new ArgumentNullException(nameof(species));
+      Species = species;
       SpeciesId = species.Sid;
     }
     private PokedexEntity()

@@ -4,7 +4,7 @@
   {
     public ResetPasswordModel(string token)
     {
-      Token = token ?? throw new ArgumentNullException(nameof(token));
+      Token = token;
     }
 
     public string Token { get; }

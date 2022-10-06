@@ -17,8 +17,6 @@ namespace PokeGame.Web.Configuration
 
     public async Task InitializeAsync(InitializeConfigurationModel payload, CancellationToken cancellationToken)
     {
-      ArgumentNullException.ThrowIfNull(payload);
-
       var createUserPayload = new CreateUserPayload
       {
         Realm = Constants.Realm,

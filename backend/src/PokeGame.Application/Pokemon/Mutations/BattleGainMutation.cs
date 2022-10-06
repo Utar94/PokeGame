@@ -8,7 +8,7 @@ namespace PokeGame.Application.Pokemon.Mutations
   {
     public BattleGainMutation(BattleGainPayload payload)
     {
-      Payload = payload ?? throw new ArgumentNullException(nameof(payload));
+      Payload = payload;
     }
 
     public BattleGainPayload Payload { get; }

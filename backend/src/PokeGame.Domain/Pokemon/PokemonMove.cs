@@ -6,8 +6,6 @@ namespace PokeGame.Domain.Pokemon
   {
     public PokemonMove(PokemonMovePayload payload)
     {
-      ArgumentNullException.ThrowIfNull(payload);
-
       MoveId = payload.MoveId;
       Position = payload.Position;
       RemainingPowerPoints = payload.RemainingPowerPoints;

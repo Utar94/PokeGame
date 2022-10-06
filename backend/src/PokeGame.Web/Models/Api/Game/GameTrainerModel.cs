@@ -8,8 +8,6 @@ namespace PokeGame.Web.Models.Api.Game
   {
     public GameTrainerModel(TrainerModel model)
     {
-      ArgumentNullException.ThrowIfNull(model);
-
       Id = model.Id;
 
       Region = model.Region;
