@@ -1,6 +1,6 @@
 <template>
   <b-tab :title="$t('game.pokemon.info')">
-    <table class="table table-striped">
+    <table class="table">
       <tbody>
         <tr>
           <th scope="row" v-t="'game.pokedex.number'" />
@@ -31,11 +31,11 @@
           <td v-text="pokemon.experienceToNextLevel || '—'" />
         </tr>
         <template v-if="heldItem">
-          <tr>
+          <tr class="held-item">
             <th scope="row" v-t="'pokemon.heldItem.label'" />
             <td><item-icon :item="heldItem" /> {{ heldItem.name }}</td>
           </tr>
-          <tr v-if="heldItem.description">
+          <tr v-if="heldItem.description" class="held-item">
             <td colspan="2" v-text="heldItem.description"></td>
           </tr>
         </template>
@@ -82,3 +82,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.held-item {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+</style>

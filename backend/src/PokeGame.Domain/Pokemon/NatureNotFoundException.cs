@@ -4,7 +4,7 @@ namespace PokeGame.Domain.Pokemon
 {
   public class NatureNotFoundException : Exception
   {
-    public NatureNotFoundException(string name, string paramName)
+    public NatureNotFoundException(string name, string? paramName = null)
       : base(GetMessage(name, paramName))
     {
       Data["Name"] = name;
@@ -17,7 +17,11 @@ namespace PokeGame.Domain.Pokemon
 
       message.AppendLine("The specified nature could not be found.");
       message.AppendLine($"Name: {name}");
-      message.AppendLine($"ParamName: {paramName}");
+
+      if (paramName != null)
+      {
+        message.AppendLine($"ParamName: {paramName}");
+      }
 
       return message.ToString();
     }

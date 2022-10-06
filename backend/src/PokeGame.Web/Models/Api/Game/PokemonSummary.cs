@@ -1,4 +1,5 @@
-﻿using PokeGame.Application.Pokemon.Models;
+﻿using Microsoft.OpenApi.Extensions;
+using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Species.Models;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Domain;
@@ -34,9 +35,10 @@ namespace PokeGame.Web.Models.Api.Game
 
         Level = pokemon.Level;
         Gender = pokemon.Gender;
-        Nature = pokemon.Nature;
+        Nature = new NatureSummary(pokemon.Nature);
 
         MetLevel = history.Level;
+        MetLocation = history.Location;
 
         CurrentHitPoints = pokemon.CurrentHitPoints;
         MaximumHitPoints = pokemon.MaximumHitPoints;
@@ -54,7 +56,6 @@ namespace PokeGame.Web.Models.Api.Game
 
       CaughtBall = history.Ball == null ? null : new(history.Ball);
 
-      MetLocation = history.Location; // TODO(fpion): to validate
       MetOn = history.MetOn;
     }
 
@@ -76,10 +77,10 @@ namespace PokeGame.Web.Models.Api.Game
 
     public byte? Level { get; set; }
     public PokemonGender? Gender { get; set; }
-    public string? Nature { get; set; }
+    public NatureSummary? Nature { get; set; }
 
     public byte? MetLevel { get; set; }
-    public string MetLocation { get; set; }
+    public string? MetLocation { get; set; }
     public DateTime MetOn { get; set; }
 
     public ushort? CurrentHitPoints { get; set; }
