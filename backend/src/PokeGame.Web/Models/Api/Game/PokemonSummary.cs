@@ -20,8 +20,9 @@ namespace PokeGame.Web.Models.Api.Game
 
       if (!IsEgg)
       {
-        NationalNumber = trainer.NationalPokedex ? species.Number : null;
-        RegionalNumber = species.RegionalNumbers.SingleOrDefault(x => x.Region == trainer.Region)?.Number;
+        Number = trainer.NationalPokedex
+          ? species.Number
+          : species.RegionalNumbers.SingleOrDefault(x => x.Region == trainer.Region)?.Number;
         Name = pokemon.Surname ?? species.Name;
 
         PrimaryType = species.PrimaryType;
@@ -36,6 +37,7 @@ namespace PokeGame.Web.Models.Api.Game
         Level = pokemon.Level;
         Gender = pokemon.Gender;
         Nature = new NatureSummary(pokemon.Nature);
+        Characteristic = pokemon.Characteristic;
 
         MetLevel = history.Level;
         MetLocation = history.Location;
@@ -61,8 +63,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public bool IsEgg { get; set; }
 
-    public int? NationalNumber { get; set; }
-    public int? RegionalNumber { get; set; }
+    public int? Number { get; set; }
     public string? Name { get; set; }
 
     public PokemonType? PrimaryType { get; set; }
@@ -78,6 +79,7 @@ namespace PokeGame.Web.Models.Api.Game
     public byte? Level { get; set; }
     public PokemonGender? Gender { get; set; }
     public NatureSummary? Nature { get; set; }
+    public Characteristic? Characteristic { get; set; }
 
     public byte? MetLevel { get; set; }
     public string? MetLocation { get; set; }

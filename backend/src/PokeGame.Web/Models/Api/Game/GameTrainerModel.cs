@@ -19,7 +19,6 @@ namespace PokeGame.Web.Models.Api.Game
       Money = model.Money;
 
       Pokedex = model.PokedexCount;
-      HasNationalPokedex = model.NationalPokedex;
 
       PlayTime = model.PlayTime;
       AdventureStarted = model.CreatedAt;
@@ -38,7 +37,6 @@ namespace PokeGame.Web.Models.Api.Game
     public int Money { get; set; }
 
     public long Pokedex { get; set; }
-    public bool HasNationalPokedex { get; set; }
 
     public int PlayTime { get; set; }
     public DateTime AdventureStarted { get; set; }

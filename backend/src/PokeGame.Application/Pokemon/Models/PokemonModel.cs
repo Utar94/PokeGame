@@ -21,6 +21,7 @@ namespace PokeGame.Application.Pokemon.Models
 
     public PokemonGender Gender { get; set; }
     public string Nature { get; set; } = string.Empty;
+    public Characteristic? Characteristic { get; set; }
     public string? Surname { get; set; }
     public string? Description { get; set; }
 

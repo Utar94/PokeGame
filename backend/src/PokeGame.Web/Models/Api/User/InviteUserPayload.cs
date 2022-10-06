@@ -2,7 +2,7 @@
 {
   public class InviteUserPayload
   {
-    public string Email { get; set; } = null!;
+    public string Email { get; set; } = string.Empty;
     public string? Locale { get; set; }
   }
 }

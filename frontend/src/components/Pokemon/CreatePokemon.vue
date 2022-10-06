@@ -82,9 +82,7 @@
             type="number"
             v-model.number="individualValues.HP"
           >
-            <b-input-group-append>
-              <icon-button icon="dice" variant="primary" @click="randomIV('HP')" />
-            </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('HP')" /></b-input-group-append>
           </form-field>
           <form-field
             class="col"
@@ -97,7 +95,7 @@
             type="number"
             v-model.number="individualValues.Attack"
           >
-            <b-input-group-append> <icon-button icon="dice" variant="primary" @click="randomIV('Attack')" /> </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('Attack')" /></b-input-group-append>
           </form-field>
           <form-field
             class="col"
@@ -110,7 +108,7 @@
             type="number"
             v-model.number="individualValues.Defense"
           >
-            <b-input-group-append> <icon-button icon="dice" variant="primary" @click="randomIV('Defense')" /> </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('Defense')" /></b-input-group-append>
           </form-field>
           <form-field
             class="col"
@@ -123,7 +121,7 @@
             type="number"
             v-model.number="individualValues.SpecialAttack"
           >
-            <b-input-group-append> <icon-button icon="dice" variant="primary" @click="randomIV('SpecialAttack')" /> </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('SpecialAttack')" /></b-input-group-append>
           </form-field>
           <form-field
             class="col"
@@ -136,7 +134,7 @@
             type="number"
             v-model.number="individualValues.SpecialDefense"
           >
-            <b-input-group-append> <icon-button icon="dice" variant="primary" @click="randomIV('SpecialDefense')" /> </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('SpecialDefense')" /></b-input-group-append>
           </form-field>
           <form-field
             class="col"
@@ -149,9 +147,22 @@
             type="number"
             v-model.number="individualValues.Speed"
           >
-            <b-input-group-append> <icon-button icon="dice" variant="primary" @click="randomIV('Speed')" /> </b-input-group-append>
+            <b-input-group-append><icon-button icon="dice" variant="primary" @click="randomIV('Speed')" /></b-input-group-append>
           </form-field>
         </b-row>
+        <form-select
+          :disabled="characteristics.length <= 1"
+          id="characteristic"
+          label="pokemon.characteristic.label"
+          :options="characteristics"
+          placeholder="pokemon.characteristic.placeholder"
+          required
+          v-model="characteristic"
+        >
+          <b-input-group-append>
+            <icon-button :disabled="characteristics.length <= 1" icon="dice" variant="primary" @click="randomCharacteristic" />
+          </b-input-group-append>
+        </form-select>
         <icon-button icon="dice" text="actions.randomize" variant="warning" @click="randomIV()" />
         <p>
           <strong>{{ $t('pokemon.individualValues.totalFormat', { total: totalIV }) }}</strong>
@@ -271,6 +282,7 @@ import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import SpeciesSelect from '@/components/Species/SpeciesSelect.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import { createPokemon } from '@/api/pokemon'
+import { getCharacteristic } from '@/helpers/characteristicUtils'
 import { getSpecies } from '@/api/species'
 
 export default {
@@ -287,6 +299,7 @@ export default {
       abilityId: null,
       ballId: null,
       box: 1,
+      characteristic: null,
       friendship: 0,
       gender: null,
       heldItemId: null,
@@ -320,6 +333,25 @@ export default {
     abilityOptions() {
       return this.orderBy(this.species?.abilities.map(({ id, name }) => ({ text: name, value: id })) ?? [], 'text')
     },
+    characteristics() {
+      const iv = {}
+      for (const [statistic, value] of Object.entries(this.individualValues)) {
+        if (iv[value]) {
+          iv[value].push(statistic)
+        } else {
+          iv[value] = [statistic]
+        }
+      }
+      const max = Math.max(...Object.keys(iv).map(value => Number(value)))
+      const statistics = iv[max]
+      return this.orderBy(
+        statistics.map(statistic => {
+          const value = getCharacteristic(statistic, max)
+          return { text: this.$i18n.t(`pokemon.characteristic.options.${value}`), value }
+        }),
+        'text'
+      )
+    },
     excludedGenders() {
       return this.species?.genderRatio === null ? ['Male', 'Female'] : ['Unknown']
     },
@@ -342,6 +374,7 @@ export default {
         level: this.level,
         gender: this.gender,
         nature: this.nature,
+        characteristic: this.characteristic,
         surname: this.surname,
         friendship: this.friendship || null,
         remainingHatchSteps: this.remainingHatchSteps,
@@ -379,6 +412,10 @@ export default {
     randomAbility() {
       const index = Math.floor(Math.random() * this.species.abilities.length)
       this.abilityId = this.species.abilities[index].id
+    },
+    randomCharacteristic() {
+      const index = Math.floor(Math.random() * this.characteristics.length)
+      this.characteristic = this.characteristics[index].value
     },
     randomGender() {
       if (this.species.genderRatio === null) {
@@ -452,6 +489,14 @@ export default {
     level(level) {
       if (level > 1) {
         this.remainingHatchSteps = 0
+      }
+    },
+    individualValues: {
+      deep: true,
+      handler() {
+        if (!this.characteristics.includes(this.characteristic)) {
+          this.randomCharacteristic()
+        }
       }
     },
     async speciesId(speciesId) {

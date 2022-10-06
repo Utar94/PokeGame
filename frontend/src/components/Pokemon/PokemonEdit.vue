@@ -8,6 +8,10 @@
           <icon-submit class="mx-1" :disabled="!canSubmit" icon="save" :loading="loading" text="actions.save" variant="primary" />
           <icon-button class="mx-1" href="/create-pokemon" icon="plus" text="actions.create" variant="success" />
           <pokemon-evolution class="mx-1" :evolutions="evolutions" :pokemon="pokemon" @updated="onPokemonEvolved" />
+          <template v-if="hasTrainer">
+            <icon-button class="mx-1" icon="info-circle" text="pokemon.summary" variant="info" @click="showSummary = true" />
+            <pokemon-summary :pokemonId="pokemon.id" v-model="showSummary" />
+          </template>
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
@@ -350,6 +354,7 @@ import HeldItemModal from './HeldItemModal.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
 import MoveSelect from '@/components/Moves/MoveSelect.vue'
 import PokemonEvolution from './PokemonEvolution.vue'
+import PokemonSummary from '@/components/Game/PokemonSummary.vue'
 import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import WalkEggModal from './WalkEggModal.vue'
@@ -365,6 +370,7 @@ export default {
     ItemSelect,
     MoveSelect,
     PokemonEvolution,
+    PokemonSummary,
     SwapModal,
     TrainerSelect,
     WalkEggModal
@@ -411,6 +417,7 @@ export default {
       positionAlreadyUsed: false,
       reference: null,
       settingModel: false,
+      showSummary: false,
       statusCondition: null,
       surname: null
     }
@@ -453,6 +460,9 @@ export default {
         .join('|')
       const newMoves = this.moves.map(({ id, remainingPowerPoints }) => `${id}:${remainingPowerPoints}`).join('|')
       return oldMoves !== newMoves
+    },
+    hasTrainer() {
+      return Boolean(this.pokemon.history?.trainer)
     },
     hpIV() {
       return this.pokemon.individualValues.find(({ statistic }) => statistic === 'HP')?.value ?? 0
