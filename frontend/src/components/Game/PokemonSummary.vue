@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import BattleMoveTab from './BattleMoveTab.vue'
 import ItemIcon from '@/components/Items/ItemIcon.vue'
 import PokemonInfoTab from './PokemonInfoTab.vue'
@@ -63,14 +62,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['gameTrainer']),
     alt() {
       return `${this.$i18n.t('number')} ${this.number} ${this.pokemon.name}`
     },
     number() {
-      return this.pokemon.isEgg
-        ? '—'
-        : ((this.gameTrainer.hasNationalPokedex ? this.pokemon.nationalNumber : this.pokemon.regionalNumber) ?? '???').toString().padStart(3, '0')
+      return this.pokemon.isEgg ? '—' : this.pokemon.number?.toString().padStart(3, '0') ?? '???'
     },
     src() {
       return this.pokemon.isEgg ? '/img/egg.webp' : this.pokemon.picture

@@ -10,7 +10,10 @@
       <span v-html="$t('game.pokemon.metFormat', { date: $d(new Date(pokemon.metOn), 'card'), location: pokemon.metLocation })" />
       <br />
       <span v-html="$t('game.pokemon.metLevel', { level: pokemon.metLevel })" />
-      <!-- TODO(fpion): Characteristic -->
+      <template v-if="pokemon.characteristic">
+        <br />
+        <span v-t="`pokemon.characteristic.options.${pokemon.characteristic}`" />
+      </template>
       <br />
       <span v-if="flavor" v-html="$t('game.pokemon.flavorFormat', { flavor })" />
       <span v-else v-t="'game.pokemon.eatAnything'" />

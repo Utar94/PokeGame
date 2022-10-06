@@ -1,5 +1,41 @@
 {
   "caughtWithBall": "Caught With Ball",
+  "characteristic": {
+    "label": "Characteristic",
+    "options": {
+      "AlertSounds": "It is alert to sounds.",
+      "CapableTakingHits": "It is capable of taking hits.",
+      "GoodEndurance": "It has good endurance.",
+      "GoodPerseverance": "It has good perseverance.",
+      "HatesLose": "It hates to lose.",
+      "HighlyCurious": "It is highly curious.",
+      "HighlyPersistent": "It is highly persistent.",
+      "ImpetuousSilly": "It is impetuous and silly.",
+      "LikesFight": "It likes to fight.",
+      "LikesRelax": "It likes to relax.",
+      "LikesRun": "It likes to run.",
+      "LikesThrashAbout": "It likes to thrash about.",
+      "LittleQuickTempered": "It is a little quick tempered.",
+      "LovesEat": "It loves to eat.",
+      "Mischievous": "It is mischievous.",
+      "NodsOffLot": "It nods off a lot.",
+      "OftenLostThought": "It is often lost in thought.",
+      "ProudPower": "It is proud of its power.",
+      "QuickFlee": "It is quick to flee.",
+      "QuickTempered": "It is quick tempered.",
+      "ScattersThingsOften": "It scatters things often.",
+      "SomewhatClown": "It is somewhat of a clown.",
+      "SomewhatStubborn": "It is somewhat stubborn.",
+      "SomewhatVain": "It is somewhat vain.",
+      "StrongWilled": "It is strong willed.",
+      "StronglyDefiant": "It is strongly defiant.",
+      "SturdyBody": "It has a sturdy body.",
+      "TakesPlentySiestas": "It takes plenty of siestas.",
+      "ThoroughlyCunning": "It is thoroughly cunning.",
+      "VeryFinicky": "It is very finicky."
+    },
+    "placeholder": "Select a characteristic"
+  },
   "condition": {
     "label": "Status Condition",
     "options": {
@@ -117,6 +153,7 @@
     }
   },
   "statistics": "Statistics",
+  "summary": "Summary",
   "surname": {
     "label": "Surname",
     "placeholder": "Enter a surname"
