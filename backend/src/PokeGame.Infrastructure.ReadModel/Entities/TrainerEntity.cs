@@ -12,6 +12,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public byte Checksum { get; private set; }
 
     public int Money { get; private set; }
+    public int PlayTime { get; private set; }
 
     public TrainerGender Gender { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -20,6 +21,9 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public string? Notes { get; private set; }
     public string? Picture { get; private set; }
     public string? Reference { get; private set; }
+
+    public bool NationalPokedex { get; private set; }
+    public int PokedexCount { get; private set; }
 
     public List<InventoryEntity> Inventory { get; private set; } = new();
     public List<PokemonEntity> OriginalPokemon { get; private set; } = new();
@@ -56,6 +60,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       Checksum = trainer.Checksum;
 
       Money = trainer.Money;
+      PlayTime = trainer.PlayTime;
 
       Gender = trainer.Gender;
       Name = trainer.Name;
@@ -64,6 +69,15 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       Notes = trainer.Notes;
       Picture = trainer.Picture;
       Reference = trainer.Reference;
+    }
+
+    public  void UpdatePokedex(int regionalCount)
+    {
+      int currentCount = Pokedex.Where(x => x.Species != null)
+        .Count(x => x.Species!.RegionalSpecies.Any(y => y.Region == Region));
+      NationalPokedex = currentCount == regionalCount;
+
+      PokedexCount = NationalPokedex ? Pokedex.Count : currentCount;
     }
   }
 }

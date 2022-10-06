@@ -23,7 +23,7 @@ namespace PokeGame.Application.Species.Mutations
         ?? throw new EntityNotFoundException<Domain.Species.Species>(request.Id);
 
       await ValidateAbilitiesAsync(request.Payload, cancellationToken);
-      await ValidateRegionalNumbersAsync(request.Payload, cancellationToken);
+      await ValidateRegionalNumbersAsync(species, request.Payload, cancellationToken);
 
       species.Update(request.Payload);
       _validator.ValidateAndThrow(species);

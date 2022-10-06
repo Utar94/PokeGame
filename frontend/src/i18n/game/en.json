@@ -1,0 +1,35 @@
+{
+  "adventureStarted": "Adventure started",
+  "back": "Back",
+  "bag": {
+    "itemDetail": "Item Detail",
+    "title": "Bag"
+  },
+  "boxFormat": "Box {box}",
+  "close": "Close",
+  "exit": "Exit",
+  "playTime": "Play time",
+  "pokedex": {
+    "caught": "Caught: {caught}",
+    "national": "National Pokédex",
+    "number": "Pokédex No.",
+    "seen": "Seen: {seen}"
+  },
+  "pokemon": {
+    "battleMoves": "Battle Moves",
+    "currentExperience": "Current Exp. Points",
+    "egg": "Egg",
+    "eggWatch": "\"The Egg Watch\"<br />What Pokémon will hatch from this Egg?",
+    "info": "Pokémon Info",
+    "metEgg": "A mysterious Pokémon Egg that I was given on {date}.",
+    "metFormat": "We first met one another on <span class=\"text-danger\">{date}</span>, and it was <span class=\"text-danger\">{location}</span>!",
+    "metLevel": "At the time, this Pokémon was Lv. {level}.",
+    "natureFormat": "This Pokémon is pretty <span class=\"text-danger\">{nature}</span> by nature.",
+    "pointsNeededToLevelUp": "Points needed to level up",
+    "skills": "Pokémon Skills",
+    "summary": "Pokémon Summary",
+    "trainerMemo": "Trainer Memo"
+  },
+  "trainerCard": "Trainer Card",
+  "trainerNumber": "ID No."
+}

@@ -25,7 +25,7 @@
       <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${species.id}`" />
       <delete-modal
         confirm="species.delete.confirm"
-        :displayName="`No. ${species.number.toString().padStart(3, '0')} ${species.name}`"
+        :displayName="`${this.$i18n.t('number')} ${species.number.toString().padStart(3, '0')} ${species.name}`"
         :id="`delete_${species.id}`"
         :loading="loading"
         title="species.delete.title"

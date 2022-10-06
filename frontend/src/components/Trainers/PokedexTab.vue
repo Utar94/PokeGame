@@ -32,7 +32,7 @@
             :region="region"
             :trainerId="trainerId"
             @removed="onRemove(entry, $event)"
-            @updated="refresh()"
+            @updated="onUpdate()"
           />
         </tbody>
       </table>
@@ -120,6 +120,10 @@ export default {
       if (callback) {
         callback()
       }
+    },
+    async onUpdate() {
+      await this.refresh()
+      this.toast('success', 'trainers.pokedex.updated')
     },
     async refresh(params = null) {
       if (!this.loading) {

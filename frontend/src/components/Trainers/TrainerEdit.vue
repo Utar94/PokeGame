@@ -25,7 +25,16 @@
             </b-row>
             <b-row>
               <user-select class="col" v-model="userId" />
-              <form-field class="col" id="money" label="trainers.money" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="money" />
+              <form-field class="col" id="money" label="trainers.money" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="money">
+                <template #prepend>
+                  <b-input-group-prepend is-text>
+                    <pokemon-dollar />
+                  </b-input-group-prepend>
+                </template>
+              </form-field>
+              <form-field class="col" id="playTime" label="trainers.playTime" :minValue="0" :step="1" type="number" v-model.number="playTime">
+                <b-input-group-append is-text>{{ formattedPlayTime }}</b-input-group-append>
+              </form-field>
             </b-row>
             <name-field required v-model="name" />
             <description-field v-model="description" />
@@ -80,6 +89,7 @@ export default {
       notes: null,
       number: 123456,
       picture: null,
+      playTime: 0,
       reference: null,
       region: null,
       trainer: null,
@@ -87,10 +97,16 @@ export default {
     }
   },
   computed: {
+    formattedPlayTime() {
+      const hours = Math.floor(this.playTime / 60)
+      const minutes = this.playTime % 60
+      return [isNaN(hours) ? 0 : hours, (isNaN(minutes) ? 0 : minutes).toString().padStart(2, '0')].join(':')
+    },
     hasChanges() {
       return (
         (!this.trainer && (this.gender || this.number || this.region)) ||
         this.money !== (this.trainer?.money ?? 0) ||
+        this.playTime !== (this.trainer?.playTime ?? 0) ||
         this.userId !== (this.trainer?.userId ?? null) ||
         (this.name ?? '') !== (this.trainer?.name ?? '') ||
         (this.description ?? '') !== (this.trainer?.description ?? '') ||
@@ -103,6 +119,7 @@ export default {
       const payload = {
         userId: this.userId,
         money: this.money,
+        playTime: this.playTime,
         name: this.name,
         description: this.description,
         reference: this.reference || null,
@@ -164,6 +181,7 @@ export default {
       this.notes = trainer.notes
       this.number = trainer.number
       this.picture = trainer.picture
+      this.playTime = trainer.playTime
       this.reference = trainer.reference
       this.region = trainer.region
       this.userId = trainer.userId
@@ -201,7 +219,7 @@ export default {
   },
   watch: {
     gender(gender) {
-      if (gender) {
+      if (gender && !this.trainer) {
         this.generateNumber()
       }
     }

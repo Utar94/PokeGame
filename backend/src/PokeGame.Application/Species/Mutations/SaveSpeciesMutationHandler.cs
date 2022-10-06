@@ -1,4 +1,5 @@
-﻿using PokeGame.Domain;
+﻿using PokeGame.Application.Species.Models;
+using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
 using PokeGame.Domain.Species.Payloads;
 
@@ -29,18 +30,17 @@ namespace PokeGame.Application.Species.Mutations
     }
 
     protected async Task ValidateRegionalNumbersAsync(SaveSpeciesPayload payload, CancellationToken cancellationToken)
+      => await ValidateRegionalNumbersAsync(species: null, payload, cancellationToken);
+    protected async Task ValidateRegionalNumbersAsync(Domain.Species.Species? species, SaveSpeciesPayload payload, CancellationToken cancellationToken)
     {
       if (payload.RegionalNumbers?.Any() == true)
       {
-        IEnumerable<Region> regions = payload.RegionalNumbers.Select(x => x.Region).Distinct();
-        Dictionary<Region, HashSet<int>> regionalNumbers = await Querier.GetRegionalNumbersAsync(regions, cancellationToken);
-
         var conflicts = new List<KeyValuePair<Region, int>>(capacity: payload.RegionalNumbers.Count());
 
         foreach (RegionalNumberPayload regionalNumber in payload.RegionalNumbers)
         {
-          if (regionalNumbers.TryGetValue(regionalNumber.Region, out HashSet<int>? numbers)
-            && numbers.Contains(regionalNumber.Number))
+          SpeciesModel? conflict = await Querier.GetAsync(regionalNumber.Region, regionalNumber.Number, cancellationToken);
+          if (conflict != null && conflict.Id != species?.Id)
           {
             conflicts.Add(new KeyValuePair<Region, int>(regionalNumber.Region, regionalNumber.Number));
           }

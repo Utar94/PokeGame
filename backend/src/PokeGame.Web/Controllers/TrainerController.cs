@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
+using PokeGame.Application.Trainers.Queries;
 
 namespace PokeGame.Web.Controllers
 {
@@ -10,11 +11,11 @@ namespace PokeGame.Web.Controllers
   [Route("trainers")]
   public class TrainerController : Controller
   {
-    private readonly ITrainerService _trainerService;
+    private readonly IMediator _mediator;
 
-    public TrainerController(ITrainerService trainerService)
+    public TrainerController(IMediator mediator)
     {
-      _trainerService = trainerService;
+      _mediator = mediator;
     }
 
     [HttpGet("/create-trainer")]
@@ -32,7 +33,7 @@ namespace PokeGame.Web.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult> TrainerEdit(Guid id, CancellationToken cancellationToken = default)
     {
-      TrainerModel? trainer = await _trainerService.GetAsync(id, cancellationToken);
+      TrainerModel? trainer = await _mediator.Send(new GetTrainerQuery(id), cancellationToken);
       if (trainer == null)
       {
         return NotFound();

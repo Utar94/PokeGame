@@ -21,6 +21,7 @@ namespace PokeGame.Domain.Trainers
     public byte Checksum => string.Concat((char)Region, Number).Checksum();
 
     public int Money { get; private set; }
+    public int PlayTime { get; private set; }
 
     public TrainerGender Gender { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -179,6 +180,7 @@ namespace PokeGame.Domain.Trainers
       UserId = payload.UserId;
 
       Money = payload.Money;
+      PlayTime = payload.PlayTime;
 
       Name = payload.Name.Trim();
       Description = payload.Description?.CleanTrim();

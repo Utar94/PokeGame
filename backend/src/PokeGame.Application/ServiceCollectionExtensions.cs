@@ -2,10 +2,8 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application.Abilities;
-using PokeGame.Application.Inventories;
 using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
-using PokeGame.Application.Trainers;
 using System.Reflection;
 
 namespace PokeGame.Application
@@ -26,10 +24,8 @@ namespace PokeGame.Application
     {
       return services
         .AddScoped<IAbilityService, AbilityService>()
-        .AddScoped<IInventoryService, InventoryService>()
         .AddScoped<IItemService, ItemService>()
-        .AddScoped<IMoveService, MoveService>()
-        .AddScoped<ITrainerService, TrainerService>();
+        .AddScoped<IMoveService, MoveService>();
     }
   }
 }

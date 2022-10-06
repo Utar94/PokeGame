@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject UserService _userService;
+
+<!DOCTYPE html>
 <html lang="@Thread.CurrentThread.CurrentUICulture.Name">
 <head>
   <title>@ViewBag.Title &mdash; PokéGame</title>
@@ -25,7 +27,7 @@
 </head>
 <body>
   <div id="app">
-    <navbar user="@(ModelSerializer.Serialize(Context.GetCurrentUser()))"></navbar>
+    <navbar user="@(ModelSerializer.Serialize(_userService.GetCurrentUser(Context)))"></navbar>
     @RenderBody()
     <app-footer version="v@(Constants.Version)"></app-footer>
   </div>

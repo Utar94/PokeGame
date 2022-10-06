@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import effectivenessTable from './effectiveness.json'
+import { getGameInventory, getGamePokedex, getGamePokemon, getGameTrainers } from '@/api/game'
 import { getPokemonList } from '@/api/pokemon'
 import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
@@ -69,6 +70,18 @@ export default new Vuex.Store({
       status: {},
       step: 'TrainerSelection'
     },
+    game: {
+      box: 1,
+      inventory: {},
+      page: null,
+      pokedex: {
+        entries: [],
+        hasNational: false
+      },
+      pokemon: [],
+      trainer: null,
+      trainers: {}
+    },
     pokemonList: {},
     trainers: {}
   },
@@ -123,6 +136,27 @@ export default new Vuex.Store({
     },
     battlingPlayerTrainers({ battle, trainers }) {
       return battle.players.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    gameBox({ game }) {
+      return game.box
+    },
+    gameInventory({ game }) {
+      return game.inventory
+    },
+    gamePage({ game }) {
+      return game.page
+    },
+    gamePokedex({ game }) {
+      return game.pokedex
+    },
+    gamePokemon({ game }) {
+      return game.pokemon
+    },
+    gameTrainer({ game }) {
+      return game.trainer
+    },
+    gameTrainers({ game }) {
+      return Object.values(game.trainers)
     },
     hasEnded(_, { remainingBattlingOpponentPokemon, remainingBattlingPlayerPokemon }) {
       return remainingBattlingPlayerPokemon.length === 0 || remainingBattlingOpponentPokemon.length === 0
@@ -223,6 +257,29 @@ export default new Vuex.Store({
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
     },
+    async loadGameInventory({ commit, state }) {
+      const { data } = await getGameInventory(state.game.trainer.id)
+      commit('setGameInventory', data)
+    },
+    async loadGamePokedex({ commit, state }, national = false) {
+      const { data } = await getGamePokedex(state.game.trainer.id, { national })
+      commit('setGamePokedex', data)
+    },
+    async loadGamePokemon({ commit, state }) {
+      const { data } = await getGamePokemon(state.game.trainer.id)
+      commit('setGamePokemon', data)
+    },
+    async loadGameTrainers({ commit, dispatch, state }) {
+      const { data } = await getGameTrainers()
+      const trainers = {}
+      for (const trainer of data) {
+        trainers[trainer.id] = trainer
+      }
+      commit('setGameTrainers', trainers)
+      if (state.game.trainer && !trainers[state.game.trainer.id]) {
+        dispatch('setGameTrainer', null)
+      }
+    },
     async loadPokemonList({ commit }) {
       const { data } = await getPokemonList()
       const pokemonList = {}
@@ -246,6 +303,9 @@ export default new Vuex.Store({
       }
       commit('setBattleStep', 'MakeMove')
     },
+    navigateGame({ commit }, page) {
+      commit('setGamePage', page)
+    },
     nextExperienceDistribution({ commit, dispatch, state }) {
       const defeatedPokemon = state.battle.experience.defeatedPokemon.slice(1)
       if (defeatedPokemon.length > 0) {
@@ -253,6 +313,14 @@ export default new Vuex.Store({
       } else {
         dispatch('battlePrevious')
       }
+    },
+    nextGameBox({ commit, state }) {
+      const { box } = state.game
+      commit('setGameBox', box === 32 ? 1 : box + 1)
+    },
+    previousGameBox({ commit, state }) {
+      const { box } = state.game
+      commit('setGameBox', box == 1 ? 32 : box - 1)
     },
     resetBattle({ commit }) {
       commit('resetBattleMove')
@@ -271,6 +339,14 @@ export default new Vuex.Store({
       if (!keepCurrentStep) {
         commit('setBattleStep', 'Battle')
       }
+    },
+    setGameTrainer({ commit }, trainer) {
+      commit('setGameTrainer', trainer)
+      commit('setGameBox', null)
+      commit('setGamePage', null)
+      commit('setGameInventory', null)
+      commit('setGamePokedex', null)
+      commit('setGamePokemon', null)
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -589,6 +665,30 @@ export default new Vuex.Store({
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
       state.battle.experience.defeatedPokemon = defeatedPokemon ?? []
+    },
+    setGameBox(state, box) {
+      state.game.box = box ?? 1
+    },
+    setGameInventory(state, inventory) {
+      state.game.inventory = inventory ?? {}
+    },
+    setGamePage(state, page) {
+      state.game.page = page ?? null
+    },
+    setGamePokedex(state, pokedex) {
+      state.game.pokedex = pokedex ?? {
+        entries: [],
+        hasNational: false
+      }
+    },
+    setGamePokemon(state, pokemon) {
+      state.game.pokemon = pokemon ?? []
+    },
+    setGameTrainer(state, trainer) {
+      state.game.trainer = trainer ?? null
+    },
+    setGameTrainers(state, trainers) {
+      state.game.trainers = trainers ?? {}
     },
     setPokemonList(state, pokemonList) {
       state.pokemonList = pokemonList ?? {}

@@ -761,6 +761,11 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<bool>("NationalPokedex")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -770,6 +775,16 @@ namespace PokeGame.Infrastructure.ReadModel.Migrations
                     b.Property<string>("Picture")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
+
+                    b.Property<int>("PlayTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PokedexCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Reference")
                         .HasMaxLength(2048)

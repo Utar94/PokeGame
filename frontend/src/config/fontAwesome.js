@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faArrowDown,
+  faArrowLeft,
   faArrowUp,
   faBan,
   faBolt,
@@ -20,6 +21,7 @@ import {
   faEraser,
   faExchangeAlt,
   faExternalLinkAlt,
+  faEye,
   faHeartbeat,
   faIdCard,
   faInfoCircle,
@@ -39,6 +41,8 @@ import {
   faSignOutAlt,
   faSkull,
   faSquare,
+  faStepBackward,
+  faStepForward,
   faSyncAlt,
   faTimes,
   faTools,
@@ -53,6 +57,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
   faArrowDown,
+  faArrowLeft,
   faArrowUp,
   faBan,
   faBolt,
@@ -71,6 +76,7 @@ library.add(
   faEraser,
   faExchangeAlt,
   faExternalLinkAlt,
+  faEye,
   faHeartbeat,
   faIdCard,
   faInfoCircle,
@@ -90,6 +96,8 @@ library.add(
   faSignOutAlt,
   faSkull,
   faSquare,
+  faStepBackward,
+  faStepForward,
   faSyncAlt,
   faTimes,
   faTools,

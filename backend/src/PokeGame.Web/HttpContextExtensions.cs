@@ -1,6 +1,5 @@
 ﻿using Logitar.Portal.Core.Sessions.Models;
 using Logitar.Portal.Core.Users.Models;
-using PokeGame.Web.Models.Users;
 using System.Text;
 using System.Text.Json;
 
@@ -9,8 +8,6 @@ namespace PokeGame.Web
   internal static class HttpContextExtensions
   {
     private const string SessionKey = "Session";
-
-    public static CurrentUser GetCurrentUser(this HttpContext context) => new(context.GetUser());
 
     public static UserModel? GetUser(this HttpContext context) => context.GetSession()?.User;
     public static SessionModel? GetSession(this HttpContext context) => context.GetItem<SessionModel>(SessionKey);

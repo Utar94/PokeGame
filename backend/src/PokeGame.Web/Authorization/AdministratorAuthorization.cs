@@ -9,16 +9,13 @@ namespace PokeGame.Web.Authorization
 
   internal class AdministratorAuthorizationHandler : AuthorizationHandler<AdministratorAuthorizationRequirement>
   {
-    private readonly HashSet<string> _administrators;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly UserService _userService;
 
-    public AdministratorAuthorizationHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+    public AdministratorAuthorizationHandler(IHttpContextAccessor httpContextAccessor, UserService userService)
     {
-      _administrators = configuration.GetSection("Administrators").Get<IEnumerable<string>>()
-        .Select(x => x.ToUpper())
-        .ToHashSet();
-
       _httpContextAccessor = httpContextAccessor;
+      _userService = userService;
     }
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AdministratorAuthorizationRequirement requirement)
@@ -30,7 +27,7 @@ namespace PokeGame.Web.Authorization
         {
           context.Fail(new AuthorizationFailureReason(this, "The User is required."));
         }
-        else if (!_administrators.Contains(user.Username.ToUpper()))
+        else if (!_userService.IsAdministrator(user))
         {
           context.Fail(new AuthorizationFailureReason(this, "The user is not an administrator."));
         }
