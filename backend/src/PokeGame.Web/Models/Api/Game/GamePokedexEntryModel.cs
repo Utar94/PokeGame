@@ -26,7 +26,8 @@ namespace PokeGame.Web.Models.Api.Game
 
       if (model.HasCaught)
       {
-        Types = string.Join(", ", new[] { species.PrimaryType, species.SecondaryType }.Where(x => x != null));
+        PrimaryType = species.PrimaryType;
+        SecondaryType = species.SecondaryType;
 
         Category = species.Category;
         Description = species.Description;
@@ -40,7 +41,8 @@ namespace PokeGame.Web.Models.Api.Game
 
     public int Number { get; set; }
 
-    public string? Types { get; set; } // TODO(fpion): refactor
+    public PokemonType? PrimaryType { get; set; }
+    public PokemonType? SecondaryType { get; set; }
 
     public string Name { get; set; } = string.Empty;
     public string? Category { get; set; }

@@ -8,7 +8,7 @@
         </tr>
         <tr>
           <th scope="row" v-t="'name.label'" />
-          <td v-text="pokemon.name" />
+          <td v-text="pokemon.isEgg ? '—' : pokemon.name" />
         </tr>
         <tr>
           <th scope="row" v-t="'type.label'" />
@@ -16,15 +16,15 @@
         </tr>
         <tr>
           <th scope="row" v-t="'pokemon.trainer.original'" />
-          <td v-text="originalTrainer.name" />
+          <td v-text="originalTrainer ? originalTrainer.name : '—'" />
         </tr>
         <tr>
           <th scope="row" v-t="'game.trainerNumber'" />
-          <td v-text="originalTrainer.number" />
+          <td v-text="originalTrainer ? originalTrainer.number : '—'" />
         </tr>
         <tr>
           <th scope="row" v-t="'game.pokemon.currentExperience'" />
-          <td v-text="pokemon.currentExperience" />
+          <td v-text="pokemon.currentExperience || '—'" />
         </tr>
         <tr>
           <th scope="row" v-t="'game.pokemon.pointsNeededToLevelUp'" />
@@ -70,11 +70,14 @@ export default {
       return this.pokemon.originalTrainer
     },
     types() {
-      const types = [this.$i18n.t(`type.options.${this.pokemon.primaryType}`)]
+      const types = []
+      if (this.pokemon.primaryType) {
+        types.push(this.$i18n.t(`type.options.${this.pokemon.primaryType}`))
+      }
       if (this.pokemon.secondaryType) {
         types.push(this.$i18n.t(`type.options.${this.pokemon.secondaryType}`))
       }
-      return types.join(', ')
+      return types.join(', ') || '—'
     }
   }
 }

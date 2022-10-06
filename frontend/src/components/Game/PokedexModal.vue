@@ -14,29 +14,25 @@
       <button aria-label="close" class="close" type="button" @click="close()">&times;</button>
     </template>
     <b-row v-if="entry">
-      <b-col><img :alt="alt" :src="src" /></b-col>
-      <b-col>
+      <b-col lg="6"><b-img :alt="alt" fluid :src="src" /></b-col>
+      <b-col lg="6">
         <table class="table table-striped">
           <tbody>
             <tr>
               <th scope="row" v-t="'species.category.label'" />
-              <td v-if="entry.category">{{ $t('species.category.format', { category: entry.category }) }}</td>
-              <td v-else>???</td>
+              <td>{{ entry.category ? $t('species.category.format', { category: entry.category }) : '???' }}</td>
             </tr>
             <tr>
               <th scope="row" v-t="'type.label'" />
-              <td v-if="entry.types" v-text="entry.types" />
-              <td v-else>???</td>
+              <td v-text="types" />
             </tr>
             <tr>
               <th scope="row" v-t="'species.height.label'" />
-              <td v-if="entry.height">{{ $t('species.height.format', { height: entry.height.toFixed(1) }) }}</td>
-              <td v-else>???</td>
+              <td>{{ entry.height ? $t('species.height.format', { height: entry.height.toFixed(1) }) : '???' }}</td>
             </tr>
             <tr>
               <th scope="row" v-t="'species.weight.label'" />
-              <td v-if="entry.weight">{{ $t('species.weight.format', { weight: entry.weight.toFixed(1) }) }}</td>
-              <td v-else>???</td>
+              <td>{{ entry.weight ? $t('species.weight.format', { weight: entry.weight.toFixed(1) }) : '???' }}</td>
             </tr>
           </tbody>
         </table>
@@ -72,15 +68,16 @@ export default {
     src() {
       return this.entry.picture ?? null
     },
-    type() {
-      return [this.entry.primaryType, this.entry.secondaryType].filter(type => Boolean(type)).join(', ')
+    types() {
+      const types = []
+      if (this.entry.primaryType) {
+        types.push(this.$i18n.t(`type.options.${this.entry.primaryType}`))
+      }
+      if (this.entry.secondaryType) {
+        types.push(this.$i18n.t(`type.options.${this.entry.secondaryType}`))
+      }
+      return types.join(', ') || '???'
     }
   }
 }
 </script>
-
-<style scoped>
-img {
-  max-width: 360px;
-}
-</style>

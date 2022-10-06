@@ -9,16 +9,21 @@
         <h3 v-t="'pokemon.trainer.party'" />
         <table class="table">
           <tbody>
-            <pokemon-row v-for="index in 6" :key="index" :pokemon="partyPokemon[index]" @click="onClick" />
+            <party-pokemon-row v-for="index in 6" :key="index" :pokemon="partyPokemon[index]" @click="onClick" />
           </tbody>
         </table>
       </b-col>
       <b-col lg="8">
         <h3>
-          <icon-button class="mr-1" icon="step-backward" variant="primary" @click="previous" />
-          <span class="mx-1">{{ $t('game.boxFormat', { box }) }}</span>
-          <icon-button class="ml-1" icon="step-forward" variant="primary" @click="next" />
+          <icon-button class="mr-1" icon="step-backward" variant="primary" @click="previousGameBox" />
+          <span class="mx-1">{{ $t('game.boxFormat', { box: gameBox }) }}</span>
+          <icon-button class="ml-1" icon="step-forward" variant="primary" @click="nextGameBox" />
         </h3>
+        <table class="table">
+          <tr v-for="row in 5" :key="`row_${row}`">
+            <pokemon-cell v-for="col in 6" :key="`row_${row}|col_${col}`" :pokemon="boxPokemon[(row - 1) * 6 + col]" @click="onClick" />
+          </tr>
+        </table>
       </b-col>
     </b-row>
     <pokemon-summary :pokemonId="selectedPokemon" v-model="showModal" />
@@ -27,39 +32,37 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import PokemonRow from './PokemonRow.vue'
+import PartyPokemonRow from './PartyPokemonRow.vue'
+import PokemonCell from './PokemonCell.vue'
 import PokemonSummary from './PokemonSummary.vue'
 
 export default {
   name: 'TrainerPokemon',
   components: {
-    PokemonRow,
+    PartyPokemonRow,
+    PokemonCell,
     PokemonSummary
   },
   data() {
     return {
-      box: 1,
       selectedPokemon: null,
       showModal: false
     }
   },
   computed: {
-    ...mapGetters(['gamePokemon']),
+    ...mapGetters(['gamePokemon', 'gameBox']),
+    boxPokemon() {
+      return Object.fromEntries(this.gamePokemon.filter(({ box }) => box === this.gameBox).map(pokemon => [pokemon.position, pokemon]))
+    },
     partyPokemon() {
       return Object.fromEntries(this.gamePokemon.filter(({ box }) => box === null).map(pokemon => [pokemon.position, pokemon]))
     }
   },
   methods: {
-    ...mapActions(['loadGamePokemon', 'navigateGame']),
-    next() {
-      this.box = this.box === 32 ? 1 : this.box + 1
-    },
+    ...mapActions(['loadGamePokemon', 'navigateGame', 'nextGameBox', 'previousGameBox']),
     onClick(pokemon) {
       this.selectedPokemon = pokemon?.id ?? null
       this.showModal = this.selectedPokemon !== null
-    },
-    previous() {
-      this.box = this.box === 1 ? 32 : this.box - 1
     }
   },
   async created() {

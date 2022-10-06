@@ -1,8 +1,9 @@
 <template>
-  <tr :class="{ clickable: Boolean(pokemon) }" @click="$emit('click', pokemon)">
+  <tr :class="{ clickable }" @click="onClick">
     <template v-if="pokemon">
       <td class="small"><pokemon-icon :pokemon="pokemon" /></td>
-      <td>
+      <td v-if="pokemon.isEgg" v-t="'game.pokemon.egg'" />
+      <td v-else>
         {{ pokemon.name }}
         {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
         <gender-icon :gender="pokemon.gender" />
@@ -19,11 +20,23 @@
 
 <script>
 export default {
-  name: 'PokemonRow',
+  name: 'PartyPokemonRow',
   props: {
     pokemon: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    clickable() {
+      return Boolean(this.pokemon)
+    }
+  },
+  methods: {
+    onClick() {
+      if (this.clickable) {
+        this.$emit('click', this.pokemon)
+      }
     }
   }
 }

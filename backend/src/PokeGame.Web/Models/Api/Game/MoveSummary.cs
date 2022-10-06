@@ -11,6 +11,8 @@ namespace PokeGame.Web.Models.Api.Game
     {
       MoveModel move = pokemonMove.Move ?? throw new ArgumentException($"The {nameof(pokemonMove.Move)} is required.", nameof(pokemonMove));
 
+      Position = pokemonMove.Position;
+
       Type = move.Type;
       Category = move.Category;
 
@@ -22,6 +24,8 @@ namespace PokeGame.Web.Models.Api.Game
       Name = move.Name;
       Description = move.Description;
     }
+
+    public byte Position { get; set; }
 
     public PokemonType Type { get; set; }
     public MoveCategory Category { get; set; }

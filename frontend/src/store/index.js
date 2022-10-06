@@ -71,6 +71,7 @@ export default new Vuex.Store({
       step: 'TrainerSelection'
     },
     game: {
+      box: 1,
       inventory: {},
       page: null,
       pokedex: {
@@ -135,6 +136,9 @@ export default new Vuex.Store({
     },
     battlingPlayerTrainers({ battle, trainers }) {
       return battle.players.trainers.map(id => trainers[id]).filter(trainer => typeof trainer === 'object' && trainer !== null)
+    },
+    gameBox({ game }) {
+      return game.box
     },
     gameInventory({ game }) {
       return game.inventory
@@ -310,6 +314,14 @@ export default new Vuex.Store({
         dispatch('battlePrevious')
       }
     },
+    nextGameBox({ commit, state }) {
+      const { box } = state.game
+      commit('setGameBox', box === 32 ? 1 : box + 1)
+    },
+    previousGameBox({ commit, state }) {
+      const { box } = state.game
+      commit('setGameBox', box == 1 ? 32 : box - 1)
+    },
     resetBattle({ commit }) {
       commit('resetBattleMove')
       commit('resetBattleStatus')
@@ -330,8 +342,11 @@ export default new Vuex.Store({
     },
     setGameTrainer({ commit }, trainer) {
       commit('setGameTrainer', trainer)
+      commit('setGameBox', null)
       commit('setGamePage', null)
       commit('setGameInventory', null)
+      commit('setGamePokedex', null)
+      commit('setGamePokemon', null)
     },
     toggleActiveBattlingPokemon({ commit, state }, id) {
       let activePokemon = state.battle.activePokemon
@@ -650,6 +665,9 @@ export default new Vuex.Store({
     },
     setExperienceDefeatedPokemon(state, defeatedPokemon) {
       state.battle.experience.defeatedPokemon = defeatedPokemon ?? []
+    },
+    setGameBox(state, box) {
+      state.game.box = box ?? 1
     },
     setGameInventory(state, inventory) {
       state.game.inventory = inventory ?? {}

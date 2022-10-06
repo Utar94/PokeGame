@@ -1,28 +1,26 @@
 <template>
   <b-modal size="xl" :title="$t('game.pokemon.summary')" :visible="value" @change="$emit('input', $event)">
     <b-row v-if="pokemon">
-      <b-col>
+      <b-col lg="6">
         <b-tabs content-class="mt-3">
           <pokemon-info-tab :number="number" :pokemon="pokemon" />
-          <b-tab :title="$t('game.pokemon.trainerMemo')">
-            <!-- TODO(fpion): implement -->
-          </b-tab>
-          <b-tab :title="$t('game.pokemon.skills')">
-            <!-- TODO(fpion): implement -->
-          </b-tab>
-          <b-tab :title="$t('game.pokemon.battleMoves')">
-            <!-- TODO(fpion): implement -->
-          </b-tab>
+          <trainer-memo-tab :pokemon="pokemon" />
+          <pokemon-skill-tab :pokemon="pokemon" />
+          <battle-move-tab :pokemon="pokemon" />
         </b-tabs>
       </b-col>
-      <b-col>
+      <b-col lg="6">
         <h6>
           <item-icon :item="pokemon.caughtBall" />
-          {{ pokemon.name }}
-          {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
-          <gender-icon :gender="pokemon.gender" />
+          {{ ' ' }}
+          <template v-if="pokemon.isEgg">{{ $t('game.pokemon.egg') }}</template>
+          <template v-else>
+            {{ pokemon.name }}
+            {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
+            <gender-icon :gender="pokemon.gender" />
+          </template>
         </h6>
-        <img :alt="alt" :src="pokemon.picture" />
+        <b-img :alt="alt" fluid :src="src" />
       </b-col>
     </b-row>
     <template #modal-footer="{ close }">
@@ -33,15 +31,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import BattleMoveTab from './BattleMoveTab.vue'
 import ItemIcon from '@/components/Items/ItemIcon.vue'
 import PokemonInfoTab from './PokemonInfoTab.vue'
+import PokemonSkillTab from './PokemonSkillTab.vue'
+import TrainerMemoTab from './TrainerMemoTab.vue'
 import { getGamePokemonSummary } from '@/api/game'
 
 export default {
   name: 'PokemonSummary',
   components: {
+    BattleMoveTab,
     ItemIcon,
-    PokemonInfoTab
+    PokemonInfoTab,
+    PokemonSkillTab,
+    TrainerMemoTab
   },
   props: {
     pokemonId: {
@@ -64,7 +68,12 @@ export default {
       return `${this.$i18n.t('number')} ${this.number} ${this.pokemon.name}`
     },
     number() {
-      return ((this.gameTrainer.hasNationalPokedex ? this.pokemon.nationalNumber : this.pokemon.regionalNumber) ?? '???').toString().padStart(3, '0')
+      return this.pokemon.isEgg
+        ? '—'
+        : ((this.gameTrainer.hasNationalPokedex ? this.pokemon.nationalNumber : this.pokemon.regionalNumber) ?? '???').toString().padStart(3, '0')
+    },
+    src() {
+      return this.pokemon.isEgg ? '/img/egg.webp' : this.pokemon.picture
     }
   },
   watch: {
@@ -86,9 +95,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-img {
-  max-width: 360px;
-}
-</style>

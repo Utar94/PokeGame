@@ -22,7 +22,7 @@ export default {
       return species ? `${this.$i18n.t('number')} ${species.number.toString().padStart(3, '0')} ${species.name}` : null
     },
     src() {
-      if ((this.pokemon?.remainingHatchSteps ?? 0) > 0) {
+      if ((this.pokemon?.remainingHatchSteps ?? 0) > 0 || this.pokemon?.isEgg) {
         return '/img/egg.webp'
       }
       const species = this.species ?? this.pokemon?.species ?? null
