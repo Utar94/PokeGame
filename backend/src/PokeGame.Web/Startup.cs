@@ -96,6 +96,7 @@ namespace PokeGame.Web
         application.UseStaticFiles();
         application.UseSession();
         application.UseMiddleware<RenewSession>();
+        application.UseMiddleware<RedirectUnauthorized>();
         application.UseAuthentication();
         application.UseAuthorization();
         application.MapControllers();

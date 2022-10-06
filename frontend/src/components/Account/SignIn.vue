@@ -17,6 +17,7 @@
           <b-form-checkbox v-model="remember">{{ $t('users.signIn.remember') }}</b-form-checkbox>
         </b-form-group>
         <icon-submit :disabled="loading" icon="sign-in-alt" :loading="loading" text="users.signIn.submit" variant="primary" />
+        <b-link class="mx-1" href="/user/recover-password">{{ $t('users.signIn.recoverPassword') }}</b-link>
       </b-form>
     </validation-observer>
   </b-container>
@@ -69,7 +70,7 @@ export default {
             await signIn(this.payload)
             this.password = null
             this.$refs.form.reset()
-            window.location.replace(this.returnUrl || '/user/profile')
+            window.location.replace(this.returnUrl || '/game')
           }
         } catch (e) {
           this.password = null

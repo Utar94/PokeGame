@@ -16,6 +16,8 @@ export default {
   PokemonEdit: () => import(/* webpackChunkName: "pokemonEdit" */ './Pokemon/PokemonEdit.vue'),
   PokemonList: () => import(/* webpackChunkName: "pokemonList" */ './Pokemon/PokemonList.vue'),
   Profile: () => import(/* webpackChunkName: "profile" */ './Account/Profile.vue'),
+  RecoverPassword: () => import(/* webpackChunkName: "recoverPassword" */ './Account/RecoverPassword.vue'),
+  ResetPassword: () => import(/* webpackChunkName: "resetPassword" */ './Account/ResetPassword.vue'),
   SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue'),
   SignUp: () => import(/* webpackChunkName: "signUp" */ './Account/SignUp.vue'),
   SpeciesEdit: () => import(/* webpackChunkName: "speciesEdit" */ './Species/SpeciesEdit.vue'),
