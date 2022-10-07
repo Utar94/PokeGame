@@ -71,6 +71,11 @@
     "label": "Gender Ratio (Male)",
     "unit": "%"
   },
+  "hatchTime": {
+    "cycleFormat": "{cycles} cycle(s)",
+    "label": "Hatch Time",
+    "unit": "steps"
+  },
   "height": {
     "format": "{height} m",
     "label": "Height",

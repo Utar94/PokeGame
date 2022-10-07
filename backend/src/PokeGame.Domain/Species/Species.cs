@@ -31,6 +31,7 @@ namespace PokeGame.Domain.Species
     public byte BaseFriendship { get; private set; }
     public byte? CatchRate { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
+    public byte? EggCycles { get; private set; }
 
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public Dictionary<Statistic, byte> EvYield { get; private set; } = new();
@@ -106,6 +107,7 @@ namespace PokeGame.Domain.Species
       BaseFriendship = payload.BaseFriendship;
       CatchRate = payload.CatchRate;
       LevelingRate = payload.LevelingRate;
+      EggCycles = payload.EggCycles;
 
       BaseStatistics.Clear();
       if (payload.BaseStatistics != null)

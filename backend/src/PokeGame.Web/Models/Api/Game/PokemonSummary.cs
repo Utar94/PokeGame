@@ -18,7 +18,11 @@ namespace PokeGame.Web.Models.Api.Game
 
       IsEgg = pokemon.RemainingHatchSteps > 0;
 
-      if (!IsEgg)
+      if (IsEgg)
+      {
+        RemainingEggCycles = (byte)(pokemon.RemainingHatchSteps / 257);
+      }
+      else
       {
         Number = trainer.NationalPokedex
           ? species.Number
@@ -62,6 +66,7 @@ namespace PokeGame.Web.Models.Api.Game
     }
 
     public bool IsEgg { get; set; }
+    public byte RemainingEggCycles { get; set; }
 
     public int? Number { get; set; }
     public string? Name { get; set; }

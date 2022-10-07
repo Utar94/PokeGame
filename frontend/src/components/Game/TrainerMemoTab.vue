@@ -2,7 +2,14 @@
   <b-tab :title="$t('game.pokemon.trainerMemo')">
     <template v-if="pokemon.isEgg">
       <p v-html="$t('game.pokemon.metEgg', { date: $d(new Date(pokemon.metOn), 'card') })" />
-      <p v-html="$t('game.pokemon.eggWatch')" />
+      <p>
+        <span v-t="'game.pokemon.eggWatch'" />
+        <br />
+        <span v-if="pokemon.remainingEggCycles <= 5" v-html="$t('game.pokemon.remainingEggCycles.5OrFewer')" />
+        <span v-else-if="pokemon.remainingEggCycles <= 10" v-html="$t('game.pokemon.remainingEggCycles.6To10')" />
+        <span v-else-if="pokemon.remainingEggCycles <= 40" v-html="$t('game.pokemon.remainingEggCycles.11To40')" />
+        <span v-else v-html="$t('game.pokemon.remainingEggCycles.41OrMore')" />
+      </p>
     </template>
     <p v-else>
       <span v-html="$t('game.pokemon.natureFormat', { nature: pokemon.nature.name })" />

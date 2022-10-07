@@ -87,6 +87,23 @@
                 type="number"
                 v-model.number="catchRate"
               />
+            </b-row>
+            <b-row>
+              <form-field
+                class="col"
+                id="hatchSteps"
+                label="species.hatchTime.label"
+                :minValue="0"
+                :maxValue="65535"
+                :step="1"
+                type="number"
+                v-model.number="hatchSteps"
+              >
+                <b-input-group-append is-text>{{ $t('species.hatchTime.unit') }}</b-input-group-append>
+                <b-input-group-append is-text>{{ $t('species.hatchTime.cycleFormat', { cycles: eggCycles }) }}</b-input-group-append>
+              </form-field>
+            </b-row>
+            <b-row>
               <form-field class="col" id="height" label="species.height.label" :minValue="0" :step="0.1" type="number" v-model.number="height">
                 <b-input-group-append>
                   <b-input-group-text>{{ $t('species.height.unit') }}</b-input-group-text>
@@ -200,6 +217,7 @@ export default {
       },
       genderRatio: 50,
       genderUnknown: false,
+      hatchSteps: 0,
       height: 0,
       levelingRate: 'MediumFast',
       loading: false,
@@ -231,6 +249,9 @@ export default {
     canSubmit() {
       return !this.evYieldExceeded && this.hasChanges && !this.loading
     },
+    eggCycles() {
+      return Math.floor(this.hatchSteps / 257)
+    },
     hasChanges() {
       return (
         (!this.species && (this.number || this.primaryType || this.secondaryType)) ||
@@ -240,6 +261,7 @@ export default {
         this.ability2 !== (this.species?.abilities[1]?.id ?? null) ||
         this.payload.genderRatio !== (this.species?.genderRatio ?? 50) ||
         this.catchRate !== (this.species?.catchRate ?? 0) ||
+        this.eggCycles !== (this.species?.eggCycles ?? 0) ||
         this.height !== (this.species?.height ?? 0) ||
         this.weight !== (this.species?.weight ?? 0) ||
         this.baseExperienceYield !== (this.species?.baseExperienceYield ?? 0) ||
@@ -267,6 +289,7 @@ export default {
         abilityIds: [this.ability1, this.ability2].filter(id => id),
         genderRatio: this.genderUnknown ? null : this.genderRatio,
         catchRate: this.catchRate || null,
+        eggCycles: this.eggCycles || null,
         height: this.height || null,
         weight: this.weight || null,
         baseExperienceYield: this.baseExperienceYield || null,
@@ -310,6 +333,7 @@ export default {
       this.catchRate = species.catchRate ?? 0
       this.category = species.category
       this.description = species.description
+      this.hatchSteps = (species.eggCycles ?? 0) * 257
       this.genderRatio = species.genderRatio ?? 0
       this.genderUnknown = species.genderRatio === null
       this.height = species.height ?? 0
