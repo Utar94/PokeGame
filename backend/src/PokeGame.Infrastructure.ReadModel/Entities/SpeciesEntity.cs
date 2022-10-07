@@ -23,6 +23,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
     public byte BaseFriendship { get; private set; }
     public byte? CatchRate { get; private set; }
     public LevelingRate LevelingRate { get; private set; }
+    public byte? EggCycles { get; private set; }
 
     public string? BaseStatistics { get; private set; }
     public string? EvYield { get; private set; }
@@ -68,6 +69,7 @@ namespace PokeGame.Infrastructure.ReadModel.Entities
       BaseFriendship = species.BaseFriendship;
       CatchRate = species.CatchRate;
       LevelingRate = species.LevelingRate;
+      EggCycles = species.EggCycles;
 
       IEnumerable<KeyValuePair<Statistic, byte>> baseStatistics = species.BaseStatistics.Where(x => x.Value > 0);
       BaseStatistics = baseStatistics.Any()

@@ -16,6 +16,7 @@ namespace PokeGame.Domain.Species.Payloads
     public byte BaseFriendship { get; set; }
     public byte? CatchRate { get; set; }
     public LevelingRate LevelingRate { get; set; }
+    public byte? EggCycles { get; set; }
 
     public IEnumerable<StatisticValuePayload>? BaseStatistics { get; set; }
     public IEnumerable<StatisticValuePayload>? EvYield { get; set; }
