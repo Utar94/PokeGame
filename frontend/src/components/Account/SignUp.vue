@@ -83,7 +83,7 @@ export default {
         try {
           if (await this.$refs.form.validate()) {
             await signUp(this.payload)
-            window.location.replace('/user/profile')
+            window.location.replace('/game')
           }
         } catch (e) {
           this.handleError(e)
