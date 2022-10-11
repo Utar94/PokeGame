@@ -81,7 +81,7 @@ namespace PokeGame.Web.Controllers.Api
         Realm = Constants.Realm,
         Recipients = GetRecipients(email),
         Template = Constants.CreateUser.Template,
-        Variables = GetVariables(token.Token)
+        Variables = GetVariables(payload.Locale, token.Token)
       };
       SentMessagesModel messages = await _messageService.SendAsync(sendMessagePayload, cancellationToken);
       if (messages.Success.Count() != 1 || messages.Error.Any() || messages.Unsent.Any())
@@ -111,8 +111,13 @@ namespace PokeGame.Web.Controllers.Api
       return recipients;
     }
 
-    private static IEnumerable<VariablePayload> GetVariables(string token) => new VariablePayload[]
+    private static IEnumerable<VariablePayload> GetVariables(string? locale, string token) => new VariablePayload[]
     {
+      new()
+      {
+        Key = "Culture",
+        Value = locale
+      },
       new()
       {
         Key = "Token",
