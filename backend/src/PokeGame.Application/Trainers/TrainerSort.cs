@@ -2,7 +2,7 @@
 {
   public enum TrainerSort
   {
-    UpdatedAt = 0,
+    UpdatedOn = 0,
     Name = 1,
     Number = 2
   }

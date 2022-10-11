@@ -6,10 +6,10 @@ namespace PokeGame.Web.Models.Users
   {
     public ProfileModel(UserModel user)
     {
-      CreatedAt = user.CreatedAt;
-      PasswordChangedAt = user.PasswordChangedAt;
-      SignedInAt = user.SignedInAt;
-      UpdatedAt = user.UpdatedAt;
+      CreatedOn = user.CreatedAt;
+      PasswordChangedOn = user.PasswordChangedAt;
+      SignedInOn = user.SignedInAt;
+      UpdatedOn = user.UpdatedAt;
 
       Username = user.Username;
 
@@ -27,10 +27,10 @@ namespace PokeGame.Web.Models.Users
       Picture = user.Picture;
     }
 
-    public DateTime CreatedAt { get; set; }
-    public DateTime? PasswordChangedAt { get; set; }
-    public DateTime? SignedInAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime CreatedOn { get; set; }
+    public DateTime? PasswordChangedOn { get; set; }
+    public DateTime? SignedInOn { get; set; }
+    public DateTime? UpdatedOn { get; set; }
 
     public string Username { get; set; } = string.Empty;
 

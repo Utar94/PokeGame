@@ -16,7 +16,7 @@ namespace PokeGame.Infrastructure.Configurations
       builder.Property(x => x.EventData).HasColumnType("jsonb");
       builder.Property(x => x.EventType).HasMaxLength(256);
       builder.Property(x => x.Id).HasDefaultValueSql("uuid_generate_v4()");
-      builder.Property(x => x.OccurredAt).HasDefaultValueSql("now()");
+      builder.Property(x => x.OccurredOn).HasDefaultValueSql("now()");
       builder.Property(x => x.UserId).HasDefaultValue(Guid.Empty);
       builder.Property(x => x.Version).HasDefaultValue(0);
     }

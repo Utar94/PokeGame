@@ -7,6 +7,6 @@ namespace PokeGame.Application.Pokedex.Models
     public SpeciesModel? Species { get; set; }
 
     public bool HasCaught { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedOn { get; set; }
   }
 }

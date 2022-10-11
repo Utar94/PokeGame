@@ -15,7 +15,7 @@ namespace PokeGame.Web.Configuration
       _userService = userService;
     }
 
-    public async Task InitializeAsync(InitializeConfigurationModel payload, CancellationToken cancellationToken)
+    public async Task<UserModel> InitializeAsync(InitializeConfigurationModel payload, CancellationToken cancellationToken)
     {
       var createUserPayload = new CreateUserPayload
       {
@@ -28,7 +28,7 @@ namespace PokeGame.Web.Configuration
         LastName = payload.User.LastName,
         Locale = payload.User.Locale
       };
-      await _userService.CreateAsync(createUserPayload, cancellationToken);
+      return await _userService.CreateAsync(createUserPayload, cancellationToken);
     }
 
     public async Task<bool> IsInitializedAsync(CancellationToken cancellationToken)

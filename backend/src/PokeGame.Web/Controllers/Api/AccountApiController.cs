@@ -6,9 +6,11 @@ using Logitar.Portal.Core.Tokens.Models;
 using Logitar.Portal.Core.Tokens.Payloads;
 using Logitar.Portal.Core.Users.Models;
 using Logitar.Portal.Core.Users.Payloads;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Infrastructure;
+using PokeGame.ReadModel.Handlers.Users;
 using PokeGame.Web.Models.Api.Account;
 using PokeGame.Web.Models.Users;
 using System.Text.Json;
@@ -20,18 +22,21 @@ namespace PokeGame.Web.Controllers.Api
   public class AccountApiController : ControllerBase
   {
     private readonly IAccountService _accountService;
+    private readonly IMediator _mediator;
     private readonly ITokenService _tokenService;
     private readonly IUserContext _userContext;
     private readonly IUserService _userService;
 
     public AccountApiController(
       IAccountService accountService,
+      IMediator mediator,
       ITokenService tokenService,
       IUserContext userContext,
       IUserService userService
     )
     {
       _accountService = accountService;
+      _mediator = mediator;
       _tokenService = tokenService;
       _userContext = userContext;
       _userService = userService;
@@ -85,6 +90,7 @@ namespace PokeGame.Web.Controllers.Api
         Picture = model.Picture
       };
       user = await _accountService.SaveProfileAsync(_userContext.SessionId, payload, cancellationToken);
+      await _mediator.Publish(new SaveUser(user), cancellationToken);
 
       return Ok(new ProfileModel(user));
     }
@@ -130,7 +136,8 @@ namespace PokeGame.Web.Controllers.Api
         LastName = payload.LastName,
         Locale = payload.Locale
       };
-      await _userService.CreateAsync(createUserPayload, cancellationToken);
+      UserModel? user = await _userService.CreateAsync(createUserPayload, cancellationToken);
+      await _mediator.Publish(new SaveUser(user), cancellationToken);
 
       var signInPayload = new SignInPayload
       {

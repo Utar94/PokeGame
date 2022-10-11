@@ -12,7 +12,7 @@ namespace PokeGame.Infrastructure.Entities
     public Guid Id { get; private set; }
     public long Sid { get; private set; }
 
-    public DateTime OccurredAt { get; private set; }
+    public DateTime OccurredOn { get; private set; }
     public Guid UserId { get; private set; }
     public int Version { get; private set; }
 
@@ -32,7 +32,7 @@ namespace PokeGame.Infrastructure.Entities
 
         return new Event
         {
-          OccurredAt = change.OccurredAt,
+          OccurredOn = change.OccurredOn,
           UserId = change.UserId,
           Version = change.Version,
           EventType = eventType.GetName(),

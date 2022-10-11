@@ -33,7 +33,7 @@
             </td>
             <td>{{ $t(`items.category.options.${item.category}`) }}</td>
             <td v-text="item.price || '—'" />
-            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedAt || item.createdAt" /></td>
+            <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedOn || item.createdOn" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal

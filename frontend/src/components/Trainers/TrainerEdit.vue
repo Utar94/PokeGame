@@ -107,7 +107,7 @@ export default {
         (!this.trainer && (this.gender || this.number || this.region)) ||
         this.money !== (this.trainer?.money ?? 0) ||
         this.playTime !== (this.trainer?.playTime ?? 0) ||
-        this.userId !== (this.trainer?.userId ?? null) ||
+        this.userId !== (this.trainer?.user?.id ?? null) ||
         (this.name ?? '') !== (this.trainer?.name ?? '') ||
         (this.description ?? '') !== (this.trainer?.description ?? '') ||
         (this.reference ?? '') !== (this.trainer?.reference ?? '') ||
@@ -184,7 +184,7 @@ export default {
       this.playTime = trainer.playTime
       this.reference = trainer.reference
       this.region = trainer.region
-      this.userId = trainer.userId
+      this.userId = trainer.user?.id ?? null
     },
     async submit() {
       if (!this.loading) {

@@ -20,7 +20,7 @@
       </template>
     </td>
     <td v-text="species.category || '—'" />
-    <td><status-cell :actor="species.updatedBy || species.createdBy" :date="species.updatedAt || species.createdAt" /></td>
+    <td><status-cell :actor="species.updatedBy || species.createdBy" :date="species.updatedOn || species.createdOn" /></td>
     <td>
       <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${species.id}`" />
       <delete-modal

@@ -149,7 +149,7 @@
       "Level": "Level",
       "Name": "Name",
       "Position": "Position",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "statistics": "Statistics",

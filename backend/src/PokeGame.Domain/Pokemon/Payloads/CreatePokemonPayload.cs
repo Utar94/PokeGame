@@ -16,7 +16,7 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public string Nature { get; set; } = string.Empty;
 
     public IEnumerable<StatisticValuePayload>? IndividualValues { get; set; }
-    public Characteristic? Characteristic { get; set; }
+    public Characteristic Characteristic { get; set; }
 
     public ushort? CurrentHitPoints { get; set; }
   }

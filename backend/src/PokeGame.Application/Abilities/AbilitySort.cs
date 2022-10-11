@@ -2,7 +2,7 @@
 {
   public enum AbilitySort
   {
-    UpdatedAt = 0,
+    UpdatedOn = 0,
     Name = 1
   }
 }

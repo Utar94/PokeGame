@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Infrastructure;
-using PokeGame.Infrastructure.ReadModel;
+using PokeGame.ReadModel;
 
 namespace PokeGame.Web
 {

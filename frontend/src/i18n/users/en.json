@@ -1,5 +1,5 @@
 {
-  "createdAt": "Created on",
+  "createdOn": "Created on",
   "email": {
     "confirmed": "Confirmed",
     "label": "Email Address",
@@ -30,7 +30,7 @@
   "password": {
     "changeFailed": "Password change failed!",
     "changed": "Your password has been changed.",
-    "changedAt": "Last changed on",
+    "changedOn": "Last changed on",
     "confirm": {
       "label": "Password Confirmation",
       "placeholder": "Enter the same password again"
@@ -48,7 +48,7 @@
     "placeholder": "Enter your password",
     "submit": "Change password"
   },
-  "passwordChangedAt": "Password changed on",
+  "passwordChangedOn": "Password changed on",
   "phone": {
     "confirmed": "Confirmed",
     "label": "Phone Number",
@@ -95,21 +95,21 @@
     "submit": "Sign up",
     "title": "Sign Up"
   },
-  "signedInAt": "Last signed-in on",
+  "signedInOn": "Last signed-in on",
   "sort": {
     "options": {
       "Email": "Email address",
       "FirstMiddleLastName": "Name",
       "LastFirstMiddleName": "Last name, then first and middle names",
-      "PasswordChangedAt": "Password changed on",
+      "PasswordChangedOn": "Password changed on",
       "PhoneNumber": "Phone number",
-      "SignedInAt": "Signed-in on",
-      "UpdatedAt": "Updated on",
+      "SignedInOn": "Signed-in on",
+      "UpdatedOn": "Updated on",
       "Username": "Username"
     }
   },
   "title": "Users",
-  "updatedAt": "Last updated on",
+  "updatedOn": "Last updated on",
   "username": {
     "label": "Email Address / Username",
     "placeholder": "Enter your email address or username"

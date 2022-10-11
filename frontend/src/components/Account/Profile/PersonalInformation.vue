@@ -22,16 +22,16 @@
           </td>
         </tr>
         <tr>
-          <th scope="row" v-t="'users.createdAt'" />
-          <td>{{ $d(new Date(profile.createdAt), 'medium') }}</td>
+          <th scope="row" v-t="'users.createdOn'" />
+          <td>{{ $d(new Date(profile.createdOn), 'medium') }}</td>
         </tr>
-        <tr v-if="profile.updatedAt">
-          <th scope="row" v-t="'users.updatedAt'" />
-          <td>{{ $d(new Date(profile.updatedAt), 'medium') }}</td>
+        <tr v-if="profile.updatedOn">
+          <th scope="row" v-t="'users.updatedOn'" />
+          <td>{{ $d(new Date(profile.updatedOn), 'medium') }}</td>
         </tr>
-        <tr v-if="profile.signedInAt">
-          <th scope="row" v-t="'users.signedInAt'" />
-          <td>{{ $d(new Date(profile.signedInAt), 'medium') }}</td>
+        <tr v-if="profile.signedInOn">
+          <th scope="row" v-t="'users.signedInOn'" />
+          <td>{{ $d(new Date(profile.signedInOn), 'medium') }}</td>
         </tr>
       </tbody>
     </table>

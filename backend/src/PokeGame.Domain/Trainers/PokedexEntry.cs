@@ -2,13 +2,13 @@
 {
   public class PokedexEntry
   {
-    public PokedexEntry(bool hasCaught, DateTime updatedAt)
+    public PokedexEntry(bool hasCaught, DateTime updatedOn)
     {
       HasCaught = hasCaught;
-      UpdatedAt = updatedAt;
+      UpdatedOn = updatedOn;
     }
 
     public bool HasCaught { get; }
-    public DateTime UpdatedAt { get; }
+    public DateTime UpdatedOn { get; }
   }
 }

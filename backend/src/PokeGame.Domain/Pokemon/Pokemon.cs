@@ -29,7 +29,7 @@ namespace PokeGame.Domain.Pokemon
     public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
     public Nature Nature { get; private set; } = null!;
-    public Characteristic? Characteristic { get; private set; }
+    public Characteristic Characteristic { get; private set; }
     public string SpeciesName { get; private set; } = string.Empty;
     public string? Surname { get; private set; }
     public string? Description { get; private set; }
@@ -318,10 +318,7 @@ namespace PokeGame.Domain.Pokemon
 
       OriginalTrainerId = payload.OriginalTrainerId;
 
-      if (@event.Payload.Moves != null)
-      {
-        SetMoves(@event.Payload);
-      } // TODO(fpion): refactor
+      SetMoves(@event.Payload);
     }
     protected virtual void Apply(PokemonUsedMove @event)
     {

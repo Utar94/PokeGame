@@ -32,7 +32,7 @@
     "options": {
       "Name": "Name",
       "Price": "Price",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "title": "Items",
