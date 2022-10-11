@@ -9,14 +9,14 @@ namespace PokeGame.Domain
     public Guid Id { get; private set; } = Guid.NewGuid();
     public int Version { get; private set; }
 
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedOn { get; private set; }
     public Guid CreatedById { get; private set; }
 
-    public DateTime? DeletedAt { get; private set; }
+    public DateTime? DeletedOn { get; private set; }
     public Guid? DeletedById { get; private set; }
-    public bool IsDeleted => DeletedAt.HasValue && DeletedById.HasValue;
+    public bool IsDeleted => DeletedOn.HasValue && DeletedById.HasValue;
 
-    public DateTime? UpdatedAt { get; private set; }
+    public DateTime? UpdatedOn { get; private set; }
     public Guid? UpdatedById { get; private set; }
 
     public IReadOnlyCollection<DomainEvent> Changes => _changes.AsReadOnly();
@@ -45,7 +45,7 @@ namespace PokeGame.Domain
     protected void ApplyChange(DomainEvent change)
     {
       change.AggregateId = Id;
-      change.OccurredAt = DateTime.UtcNow;
+      change.OccurredOn = DateTime.UtcNow;
       change.Version = Version + 1;
 
       Dispatch(change);
@@ -65,12 +65,12 @@ namespace PokeGame.Domain
 
       if (Version == 0)
       {
-        CreatedAt = @event.OccurredAt;
+        CreatedOn = @event.OccurredOn;
         CreatedById = @event.UserId;
       }
       else
       {
-        UpdatedAt = @event.OccurredAt;
+        UpdatedOn = @event.OccurredOn;
         UpdatedById = @event.UserId;
       }
 
@@ -79,7 +79,7 @@ namespace PokeGame.Domain
 
     protected void Delete(DomainEvent @event)
     {
-      DeletedAt = @event.OccurredAt;
+      DeletedOn = @event.OccurredOn;
       DeletedById = @event.UserId;
     }
 

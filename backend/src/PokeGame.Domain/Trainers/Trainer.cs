@@ -108,7 +108,7 @@ namespace PokeGame.Domain.Trainers
     }
     protected virtual void Apply(SavedPokedex @event)
     {
-      Pokedex[@event.SpeciesId] = new(@event.HasCaught, @event.OccurredAt);
+      Pokedex[@event.SpeciesId] = new(@event.HasCaught, @event.OccurredOn);
     }
     protected virtual void Apply(TrainerCreated @event)
     {

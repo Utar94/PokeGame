@@ -113,7 +113,7 @@
       "Category": "Category",
       "Name": "Name",
       "Number": "Number",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "title": "Species",

@@ -63,7 +63,7 @@
         "Height": "Height",
         "Name": "Name",
         "Number": "Number",
-        "UpdatedAt": "Updated on",
+        "UpdatedOn": "Updated on",
         "Weight": "Weight"
       }
     },
@@ -77,7 +77,7 @@
     "options": {
       "Name": "Name",
       "Number": "Number",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "title": "Trainers",

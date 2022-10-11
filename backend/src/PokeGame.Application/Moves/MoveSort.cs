@@ -2,7 +2,7 @@
 {
   public enum MoveSort
   {
-    UpdatedAt = 0,
+    UpdatedOn = 0,
     Name = 1
   }
 }

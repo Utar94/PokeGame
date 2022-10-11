@@ -36,7 +36,7 @@
   "sort": {
     "options": {
       "Name": "Name",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "stagesAndCondition": "Stages & Condition",

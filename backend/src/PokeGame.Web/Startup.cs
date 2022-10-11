@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using PokeGame.Application;
 using PokeGame.Infrastructure;
-using PokeGame.Infrastructure.ReadModel;
+using PokeGame.ReadModel;
 using PokeGame.Web.Authentication;
 using PokeGame.Web.Authorization;
 using PokeGame.Web.Configuration;

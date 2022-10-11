@@ -2,7 +2,7 @@
 {
   public enum PokemonSort
   {
-    UpdatedAt = 0,
+    UpdatedOn = 0,
     Name = 1,
     Level = 2,
     Position = 3

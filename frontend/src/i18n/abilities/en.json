@@ -15,7 +15,7 @@
   "sort": {
     "options": {
       "Name": "Name",
-      "UpdatedAt": "Updated on"
+      "UpdatedOn": "Updated on"
     }
   },
   "title": "Abilities",

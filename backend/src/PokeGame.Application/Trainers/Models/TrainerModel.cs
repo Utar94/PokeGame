@@ -6,7 +6,7 @@ namespace PokeGame.Application.Trainers.Models
 {
   public class TrainerModel : AggregateModel
   {
-    public Guid? UserId { get; set; }
+    public ActorModel? User { get; set; }
 
     public Region Region { get; set; }
     public int Number { get; set; }

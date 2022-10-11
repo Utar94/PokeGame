@@ -15,7 +15,7 @@
     </td>
     <td v-text="species.name" />
     <td>{{ $t(entry.hasCaught ? 'yes' : 'no') }}</td>
-    <td><status-cell :date="entry.updatedAt" /></td>
+    <td><status-cell :date="entry.updatedOn" /></td>
     <td>
       <icon-button class="mx-1" icon="edit" text="trainers.pokedex.edit" variant="primary" v-b-modal="`edit_${species.id}`" />
       <edit-entry-modal :entry="entry" :id="`edit_${species.id}`" :trainerId="trainerId" @updated="$emit('updated')" />

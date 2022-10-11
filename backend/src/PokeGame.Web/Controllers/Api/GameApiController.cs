@@ -54,7 +54,7 @@ namespace PokeGame.Web.Controllers.Api
       {
         return NotFound();
       }
-      else if (trainer.UserId != _userContext.Id)
+      else if (trainer.User?.Id != _userContext.Id)
       {
         return Forbid();
       }
@@ -77,7 +77,7 @@ namespace PokeGame.Web.Controllers.Api
       {
         return NotFound();
       }
-      else if (trainer.UserId != _userContext.Id || national && !trainer.NationalPokedex)
+      else if (trainer.User?.Id != _userContext.Id || national && !trainer.NationalPokedex)
       {
         return Forbid();
       }
@@ -101,7 +101,7 @@ namespace PokeGame.Web.Controllers.Api
       {
         return NotFound();
       }
-      else if (trainer.UserId != _userContext.Id)
+      else if (trainer.User?.Id != _userContext.Id)
       {
         return Forbid();
       }
@@ -125,7 +125,7 @@ namespace PokeGame.Web.Controllers.Api
       {
         return NotFound();
       }
-      else if (pokemon.History?.Trainer?.UserId != _userContext.Id)
+      else if (pokemon.History?.Trainer?.User?.Id != _userContext.Id)
       {
         return Forbid();
       }

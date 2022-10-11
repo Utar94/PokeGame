@@ -21,6 +21,7 @@
           <tr>
             <th scope="col" />
             <th scope="col" v-t="'name.label'" />
+            <th scope="col" v-t="'users.select.label'" />
             <th scope="col" v-t="'trainers.number'" />
             <th scope="col" v-t="'region.label'" />
             <th scope="col" v-t="'updated'" />
@@ -35,9 +36,17 @@
             <td>
               <b-link :href="`/trainers/${trainer.id}`"><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</b-link>
             </td>
+            <td>
+              <template v-if="trainer.user">
+                <b-link :href="`/users/${trainer.user.id}`" target="_blank"><user-avatar :user="trainer.user" /></b-link>
+                {{ ' ' }}
+                <b-link :href="`/users/${trainer.user.id}`" target="_blank">{{ trainer.user.name }} <font-awesome-icon icon="external-link-alt" /></b-link>
+              </template>
+              <template v-else>&mdash;</template>
+            </td>
             <td v-text="trainer.number" />
             <td>{{ $t(`region.options.${trainer.region}`) }}</td>
-            <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedAt || trainer.createdAt" /></td>
+            <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedOn || trainer.createdOn" /></td>
             <td>
               <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />
               <delete-modal
@@ -61,6 +70,7 @@
 <script>
 import GenderSelect from './GenderSelect.vue'
 import TrainerIcon from './TrainerIcon.vue'
+import UserAvatar from '@/components/Users/UserAvatar.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
 import { deleteTrainer, getTrainers } from '@/api/trainers'
 
@@ -69,6 +79,7 @@ export default {
   components: {
     GenderSelect,
     TrainerIcon,
+    UserAvatar,
     UserSelect
   },
   data() {

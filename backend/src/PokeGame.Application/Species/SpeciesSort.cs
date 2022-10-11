@@ -2,7 +2,7 @@
 {
   public enum SpeciesSort
   {
-    UpdatedAt = 0,
+    UpdatedOn = 0,
     Number = 1,
     Name = 2,
     Category = 3

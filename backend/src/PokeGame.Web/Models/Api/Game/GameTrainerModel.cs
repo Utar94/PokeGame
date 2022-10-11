@@ -21,7 +21,7 @@ namespace PokeGame.Web.Models.Api.Game
       Pokedex = model.PokedexCount;
 
       PlayTime = model.PlayTime;
-      AdventureStarted = model.CreatedAt;
+      AdventureStarted = model.CreatedOn;
 
       Picture = model.Picture;
     }

@@ -1,6 +1,6 @@
 {
   "name": "pokegame-app",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "watch": "vue-cli-service build --watch --mode development",
