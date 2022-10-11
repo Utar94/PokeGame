@@ -77,6 +77,7 @@ namespace PokeGame.Web.Controllers.Api
 
       var sendMessagePayload = new SendMessagePayload
       {
+        IgnoreUserLocale = true,
         Locale = payload.Locale,
         Realm = Constants.Realm,
         Recipients = GetRecipients(email),
