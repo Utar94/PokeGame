@@ -10,7 +10,7 @@
           <pokemon-evolution class="mx-1" :evolutions="evolutions" :pokemon="pokemon" @updated="onPokemonEvolved" />
           <template v-if="hasTrainer">
             <icon-button class="mx-1" icon="info-circle" text="pokemon.summary" variant="info" @click="showSummary = true" />
-            <pokemon-summary :pokemonId="pokemon.id" v-model="showSummary" />
+            <pokemon-summary is-admin :pokemonId="pokemon.id" v-model="showSummary" />
           </template>
         </div>
         <b-tabs content-class="mt-3">

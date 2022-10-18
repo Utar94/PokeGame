@@ -132,5 +132,7 @@ namespace PokeGame.Web.Controllers.Api
 
       return Ok(new PokemonSummary(pokemon));
     }
+
+    private new ActionResult Forbid() => StatusCode(StatusCodes.Status403Forbidden);
   }
 }

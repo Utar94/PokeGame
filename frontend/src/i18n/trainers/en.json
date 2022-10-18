@@ -16,6 +16,10 @@
     },
     "placeholder": "Select a gender"
   },
+  "healParty": {
+    "label": "Heal Party",
+    "success": "The trainer party Pokémon have been healed. Their HP and moves PP have been restored, and condition removed."
+  },
   "inventory": {
     "add": "Add item",
     "added": "The item has been added.",

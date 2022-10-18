@@ -9,6 +9,15 @@
           <template v-if="trainer">
             <icon-submit class="mx-1" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
             <icon-button class="mx-1" href="/create-trainer" icon="plus" text="actions.create" variant="success" />
+            <icon-button
+              class="mx-1"
+              :disabled="!hasParty || loading"
+              icon="clinic-medical"
+              :loading="loading"
+              text="trainers.healParty.label"
+              variant="warning"
+              @click="onHealTrainerParty"
+            />
           </template>
           <icon-submit v-else :disabled="!hasChanges || loading" icon="plus" :loading="loading" text="actions.create" variant="success" />
         </div>
@@ -58,7 +67,8 @@ import InventoryTab from './InventoryTab.vue'
 import PokedexTab from './PokedexTab.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
-import { createTrainer, getTrainer, updateTrainer } from '@/api/trainers'
+import { createTrainer, getTrainer, healTrainerParty, updateTrainer } from '@/api/trainers'
+import { getPokemonList } from '@/api/pokemon'
 
 export default {
   name: 'TrainerEdit',
@@ -83,6 +93,7 @@ export default {
     return {
       description: null,
       gender: null,
+      hasParty: false,
       loading: false,
       money: 0,
       name: null,
@@ -163,6 +174,19 @@ export default {
       }
       this.number = digits.join('')
     },
+    async onHealTrainerParty() {
+      if (!this.loading) {
+        this.loading = true
+        try {
+          await healTrainerParty(this.trainer.id)
+          this.toast('success', 'trainers.healParty.success')
+        } catch (e) {
+          this.handleError(e)
+        } finally {
+          this.loading = false
+        }
+      }
+    },
     async onInventoryUpdated() {
       try {
         const { data } = await getTrainer(this.trainer.id)
@@ -209,9 +233,15 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     if (this.json) {
       this.setModel(JSON.parse(this.json))
+      try {
+        const { data } = await getPokemonList({ inParty: true, trainerId: this.trainer.id })
+        this.hasParty = data.total > 0
+      } catch (e) {
+        this.handleError(e)
+      }
     }
     if (this.status === 'created') {
       this.toast('success', 'trainers.created')

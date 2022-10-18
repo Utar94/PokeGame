@@ -18,7 +18,7 @@ namespace PokeGame.Web
     {
       UserModel? user = httpContext.GetUser();
 
-      return new(user, user == null ? false : IsAdministrator(user));
+      return new(user, user != null && IsAdministrator(user));
     }
 
     public bool IsAdministrator(UserModel user) => _administrators.Contains(user.Username.ToUpper());

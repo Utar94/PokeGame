@@ -36,6 +36,7 @@ import PokemonInfoTab from './PokemonInfoTab.vue'
 import PokemonSkillTab from './PokemonSkillTab.vue'
 import TrainerMemoTab from './TrainerMemoTab.vue'
 import { getGamePokemonSummary } from '@/api/game'
+import { getPokemonSummary } from '@/api/pokemon'
 
 export default {
   name: 'PokemonSummary',
@@ -47,6 +48,10 @@ export default {
     TrainerMemoTab
   },
   props: {
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
     pokemonId: {
       type: String,
       default: ''
@@ -78,7 +83,7 @@ export default {
       async handler(pokemonId) {
         if (pokemonId) {
           try {
-            const { data } = await getGamePokemonSummary(pokemonId)
+            const { data } = this.isAdmin ? await getPokemonSummary(pokemonId) : await getGamePokemonSummary(pokemonId)
             this.pokemon = data
           } catch (e) {
             this.handleError(e)

@@ -8,6 +8,7 @@ using PokeGame.Application.Pokemon.Payloads;
 using PokeGame.Application.Pokemon.Queries;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Pokemon.Payloads;
+using PokeGame.Web.Models.Api.Game;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -72,6 +73,18 @@ namespace PokeGame.Web.Controllers.Api
       }
 
       return Ok(pokemon);
+    }
+
+    [HttpGet("{id}/summary")]
+    public async Task<ActionResult<PokemonSummary>> GetSummaryAsync(Guid id, CancellationToken cancellationToken)
+    {
+      PokemonModel? pokemon = await _mediator.Send(new GetPokemonQuery(id), cancellationToken);
+      if (pokemon == null)
+      {
+        return NotFound();
+      }
+
+      return Ok(new PokemonSummary(pokemon));
     }
 
     [HttpPut("{id}")]

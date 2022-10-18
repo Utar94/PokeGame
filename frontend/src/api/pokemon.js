@@ -33,6 +33,10 @@ export async function getPokemonList(params) {
   return await get('/api/pokemon' + getQueryString(params))
 }
 
+export async function getPokemonSummary(id) {
+  return await get(`/api/pokemon/${id}/summary`)
+}
+
 export async function healPokemon(id, payload) {
   return await patch(`/api/pokemon/${id}/heal`, payload)
 }

@@ -21,7 +21,7 @@ namespace PokeGame.ReadModel.Queriers
     protected IQueryable<PokemonEntity> BaseQuery => _pokemon.AsNoTracking()
       .Include(x => x.Ability)
       .Include(x => x.Ball)
-      .Include(x => x.CurrentTrainer)
+      .Include(x => x.CurrentTrainer).ThenInclude(x => x!.User)
       .Include(x => x.HeldItem)
       .Include(x => x.Moves).ThenInclude(x => x.Move)
       .Include(x => x.OriginalTrainer)
