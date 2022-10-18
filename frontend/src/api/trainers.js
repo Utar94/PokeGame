@@ -1,4 +1,4 @@
-import { _delete, get, post, put } from '.'
+import { _delete, get, patch, post, put } from '.'
 import { getQueryString } from '@/helpers/queryUtils'
 
 export async function createTrainer(payload) {
@@ -15,6 +15,10 @@ export async function getTrainer(id) {
 
 export async function getTrainers(params) {
   return await get('/api/trainers' + getQueryString(params))
+}
+
+export async function healTrainerParty(id) {
+  return await patch(`/api/trainers/${id}/heal-party`)
 }
 
 export async function updateTrainer(id, payload) {

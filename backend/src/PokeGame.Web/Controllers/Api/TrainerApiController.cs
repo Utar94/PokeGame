@@ -76,5 +76,13 @@ namespace PokeGame.Web.Controllers.Api
     {
       return Ok(await _mediator.Send(new UpdateTrainerMutation(id, payload), cancellationToken));
     }
+
+    [HttpPatch("{id}/heal-party")]
+    public async Task<ActionResult> HealPartyAsync(Guid id, CancellationToken cancellationToken)
+    {
+      await _mediator.Send(new HealTrainerPartyMutation(id), cancellationToken);
+
+      return NoContent();
+    }
   }
 }
