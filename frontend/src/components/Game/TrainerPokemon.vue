@@ -26,7 +26,7 @@
         </table>
       </b-col>
     </b-row>
-    <pokemon-summary :pokemonId="selectedPokemon" v-model="showModal" />
+    <pokemon-summary :pokemon="summary" v-model="showModal" />
   </b-container>
 </template>
 
@@ -35,6 +35,7 @@ import { mapActions, mapGetters } from 'vuex'
 import PartyPokemonRow from './PartyPokemonRow.vue'
 import PokemonCell from './PokemonCell.vue'
 import PokemonSummary from './PokemonSummary.vue'
+import { getGamePokemonSummary } from '@/api/game'
 
 export default {
   name: 'TrainerPokemon',
@@ -45,8 +46,10 @@ export default {
   },
   data() {
     return {
+      interval: null,
       selectedPokemon: null,
-      showModal: false
+      showModal: false,
+      summary: null
     }
   },
   computed: {
@@ -60,16 +63,31 @@ export default {
   },
   methods: {
     ...mapActions(['loadGamePokemon', 'navigateGame', 'nextGameBox', 'previousGameBox']),
-    onClick(pokemon) {
-      this.selectedPokemon = pokemon?.id ?? null
-      this.showModal = this.selectedPokemon !== null
+    async onClick({ id }) {
+      this.selectedPokemon = id
+      this.showModal = true
+      await this.refresh()
+    },
+    async refresh() {
+      try {
+        if (this.selectedPokemon && this.showModal) {
+          const { data } = await getGamePokemonSummary(this.selectedPokemon)
+          this.summary = data
+        } else {
+          await this.loadGamePokemon()
+        }
+      } catch (e) {
+        this.handleError(e)
+      }
     }
   },
   async created() {
-    try {
-      await this.loadGamePokemon()
-    } catch (e) {
-      this.handleError(e)
+    await this.refresh()
+    this.interval = setInterval(this.refresh, Number(process.env.VUE_APP_REFRESH_RATE))
+  },
+  beforeDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval)
     }
   }
 }

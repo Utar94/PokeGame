@@ -6,8 +6,10 @@ namespace PokeGame.Web.Models.Api.Game
 {
   public class GameInventoryModel
   {
-    public GameInventoryModel(ListModel<InventoryModel> inventory)
+    public GameInventoryModel(ListModel<InventoryModel> inventory, int money)
     {
+      Money = money;
+
       Dictionary<ItemCategory, IEnumerable<GameInventoryLineModel>> items = inventory.Items.Where(x => x.Item != null)
         .GroupBy(x => x.Item!.Category)
         .ToDictionary(x => x.Key, x => x.Select(y => new GameInventoryLineModel(y)));
@@ -54,5 +56,7 @@ namespace PokeGame.Web.Models.Api.Game
     public IEnumerable<GameInventoryLineModel> TMs { get; set; } = Enumerable.Empty<GameInventoryLineModel>();
     public IEnumerable<GameInventoryLineModel> Treasures { get; set; } = Enumerable.Empty<GameInventoryLineModel>();
     public IEnumerable<GameInventoryLineModel> KeyItems { get; set; } = Enumerable.Empty<GameInventoryLineModel>();
+
+    public int Money { get; set; }
   }
 }

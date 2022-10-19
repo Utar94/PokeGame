@@ -10,7 +10,7 @@
           <pokemon-evolution class="mx-1" :evolutions="evolutions" :pokemon="pokemon" @updated="onPokemonEvolved" />
           <template v-if="hasTrainer">
             <icon-button class="mx-1" icon="info-circle" text="pokemon.summary" variant="info" @click="showSummary = true" />
-            <pokemon-summary is-admin :pokemonId="pokemon.id" v-model="showSummary" />
+            <pokemon-summary :pokemon="summary" v-model="showSummary" />
           </template>
         </div>
         <b-tabs content-class="mt-3">
@@ -358,7 +358,7 @@ import PokemonSummary from '@/components/Game/PokemonSummary.vue'
 import SwapModal from './SwapModal.vue'
 import TrainerSelect from '@/components/Trainers/TrainerSelect.vue'
 import WalkEggModal from './WalkEggModal.vue'
-import { updatePokemon } from '@/api/pokemon'
+import { getPokemonSummary, updatePokemon } from '@/api/pokemon'
 import { getSpeciesEvolutions } from '@/api/species'
 
 export default {
@@ -419,6 +419,7 @@ export default {
       settingModel: false,
       showSummary: false,
       statusCondition: null,
+      summary: null,
       surname: null
     }
   },
@@ -542,6 +543,14 @@ export default {
         this.handleError(e)
       }
     },
+    async loadSummary() {
+      try {
+        const { data } = await getPokemonSummary(this.pokemon.id)
+        this.summary = data
+      } catch (e) {
+        this.handleError(e)
+      }
+    },
     onExperienceUpdated(pokemon) {
       this.pokemon = pokemon
       this.currentHitPoints = pokemon.currentHitPoints
@@ -598,6 +607,7 @@ export default {
           if (await this.$refs.form.validate()) {
             const { data } = await updatePokemon(this.pokemon.id, this.payload)
             this.setModel(data)
+            await this.loadSummary()
             this.toast('success', 'pokemon.updated')
             this.$refs.form.reset()
           }
@@ -630,6 +640,7 @@ export default {
       this.toast('success', 'pokemon.created')
     }
     await this.loadEvolutions()
+    await this.loadSummary()
   },
   watch: {
     currentTrainer(trainer, previous) {

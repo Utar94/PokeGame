@@ -35,8 +35,6 @@ import ItemIcon from '@/components/Items/ItemIcon.vue'
 import PokemonInfoTab from './PokemonInfoTab.vue'
 import PokemonSkillTab from './PokemonSkillTab.vue'
 import TrainerMemoTab from './TrainerMemoTab.vue'
-import { getGamePokemonSummary } from '@/api/game'
-import { getPokemonSummary } from '@/api/pokemon'
 
 export default {
   name: 'PokemonSummary',
@@ -48,22 +46,13 @@ export default {
     TrainerMemoTab
   },
   props: {
-    isAdmin: {
-      type: Boolean,
-      default: false
-    },
-    pokemonId: {
-      type: String,
-      default: ''
+    pokemon: {
+      type: Object,
+      default: null
     },
     value: {
       type: Boolean,
       required: true
-    }
-  },
-  data() {
-    return {
-      pokemon: null
     }
   },
   computed: {
@@ -75,23 +64,6 @@ export default {
     },
     src() {
       return this.pokemon.isEgg ? '/img/egg.webp' : this.pokemon.picture
-    }
-  },
-  watch: {
-    pokemonId: {
-      immediate: true,
-      async handler(pokemonId) {
-        if (pokemonId) {
-          try {
-            const { data } = this.isAdmin ? await getPokemonSummary(pokemonId) : await getGamePokemonSummary(pokemonId)
-            this.pokemon = data
-          } catch (e) {
-            this.handleError(e)
-          }
-        } else {
-          this.pokemon = null
-        }
-      }
     }
   }
 }
