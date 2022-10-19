@@ -6,7 +6,7 @@
       <b-form @submit.prevent="submit">
         <div class="my-2">
           <icon-submit class="mx-1" :disabled="!canSubmit" icon="save" :loading="loading" text="actions.save" variant="primary" />
-          <icon-button class="mx-1" href="/create-pokemon" icon="plus" text="actions.create" variant="success" />
+          <icon-button class="mx-1" :disabled="hasChanges" href="/create-pokemon" icon="plus" text="actions.create" variant="success" />
           <pokemon-evolution class="mx-1" :evolutions="evolutions" :pokemon="pokemon" @updated="onPokemonEvolved" />
           <template v-if="hasTrainer">
             <icon-button class="mx-1" icon="info-circle" text="pokemon.summary" variant="info" @click="showSummary = true" />
@@ -561,7 +561,6 @@ export default {
     },
     setModel(pokemon) {
       this.pokemon = pokemon
-      this.ballId = pokemon.history?.ball?.id ?? null
       this.currentHitPoints = pokemon.currentHitPoints
       this.currentTrainer = pokemon.history?.trainer ?? null
       this.description = pokemon.description
@@ -574,12 +573,8 @@ export default {
       this.friendship = pokemon.friendship
       this.heldItemId = pokemon.heldItem?.id ?? null
       this.inParty = pokemon.box === null
-      this.metLevel = pokemon.history?.level ?? 1
-      this.metLocation = pokemon.history?.location ?? null
-      this.metOn = pokemon.history?.metOn ?? null
       this.moves = this.orderBy(pokemon.moves, 'position').map(({ move, remainingPowerPoints }) => ({ ...move, remainingPowerPoints }))
       this.notes = pokemon.notes
-      this.originalTrainer = pokemon.originalTrainer
       this.reference = pokemon.reference
       this.statusCondition = pokemon.statusCondition
       this.surname = pokemon.surname
@@ -587,6 +582,12 @@ export default {
       Vue.nextTick(() => {
         this.box = pokemon.box ?? 1
         this.position = pokemon.position ?? 1
+
+        this.ballId = pokemon.history?.ball?.id ?? null
+        this.metLevel = pokemon.history?.level ?? 1
+        this.metLocation = pokemon.history?.location ?? null
+        this.metOn = pokemon.history?.metOn ?? null
+        this.originalTrainer = pokemon.originalTrainer
       })
     },
     async submit() {
@@ -633,8 +634,8 @@ export default {
   watch: {
     currentTrainer(trainer, previous) {
       if (!trainer) {
-        this.inParty = true
         this.ballId = null
+        this.inParty = true
         this.metLevel = 1
         this.metLocation = null
         this.metOn = null
@@ -642,6 +643,7 @@ export default {
       } else if (!previous) {
         this.metLevel = this.pokemon.level
         this.metOn = new Date()
+        this.originalTrainer = trainer
       }
     },
     inParty() {

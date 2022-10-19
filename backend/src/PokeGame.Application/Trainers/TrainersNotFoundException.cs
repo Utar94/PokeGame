@@ -1,0 +1,23 @@
+﻿using System.Text;
+
+namespace PokeGame.Application.Trainers
+{
+  public class TrainersNotFoundException : Exception
+  {
+    public TrainersNotFoundException(IEnumerable<Guid> ids)
+      : base(GetMessage(ids))
+    {
+      Data["Ids"] = ids;
+    }
+
+    private static string GetMessage(IEnumerable<Guid> ids)
+    {
+      var message = new StringBuilder();
+
+      message.AppendLine("The specified trainers could not be found.");
+      message.AppendLine($"Ids: {string.Join(", ", ids)}");
+
+      return message.ToString();
+    }
+  }
+}

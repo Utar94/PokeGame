@@ -3,7 +3,7 @@
     :icon="isVictory ? 'crown' : 'skull'"
     :text="`battle.combatTracker.${isVictory ? 'victory' : 'defeat'}`"
     variant="primary"
-    @click="resetBattle"
+    @click="onBattleEnded"
   />
 </template>
 
@@ -19,7 +19,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['resetBattle'])
+    ...mapActions(['endBattle']),
+    async onBattleEnded() {
+      try {
+        await this.endBattle()
+      } catch (e) {
+        this.handleError(e)
+      }
+    }
   }
 }
 </script>

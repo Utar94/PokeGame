@@ -9,7 +9,7 @@
       </p>
       <template #modal-footer="{ cancel, ok }">
         <icon-button icon="ban" text="actions.cancel" @click="cancel()" />
-        <icon-button icon="running" text="battle.escape.label" variant="primary" @click="onOk(ok)" />
+        <icon-button icon="running" text="battle.escape.label" variant="primary" @click="onBattleEscaped(ok)" />
       </template>
     </b-modal>
   </span>
@@ -21,9 +21,13 @@ import { mapActions } from 'vuex'
 export default {
   name: 'EscapeBattle',
   methods: {
-    ...mapActions(['resetBattle']),
-    onOk(callback = null) {
-      this.resetBattle()
+    ...mapActions(['endBattle']),
+    async onBattleEscaped(callback = null) {
+      try {
+        await this.endBattle()
+      } catch (e) {
+        this.handleError(e)
+      }
       if (typeof callback === 'function') {
         callback()
       }

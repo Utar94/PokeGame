@@ -77,7 +77,7 @@ export default {
       const activeBattlingPokemon = Object.fromEntries(this.activeBattlingPokemon.map(pokemon => [pokemon.id, pokemon]))
       for (const pokemon of this.battlingOpponentPokemon) {
         if (!activeBattlingPokemon[pokemon.id]) {
-          this.toggleActiveBattlingPokemon(pokemon.id)
+          this.toggleActiveBattlingPokemon(pokemon)
         }
       }
     }

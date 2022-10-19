@@ -14,16 +14,19 @@ namespace PokeGame.Application.Pokemon.Mutations
   {
     private readonly IPokemonQuerier _querier;
     private readonly IRepository _repository;
+    private readonly IValidator<Trainer> _trainerValidator;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public CatchPokemonMutationHandler(
       IPokemonQuerier querier,
       IRepository repository,
+      IValidator<Trainer> trainerValidator,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
       _querier = querier;
       _repository = repository;
+      _trainerValidator = trainerValidator;
       _validator = validator;
     }
 
@@ -59,6 +62,14 @@ namespace PokeGame.Application.Pokemon.Mutations
       _validator.ValidateAndThrow(pokemon);
 
       await _repository.SaveAsync(pokemon, cancellationToken);
+
+      if (!trainer.Pokedex.TryGetValue(pokemon.SpeciesId, out PokedexEntry? entry) || !entry.HasCaught)
+      {
+        trainer.SavePokedex(pokemon.SpeciesId, hasCaught: true);
+        _trainerValidator.ValidateAndThrow(trainer);
+
+        await _repository.SaveAsync(trainer, cancellationToken);
+      }
 
       return await _querier.GetAsync(pokemon.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);

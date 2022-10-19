@@ -8,7 +8,7 @@
         <div class="my-2">
           <template v-if="ability">
             <icon-submit class="mx-1" :disabled="!hasChanges || loading" icon="save" :loading="loading" text="actions.save" variant="primary" />
-            <icon-button class="mx-1" href="/create-ability" icon="plus" text="actions.create" variant="success" />
+            <icon-button class="mx-1" :disabled="hasChanges" href="/create-ability" icon="plus" text="actions.create" variant="success" />
           </template>
           <icon-submit v-else :disabled="!hasChanges || loading" icon="plus" :loading="loading" text="actions.create" variant="success" />
         </div>
