@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "create": "Create",
+    "delete": "Delete",
+    "randomize": "Randomize",
+    "refresh": "Refresh",
+    "save": "Save"
+  },
+  "by": "By",
+  "copyright": "© PokéGame {version} 2022.",
+  "count": "Count",
+  "dcFormat": "DC: {dc}",
+  "description": {
+    "label": "Description",
+    "placeholder": "Enter a description"
+  },
+  "errorToast": {
+    "body": "An unexpected error occurred. Please try again later or contact our support team.",
+    "title": "Error!"
+  },
+  "experience": "Experience",
+  "gameData": "Game data",
+  "locale": {
+    "label": "Locale",
+    "placeholder": "Select a locale"
+  },
+  "metadata": "Metadata",
+  "name": {
+    "label": "Name",
+    "placeholder": "Enter a name"
+  },
+  "no": "No",
+  "notFound": {
+    "help": "The requested page could not be found.",
+    "lead": "Page Not Found",
+    "link": "Go to Home"
+  },
+  "notes": {
+    "label": "Notes",
+    "placeholder": "Type some notes about this element"
+  },
+  "number": "No.",
+  "picture": {
+    "label": "Picture",
+    "placeholder": "Paste the picture URL"
+  },
+  "reference": {
+    "label": "Reference",
+    "placeholder": "Place the link to the reference"
+  },
+  "region": {
+    "label": "Region",
+    "options": {
+      "Alola": "Alola",
+      "Galar": "Galar",
+      "Hoenn": "Hoenn",
+      "Indigo": "Indigo",
+      "Johto": "Johto",
+      "Kalos": "Kalos",
+      "Kanto": "Kanto",
+      "Sinnoh": "Sinnoh",
+      "Unova": "Unova"
+    },
+    "placeholder": "Select a region"
+  },
+  "search": {
+    "label": "Search",
+    "placeholder": "Enter something to search"
+  },
+  "sort": {
+    "desc": "Descending",
+    "label": "Sort",
+    "placeholder": "Select a sort option"
+  },
+  "statistic": {
+    "options": {
+      "Attack": "Attack",
+      "Defense": "Defense",
+      "HP": "HP",
+      "SpecialAttack": "Sp. Attack",
+      "SpecialDefense": "Sp. Defense",
+      "Speed": "Speed"
+    }
+  },
+  "statusDetail": {
+    "by": "by",
+    "createdOn": "Created on {date}",
+    "updatedOn": "Last updated on {date}"
+  },
+  "success": "Success!",
+  "system": "System",
+  "type": {
+    "label": "Type",
+    "options": {
+      "Bug": "Bug",
+      "Dark": "Dark",
+      "Dragon": "Dragon",
+      "Electric": "Electric",
+      "Fairy": "Fairy",
+      "Fighting": "Fighting",
+      "Fire": "Fire",
+      "Flying": "Flying",
+      "Ghost": "Ghost",
+      "Grass": "Grass",
+      "Ground": "Ground",
+      "Ice": "Ice",
+      "Normal": "Normal",
+      "Poison": "Poison",
+      "Psychic": "Psychic",
+      "Rock": "Rock",
+      "Steel": "Steel",
+      "Water": "Water"
+    },
+    "placeholder": "Select a type"
+  },
+  "updated": "Updated",
+  "warning": "Warning!",
+  "yes": "Yes"
+}

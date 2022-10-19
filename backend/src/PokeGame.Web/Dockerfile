@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["PokeGame.Web/PokeGame.Web.csproj", "PokeGame.Web/"]
-RUN dotnet restore "PokeGame.Web/PokeGame.Web.csproj"
+COPY ["src/PokeGame.Web/PokeGame.Web.csproj", "src/PokeGame.Web/"]
+RUN dotnet restore "src/PokeGame.Web/PokeGame.Web.csproj"
 COPY . .
-WORKDIR "/src/PokeGame.Web"
+WORKDIR "/src/src/PokeGame.Web"
 RUN dotnet build "PokeGame.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish

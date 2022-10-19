@@ -1,0 +1,194 @@
+{
+  "caughtWithBall": "Caught With Ball",
+  "characteristic": {
+    "label": "Characteristic",
+    "options": {
+      "AlertSounds": "It is alert to sounds.",
+      "CapableTakingHits": "It is capable of taking hits.",
+      "GoodEndurance": "It has good endurance.",
+      "GoodPerseverance": "It has good perseverance.",
+      "HatesLose": "It hates to lose.",
+      "HighlyCurious": "It is highly curious.",
+      "HighlyPersistent": "It is highly persistent.",
+      "ImpetuousSilly": "It is impetuous and silly.",
+      "LikesFight": "It likes to fight.",
+      "LikesRelax": "It likes to relax.",
+      "LikesRun": "It likes to run.",
+      "LikesThrashAbout": "It likes to thrash about.",
+      "LittleQuickTempered": "It is a little quick tempered.",
+      "LovesEat": "It loves to eat.",
+      "Mischievous": "It is mischievous.",
+      "NodsOffLot": "It nods off a lot.",
+      "OftenLostThought": "It is often lost in thought.",
+      "ProudPower": "It is proud of its power.",
+      "QuickFlee": "It is quick to flee.",
+      "QuickTempered": "It is quick tempered.",
+      "ScattersThingsOften": "It scatters things often.",
+      "SomewhatClown": "It is somewhat of a clown.",
+      "SomewhatStubborn": "It is somewhat stubborn.",
+      "SomewhatVain": "It is somewhat vain.",
+      "StrongWilled": "It is strong willed.",
+      "StronglyDefiant": "It is strongly defiant.",
+      "SturdyBody": "It has a sturdy body.",
+      "TakesPlentySiestas": "It takes plenty of siestas.",
+      "ThoroughlyCunning": "It is thoroughly cunning.",
+      "VeryFinicky": "It is very finicky."
+    },
+    "placeholder": "Select a characteristic"
+  },
+  "condition": {
+    "label": "Status Condition",
+    "options": {
+      "Burn": "Burn",
+      "Freeze": "Freeze",
+      "Paralysis": "Paralysis",
+      "Poison": "Poison",
+      "Sleep": "Sleep"
+    },
+    "placeholder": "Select a status condition"
+  },
+  "created": "The Pokémon has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following Pokémon?",
+    "success": "The Pokémon has been deleted.",
+    "title": "Delete Pokémon"
+  },
+  "editTitle": "Edit Pokémon: {name}",
+  "effortValues": {
+    "exceeded": "The sum for the EV cannot exceed 510.",
+    "title": "Effort Values (EV)",
+    "totalFormat": "Total EV: {total} (max: 510)"
+  },
+  "empty": "This list is empty.",
+  "evolution": {
+    "condition": "Condition",
+    "current": "Current",
+    "empty": "This Pokémon has no evolution.",
+    "evolve": "Evolve",
+    "evolved": "The Pokémon has evolved.",
+    "success": "Success",
+    "title": "Evolve Pokémon"
+  },
+  "experience": {
+    "add": "Add",
+    "gained": "The Pokémon has gained experience.",
+    "leveledUp": "The Pokémon has leveled-up. Be sure to checkout its newly learnt moves and possible evolutions.",
+    "title": "Add Experience",
+    "toNextLevelFormat": "To Next Level: {experience}",
+    "warning": "The Pokémon will level-up."
+  },
+  "fainted": "Fainted",
+  "friendship": "Friendship",
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "Female": "Female",
+      "Male": "Male",
+      "Unknown": "Unknown"
+    },
+    "placeholder": "Select a gender"
+  },
+  "heldItem": {
+    "current": "Current Held Item: ",
+    "label": "Held Item",
+    "placeholder": "No held item",
+    "saved": "The held item has been saved.",
+    "title": "Manage Held Item"
+  },
+  "identification": "Identification",
+  "individualValues": {
+    "title": "Individual Values (IV)",
+    "totalFormat": "Total IV: {total} (average: 93)"
+  },
+  "level": "Level",
+  "levelFormat": "Lv. {level}",
+  "moves": {
+    "add": "Add move",
+    "remainingPowerPoints": "Remaining Power Points",
+    "title": "Moves"
+  },
+  "nature": {
+    "label": "Nature",
+    "options": {
+      "Adamant": "Adamant",
+      "Bashful": "Bashful",
+      "Bold": "Bold",
+      "Brave": "Brave",
+      "Calm": "Calm",
+      "Careful": "Careful",
+      "Docile": "Docile",
+      "Gentle": "Gentle",
+      "Hardy": "Hardy",
+      "Hasty": "Hasty",
+      "Impish": "Impish",
+      "Jolly": "Jolly",
+      "Lax": "Lax",
+      "Lonely": "Lonely",
+      "Mild": "Mild",
+      "Modest": "Modest",
+      "Naive": "Naive",
+      "Naughty": "Naughty",
+      "Quiet": "Quiet",
+      "Quirky": "Quirky",
+      "Rash": "Rash",
+      "Relaxed": "Relaxed",
+      "Sassy": "Sassy",
+      "Serious": "Serious",
+      "Timid": "Timid"
+    },
+    "placeholder": "Select a nature"
+  },
+  "newTitle": "Create Pokémon",
+  "remainingHatchSteps": "Remaining Hatch Steps",
+  "select": {
+    "label": "Pokémon",
+    "placeholder": "Select a Pokémon"
+  },
+  "sort": {
+    "options": {
+      "Level": "Level",
+      "Name": "Name",
+      "Position": "Position",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "statistics": "Statistics",
+  "summary": "Summary",
+  "surname": {
+    "label": "Surname",
+    "placeholder": "Enter a surname"
+  },
+  "title": "Pokémon",
+  "trainer": {
+    "box": "Box",
+    "boxFormat": "Box {box} ({position})",
+    "current": "Current Trainer",
+    "history": "History",
+    "inBox": "In Box",
+    "location": "Location",
+    "metLevel": "Met at Level",
+    "metLocation": {
+      "label": "Met Location",
+      "placeholder": "Enter the location"
+    },
+    "metOn": "Met On",
+    "original": "Original Trainer",
+    "party": "In Party",
+    "partyFormat": "In Party ({position})",
+    "position": "Position",
+    "positionAlreadyUsed": "The Pokémon position (box/party & position) is already used by another Pokémon.",
+    "swap": "Swap",
+    "swapped": "The selected Pokémon have been swapped.",
+    "swapTitle": "Swap Pokémon",
+    "title": "Trainer"
+  },
+  "updated": "The Pokémon has been updated.",
+  "walkEgg": {
+    "hatched": "The Pokémon egg has hatched! Please review this Pokémon details.",
+    "label": "Walk",
+    "steps": "Steps",
+    "title": "Walk Egg",
+    "walked": "The Pokémon egg has been walked."
+  },
+  "wild": "Wild Pokémon"
+}

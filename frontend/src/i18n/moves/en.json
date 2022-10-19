@@ -1,0 +1,54 @@
+{
+  "accuracy": {
+    "label": "Accuracy",
+    "neverMisses": "This move never misses.",
+    "unit": "%"
+  },
+  "category": {
+    "label": "Category",
+    "options": {
+      "Physical": "Physical",
+      "Special": "Special",
+      "Status": "Status"
+    },
+    "placeholder": "Select a category"
+  },
+  "condition": "Condition",
+  "created": "The move has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following move?",
+    "success": "The move has been deleted.",
+    "title": "Delete move"
+  },
+  "editTitle": "Edit move: {name}",
+  "empty": "This list is empty.",
+  "evasion": "Evasion",
+  "newTitle": "Create move",
+  "power": "Power",
+  "powerPoints": {
+    "label": "Power Points",
+    "unit": "PP"
+  },
+  "select": {
+    "label": "Move",
+    "placeholder": "Select a move"
+  },
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "stagesAndCondition": "Stages & Condition",
+  "statisticStages": "Statistic Stages",
+  "statusChance": {
+    "label": "Status Chance",
+    "unit": "%"
+  },
+  "title": "Moves",
+  "updated": "The move has been updated.",
+  "volatile": {
+    "label": "Volatile Conditions",
+    "placeholder": "Enter the volatile conditions separated by a comma ','"
+  }
+}

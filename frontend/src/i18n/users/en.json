@@ -1,0 +1,117 @@
+{
+  "createdOn": "Created on",
+  "email": {
+    "confirmed": "Confirmed",
+    "label": "Email Address",
+    "placeholder": "Enter your email address"
+  },
+  "empty": "This list is empty.",
+  "firstName": {
+    "label": "First Name",
+    "placeholder": "Enter your first name"
+  },
+  "fullName": "Name",
+  "information": {
+    "authentication": "Authentication Information",
+    "personal": "Personal Information"
+  },
+  "invite": {
+    "emailConflict": "The email address is already used.",
+    "emailPlaceholder": "Enter an email address",
+    "failed": "Invitation failed!",
+    "submit": "Invite",
+    "success": "The user has been invited.",
+    "title": "Invite user"
+  },
+  "lastName": {
+    "label": "Last Name",
+    "placeholder": "Enter your last name"
+  },
+  "password": {
+    "changeFailed": "Password change failed!",
+    "changed": "Your password has been changed.",
+    "changedOn": "Last changed on",
+    "confirm": {
+      "label": "Password Confirmation",
+      "placeholder": "Enter the same password again"
+    },
+    "current": {
+      "label": "Current Password",
+      "placeholder": "Enter your current password"
+    },
+    "invalidCredentials": "Please check you provided your correct current password.",
+    "label": "Password",
+    "new": {
+      "label": "New Password",
+      "placeholder": "Enter a new password"
+    },
+    "placeholder": "Enter your password",
+    "submit": "Change password"
+  },
+  "passwordChangedOn": "Password changed on",
+  "phone": {
+    "confirmed": "Confirmed",
+    "label": "Phone Number",
+    "placeholder": "Enter a phone number"
+  },
+  "picture": {
+    "label": "Picture URL",
+    "placeholder": "Paste the picture URL of the user"
+  },
+  "profile": {
+    "title": "Profile",
+    "updated": "Your profile has been updated."
+  },
+  "recoverPassword": {
+    "close": "You can now close this page.",
+    "info": "A password recovery message will be sent to your email address.",
+    "submit": "Recover password",
+    "success": "A message has been sent to your email address. Please make sure to check your spam folder.",
+    "title": "Recover Password"
+  },
+  "resetPassword": {
+    "info": "Create a new password to secure your account.",
+    "signIn": "Click on the button below to sign in to your account.",
+    "submit": "Reset password",
+    "success": "Your password has been changed.",
+    "title": "Reset Password"
+  },
+  "select": {
+    "label": "User",
+    "placeholder": "Select an user"
+  },
+  "signIn": {
+    "accountIsDisabled": "Your account is disabled.",
+    "failed": "Sign in failed!",
+    "invalidCredentials": "Please check you provided the correct email address/username and password.",
+    "recoverPassword": "I forgot my password",
+    "remember": "Remember me",
+    "submit": "Sign in",
+    "title": "Sign In"
+  },
+  "signOut": "Sign Out",
+  "signUp": {
+    "info": "Please complete the form below to sign up. You will be able to sign in to your account using the following email:",
+    "submit": "Sign up",
+    "title": "Sign Up"
+  },
+  "signedInOn": "Last signed-in on",
+  "sort": {
+    "options": {
+      "Email": "Email address",
+      "FirstMiddleLastName": "Name",
+      "LastFirstMiddleName": "Last name, then first and middle names",
+      "PasswordChangedOn": "Password changed on",
+      "PhoneNumber": "Phone number",
+      "SignedInOn": "Signed-in on",
+      "UpdatedOn": "Updated on",
+      "Username": "Username"
+    }
+  },
+  "title": "Users",
+  "updatedOn": "Last updated on",
+  "username": {
+    "label": "Email Address / Username",
+    "placeholder": "Enter your email address or username"
+  }
+}

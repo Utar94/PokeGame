@@ -1,0 +1,10 @@
+﻿@using PokeGame.Web.Models.Users;
+
+@model ProfileModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = "Profile";
+}
+
+<profile json="@(ModelSerializer.Serialize(Model))"></profile>

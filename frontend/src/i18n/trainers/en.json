@@ -1,0 +1,89 @@
+{
+  "created": "The trainer has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following trainer?",
+    "success": "The trainer has been deleted.",
+    "title": "Delete trainer"
+  },
+  "editTitle": "Edit trainer: {name}",
+  "empty": "This list is empty.",
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "Female": "Female",
+      "Male": "Male",
+      "Other": "Other"
+    },
+    "placeholder": "Select a gender"
+  },
+  "healParty": {
+    "label": "Heal Party",
+    "success": "The trainer party Pokémon have been healed. Their HP and moves PP have been restored, and condition removed."
+  },
+  "inventory": {
+    "add": "Add item",
+    "added": "The item has been added.",
+    "bought": "The item has been bought.",
+    "buy": "Buy",
+    "buyItem": "Buy item",
+    "category": "Category",
+    "empty": "This list is empty.",
+    "insufficientMoney": "The trainer does not have enough money.",
+    "item": "Item",
+    "itemPriceRequired": "The item price is required.",
+    "label": "Inventory",
+    "price": "Price",
+    "quantity": "Quantity",
+    "remove": "Remove item",
+    "removed": "The item has been removed.",
+    "sell": "Sell",
+    "sellItem": "Sell item",
+    "sold": "The item has been sold.",
+    "sort": {
+      "options": {
+        "ItemName": "Item Name",
+        "ItemPrice": "Item Price",
+        "Quantity": "Quantity"
+      }
+    }
+  },
+  "money": "Money",
+  "newTitle": "Create trainer",
+  "number": "Number",
+  "playTime": "Play Time (Minutes)",
+  "pokedex": {
+    "add": "Add entry",
+    "edit": "Edit entry",
+    "empty": "This list is empty.",
+    "hasCaught": "Caught",
+    "label": "Pokédex",
+    "remove": {
+      "confirm": "Do you really want to remove the following Pokédex entry?",
+      "success": "The Pokédex entry entry has been removed.",
+      "text": "Remove entry"
+    },
+    "sort": {
+      "options": {
+        "Height": "Height",
+        "Name": "Name",
+        "Number": "Number",
+        "UpdatedOn": "Updated on",
+        "Weight": "Weight"
+      }
+    },
+    "updated": "The Pokédex entry has been updated."
+  },
+  "select": {
+    "label": "Trainer",
+    "placeholder": "Select a trainer"
+  },
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "Number": "Number",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": "Trainers",
+  "updated": "The trainer has been updated."
+}

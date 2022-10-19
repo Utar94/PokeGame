@@ -1,0 +1,50 @@
+{
+  "adventureStarted": "Adventure started",
+  "back": "Back",
+  "bag": {
+    "itemDetail": "Item Detail",
+    "title": "Bag"
+  },
+  "boxFormat": "Box {box}",
+  "close": "Close",
+  "exit": "Exit",
+  "flavors": {
+    "Bitter": "bitter",
+    "Dry": "dry",
+    "Sour": "sour",
+    "Spicy": "spicy",
+    "Sweet": "sweet"
+  },
+  "playTime": "Play time",
+  "pokedex": {
+    "caught": "Caught: {caught}",
+    "national": "National Pokédex",
+    "number": "Pokédex No.",
+    "seen": "Seen: {seen}"
+  },
+  "pokemon": {
+    "battleMoves": "Battle Moves",
+    "currentExperience": "Current Exp. Points",
+    "eatAnything": "It happily eats anything.",
+    "egg": "Egg",
+    "eggWatch": "\"The Egg Watch\"",
+    "flavorFormat": "It likes <span class=\"text-danger\">{flavor}</span> food.",
+    "info": "Pokémon Info",
+    "metEgg": "A mysterious Pokémon Egg that I was given on {date}.",
+    "metFormat": "We first met one another on <span class=\"text-danger\">{date}</span>, and it was <span class=\"text-danger\">{location}</span>!",
+    "metLevel": "At the time, this Pokémon was Lv. {level}.",
+    "natureFormat": "This Pokémon is pretty <span class=\"text-danger\">{nature}</span> by nature.",
+    "pointsNeededToLevelUp": "Points needed to level up",
+    "remainingEggCycles": {
+      "5OrFewer": "Sounds can be heard coming from inside!<br />This Egg will hatch soon!",
+      "6To10": "It appears to move occasionally.<br />It may be close to hatching.",
+      "11To40": "What Pokémon will hatch from this Egg?<br />It doesn't seem close to hatching.",
+      "41OrMore": "It looks as though this Egg will take a long time yet to hatch."
+    },
+    "skills": "Pokémon Skills",
+    "summary": "Pokémon Summary",
+    "trainerMemo": "Trainer Memo"
+  },
+  "trainerCard": "Trainer Card",
+  "trainerNumber": "ID No."
+}
