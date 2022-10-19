@@ -6,6 +6,7 @@ import { getGameInventory, getGamePokedex, getGamePokemon, getGameTrainers } fro
 import { getPokemonList } from '@/api/pokemon'
 import { getStatisticModifier } from '@/helpers/statisticUtils'
 import { getTrainers } from '@/api/trainers'
+import { seenSpecies } from '@/api/pokedex'
 
 function getStageChange(value, change) {
   value += change
@@ -67,6 +68,7 @@ export default new Vuex.Store({
         pokemon: [],
         trainers: []
       },
+      seenSpecies: {},
       status: {},
       step: 'TrainerSelection'
     },
@@ -254,6 +256,15 @@ export default new Vuex.Store({
         commit('setBattleStep', 'Experience')
       }
     },
+    async endBattle({ dispatch, state }) {
+      const { battle } = state
+      const speciesIds = Object.keys(battle.seenSpecies)
+      const trainerIds = battle.players.trainers
+      if (speciesIds.length > 0 && trainerIds.length > 0) {
+        await seenSpecies({ speciesIds, trainerIds })
+      }
+      dispatch('resetBattle')
+    },
     increaseEscapeAttempts({ commit, state }) {
       commit('setEscapeAttempts', state.battle.escapeAttempts + 1)
     },
@@ -326,6 +337,7 @@ export default new Vuex.Store({
       commit('resetBattleMove')
       commit('resetBattleStatus')
       commit('resetBattleExperienceDistribution')
+      commit('resetBattleSeenSpecies')
       commit('setActiveBattlingPokemon', [])
       commit('setBattleLocation', null)
       commit('setBattlingPlayerPokemon', [])
@@ -340,6 +352,10 @@ export default new Vuex.Store({
         commit('setBattleStep', 'Battle')
       }
     },
+    resetGame({ commit, dispatch }) {
+      dispatch('setGameTrainer', null)
+      commit('setGameTrainers', null)
+    },
     setGameTrainer({ commit }, trainer) {
       commit('setGameTrainer', trainer)
       commit('setGameBox', null)
@@ -348,9 +364,17 @@ export default new Vuex.Store({
       commit('setGamePokedex', null)
       commit('setGamePokemon', null)
     },
-    toggleActiveBattlingPokemon({ commit, state }, id) {
+    toggleActiveBattlingPokemon({ commit, state }, pokemon) {
+      const { id, species } = pokemon
       let activePokemon = state.battle.activePokemon
-      activePokemon = activePokemon.includes(id) ? activePokemon.filter(pokemon => pokemon !== id) : activePokemon.concat([id])
+      if (activePokemon.includes(id)) {
+        activePokemon = activePokemon.filter(pokemon => pokemon !== id)
+      } else {
+        activePokemon = activePokemon.concat([id])
+        if (species) {
+          commit('seenSpeciesInBattle', species.id)
+        }
+      }
       commit('setActiveBattlingPokemon', activePokemon)
       commit('setBattleStatus', { id })
     },
@@ -582,8 +606,16 @@ export default new Vuex.Store({
         targets: {}
       }
     },
+    resetBattleSeenSpecies(state) {
+      state.battle.seenSpecies = {}
+    },
     resetBattleStatus(state) {
       state.battle.status = {}
+    },
+    seenSpeciesInBattle(state, speciesId) {
+      if (speciesId) {
+        state.battle.seenSpecies[speciesId] = true
+      }
     },
     setActiveBattlingPokemon(state, activePokemon) {
       state.battle.activePokemon = activePokemon ?? []

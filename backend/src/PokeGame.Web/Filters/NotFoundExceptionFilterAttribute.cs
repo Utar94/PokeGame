@@ -6,6 +6,7 @@ using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Species;
+using PokeGame.Application.Trainers;
 using PokeGame.Domain.Pokemon;
 using PokeGame.Domain.Trainers;
 
@@ -24,7 +25,8 @@ namespace PokeGame.Web.Filters
       [typeof(PokedexEntryNotFoundException)] = HandlePokedexEntryNotFound,
       [typeof(PokemonMoveNotFoundException)] = HandlePokemonMoveNotFound,
       [typeof(PokemonNotFoundException)] = HandlePokemonNotFound,
-      [typeof(SpeciesNotFoundException)] = HandleSpeciesNotFound
+      [typeof(SpeciesNotFoundException)] = HandleSpeciesNotFound,
+      [typeof(TrainersNotFoundException)] = HandleTrainersNotFound
     };
 
     public override void OnException(ExceptionContext context)
@@ -70,6 +72,9 @@ namespace PokeGame.Web.Filters
       => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
 
     private static ActionResult HandleSpeciesNotFound(ExceptionContext context)
+      => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
+
+    private static ActionResult HandleTrainersNotFound(ExceptionContext context)
       => new NotFoundObjectResult(new { Ids = context.Exception.Data["Ids"] });
   }
 }

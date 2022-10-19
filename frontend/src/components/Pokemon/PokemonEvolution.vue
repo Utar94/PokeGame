@@ -217,7 +217,6 @@ export default {
       this.timeOfDay = null
     },
     async submit(callback = null) {
-      console.log(callback)
       if (!this.loading) {
         this.loading = true
         try {

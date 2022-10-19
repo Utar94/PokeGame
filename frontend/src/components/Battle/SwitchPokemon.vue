@@ -5,7 +5,7 @@
     icon="exchange-alt"
     :text="active ? 'battle.combatTracker.withdraw' : 'battle.combatTracker.send'"
     variant="success"
-    @click="toggleActiveBattlingPokemon(pokemon.id)"
+    @click="toggleActiveBattlingPokemon(pokemon)"
   />
 </template>
 

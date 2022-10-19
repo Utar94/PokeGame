@@ -73,7 +73,7 @@
                 <font-awesome-icon icon="user" />
                 {{ currentUser.fullName || currentUser.username }}
               </b-dropdown-item>
-              <b-dropdown-item href="/user/sign-out">
+              <b-dropdown-item @click="onSignOut">
                 <font-awesome-icon icon="sign-out-alt" />
                 {{ $t('users.signOut') }}
               </b-dropdown-item>
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import UserAvatar from '@/components/Users/UserAvatar.vue'
 
 export default {
@@ -116,6 +117,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['resetGame']),
+    onSignOut() {
+      this.resetGame()
+      window.location.replace('/user/sign-out')
+    },
     setModel(currentUser) {
       this.currentUser = currentUser
     }

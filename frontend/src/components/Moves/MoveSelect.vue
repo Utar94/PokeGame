@@ -48,27 +48,32 @@ export default {
   },
   data() {
     return {
-      moves: {}
+      moves: null
     }
   },
   computed: {
     options() {
-      return Object.values(this.moves)
-        .filter(({ id }) => !this.exclude.includes(id))
-        .map(({ id, name }) => ({
-          text: name,
-          value: id
-        }))
+      return this.moves === null
+        ? []
+        : Object.values(this.moves)
+            .filter(({ id }) => !this.exclude.includes(id))
+            .map(({ id, name }) => ({
+              text: name,
+              value: id
+            }))
     }
   },
   methods: {
     onInput($event) {
-      this.$emit('input', this.moves[$event])
+      if (this.moves) {
+        this.$emit('input', this.moves[$event])
+      }
     }
   },
   async created() {
     try {
       const { data } = await getMoves({ sort: 'Name', desc: false })
+      this.moves = {}
       for (const move of data.items) {
         Vue.set(this.moves, move.id, move)
       }

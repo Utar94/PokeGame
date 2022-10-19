@@ -54,27 +54,32 @@ export default {
   },
   data() {
     return {
-      trainers: {}
+      trainers: null
     }
   },
   computed: {
     options() {
-      return Object.values(this.trainers)
-        .filter(({ id }) => !this.exclude.includes(id))
-        .map(({ id, name }) => ({
-          text: name,
-          value: id
-        }))
+      return this.trainers === null
+        ? []
+        : Object.values(this.trainers)
+            .filter(({ id }) => !this.exclude.includes(id))
+            .map(({ id, name }) => ({
+              text: name,
+              value: id
+            }))
     }
   },
   methods: {
     onInput($event) {
-      this.$emit('input', this.trainers[$event] ?? null)
+      if (this.trainers) {
+        this.$emit('input', this.trainers[$event] ?? null)
+      }
     }
   },
   async created() {
     try {
       const { data } = await getTrainers({ sort: 'Name', desc: false })
+      this.trainers = {}
       for (const trainer of data.items) {
         Vue.set(this.trainers, trainer.id, trainer)
       }

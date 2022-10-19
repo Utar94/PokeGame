@@ -12,16 +12,19 @@ namespace PokeGame.Application.Pokemon.Mutations
   {
     private readonly IPokemonQuerier _querier;
     private readonly IRepository _repository;
+    private readonly IValidator<Trainer> _trainerValidator;
     private readonly IValidator<Domain.Pokemon.Pokemon> _validator;
 
     public EvolvePokemonMutationHandler(
       IPokemonQuerier querier,
       IRepository repository,
+      IValidator<Trainer> trainerValidator,
       IValidator<Domain.Pokemon.Pokemon> validator
     )
     {
       _querier = querier;
       _repository = repository;
+      _trainerValidator = trainerValidator;
       _validator = validator;
     }
 
@@ -30,9 +33,16 @@ namespace PokeGame.Application.Pokemon.Mutations
       Domain.Pokemon.Pokemon pokemon = await _repository.LoadAsync<Domain.Pokemon.Pokemon>(request.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(request.Id);
 
+      if (pokemon.History == null)
+      {
+        throw new TrainerIsRequiredException(pokemon);
+      }
+      Trainer trainer = await _repository.LoadAsync<Trainer>(pokemon.History.TrainerId, cancellationToken)
+        ?? throw new EntityNotFoundException<Trainer>(pokemon.History.TrainerId);
+
       EvolvePokemonPayload payload = request.Payload;
 
-      bool removeHeldItem = await ValidateCanEvolveAsync(pokemon, payload, cancellationToken);
+      bool removeHeldItem = await ValidateCanEvolveAsync(payload, pokemon, trainer, cancellationToken);
 
       Domain.Species.Species evolvedSpecies = await _repository.LoadAsync<Domain.Species.Species>(payload.SpeciesId, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(payload.SpeciesId, nameof(payload.SpeciesId));
@@ -47,17 +57,20 @@ namespace PokeGame.Application.Pokemon.Mutations
 
       await _repository.SaveAsync(pokemon, cancellationToken);
 
+      if (!trainer.Pokedex.TryGetValue(pokemon.SpeciesId, out PokedexEntry? entry) || !entry.HasCaught)
+      {
+        trainer.SavePokedex(pokemon.SpeciesId, hasCaught: true);
+        _trainerValidator.ValidateAndThrow(trainer);
+
+        await _repository.SaveAsync(trainer, cancellationToken);
+      }
+
       return await _querier.GetAsync(pokemon.Id, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Pokemon.Pokemon>(pokemon.Id);
     }
 
-    public async Task<bool> ValidateCanEvolveAsync(Domain.Pokemon.Pokemon pokemon, EvolvePokemonPayload payload, CancellationToken cancellationToken)
+    public async Task<bool> ValidateCanEvolveAsync(EvolvePokemonPayload payload, Domain.Pokemon.Pokemon pokemon, Trainer trainer, CancellationToken cancellationToken)
     {
-      if (pokemon.History == null)
-      {
-        throw new TrainerIsRequiredException(pokemon);
-      }
-
       Domain.Species.Species evolvingSpecies = await _repository.LoadAsync<Domain.Species.Species>(pokemon.SpeciesId, cancellationToken)
         ?? throw new EntityNotFoundException<Domain.Species.Species>(pokemon.SpeciesId);
 
@@ -68,7 +81,6 @@ namespace PokeGame.Application.Pokemon.Mutations
 
       var errors = new List<string>(capacity: 8);
       bool removeHeldItem = false;
-      Trainer? trainer = null;
 
       if (evolution.Gender?.Equals(pokemon.Gender) == false)
       {
@@ -82,9 +94,6 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         if (evolution.Method == EvolutionMethod.Item)
         {
-          trainer = await _repository.LoadAsync<Trainer>(pokemon.History.TrainerId, cancellationToken)
-            ?? throw new EntityNotFoundException<Trainer>(pokemon.History.TrainerId);
-
           Item item = await _repository.LoadAsync<Item>(evolution.ItemId.Value, cancellationToken)
             ?? throw new EntityNotFoundException<Item>(evolution.ItemId.Value);
 
@@ -92,7 +101,7 @@ namespace PokeGame.Application.Pokemon.Mutations
           {
             trainer.RemoveItem(item, quantity: 1);
           }
-           catch (InsufficientQuantityException)
+          catch (InsufficientQuantityException)
           {
             errors.Add($"TrainerItem: (Expected={evolution.ItemId.Value})");
           }

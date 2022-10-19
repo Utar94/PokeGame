@@ -5,6 +5,7 @@ using PokeGame.Application.Models;
 using PokeGame.Application.Pokedex;
 using PokeGame.Application.Pokedex.Models;
 using PokeGame.Application.Pokedex.Mutations;
+using PokeGame.Application.Pokedex.Payloads;
 using PokeGame.Application.Pokedex.Queries;
 using PokeGame.Domain;
 using PokeGame.Web.Models.Api.Pokedex;
@@ -67,6 +68,14 @@ namespace PokeGame.Web.Controllers.Api
     public async Task<ActionResult<PokedexModel>> SaveAsync(Guid trainerId, Guid speciesId, [FromBody] PokedexPayload payload, CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new SavePokedexEntryMutation(trainerId, speciesId, payload.HasCaught), cancellationToken));
+    }
+
+    [HttpPatch("/api/pokedex/seen")]
+    public async Task<ActionResult> SeenAsync([FromBody] SeenSpeciesPayload payload, CancellationToken cancellationToken)
+    {
+      await _mediator.Send(new SeenSpeciesMutation(payload), cancellationToken);
+
+      return NoContent();
     }
   }
 }
