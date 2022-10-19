@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      interval: null,
       national: false,
       selectedEntry: null,
       showModal: false
@@ -62,20 +63,35 @@ export default {
     openEntry(entry) {
       this.selectedEntry = entry
       this.showModal = true
+    },
+    async refresh(national = null) {
+      try {
+        await this.loadGamePokedex(national ?? this.national)
+        if (this.selectedEntry) {
+          const entry = this.gamePokedex.entries.find(({ number }) => number === this.selectedEntry.number)
+          this.selectedEntry = entry ?? null
+          if (entry === null) {
+            this.showModal = false
+          }
+        }
+      } catch (e) {
+        this.handleError(e)
+      }
     }
   },
-  async created() {
-    try {
-      await this.loadGamePokedex()
-    } catch (e) {
-      this.handleError(e)
+  created() {
+    this.interval = setInterval(this.refresh, Number(process.env.VUE_APP_REFRESH_RATE))
+  },
+  beforeDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval)
     }
   },
   watch: {
     national: {
       immediate: true,
       async handler(national) {
-        await this.loadGamePokedex(national)
+        await this.refresh(national)
       }
     }
   }

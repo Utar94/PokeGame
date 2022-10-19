@@ -17,6 +17,10 @@ export async function getGamePokemonSummary(pokemonId) {
   return await get(`/api/game/trainers/pokemon/${pokemonId}`)
 }
 
+export async function getGameTrainer(id) {
+  return await get(`/api/game/trainers/${id}`)
+}
+
 export async function getGameTrainers() {
   return await get('/api/game/trainers')
 }

@@ -48,6 +48,11 @@ import TrainerIcon from '@/components/Trainers/TrainerIcon.vue'
 
 export default {
   name: 'GameMenu',
+  data() {
+    return {
+      interval: null
+    }
+  },
   components: {
     TrainerCard,
     TrainerIcon
@@ -56,7 +61,23 @@ export default {
     ...mapGetters(['gameTrainer'])
   },
   methods: {
-    ...mapActions(['navigateGame', 'setGameTrainer'])
+    ...mapActions(['loadGameTrainer', 'navigateGame', 'setGameTrainer']),
+    async refresh() {
+      try {
+        await this.loadGameTrainer()
+      } catch (e) {
+        this.handleError(e)
+      }
+    }
+  },
+  async created() {
+    await this.refresh()
+    this.interval = setInterval(this.refresh, Number(process.env.VUE_APP_REFRESH_RATE))
+  },
+  beforeDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 }
 </script>

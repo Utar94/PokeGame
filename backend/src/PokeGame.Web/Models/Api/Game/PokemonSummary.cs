@@ -1,5 +1,4 @@
-﻿using Microsoft.OpenApi.Extensions;
-using PokeGame.Application.Pokemon.Models;
+﻿using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Species.Models;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Domain;

@@ -46,6 +46,22 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(trainers.Items.Select(trainer => new GameTrainerModel(trainer)));
     }
 
+    [HttpGet("trainers/{id}")]
+    public async Task<ActionResult<GameTrainerModel>> GetTrainerAsync(Guid id, CancellationToken cancellationToken)
+    {
+      TrainerModel? trainer = await _mediator.Send(new GetTrainerQuery(id), cancellationToken);
+      if (trainer == null)
+      {
+        return NotFound();
+      }
+      else if (trainer.User?.Id != _userContext.Id)
+      {
+        return Forbid();
+      }
+
+      return Ok(new GameTrainerModel(trainer));
+    }
+
     [HttpGet("trainers/{id}/inventory")]
     public async Task<ActionResult<GameInventoryModel>> GetTrainerInventoryAsync(Guid id, CancellationToken cancellationToken)
     {
@@ -66,7 +82,7 @@ namespace PokeGame.Web.Controllers.Api
         Desc = false
       }, cancellationToken);
 
-      return Ok(new GameInventoryModel(inventory));
+      return Ok(new GameInventoryModel(inventory, trainer.Money));
     }
 
     [HttpGet("trainers/{id}/pokedex")]

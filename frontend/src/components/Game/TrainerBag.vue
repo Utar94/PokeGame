@@ -4,6 +4,14 @@
     <div class="my-2">
       <icon-button icon="arrow-left" text="game.back" variant="danger" @click="navigateGame(null)" />
     </div>
+    <table class="table">
+      <tbody>
+        <tr class="table-secondary">
+          <th scope="row" v-t="'trainers.money'" />
+          <td><pokemon-dollar /> {{ gameInventory.money }}</td>
+        </tr>
+      </tbody>
+    </table>
     <b-tabs content-class="mt-3">
       <bag-tab :items="gameInventory.medicine || []" title="items.category.options.Medicine" @selected="onItemSelected" />
       <bag-tab :items="gameInventory.pokeBalls || []" title="items.category.options.PokeBall" @selected="onItemSelected" />
@@ -40,6 +48,7 @@ export default {
   },
   data() {
     return {
+      interval: null,
       selectedItem: null,
       showModal: false
     }
@@ -52,13 +61,22 @@ export default {
     onItemSelected(item) {
       this.selectedItem = item
       this.showModal = true
+    },
+    async refresh() {
+      try {
+        await this.loadGameInventory()
+      } catch (e) {
+        this.handleError(e)
+      }
     }
   },
   async created() {
-    try {
-      await this.loadGameInventory()
-    } catch (e) {
-      this.handleError(e)
+    await this.refresh()
+    this.interval = setInterval(this.refresh, Number(process.env.VUE_APP_REFRESH_RATE))
+  },
+  beforeDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval)
     }
   }
 }

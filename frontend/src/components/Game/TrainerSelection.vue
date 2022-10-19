@@ -16,6 +16,11 @@ import TrainerCard from './TrainerCard.vue'
 
 export default {
   name: 'TrainerSelection',
+  data() {
+    return {
+      interval: null
+    }
+  },
   components: {
     TrainerCard
   },
@@ -23,13 +28,22 @@ export default {
     ...mapGetters(['gameTrainers'])
   },
   methods: {
-    ...mapActions(['loadGameTrainers', 'setGameTrainer'])
+    ...mapActions(['loadGameTrainers', 'setGameTrainer']),
+    async refresh() {
+      try {
+        await this.loadGameTrainers()
+      } catch (e) {
+        this.handleError(e)
+      }
+    }
   },
   async created() {
-    try {
-      await this.loadGameTrainers()
-    } catch (e) {
-      this.handleError(e)
+    await this.refresh()
+    this.interval = setInterval(this.refresh, Number(process.env.VUE_APP_REFRESH_RATE))
+  },
+  beforeDestroy() {
+    if (this.interval) {
+      clearInterval(this.interval)
     }
   }
 }
