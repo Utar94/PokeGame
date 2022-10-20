@@ -52,7 +52,7 @@
             </b-row>
             <description-field v-model="description" />
           </b-tab>
-          <b-tab v-if="move" :title="$t('moves.stagesAndCondition')">
+          <b-tab :title="$t('moves.stagesAndCondition')">
             <h4 v-t="'moves.statisticStages'" />
             <b-row>
               <form-field
