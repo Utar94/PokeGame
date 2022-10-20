@@ -83,7 +83,7 @@
                 label="species.catchRate"
                 :minValue="0"
                 :maxValue="255"
-                :step="5"
+                :step="1"
                 type="number"
                 v-model.number="catchRate"
               />
@@ -259,7 +259,7 @@ export default {
         (this.category ?? '') !== (this.species?.category ?? '') ||
         this.ability1 !== (this.species?.abilities[0]?.id ?? null) ||
         this.ability2 !== (this.species?.abilities[1]?.id ?? null) ||
-        this.payload.genderRatio !== (this.species?.genderRatio ?? 50) ||
+        this.payload.genderRatio !== (this.species ? this.species.genderRatio : 50) ||
         this.catchRate !== (this.species?.catchRate ?? 0) ||
         this.eggCycles !== (this.species?.eggCycles ?? 0) ||
         this.height !== (this.species?.height ?? 0) ||
