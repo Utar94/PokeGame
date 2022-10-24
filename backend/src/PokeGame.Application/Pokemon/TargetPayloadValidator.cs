@@ -5,7 +5,7 @@ namespace PokeGame.Application.Pokemon
 {
   internal class TargetPayloadValidator : AbstractValidator<TargetPayload>
   {
-    private static readonly HashSet<double> _effectiveness = new(new[] { 0.25, 0.5, 1.0, 2.0, 4.0 });
+    private static readonly HashSet<double> _effectiveness = new(new[] { 0, 0.25, 0.5, 1.0, 2.0, 4.0 });
 
     public TargetPayloadValidator()
     {
