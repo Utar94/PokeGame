@@ -410,8 +410,10 @@ export default {
       this.move = null
     },
     randomAbility() {
-      const index = Math.floor(Math.random() * this.species.abilities.length)
-      this.abilityId = this.species.abilities[index].id
+      if (this.species.abilities.length) {
+        const index = Math.floor(Math.random() * this.species.abilities.length)
+        this.abilityId = this.species.abilities[index].id
+      }
     },
     randomCharacteristic() {
       const index = Math.floor(Math.random() * this.characteristics.length)
@@ -505,10 +507,8 @@ export default {
         try {
           const { data } = await getSpecies(speciesId)
           this.species = data
-          if (this.species.abilities.length) {
-            this.randomAbility()
-            this.randomGender()
-          }
+          this.randomAbility()
+          this.randomGender()
           this.friendship = this.species.baseFriendship
         } catch (e) {
           this.handleError(e)
