@@ -544,11 +544,13 @@ export default {
       }
     },
     async loadSummary() {
-      try {
-        const { data } = await getPokemonSummary(this.pokemon.id)
-        this.summary = data
-      } catch (e) {
-        this.handleError(e)
+      if (this.hasTrainer) {
+        try {
+          const { data } = await getPokemonSummary(this.pokemon.id)
+          this.summary = data
+        } catch (e) {
+          this.handleError(e)
+        }
       }
     },
     onExperienceUpdated(pokemon) {
