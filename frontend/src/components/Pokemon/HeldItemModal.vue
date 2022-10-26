@@ -55,22 +55,18 @@ export default {
   },
   methods: {
     async refresh(trainerId = null) {
-      if (trainerId || this.pokemon?.history?.trainer.id) {
-        try {
-          const { data } = await getInventory(trainerId ?? this.trainerId)
-          this.inventory = data.items
-          this.reset()
-          if (this.heldItem) {
-            const item = this.inventory.find(({ item }) => item.id === this.heldItem.id)
-            if (!item) {
-              this.inventory.push({ item: this.heldItem, quantity: 0 })
-            }
+      try {
+        const { data } = await getInventory(trainerId ?? this.pokemon.history.trainer.id)
+        this.inventory = data.items
+        this.reset()
+        if (this.heldItem) {
+          const item = this.inventory.find(({ item }) => item.id === this.heldItem.id)
+          if (!item) {
+            this.inventory.push({ item: this.heldItem, quantity: 0 })
           }
-        } catch (e) {
-          this.handleError(e)
         }
-      } else {
-        this.inventory = []
+      } catch (e) {
+        this.handleError(e)
       }
     },
     reset() {
@@ -103,7 +99,7 @@ export default {
       deep: true,
       immediate: true,
       async handler(pokemon) {
-        await this.refresh(pokemon?.history?.trainer.id ?? null)
+        await this.refresh(pokemon.history.trainer.id)
       }
     }
   }

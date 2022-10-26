@@ -2,6 +2,7 @@
 {
   public abstract class SaveItemPayload
   {
+    public ItemType? Type { get; set; }
     public double? DefaultModifier { get; set; }
 
     public int? Price { get; set; }

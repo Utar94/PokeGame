@@ -249,7 +249,7 @@ export default new Vuex.Store({
         commit('setExperienceDefeatedPokemon', pokemonList)
         const active = Object.fromEntries(state.battle.activePokemon.map(id => [id, true]))
         for (const pokemon of getters.battlingPlayerPokemon) {
-          if (pokemon.currentHitPoints > 0 && (active[pokemon.id] || pokemon.heldItem?.name === 'Exp. Share')) {
+          if (pokemon.currentHitPoints > 0 && (active[pokemon.id] || pokemon.heldItem?.type === 'ExpShare')) {
             dispatch('toggleBattleExperienceWinner', pokemon)
           }
         }

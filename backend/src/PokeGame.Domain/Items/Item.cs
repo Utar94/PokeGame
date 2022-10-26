@@ -14,6 +14,7 @@ namespace PokeGame.Domain.Items
     }
 
     public ItemCategory Category { get; private set; }
+    public ItemType? Type { get; private set; }
     public double? DefaultModifier { get; private set; }
 
     public int? Price { get; private set; }
@@ -45,6 +46,7 @@ namespace PokeGame.Domain.Items
 
     private void Apply(SaveItemPayload payload)
     {
+      Type = payload.Type;
       DefaultModifier = payload.DefaultModifier;
 
       Price = payload.Price;

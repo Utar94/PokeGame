@@ -85,7 +85,7 @@
               </form-field>
             </b-row>
             <item-select id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId">
-              <b-input-group-append v-if="pokemon.history">
+              <b-input-group-append v-if="pokemon.history && pokemon.history.trainer">
                 <icon-button icon="shopping-cart" text="trainers.inventory.label" variant="primary" v-b-modal.heldItem />
                 <held-item-modal :pokemon="pokemon" @saved="onHeldItemSaved" />
               </b-input-group-append>

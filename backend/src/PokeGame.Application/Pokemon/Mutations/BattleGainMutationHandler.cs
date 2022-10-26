@@ -74,8 +74,8 @@ namespace PokeGame.Application.Pokemon.Mutations
           Experience = CalculateExperienceGain(defeatedPokemon, defeatedSpecies, winnerPayload, winnerPokemon, heldItem, payload.IsTrainerBattle)
         };
 
-        bool hasBeenCaughtWithLuxuryBall = ball?.Name == "Luxury Ball";
-        bool isHoldingSootheBell = heldItem?.Name == "Soothe Bell";
+        bool hasBeenCaughtWithLuxuryBall = ball?.Type == ItemType.LuxuryBall;
+        bool isHoldingSootheBell = heldItem?.Type == ItemType.SootheBell;
         winnerPokemon.GainedExperience(gainPayload, hasBeenCaughtWithLuxuryBall, isHoldingSootheBell);
         _validator.ValidateAndThrow(winnerPokemon);
       }
@@ -113,7 +113,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         experience *= 1.5;
       }
 
-      if (heldItem?.Name == "Lucky Egg")
+      if (heldItem?.Type == ItemType.LuckyEgg)
       {
         experience *= 1.5;
       }

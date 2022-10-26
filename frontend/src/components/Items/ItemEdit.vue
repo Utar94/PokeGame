@@ -16,9 +16,12 @@
           <b-tab :title="$t('gameData')">
             <b-row>
               <category-select class="col" :disabled="Boolean(item)" :required="!item" v-model="category" />
-              <ball-modifier-field v-if="category === 'PokeBall'" class="col" id="defaultModifier" v-model="defaultModifier" />
               <name-field class="col" required v-model="name" />
               <form-field class="col" id="price" label="items.price" :minValue="0" :maxValue="999999" :step="1" type="number" v-model.number="price" />
+            </b-row>
+            <b-row>
+              <ball-modifier-field v-if="category === 'PokeBall'" class="col" id="defaultModifier" v-model="defaultModifier" />
+              <item-type-select v-if="category === 'PokeBall' || category === 'OtherItem'" class="col" v-model="type" />
             </b-row>
             <description-field v-model="description" />
           </b-tab>
@@ -34,9 +37,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import BallModifierField from './BallModifierField.vue'
 import CategorySelect from './CategorySelect.vue'
 import ItemIcon from './ItemIcon.vue'
+import ItemTypeSelect from './ItemTypeSelect.vue'
 import { createItem, updateItem } from '@/api/items'
 
 export default {
@@ -44,7 +49,8 @@ export default {
   components: {
     BallModifierField,
     CategorySelect,
-    ItemIcon
+    ItemIcon,
+    ItemTypeSelect
   },
   props: {
     json: {
@@ -67,16 +73,19 @@ export default {
       notes: null,
       picture: null,
       price: 0,
-      reference: null
+      reference: null,
+      type: null,
+      types: {}
     }
   },
   computed: {
     hasChanges() {
       return (
         (!this.item && this.category) ||
-        (this.defaultModifier ?? 0) !== (this.item?.defaultModifier ?? 0) ||
         (this.name ?? '') !== (this.item?.name ?? '') ||
         this.price !== (this.item?.price ?? 0) ||
+        (this.defaultModifier ?? 0) !== (this.item?.defaultModifier ?? 0) ||
+        this.type !== (this.item?.type ?? null) ||
         (this.description ?? '') !== (this.item?.description ?? '') ||
         (this.reference ?? '') !== (this.item?.reference ?? '') ||
         (this.picture ?? '') !== (this.item?.picture ?? '') ||
@@ -85,6 +94,7 @@ export default {
     },
     payload() {
       const payload = {
+        type: this.type,
         defaultModifier: this.defaultModifier || null,
         name: this.name,
         price: this.price || null,
@@ -110,6 +120,7 @@ export default {
       this.picture = item.picture
       this.price = item.price ?? 0
       this.reference = item.reference
+      this.type = item.type
     },
     async submit() {
       if (!this.loading) {
@@ -135,11 +146,24 @@ export default {
     }
   },
   created() {
+    for (const [value, text] of Object.entries(this.$i18n.t('items.type.options'))) {
+      if (!this.types[text]) {
+        Vue.set(this.types, text, value)
+      }
+    }
     if (this.json) {
       this.setModel(JSON.parse(this.json))
     }
     if (this.status === 'created') {
       this.toast('success', 'items.created')
+    }
+  },
+  watch: {
+    name(text) {
+      const type = this.types[text]
+      if (type) {
+        this.type = type
+      }
     }
   }
 }
