@@ -36,5 +36,17 @@
     }
   },
   "title": "Items",
+  "type": {
+    "label": "Type",
+    "options": {
+      "ExpShare": "Exp. Share",
+      "FriendBall": "Friend Ball",
+      "HealBall": "Heal Ball",
+      "LuckyEgg": "Lucky Egg",
+      "LuxuryBall": "Luxury Ball",
+      "SootheBell": "Soothe Bell"
+    },
+    "placeholder": "Select a type"
+  },
   "updated": "The item has been updated."
 }

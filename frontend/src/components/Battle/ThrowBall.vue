@@ -232,9 +232,9 @@ export default {
   },
   watch: {
     catchSuccess() {
-      this.friendship = this.item?.name === 'Friend Ball' ? 200 : 0
+      this.friendship = this.item?.type === 'FriendBall' ? 200 : 0
       this.surname = null
-      if (this.item?.name === 'Heal Ball') {
+      if (this.item?.type === 'HealBall') {
         this.removeAllConditions = true
         this.restoreAllPowerPoints = true
         this.restoreHitPoints = 999

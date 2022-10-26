@@ -5,6 +5,7 @@ namespace PokeGame.ReadModel.Entities
   internal class ItemEntity : Entity
   {
     public ItemCategory Category { get; private set; }
+    public ItemType? Type { get; private set; }
     public double? DefaultModifier { get; private set; }
 
     public int? Price { get; private set; }
@@ -24,6 +25,7 @@ namespace PokeGame.ReadModel.Entities
       base.Synchronize(item);
 
       Category = item.Category;
+      Type = item.Type;
       DefaultModifier = item.DefaultModifier;
 
       Price = item.Price;
