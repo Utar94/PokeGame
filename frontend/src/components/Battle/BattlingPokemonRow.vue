@@ -43,14 +43,10 @@
         @click="makeBattleMove(pokemon)"
       />
       <switch-pokemon v-if="isTrainerBattle || team === 'players'" :active="active" :pokemon="pokemon" />
-      <icon-button
-        v-if="pokemon.currentHitPoints === 0 && team === 'opponents'"
-        class="mx-1"
-        icon="level-up-alt"
-        text="battle.experience.label"
-        variant="info"
-        @click="distributeExperience([pokemon])"
-      />
+      <template v-if="pokemon.currentHitPoints === 0 && team === 'opponents'">
+        <icon-button class="mx-1" icon="level-up-alt" text="battle.experience.label" variant="info" @click="distributeExperience([pokemon])" />
+        <icon-button class="mx-1" icon="times" text="actions.remove" variant="danger" @click="toggleBattlingOpponentPokemon(pokemon.id)" />
+      </template>
     </td>
   </tr>
 </template>
@@ -98,7 +94,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['distributeExperience', 'makeBattleMove'])
+    ...mapActions(['distributeExperience', 'makeBattleMove', 'toggleBattlingOpponentPokemon'])
   }
 }
 </script>
