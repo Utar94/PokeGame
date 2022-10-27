@@ -1,37 +1,29 @@
 ﻿using Microsoft.OpenApi.Models;
+using PokeGame.Web.Settings;
 
 namespace PokeGame.Web
 {
   internal static class OpenApiExtensions
   {
-    public static IServiceCollection AddOpenApi(this IServiceCollection services)
+    public static IServiceCollection AddOpenApi(this IServiceCollection services, ApiSettings apiSettings, Version version)
     {
       return services.AddSwaggerGen(config =>
       {
-        config.SwaggerDoc(name: $"v{Constants.Version.Split('.').First()}", new OpenApiInfo
+        config.SwaggerDoc(name: $"v{(version.Major == 0 ? 1 : version.Major)}", new OpenApiInfo
         {
-          Contact = new OpenApiContact
-          {
-            Email = "francispion@hotmail.com",
-            Name = "Francis Pion",
-            Url = new Uri("https://www.francispion.ca/")
-          },
-          Description = "Pokémon game management Web API.",
-          License = new OpenApiLicense
-          {
-            Name = "Use under MIT",
-            Url = new Uri("https://github.com/Utar94/PokeGame/blob/main/LICENSE")
-          },
-          Title = "PokéGame API",
-          Version = $"v{Constants.Version}"
+          Contact = apiSettings.Contact?.ToOpenApiContact(),
+          Description = apiSettings.Description,
+          License = apiSettings.License?.ToOpenApiLicense(),
+          Title = apiSettings.Title,
+          Version = $"v{version}"
         });
       });
     }
 
-    public static void UseOpenApi(this WebApplication application)
+    public static void UseOpenApi(this WebApplication application, ApiSettings apiSettings, Version version)
     {
       application.UseSwagger();
-      application.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", $"PokéGame API v{Constants.Version}"));
+      application.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", $"{apiSettings.Title} v{version}"));
     }
   }
 }

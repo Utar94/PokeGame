@@ -36,6 +36,5 @@
     }
 
     public const string Realm = "pokegame";
-    public const string Version = "0.2.1";
   }
 }
