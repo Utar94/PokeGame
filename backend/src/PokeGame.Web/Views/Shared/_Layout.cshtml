@@ -1,4 +1,5 @@
-﻿@inject UserService _userService;
+﻿@inject IConfiguration _configuration;
+@inject UserService _userService;
 
 <!DOCTYPE html>
 <html lang="@Thread.CurrentThread.CurrentUICulture.Name">
@@ -29,7 +30,7 @@
   <div id="app">
     <navbar user="@(ModelSerializer.Serialize(_userService.GetCurrentUser(Context)))"></navbar>
     @RenderBody()
-    <app-footer version="v@(Constants.Version)"></app-footer>
+    <app-footer version="v@(_configuration.GetValue<string>("Version"))"></app-footer>
   </div>
   <script src="~/dist/app.js"></script>
   <script src="~/dist/chunk-vendors.js"></script>

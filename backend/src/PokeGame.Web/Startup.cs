@@ -1,4 +1,5 @@
-﻿using Logitar.Portal.Client;
+﻿using FluentValidation;
+using Logitar.Portal.Client;
 using Microsoft.AspNetCore.Authorization;
 using PokeGame.Application;
 using PokeGame.Infrastructure;
@@ -8,17 +9,25 @@ using PokeGame.Web.Authorization;
 using PokeGame.Web.Configuration;
 using PokeGame.Web.Filters;
 using PokeGame.Web.Middlewares;
+using PokeGame.Web.Settings;
 using System.Text.Json.Serialization;
 
 namespace PokeGame.Web
 {
   internal class Startup : StartupBase
   {
+    private readonly ApiSettings _apiSettings;
     private readonly PortalSettings _portalSettings;
+    private readonly Version _version;
 
     public Startup(IConfiguration configuration)
     {
+      _apiSettings = configuration.GetSection("Api").Get<ApiSettings>() ?? new();
+      new ApiSettingsValidator().ValidateAndThrow(_apiSettings);
+
       _portalSettings = configuration.GetSection("Portal").Get<PortalSettings>() ?? new();
+
+      _version = new Version(configuration.GetValue<string>("Version"));
     }
 
     public override void ConfigureServices(IServiceCollection services)
@@ -61,7 +70,11 @@ namespace PokeGame.Web
         .AddDistributedMemoryCache();
 
       services.AddHttpContextAccessor();
-      services.AddOpenApi();
+
+      if (_apiSettings.Title != null)
+      {
+        services.AddOpenApi(_apiSettings, _version);
+      }
 
       services.AddApplicationInsightsTelemetry();
       services
@@ -87,9 +100,9 @@ namespace PokeGame.Web
     {
       if (applicationBuilder is WebApplication application)
       {
-        if (application.Environment.IsDevelopment())
+        if (_apiSettings.Title != null)
         {
-          application.UseOpenApi();
+          application.UseOpenApi(_apiSettings, _version);
         }
 
         application.UseHttpsRedirection();
