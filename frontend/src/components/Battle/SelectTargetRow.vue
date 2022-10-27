@@ -130,17 +130,22 @@ export default {
       const { level } = this.battleMoveAttacker
       const { attack, burn, critical, power, random, stab } = this.battleMoveDamage
       const { effectiveness, otherModifiers } = this.target
-      return Math.floor(
-        ((((2 * level) / 5 + 2) * power * (attack / this.defensiveStatisticValue)) / 50 + 2) *
-          this.targetsModifier *
-          this.weatherModifier *
-          (critical ? 1.5 : 1) *
-          (random / 100) *
-          stab *
-          effectiveness *
-          (burn ? 0.5 : 1) *
-          otherModifiers
-      )
+      return effectiveness === 0
+        ? 0
+        : Math.max(
+            1,
+            Math.floor(
+              ((((2 * level) / 5 + 2) * power * (attack / this.defensiveStatisticValue)) / 50 + 2) *
+                this.targetsModifier *
+                this.weatherModifier *
+                (critical ? 1.5 : 1) *
+                (random / 100) *
+                stab *
+                effectiveness *
+                (burn ? 0.5 : 1) *
+                otherModifiers
+            )
+          )
     },
     defensiveStatistic() {
       switch (this.selectedBattleMove.category) {

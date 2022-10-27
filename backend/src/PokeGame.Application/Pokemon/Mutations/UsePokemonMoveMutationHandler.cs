@@ -92,6 +92,11 @@ namespace PokeGame.Application.Pokemon.Mutations
       TargetPayload targetPayload
     )
     {
+      if (targetPayload.Effectiveness == 0)
+      {
+        return 0;
+      }
+
       ushort attack = 0;
       if (payload.Attack.HasValue!)
       {
@@ -183,7 +188,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         damage *= targetPayload.OtherModifiers.Value;
       }
 
-      return (ushort)Math.Floor(damage);
+      return (ushort)Math.Max(1, Math.Floor(damage));
     }
   }
 }
