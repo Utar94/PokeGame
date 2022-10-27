@@ -1,6 +1,6 @@
-﻿using Logitar.Portal.Client;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PokeGame.Web.Settings;
 
 namespace PokeGame.Web.Controllers
 {
@@ -9,9 +9,9 @@ namespace PokeGame.Web.Controllers
   [Route("users")]
   public class UserController : Controller
   {
-    private readonly PortalSettings _portalSettings;
+    private readonly ClientPortalSettings _portalSettings;
 
-    public UserController(PortalSettings portalSettings)
+    public UserController(ClientPortalSettings portalSettings)
     {
       _portalSettings = portalSettings;
     }

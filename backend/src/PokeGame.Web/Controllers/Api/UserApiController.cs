@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Models;
 using PokeGame.Web.Models.Api.User;
 using PokeGame.Web.Models.Users;
+using PokeGame.Web.Settings;
 using System.Text;
 using PortalModels = Logitar.Portal.Core;
 using UserModels = Logitar.Portal.Core.Users.Models;
@@ -25,6 +26,7 @@ namespace PokeGame.Web.Controllers.Api
     private readonly HashSet<RecipientPayload> _bcc;
     private readonly IMapper _mapper;
     private readonly IMessageService _messageService;
+    private readonly ClientPortalSettings _portalSettings;
     private readonly ITokenService _tokenService;
     private readonly IUserService _userService;
 
@@ -32,6 +34,7 @@ namespace PokeGame.Web.Controllers.Api
       IConfiguration configuration,
       IMapper mapper,
       IMessageService messageService,
+      ClientPortalSettings portalSettings,
       ITokenService tokenService,
       IUserService userService
     )
@@ -46,6 +49,7 @@ namespace PokeGame.Web.Controllers.Api
 
       _mapper = mapper;
       _messageService = messageService;
+      _portalSettings = portalSettings;
       _tokenService = tokenService;
       _userService = userService;
     }
@@ -56,7 +60,7 @@ namespace PokeGame.Web.Controllers.Api
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(isConfirmed, isDisabled, Constants.Realm, search,
+      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(isConfirmed, isDisabled, _portalSettings.Realm, search,
         sort, desc,
         index, count,
         cancellationToken);
@@ -68,7 +72,7 @@ namespace PokeGame.Web.Controllers.Api
     public async Task<ActionResult> InviteAsync([FromBody] InviteUserPayload payload, CancellationToken cancellationToken)
     {
       string email = payload.Email.Trim().ToLower();
-      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(realm: Constants.Realm, search: email, cancellationToken: cancellationToken);
+      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(realm: _portalSettings.Realm, search: email, cancellationToken: cancellationToken);
       if (users.Items.Any(x => x.Email?.ToLower() == email))
       {
         return Conflict(new { field = nameof(payload.Email) });
@@ -79,7 +83,7 @@ namespace PokeGame.Web.Controllers.Api
         Email = email,
         Lifetime = Constants.CreateUser.Lifetime,
         Purpose = Constants.CreateUser.Purpose,
-        Realm = Constants.Realm
+        Realm = _portalSettings.Realm
       };
       TokenModel token = await _tokenService.CreateAsync(createTokenPayload, cancellationToken);
 
@@ -87,7 +91,7 @@ namespace PokeGame.Web.Controllers.Api
       {
         IgnoreUserLocale = true,
         Locale = payload.Locale,
-        Realm = Constants.Realm,
+        Realm = _portalSettings.Realm,
         Recipients = GetRecipients(email),
         Template = Constants.CreateUser.Template,
         Variables = GetVariables(payload.Locale, token.Token)

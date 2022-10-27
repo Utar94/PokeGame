@@ -3,15 +3,18 @@ using Logitar.Portal.Core;
 using Logitar.Portal.Core.Users.Models;
 using Logitar.Portal.Core.Users.Payloads;
 using PokeGame.Web.Models.Api.Configuration;
+using PokeGame.Web.Settings;
 
 namespace PokeGame.Web.Configuration
 {
   internal class ConfigurationService : IConfigurationService
   {
+    private readonly ClientPortalSettings _portalSettings;
     private readonly IUserService _userService;
 
-    public ConfigurationService(IUserService userService)
+    public ConfigurationService(ClientPortalSettings portalSettings, IUserService userService)
     {
+      _portalSettings = portalSettings;
       _userService = userService;
     }
 
@@ -19,7 +22,7 @@ namespace PokeGame.Web.Configuration
     {
       var createUserPayload = new CreateUserPayload
       {
-        Realm = Constants.Realm,
+        Realm = _portalSettings.Realm,
         Username = payload.User.Username,
         Password = payload.User.Password,
         ConfirmEmail = true,
@@ -33,7 +36,7 @@ namespace PokeGame.Web.Configuration
 
     public async Task<bool> IsInitializedAsync(CancellationToken cancellationToken)
     {
-      ListModel<UserSummary> users = await _userService.GetAsync(realm: Constants.Realm, cancellationToken: cancellationToken);
+      ListModel<UserSummary> users = await _userService.GetAsync(realm: _portalSettings.Realm, cancellationToken: cancellationToken);
 
       return users.Items.Any();
     }
