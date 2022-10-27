@@ -34,6 +34,8 @@ namespace PokeGame.Web
     {
       base.ConfigureServices(services);
 
+      services.AddAutoMapper(typeof(Startup).Assembly);
+
       services
         .AddControllersWithViews(options =>
         {
