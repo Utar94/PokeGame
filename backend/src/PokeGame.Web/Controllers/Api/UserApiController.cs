@@ -1,16 +1,19 @@
-﻿using Logitar.Portal.Client;
-using Logitar.Portal.Core;
+﻿using AutoMapper;
+using Logitar.Portal.Client;
 using Logitar.Portal.Core.Emails.Messages;
 using Logitar.Portal.Core.Emails.Messages.Models;
 using Logitar.Portal.Core.Emails.Messages.Payloads;
 using Logitar.Portal.Core.Tokens.Models;
 using Logitar.Portal.Core.Tokens.Payloads;
 using Logitar.Portal.Core.Users;
-using Logitar.Portal.Core.Users.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PokeGame.Application.Models;
 using PokeGame.Web.Models.Api.User;
+using PokeGame.Web.Models.Users;
 using System.Text;
+using PortalModels = Logitar.Portal.Core;
+using UserModels = Logitar.Portal.Core.Users.Models;
 
 namespace PokeGame.Web.Controllers.Api
 {
@@ -20,12 +23,14 @@ namespace PokeGame.Web.Controllers.Api
   public class UserApiController : ControllerBase
   {
     private readonly HashSet<RecipientPayload> _bcc;
+    private readonly IMapper _mapper;
     private readonly IMessageService _messageService;
     private readonly ITokenService _tokenService;
     private readonly IUserService _userService;
 
     public UserApiController(
       IConfiguration configuration,
+      IMapper mapper,
       IMessageService messageService,
       ITokenService tokenService,
       IUserService userService
@@ -39,6 +44,7 @@ namespace PokeGame.Web.Controllers.Api
         })
         .ToHashSet() ?? new();
 
+      _mapper = mapper;
       _messageService = messageService;
       _tokenService = tokenService;
       _userService = userService;
@@ -50,17 +56,19 @@ namespace PokeGame.Web.Controllers.Api
       int? index, int? count,
       CancellationToken cancellationToken)
     {
-      return Ok(await _userService.GetAsync(isConfirmed, isDisabled, Constants.Realm, search,
+      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(isConfirmed, isDisabled, Constants.Realm, search,
         sort, desc,
         index, count,
-        cancellationToken));
+        cancellationToken);
+
+      return Ok(_mapper.Map<ListModel<UserSummary>>(users));
     }
 
     [HttpPost("invite")]
     public async Task<ActionResult> InviteAsync([FromBody] InviteUserPayload payload, CancellationToken cancellationToken)
     {
       string email = payload.Email.Trim().ToLower();
-      ListModel<UserSummary> users = await _userService.GetAsync(realm: Constants.Realm, search: email, cancellationToken: cancellationToken);
+      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(realm: Constants.Realm, search: email, cancellationToken: cancellationToken);
       if (users.Items.Any(x => x.Email?.ToLower() == email))
       {
         return Conflict(new { field = nameof(payload.Email) });
