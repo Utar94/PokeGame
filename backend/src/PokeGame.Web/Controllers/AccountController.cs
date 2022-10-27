@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Infrastructure;
 using PokeGame.Web.Models.Users;
+using PokeGame.Web.Settings;
 
 namespace PokeGame.Web.Controllers
 {
@@ -13,20 +14,23 @@ namespace PokeGame.Web.Controllers
   [Route("user")]
   public class AccountController : Controller
   {
-    private readonly ILogger<AccountController> _logger;
     private readonly IAccountService _accountService;
+    private readonly ILogger<AccountController> _logger;
+    private readonly ClientPortalSettings _portalSettings;
     private readonly ITokenService _tokenService;
     private readonly IUserContext _userContext;
 
     public AccountController(
-      ILogger<AccountController> logger,
       IAccountService accountService,
+      ILogger<AccountController> logger,
+      ClientPortalSettings portalSettings,
       ITokenService tokenService,
       IUserContext userContext
     )
     {
-      _logger = logger;
       _accountService = accountService;
+      _logger = logger;
+      _portalSettings = portalSettings;
       _tokenService = tokenService;
       _userContext = userContext;
     }
@@ -91,7 +95,7 @@ namespace PokeGame.Web.Controllers
       var validateTokenPayload = new ValidateTokenPayload
       {
         Purpose = Constants.CreateUser.Purpose,
-        Realm = Constants.Realm,
+        Realm = _portalSettings.Realm,
         Token = token
       };
       ValidatedTokenModel validatedToken = await _tokenService.ValidateAsync(validateTokenPayload, cancellationToken);

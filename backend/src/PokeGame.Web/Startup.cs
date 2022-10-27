@@ -17,7 +17,7 @@ namespace PokeGame.Web
   internal class Startup : StartupBase
   {
     private readonly ApiSettings _apiSettings;
-    private readonly PortalSettings _portalSettings;
+    private readonly ClientPortalSettings _portalSettings;
     private readonly Version _version;
 
     public Startup(IConfiguration configuration)
@@ -25,7 +25,8 @@ namespace PokeGame.Web
       _apiSettings = configuration.GetSection("Api").Get<ApiSettings>() ?? new();
       new ApiSettingsValidator().ValidateAndThrow(_apiSettings);
 
-      _portalSettings = configuration.GetSection("Portal").Get<PortalSettings>() ?? new();
+      _portalSettings = configuration.GetSection("Portal").Get<ClientPortalSettings>() ?? new();
+      new PortalSettingsValidator().ValidateAndThrow(_portalSettings);
 
       _version = new Version(configuration.GetValue<string>("Version"));
     }

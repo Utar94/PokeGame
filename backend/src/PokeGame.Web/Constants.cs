@@ -34,7 +34,5 @@
 
       public static string[] All => new[] { Session };
     }
-
-    public const string Realm = "pokegame";
   }
 }

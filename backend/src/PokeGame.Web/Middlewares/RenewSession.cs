@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Client;
 using Logitar.Portal.Core.Accounts.Payloads;
 using Logitar.Portal.Core.Sessions.Models;
+using PokeGame.Web.Settings;
 using System.Text.Json;
 
 namespace PokeGame.Web.Middlewares
@@ -14,7 +15,7 @@ namespace PokeGame.Web.Middlewares
       _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IAccountService accountService)
+    public async Task InvokeAsync(HttpContext context, IAccountService accountService, ClientPortalSettings portalSettings)
     {
       if (!context.HasSession())
       {
@@ -28,7 +29,7 @@ namespace PokeGame.Web.Middlewares
               IpAddress = context.Connection.RemoteIpAddress?.ToString(),
               RenewToken = renewToken,
             };
-            SessionModel session = await accountService.RenewSessionAsync(Constants.Realm, payload);
+            SessionModel session = await accountService.RenewSessionAsync(portalSettings.Realm, payload);
             context.SignIn(session);
           }
           catch (Exception)

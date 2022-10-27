@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using PokeGame.ReadModel.Handlers.Users;
 using PokeGame.Web.Configuration;
 using PokeGame.Web.Models.Api.Configuration;
+using PokeGame.Web.Settings;
 using System.Text.Json;
 
 namespace PokeGame.Web.Controllers.Api
@@ -18,16 +19,19 @@ namespace PokeGame.Web.Controllers.Api
     private readonly IAccountService _accountService;
     private readonly IConfigurationService _configurationService;
     private readonly IMediator _mediator;
+    private readonly ClientPortalSettings _portalSettings;
 
     public ConfigurationApiController(
       IAccountService accountService,
       IConfigurationService configurationService,
-      IMediator mediator
+      IMediator mediator,
+      ClientPortalSettings portalSettings
     )
     {
       _accountService = accountService;
       _configurationService = configurationService;
       _mediator = mediator;
+      _portalSettings = portalSettings;
     }
 
     [HttpPost]
@@ -43,7 +47,7 @@ namespace PokeGame.Web.Controllers.Api
         AdditionalInformation = JsonSerializer.Serialize(Request.Headers),
         IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
       };
-      SessionModel session = await _accountService.SignInAsync(Constants.Realm, signInPayload, cancellationToken);
+      SessionModel session = await _accountService.SignInAsync(_portalSettings.Realm, signInPayload, cancellationToken);
       HttpContext.SignIn(session);
 
       return NoContent();

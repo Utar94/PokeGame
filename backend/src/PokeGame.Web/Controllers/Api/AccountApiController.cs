@@ -13,6 +13,7 @@ using PokeGame.Infrastructure;
 using PokeGame.ReadModel.Handlers.Users;
 using PokeGame.Web.Models.Api.Account;
 using PokeGame.Web.Models.Users;
+using PokeGame.Web.Settings;
 using System.Text.Json;
 
 namespace PokeGame.Web.Controllers.Api
@@ -23,6 +24,7 @@ namespace PokeGame.Web.Controllers.Api
   {
     private readonly IAccountService _accountService;
     private readonly IMediator _mediator;
+    private readonly ClientPortalSettings _portalSettings;
     private readonly ITokenService _tokenService;
     private readonly IUserContext _userContext;
     private readonly IUserService _userService;
@@ -30,6 +32,7 @@ namespace PokeGame.Web.Controllers.Api
     public AccountApiController(
       IAccountService accountService,
       IMediator mediator,
+      ClientPortalSettings portalSettings,
       ITokenService tokenService,
       IUserContext userContext,
       IUserService userService
@@ -37,6 +40,7 @@ namespace PokeGame.Web.Controllers.Api
     {
       _accountService = accountService;
       _mediator = mediator;
+      _portalSettings = portalSettings;
       _tokenService = tokenService;
       _userContext = userContext;
       _userService = userService;
@@ -56,7 +60,7 @@ namespace PokeGame.Web.Controllers.Api
     {
       try
       {
-        await _accountService.RecoverPasswordAsync(Constants.Realm, payload, cancellationToken);
+        await _accountService.RecoverPasswordAsync(_portalSettings.Realm, payload, cancellationToken);
       }
       catch (ErrorException)
       {
@@ -68,7 +72,7 @@ namespace PokeGame.Web.Controllers.Api
     [HttpPost("password/reset")]
     public async Task<ActionResult> ResetPasswordAsync([FromBody] ResetPasswordPayload payload, CancellationToken cancellationToken)
     {
-      await _accountService.ResetPasswordAsync(Constants.Realm, payload, cancellationToken);
+      await _accountService.ResetPasswordAsync(_portalSettings.Realm, payload, cancellationToken);
 
       return NoContent();
     }
@@ -106,7 +110,7 @@ namespace PokeGame.Web.Controllers.Api
         AdditionalInformation = JsonSerializer.Serialize(Request.Headers),
         IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
       };
-      SessionModel session = await _accountService.SignInAsync(Constants.Realm, payload, cancellationToken);
+      SessionModel session = await _accountService.SignInAsync(_portalSettings.Realm, payload, cancellationToken);
       HttpContext.SignIn(session);
 
       return NoContent();
@@ -118,7 +122,7 @@ namespace PokeGame.Web.Controllers.Api
       var validateTokenPayload = new ValidateTokenPayload
       {
         Purpose = Constants.CreateUser.Purpose,
-        Realm = Constants.Realm,
+        Realm = _portalSettings.Realm,
         Token = payload.Token
       };
       ValidatedTokenModel validatedToken = await _tokenService.ConsumeAsync(validateTokenPayload, cancellationToken);
@@ -127,7 +131,7 @@ namespace PokeGame.Web.Controllers.Api
 
       var createUserPayload = new CreateUserPayload
       {
-        Realm = Constants.Realm,
+        Realm = _portalSettings.Realm,
         Username = email,
         Password = payload.Password,
         Email = validatedToken.Email,
@@ -146,7 +150,7 @@ namespace PokeGame.Web.Controllers.Api
         AdditionalInformation = JsonSerializer.Serialize(Request.Headers),
         IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
       };
-      SessionModel session = await _accountService.SignInAsync(Constants.Realm, signInPayload, cancellationToken);
+      SessionModel session = await _accountService.SignInAsync(_portalSettings.Realm, signInPayload, cancellationToken);
       HttpContext.SignIn(session);
 
       return NoContent();
