@@ -1,9 +1,12 @@
 ﻿using PokeGame.Application.Models;
+using PokeGame.Domain.Abilities;
 
 namespace PokeGame.Application.Abilities.Models
 {
   public class AbilityModel : AggregateModel
   {
+    public AbilityType? Type { get; set; }
+
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 

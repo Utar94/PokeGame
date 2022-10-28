@@ -4,6 +4,8 @@ namespace PokeGame.ReadModel.Entities
 {
   internal class AbilityEntity : Entity
   {
+    public AbilityType? Type { get; private set; }
+
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
 
@@ -16,6 +18,8 @@ namespace PokeGame.ReadModel.Entities
     public void Synchronize(Ability ability)
     {
       base.Synchronize(ability);
+
+      Type = ability.Type;
 
       Name = ability.Name;
       Description = ability.Description;

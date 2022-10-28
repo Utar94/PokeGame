@@ -86,8 +86,7 @@ export default {
     ...mapGetters(['activeBattlingPokemon', 'battleMoveDamage']),
     isWeatherDisabled() {
       for (const { ability } of this.activeBattlingPokemon) {
-        // TODO(fpion): implement
-        if (ability.name === 'Air Lock' || ability.name === 'Cloud Nine') {
+        if (ability.type === 'AirLock' || ability.type === 'CloudNine') {
           return true
         }
       }
