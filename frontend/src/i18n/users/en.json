@@ -108,6 +108,10 @@
       "Username": "Username"
     }
   },
+  "synchronize": {
+    "label": "Synchronize",
+    "success": "The users have been synchronized."
+  },
   "title": "Users",
   "updatedOn": "Last updated on",
   "username": {
