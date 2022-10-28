@@ -16,6 +16,7 @@ namespace PokeGame.Domain.Moves
 
     public PokemonType Type { get; private set; }
     public MoveCategory Category { get; private set; }
+    public MoveKind? Kind { get; private set; }
 
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
@@ -55,6 +56,8 @@ namespace PokeGame.Domain.Moves
 
     private void Apply(SaveMovePayload payload)
     {
+      Kind = payload.Kind;
+
       Name = payload.Name.Trim();
       Description = payload.Description?.CleanTrim();
 

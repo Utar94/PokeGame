@@ -8,6 +8,7 @@ namespace PokeGame.ReadModel.Entities
   {
     public PokemonType Type { get; private set; }
     public MoveCategory Category { get; private set; }
+    public MoveKind? Kind { get; private set; }
 
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
@@ -35,6 +36,7 @@ namespace PokeGame.ReadModel.Entities
 
       Type = move.Type;
       Category = move.Category;
+      Kind = move.Kind;
 
       Name = move.Name;
       Description = move.Description;

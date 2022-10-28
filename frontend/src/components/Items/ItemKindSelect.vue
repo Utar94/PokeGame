@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'ItemTypeSelect',
+  name: 'ItemKindSelect',
   props: {
     disabled: {
       type: Boolean,
@@ -21,15 +21,15 @@ export default {
     },
     id: {
       type: String,
-      default: 'type'
+      default: 'kind'
     },
     label: {
       type: String,
-      default: 'items.type.label'
+      default: 'items.kind.label'
     },
     placeholder: {
       type: String,
-      default: 'items.type.placeholder'
+      default: 'items.kind.placeholder'
     },
     required: {
       type: Boolean,
@@ -40,7 +40,7 @@ export default {
   computed: {
     options() {
       return this.orderBy(
-        Object.entries(this.$i18n.t('items.type.options')).map(([value, text]) => ({ text, value })),
+        Object.entries(this.$i18n.t('items.kind.options')).map(([value, text]) => ({ text, value })),
         'text'
       )
     }

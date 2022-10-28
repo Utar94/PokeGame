@@ -1,6 +1,6 @@
 ﻿namespace PokeGame.Domain.Abilities
 {
-  public enum AbilityType
+  public enum AbilityKind
   {
     Adaptability = 0,
     AirLock = 1,

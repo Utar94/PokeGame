@@ -86,7 +86,7 @@ export default {
     ...mapGetters(['activeBattlingPokemon', 'battleMoveDamage']),
     isWeatherDisabled() {
       for (const { ability } of this.activeBattlingPokemon) {
-        if (ability.type === 'AirLock' || ability.type === 'CloudNine') {
+        if (ability.kind === 'AirLock' || ability.kind === 'CloudNine') {
           return true
         }
       }

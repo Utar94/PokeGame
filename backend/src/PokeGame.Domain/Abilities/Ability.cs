@@ -13,7 +13,7 @@ namespace PokeGame.Domain.Abilities
     {
     }
 
-    public AbilityType? Type { get; private set; }
+    public AbilityKind? Kind { get; private set; }
 
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
@@ -39,7 +39,7 @@ namespace PokeGame.Domain.Abilities
 
     private void Apply(SaveAbilityPayload payload)
     {
-      Type = payload.Type;
+      Kind = payload.Kind;
 
       Name = payload.Name.Trim();
       Description = payload.Description?.CleanTrim();

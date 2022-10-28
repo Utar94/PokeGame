@@ -121,7 +121,7 @@ export default {
       return this.pokemon.friendship >= 220
     },
     isHoldingLuckyEgg() {
-      return this.pokemon.heldItem?.type === 'LuckyEgg'
+      return this.pokemon.heldItem?.kind === 'LuckyEgg'
     },
     isTraded() {
       return this.pokemon.originalTrainer?.id !== this.trainer?.id

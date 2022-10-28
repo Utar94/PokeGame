@@ -7,6 +7,16 @@
   },
   "editTitle": "Edit ability: {name}",
   "empty": "This list is empty.",
+  "kind": {
+    "label": "Kind",
+    "options": {
+      "Adaptability": "Adaptability",
+      "AirLock": "Air Lock",
+      "CloudNine": "Cloud Nine",
+      "Guts": "Guts"
+    },
+    "placeholder": "Select a kind"
+  },
   "newTitle": "Create ability",
   "select": {
     "label": "Ability",
@@ -19,15 +29,5 @@
     }
   },
   "title": "Abilities",
-  "type": {
-    "label": "Type",
-    "options": {
-      "Adaptability": "Adaptability",
-      "AirLock": "Air Lock",
-      "CloudNine": "Cloud Nine",
-      "Guts": "Guts"
-    },
-    "placeholder": "Select a type"
-  },
   "updated": "The ability has been updated."
 }

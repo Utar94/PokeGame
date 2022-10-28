@@ -4,6 +4,8 @@ namespace PokeGame.Domain.Moves.Payloads
 {
   public abstract class SaveMovePayload
   {
+    public MoveKind? Kind { get; set; }
+
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
 

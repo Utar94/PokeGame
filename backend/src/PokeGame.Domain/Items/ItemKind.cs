@@ -1,6 +1,6 @@
 ﻿namespace PokeGame.Domain.Items
 {
-  public enum ItemType
+  public enum ItemKind
   {
     ExpShare = 0,
     LuckyEgg = 1,

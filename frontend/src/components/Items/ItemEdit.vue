@@ -21,7 +21,7 @@
             </b-row>
             <b-row>
               <ball-modifier-field v-if="category === 'PokeBall'" class="col" id="defaultModifier" v-model="defaultModifier" />
-              <item-type-select v-if="category === 'PokeBall' || category === 'OtherItem'" class="col" v-model="type" />
+              <item-kind-select v-if="category === 'PokeBall' || category === 'OtherItem'" class="col" v-model="kind" />
             </b-row>
             <description-field v-model="description" />
           </b-tab>
@@ -41,7 +41,7 @@ import Vue from 'vue'
 import BallModifierField from './BallModifierField.vue'
 import CategorySelect from './CategorySelect.vue'
 import ItemIcon from './ItemIcon.vue'
-import ItemTypeSelect from './ItemTypeSelect.vue'
+import ItemKindSelect from './ItemKindSelect.vue'
 import { createItem, updateItem } from '@/api/items'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     BallModifierField,
     CategorySelect,
     ItemIcon,
-    ItemTypeSelect
+    ItemKindSelect
   },
   props: {
     json: {
@@ -68,14 +68,14 @@ export default {
       defaultModifier: 0,
       description: null,
       item: null,
+      kind: null,
+      kinds: {},
       loading: false,
       name: null,
       notes: null,
       picture: null,
       price: 0,
-      reference: null,
-      type: null,
-      types: {}
+      reference: null
     }
   },
   computed: {
@@ -85,7 +85,7 @@ export default {
         (this.name ?? '') !== (this.item?.name ?? '') ||
         this.price !== (this.item?.price ?? 0) ||
         (this.defaultModifier ?? 0) !== (this.item?.defaultModifier ?? 0) ||
-        this.type !== (this.item?.type ?? null) ||
+        this.kind !== (this.item?.kind ?? null) ||
         (this.description ?? '') !== (this.item?.description ?? '') ||
         (this.reference ?? '') !== (this.item?.reference ?? '') ||
         (this.picture ?? '') !== (this.item?.picture ?? '') ||
@@ -94,7 +94,7 @@ export default {
     },
     payload() {
       const payload = {
-        type: this.type,
+        kind: this.kind,
         defaultModifier: this.defaultModifier || null,
         name: this.name,
         price: this.price || null,
@@ -115,12 +115,12 @@ export default {
       this.category = item.category
       this.defaultModifier = item.defaultModifier ?? 0
       this.description = item.description
+      this.kind = item.kind
       this.name = item.name
       this.notes = item.notes
       this.picture = item.picture
       this.price = item.price ?? 0
       this.reference = item.reference
-      this.type = item.type
     },
     async submit() {
       if (!this.loading) {
@@ -146,9 +146,9 @@ export default {
     }
   },
   created() {
-    for (const [value, text] of Object.entries(this.$i18n.t('items.type.options'))) {
-      if (!this.types[text]) {
-        Vue.set(this.types, text, value)
+    for (const [value, text] of Object.entries(this.$i18n.t('items.kind.options'))) {
+      if (!this.kinds[text]) {
+        Vue.set(this.kinds, text, value)
       }
     }
     if (this.json) {
@@ -160,9 +160,9 @@ export default {
   },
   watch: {
     name(text) {
-      const type = this.types[text]
-      if (type) {
-        this.type = type
+      const kind = this.kinds[text]
+      if (kind) {
+        this.kind = kind
       }
     }
   }
