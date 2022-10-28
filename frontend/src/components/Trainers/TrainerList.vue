@@ -2,7 +2,7 @@
   <b-container>
     <h1 v-t="'trainers.title'" />
     <div class="my-2">
-      <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
+      <icon-button class="mx-1" :disabled="loading" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
       <icon-button class="mx-1" href="/create-trainer" icon="plus" text="actions.create" variant="success" />
     </div>
     <b-row>
