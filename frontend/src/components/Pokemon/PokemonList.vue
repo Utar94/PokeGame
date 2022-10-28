@@ -84,7 +84,7 @@
             </td>
             <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedOn || item.createdOn" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
+              <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal
                 confirm="pokemon.delete.confirm"
                 :displayName="`${item.surname || item.species.name} ${$t('pokemon.levelFormat', { level: item.level })}`"

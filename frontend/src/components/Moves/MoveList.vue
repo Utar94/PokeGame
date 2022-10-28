@@ -31,7 +31,7 @@
             <td>{{ $t(`moves.category.options.${move.category}`) }}</td>
             <td><status-cell :actor="move.updatedBy || move.createdBy" :date="move.updatedOn || move.createdOn" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${move.id}`" />
+              <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${move.id}`" />
               <delete-modal
                 confirm="moves.delete.confirm"
                 :displayName="move.name"

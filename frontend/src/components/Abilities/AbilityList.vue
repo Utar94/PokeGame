@@ -26,7 +26,7 @@
             </td>
             <td><status-cell :actor="ability.updatedBy || ability.createdBy" :date="ability.updatedOn || ability.createdOn" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${ability.id}`" />
+              <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${ability.id}`" />
               <delete-modal
                 confirm="abilities.delete.confirm"
                 :displayName="ability.name"
