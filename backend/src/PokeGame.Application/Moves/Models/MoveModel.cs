@@ -9,6 +9,7 @@ namespace PokeGame.Application.Moves.Models
   {
     public PokemonType Type { get; set; }
     public MoveCategory Category { get; set; }
+    public MoveKind? Kind { get; set; }
 
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

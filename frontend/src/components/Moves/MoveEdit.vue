@@ -18,7 +18,10 @@
               <type-select class="col" :disabled="Boolean(move)" :required="!move" v-model="type" />
               <category-select class="col" :disabled="Boolean(move)" :required="!category" v-model="category" />
             </b-row>
-            <name-field required v-model="name" />
+            <b-row>
+              <name-field class="col" required v-model="name" />
+              <move-kind-select class="col" v-model="kind" />
+            </b-row>
             <b-row>
               <form-field
                 class="col"
@@ -158,15 +161,18 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import CategorySelect from './CategorySelect.vue'
 import ConditionSelect from '@/components/Pokemon/ConditionSelect.vue'
+import MoveKindSelect from './MoveKindSelect.vue'
 import { createMove, updateMove } from '@/api/moves'
 
 export default {
   name: 'MoveEdit',
   components: {
     CategorySelect,
-    ConditionSelect
+    ConditionSelect,
+    MoveKindSelect
   },
   props: {
     json: {
@@ -185,6 +191,8 @@ export default {
       category: null,
       description: null,
       evasionStage: 0,
+      kind: null,
+      kinds: {},
       loading: false,
       move: null,
       name: null,
@@ -210,6 +218,7 @@ export default {
       return (
         (!this.move && (this.type || this.category)) ||
         (this.name ?? '') !== (this.move?.name ?? '') ||
+        this.kind !== (this.move?.kind ?? null) ||
         this.powerPoints !== (this.move?.powerPoints ?? 0) ||
         this.power !== (this.move?.power ?? 0) ||
         this.accuracy !== (this.move?.accuracy ?? 0) ||
@@ -231,6 +240,7 @@ export default {
     payload() {
       const payload = {
         name: this.name,
+        kind: this.kind,
         powerPoints: this.powerPoints,
         power: this.category === 'Status' ? null : this.power || null,
         accuracy: this.accuracy || null,
@@ -263,6 +273,7 @@ export default {
       this.category = move.category
       this.description = move.description
       this.evasionStage = move.evasionStage
+      this.kind = move.kind
       this.name = move.name
       this.notes = move.notes
       this.power = move.power ?? 0
@@ -302,6 +313,11 @@ export default {
     }
   },
   created() {
+    for (const [value, text] of Object.entries(this.$i18n.t('moves.kind.options'))) {
+      if (!this.kinds[text]) {
+        Vue.set(this.kinds, text, value)
+      }
+    }
     if (this.json) {
       this.setModel(JSON.parse(this.json))
     }
@@ -310,6 +326,12 @@ export default {
     }
   },
   watch: {
+    name(text) {
+      const kind = this.kinds[text]
+      if (kind) {
+        this.kind = kind
+      }
+    },
     statusCondition(value) {
       if (value) {
         this.statusChance = this.category === 'Status' ? 100 : 10

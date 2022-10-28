@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'AbilityTypeSelect',
+  name: 'AbilityKindSelect',
   props: {
     disabled: {
       type: Boolean,
@@ -21,15 +21,15 @@ export default {
     },
     id: {
       type: String,
-      default: 'type'
+      default: 'kind'
     },
     label: {
       type: String,
-      default: 'abilities.type.label'
+      default: 'abilities.kind.label'
     },
     placeholder: {
       type: String,
-      default: 'abilities.type.placeholder'
+      default: 'abilities.kind.placeholder'
     },
     required: {
       type: Boolean,
@@ -40,7 +40,7 @@ export default {
   computed: {
     options() {
       return this.orderBy(
-        Object.entries(this.$i18n.t('abilities.type.options')).map(([value, text]) => ({ text, value })),
+        Object.entries(this.$i18n.t('abilities.kind.options')).map(([value, text]) => ({ text, value })),
         'text'
       )
     }

@@ -6,7 +6,7 @@ namespace PokeGame.Application.Items.Models
   public class ItemModel : AggregateModel
   {
     public ItemCategory Category { get; set; }
-    public ItemType? Type { get; set; }
+    public ItemKind? Kind { get; set; }
     public double? DefaultModifier { get; set; }
 
     public int? Price { get; set; }

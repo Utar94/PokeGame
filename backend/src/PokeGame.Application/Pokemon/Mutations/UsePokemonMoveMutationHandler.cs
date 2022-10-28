@@ -169,7 +169,7 @@ namespace PokeGame.Application.Pokemon.Mutations
       }
       else if (move.Type == species.PrimaryType || move.Type == species.SecondaryType)
       {
-        double stab = ability.Type == AbilityType.Adaptability ? 2.0 : 1.5;
+        double stab = ability.Kind == AbilityKind.Adaptability ? 2.0 : 1.5;
         damage *= stab;
       }
 
@@ -178,7 +178,7 @@ namespace PokeGame.Application.Pokemon.Mutations
         damage *= targetPayload.Effectiveness.Value;
       }
 
-      if (payload.IsBurnt == true || (attacker.StatusCondition == StatusCondition.Burn && ability.Type != AbilityType.Guts && move.Category == MoveCategory.Physical && move.Name != "Facade"))
+      if (payload.IsBurnt == true || (attacker.StatusCondition == StatusCondition.Burn && ability.Kind != AbilityKind.Guts && move.Category == MoveCategory.Physical && move.Kind != MoveKind.Facade))
       {
         damage *= 0.5;
       }

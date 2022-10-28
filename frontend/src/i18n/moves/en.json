@@ -23,6 +23,13 @@
   "editTitle": "Edit move: {name}",
   "empty": "This list is empty.",
   "evasion": "Evasion",
+  "kind": {
+    "label": "Kind",
+    "options": {
+      "Facade": "Facade"
+    },
+    "placeholder": "Select a kind"
+  },
   "newTitle": "Create move",
   "power": "Power",
   "powerPoints": {

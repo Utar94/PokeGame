@@ -16,7 +16,7 @@
           <b-tab :title="$t('gameData')">
             <b-row>
               <name-field class="col" required v-model="name" />
-              <ability-type-select class="col" v-model="type" />
+              <ability-kind-select class="col" v-model="kind" />
             </b-row>
             <description-field v-model="description" />
           </b-tab>
@@ -31,13 +31,14 @@
 </template>
 
 <script>
-import AbilityTypeSelect from './AbilityTypeSelect.vue'
+import Vue from 'vue'
+import AbilityKindSelect from './AbilityKindSelect.vue'
 import { createAbility, updateAbility } from '@/api/abilities'
 
 export default {
   name: 'AbilityEdit',
   components: {
-    AbilityTypeSelect
+    AbilityKindSelect
   },
   props: {
     json: {
@@ -53,18 +54,19 @@ export default {
     return {
       ability: null,
       description: null,
+      kind: null,
+      kinds: {},
       loading: false,
       name: null,
       notes: null,
-      reference: null,
-      type: null
+      reference: null
     }
   },
   computed: {
     hasChanges() {
       return (
         (this.name ?? '') !== (this.ability?.name ?? '') ||
-        this.type !== (this.ability?.type ?? null) ||
+        this.kind !== (this.ability?.kind ?? null) ||
         (this.description ?? '') !== (this.ability?.description ?? '') ||
         (this.reference ?? '') !== (this.ability?.reference ?? '') ||
         (this.notes ?? '') !== (this.ability?.notes ?? '')
@@ -72,7 +74,7 @@ export default {
     },
     payload() {
       const payload = {
-        type: this.type,
+        kind: this.kind,
         name: this.name,
         description: this.description,
         reference: this.reference || null,
@@ -85,10 +87,10 @@ export default {
     setModel(ability) {
       this.ability = ability
       this.description = ability.description
+      this.kind = ability.kind
       this.name = ability.name
       this.notes = ability.notes
       this.reference = ability.reference
-      this.type = ability.type
     },
     async submit() {
       if (!this.loading) {
@@ -114,11 +116,24 @@ export default {
     }
   },
   created() {
+    for (const [value, text] of Object.entries(this.$i18n.t('abilities.kind.options'))) {
+      if (!this.kinds[text]) {
+        Vue.set(this.kinds, text, value)
+      }
+    }
     if (this.json) {
       this.setModel(JSON.parse(this.json))
     }
     if (this.status === 'created') {
       this.toast('success', 'abilities.created')
+    }
+  },
+  watch: {
+    name(text) {
+      const kind = this.kinds[text]
+      if (kind) {
+        this.kind = kind
+      }
     }
   }
 }

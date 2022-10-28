@@ -249,7 +249,7 @@ export default new Vuex.Store({
         commit('setExperienceDefeatedPokemon', pokemonList)
         const active = Object.fromEntries(state.battle.activePokemon.map(id => [id, true]))
         for (const pokemon of getters.battlingPlayerPokemon) {
-          if (pokemon.currentHitPoints > 0 && (active[pokemon.id] || pokemon.heldItem?.type === 'ExpShare')) {
+          if (pokemon.currentHitPoints > 0 && (active[pokemon.id] || pokemon.heldItem?.kind === 'ExpShare')) {
             dispatch('toggleBattleExperienceWinner', pokemon)
           }
         }
@@ -399,7 +399,7 @@ export default new Vuex.Store({
     },
     toggleBattleMove({ commit, state }, move) {
       const { battle } = state
-      const { accuracyStage, category, evasionStage, id, name, power, statisticStages, statusCondition, type, volatileConditions } = move
+      const { accuracyStage, category, evasionStage, id, kind, power, statisticStages, statusCondition, type, volatileConditions } = move
       if (battle.move.selected?.id === id) {
         commit('setSelectedBattleMove', null)
         commit('setBattleMoveDamage', null)
@@ -417,11 +417,11 @@ export default new Vuex.Store({
           const stab = type === attacker.species.primaryType || type === attacker.species.secondaryType
           const damage = {
             attack,
-            burn: attacker.statusCondition === 'Burn' && category === 'Physical' && name !== 'Facade' && attacker.ability.type !== 'Guts',
+            burn: attacker.statusCondition === 'Burn' && category === 'Physical' && kind !== 'Facade' && attacker.ability.kind !== 'Guts',
             critical: false,
             power: power ?? 0,
             random: 85 + Math.floor(Math.random() * (15 + 1)),
-            stab: stab ? (attacker.ability.type === 'Adaptability' ? 2 : 1.5) : 1,
+            stab: stab ? (attacker.ability.kind === 'Adaptability' ? 2 : 1.5) : 1,
             weather: 'Normal'
           }
           commit('setBattleMoveDamage', damage)
