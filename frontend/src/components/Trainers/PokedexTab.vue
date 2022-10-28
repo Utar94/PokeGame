@@ -1,7 +1,7 @@
 <template>
   <b-tab :title="$t('trainers.pokedex.label')">
     <div class="my-2">
-      <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
+      <icon-button class="mx-1" :disabled="loading" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
       <icon-button class="mx-1" icon="plus" text="trainers.pokedex.add" variant="success" v-b-modal.addEntry />
       <edit-entry-modal :exclude="speciesIds" id="addEntry" :trainerId="trainerId" @updated="refresh()" />
     </div>
