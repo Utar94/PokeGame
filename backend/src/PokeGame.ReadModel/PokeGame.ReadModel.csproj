@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="Logitar.Portal.Core" Version="1.1.1" />
+    <PackageReference Include="Logitar.Portal.Client" Version="1.1.5" />
   </ItemGroup>
 
   <ItemGroup>

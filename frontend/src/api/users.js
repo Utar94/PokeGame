@@ -1,4 +1,4 @@
-import { get, post } from '.'
+import { get, post, put } from '.'
 import { getQueryString } from '@/helpers/queryUtils'
 
 export async function getUsers(params) {
@@ -7,4 +7,8 @@ export async function getUsers(params) {
 
 export async function inviteUser(payload) {
   return await post('/api/users/invite', payload)
+}
+
+export async function synchronizeUsers() {
+  return await put('/api/users/synchronize')
 }

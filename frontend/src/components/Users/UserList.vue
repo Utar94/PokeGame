@@ -3,8 +3,17 @@
     <b-container>
       <h1 v-t="'users.title'" />
       <div class="my-2">
-        <icon-button class="mx-1" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
+        <icon-button class="mx-1" :disabled="loading" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
         <icon-button class="mx-1" href="/users/invite" icon="envelope" text="users.invite.submit" variant="success" />
+        <icon-button
+          class="mx-1"
+          :disabled="loading"
+          icon="cloud-download-alt"
+          :loading="loading"
+          text="users.synchronize.label"
+          variant="warning"
+          @click="synchronize"
+        />
       </div>
       <b-row>
         <search-field class="col" v-model="search" />
@@ -43,7 +52,7 @@
             </td>
             <td>{{ user.passwordChangedOn ? $d(new Date(user.passwordChangedOn), 'medium') : '—' }}</td>
             <td>{{ user.signedInOn ? $d(new Date(user.signedInOn), 'medium') : '—' }}</td>
-            <td><status-cell :actor="user.updatedBy" :date="user.updatedAt" /></td>
+            <td><status-cell :actor="user.updatedBy" :date="user.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
@@ -54,7 +63,7 @@
 
 <script>
 import UserAvatar from './UserAvatar.vue'
-import { getUsers } from '@/api/users'
+import { getUsers, synchronizeUsers } from '@/api/users'
 
 export default {
   name: 'UserList',
@@ -108,6 +117,19 @@ export default {
           const { data } = await getUsers(params ?? this.params)
           this.users = data.items
           this.total = data.total
+        } catch (e) {
+          this.handleError(e)
+        } finally {
+          this.loading = false
+        }
+      }
+    },
+    async synchronize() {
+      if (!this.loading) {
+        this.loading = true
+        try {
+          await synchronizeUsers()
+          this.toast('success', 'users.synchronize.success')
         } catch (e) {
           this.handleError(e)
         } finally {

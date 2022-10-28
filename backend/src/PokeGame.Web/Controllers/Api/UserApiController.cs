@@ -6,9 +6,11 @@ using Logitar.Portal.Core.Emails.Messages.Payloads;
 using Logitar.Portal.Core.Tokens.Models;
 using Logitar.Portal.Core.Tokens.Payloads;
 using Logitar.Portal.Core.Users;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Models;
+using PokeGame.ReadModel.Handlers.Users;
 using PokeGame.Web.Models.Api.User;
 using PokeGame.Web.Models.Users;
 using PokeGame.Web.Settings;
@@ -25,6 +27,7 @@ namespace PokeGame.Web.Controllers.Api
   {
     private readonly HashSet<RecipientPayload> _bcc;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
     private readonly IMessageService _messageService;
     private readonly ClientPortalSettings _portalSettings;
     private readonly ITokenService _tokenService;
@@ -33,6 +36,7 @@ namespace PokeGame.Web.Controllers.Api
     public UserApiController(
       IConfiguration configuration,
       IMapper mapper,
+      IMediator mediator,
       IMessageService messageService,
       ClientPortalSettings portalSettings,
       ITokenService tokenService,
@@ -48,6 +52,7 @@ namespace PokeGame.Web.Controllers.Api
         .ToHashSet() ?? new();
 
       _mapper = mapper;
+      _mediator = mediator;
       _messageService = messageService;
       _portalSettings = portalSettings;
       _tokenService = tokenService;
@@ -65,7 +70,7 @@ namespace PokeGame.Web.Controllers.Api
         index, count,
         cancellationToken);
 
-      return Ok(_mapper.Map<ListModel<UserSummary>>(users));
+       return Ok(_mapper.Map<ListModel<UserSummary>>(users));
     }
 
     [HttpPost("invite")]
@@ -108,6 +113,18 @@ namespace PokeGame.Web.Controllers.Api
 
         throw new InvalidOperationException(message.ToString());
       }
+
+      return NoContent();
+    }
+
+    [HttpPut("synchronize")]
+    public async Task<ActionResult> SynchronizeAsync(CancellationToken cancellationToken)
+    {
+      PortalModels.ListModel<UserModels.UserSummary> users = await _userService.GetAsync(
+        realm: _portalSettings.Realm,
+        cancellationToken: cancellationToken);
+
+      await _mediator.Publish(new SaveUsers(users), cancellationToken);
 
       return NoContent();
     }

@@ -6,8 +6,8 @@ namespace PokeGame.Web.Models.Users
   {
     public Guid Id { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
     public ActorModel? UpdatedBy { get; set; }
+    public DateTime UpdatedOn { get; set; }
 
     public string Username { get; set; } = string.Empty;
 
@@ -20,7 +20,7 @@ namespace PokeGame.Web.Models.Users
 
     public string? Picture { get; set; }
 
-    public DateTime? PasswordChangedAt { get; set; }
-    public DateTime? SignedInAt { get; set; }
+    public DateTime? PasswordChangedOn { get; set; }
+    public DateTime? SignedInOn { get; set; }
   }
 }
