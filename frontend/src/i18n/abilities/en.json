@@ -19,5 +19,15 @@
     }
   },
   "title": "Abilities",
+  "type": {
+    "label": "Type",
+    "options": {
+      "Adaptability": "Adaptability",
+      "AirLock": "Air Lock",
+      "CloudNine": "Cloud Nine",
+      "Guts": "Guts"
+    },
+    "placeholder": "Select a type"
+  },
   "updated": "The ability has been updated."
 }

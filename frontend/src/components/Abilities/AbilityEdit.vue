@@ -14,7 +14,10 @@
         </div>
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
-            <name-field required v-model="name" />
+            <b-row>
+              <name-field class="col" required v-model="name" />
+              <ability-type-select class="col" v-model="type" />
+            </b-row>
             <description-field v-model="description" />
           </b-tab>
           <b-tab :title="$t('metadata')">
@@ -28,10 +31,14 @@
 </template>
 
 <script>
+import AbilityTypeSelect from './AbilityTypeSelect.vue'
 import { createAbility, updateAbility } from '@/api/abilities'
 
 export default {
   name: 'AbilityEdit',
+  components: {
+    AbilityTypeSelect
+  },
   props: {
     json: {
       type: String,
@@ -49,13 +56,15 @@ export default {
       loading: false,
       name: null,
       notes: null,
-      reference: null
+      reference: null,
+      type: null
     }
   },
   computed: {
     hasChanges() {
       return (
         (this.name ?? '') !== (this.ability?.name ?? '') ||
+        this.type !== (this.ability?.type ?? null) ||
         (this.description ?? '') !== (this.ability?.description ?? '') ||
         (this.reference ?? '') !== (this.ability?.reference ?? '') ||
         (this.notes ?? '') !== (this.ability?.notes ?? '')
@@ -63,6 +72,7 @@ export default {
     },
     payload() {
       const payload = {
+        type: this.type,
         name: this.name,
         description: this.description,
         reference: this.reference || null,
@@ -78,6 +88,7 @@ export default {
       this.name = ability.name
       this.notes = ability.notes
       this.reference = ability.reference
+      this.type = ability.type
     },
     async submit() {
       if (!this.loading) {

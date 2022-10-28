@@ -417,11 +417,11 @@ export default new Vuex.Store({
           const stab = type === attacker.species.primaryType || type === attacker.species.secondaryType
           const damage = {
             attack,
-            burn: attacker.statusCondition === 'Burn' && category === 'Physical' && name !== 'Facade' && attacker.ability.name !== 'Guts',
+            burn: attacker.statusCondition === 'Burn' && category === 'Physical' && name !== 'Facade' && attacker.ability.type !== 'Guts',
             critical: false,
             power: power ?? 0,
             random: 85 + Math.floor(Math.random() * (15 + 1)),
-            stab: stab ? (attacker.ability.name === 'Adaptability' ? 2 : 1.5) : 1,
+            stab: stab ? (attacker.ability.type === 'Adaptability' ? 2 : 1.5) : 1,
             weather: 'Normal'
           }
           commit('setBattleMoveDamage', damage)
