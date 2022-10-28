@@ -35,7 +35,7 @@
             <td v-text="item.price || '—'" />
             <td><status-cell :actor="item.updatedBy || item.createdBy" :date="item.updatedOn || item.createdOn" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
+              <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${item.id}`" />
               <delete-modal
                 confirm="items.delete.confirm"
                 :displayName="item.name"

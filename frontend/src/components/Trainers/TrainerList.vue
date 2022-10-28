@@ -48,7 +48,7 @@
             <td>{{ $t(`region.options.${trainer.region}`) }}</td>
             <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedOn || trainer.createdOn" /></td>
             <td>
-              <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />
+              <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />
               <delete-modal
                 confirm="trainers.delete.confirm"
                 :displayName="trainer.name"

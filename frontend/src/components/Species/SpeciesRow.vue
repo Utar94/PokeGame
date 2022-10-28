@@ -22,7 +22,7 @@
     <td v-text="species.category || '—'" />
     <td><status-cell :actor="species.updatedBy || species.createdBy" :date="species.updatedOn || species.createdOn" /></td>
     <td>
-      <icon-button icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${species.id}`" />
+      <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${species.id}`" />
       <delete-modal
         confirm="species.delete.confirm"
         :displayName="`${this.$i18n.t('number')} ${species.number.toString().padStart(3, '0')} ${species.name}`"
