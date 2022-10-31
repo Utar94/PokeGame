@@ -21,7 +21,7 @@
         <b-row>
           <item-select class="col" :label="itemLabel" :required="method === 'Item'" v-model="itemId" />
           <gender-select v-if="method !== 'Trade'" class="col" v-model="gender" />
-          <region-select v-if="method !== 'Trade'" class="col" v-model="region" />
+          <new-region-select v-if="method !== 'Trade'" class="col" v-model="region" />
         </b-row>
         <template v-if="method === 'LevelUp'">
           <b-row>
@@ -57,6 +57,7 @@ import GenderSelect from '@/components/Pokemon/GenderSelect.vue'
 import ItemSelect from '@/components/Items/ItemSelect.vue'
 import MethodSelect from './MethodSelect.vue'
 import MoveSelect from '@/components/Moves/MoveSelect.vue'
+import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
 import SpeciesSelect from '@/components/Species/SpeciesSelect.vue'
 import TimeOfDaySelect from './TimeOfDaySelect.vue'
 import { saveSpeciesEvolution } from '@/api/species'
@@ -68,6 +69,7 @@ export default {
     ItemSelect,
     MethodSelect,
     MoveSelect,
+    NewRegionSelect,
     SpeciesSelect,
     TimeOfDaySelect
   },
@@ -121,7 +123,7 @@ export default {
         level: this.level,
         location: this.location,
         moveId: this.move?.id ?? null,
-        region: this.region,
+        regionId: this.region?.id ?? null,
         timeOfDay: this.timeOfDay,
         notes: this.notes
       }

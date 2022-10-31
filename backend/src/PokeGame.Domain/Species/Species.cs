@@ -81,9 +81,9 @@ namespace PokeGame.Domain.Species
 
       Evolutions[@event.SpeciesId] = payload.Method switch
       {
-        EvolutionMethod.Item => Evolution.Item(payload.ItemId ?? default, payload.Gender, payload.Region, payload.Notes),
+        EvolutionMethod.Item => Evolution.Item(payload.ItemId ?? default, payload.Gender, payload.RegionId, payload.Notes),
         EvolutionMethod.LevelUp => Evolution.LevelUp(payload.Gender, payload.HighFriendship, payload.ItemId,
-          payload.Level, payload.Location, payload.MoveId, payload.Region, payload.TimeOfDay, payload.Notes),
+          payload.Level, payload.Location, payload.MoveId, payload.RegionId, payload.TimeOfDay, payload.Notes),
         EvolutionMethod.Trade => Evolution.Trade(payload.ItemId, payload.Notes),
         _ => throw new ArgumentException($"The evolution method '{payload.Method}' is not supported.", nameof(@event)),
       };

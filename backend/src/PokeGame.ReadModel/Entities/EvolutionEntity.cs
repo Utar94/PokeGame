@@ -32,12 +32,13 @@ namespace PokeGame.ReadModel.Entities
     public string? Location { get; private set; }
     public MoveEntity? Move { get; private set; }
     public int? MoveId { get; private set; }
-    public Region? Region { get; private set; }
+    public RegionEntity? Region { get; private set; }
+    public int? RegionId { get; private set; }
     public TimeOfDay? TimeOfDay { get; private set; }
 
     public string? Notes { get; private set; }
 
-    public void Synchronize(Evolution evolution, ItemEntity? item = null, MoveEntity? move = null)
+    public void Synchronize(Evolution evolution, ItemEntity? item = null, MoveEntity? move = null, RegionEntity? region = null)
     {
       Method = evolution.Method;
 
@@ -49,7 +50,8 @@ namespace PokeGame.ReadModel.Entities
       Location = evolution.Location;
       Move = move;
       MoveId = move?.Sid;
-      Region = evolution.Region;
+      Region = region;
+      RegionId = region?.Sid;
       TimeOfDay = evolution.TimeOfDay;
 
       Notes = evolution.Notes;

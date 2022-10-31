@@ -15,7 +15,7 @@
         <div v-if="evolution.level">{{ $t('species.evolutions.levelFormat', { level: evolution.level }) }}</div>
         <div v-if="item">{{ $t(`species.evolutions.${evolution.method === 'Item' ? 'itemFormat' : 'holdingItemFormat'}`, { item: item.name }) }}</div>
         <div v-if="evolution.gender">{{ $t('species.evolutions.genderFormat', { gender: this.$i18n.t(`pokemon.gender.options.${evolution.gender}`) }) }}</div>
-        <div v-if="evolution.region">{{ $t('species.evolutions.regionFormat', { region: this.$i18n.t(`region.options.${evolution.region}`) }) }}</div>
+        <div v-if="evolution.region">{{ $t('species.evolutions.regionFormat', { region: evolution.region.name }) }}</div>
         <div v-if="evolution.location">{{ $t('species.evolutions.location.format', { location: evolution.location }) }}</div>
         <div v-if="move">{{ $t('species.evolutions.moveFormat', { move: move.name }) }}</div>
         <div v-if="evolution.timeOfDay">

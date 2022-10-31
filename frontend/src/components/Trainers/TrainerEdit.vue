@@ -24,7 +24,7 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
-              <new-region-select class="col" required v-model="regionId" />
+              <new-region-select class="col" required v-model="region" />
               <gender-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="gender" />
               <form-field class="col" disabled id="number" label="trainers.number" :required="!trainer" type="number" v-model.number="number">
                 <b-input-group-append>
@@ -104,7 +104,7 @@ export default {
       picture: null,
       playTime: 0,
       reference: null,
-      regionId: null,
+      region: null,
       trainer: null,
       userId: null
     }
@@ -118,7 +118,7 @@ export default {
     hasChanges() {
       return (
         (!this.trainer && (this.gender || this.number)) ||
-        this.regionId !== (this.trainer?.region?.id ?? null) ||
+        (this.region?.id ?? null) !== (this.trainer?.region?.id ?? null) ||
         this.money !== (this.trainer?.money ?? 0) ||
         this.playTime !== (this.trainer?.playTime ?? 0) ||
         this.userId !== (this.trainer?.user?.id ?? null) ||
@@ -138,7 +138,7 @@ export default {
         description: this.description,
         reference: this.reference || null,
         picture: this.picture || null,
-        regionId: this.regionId,
+        regionId: this.region?.id ?? null,
         notes: this.notes
       }
       if (!this.trainer) {
@@ -210,7 +210,7 @@ export default {
       this.picture = trainer.picture
       this.playTime = trainer.playTime
       this.reference = trainer.reference
-      this.regionId = trainer.region?.id ?? null
+      this.region = trainer.region
       this.userId = trainer.user?.id ?? null
     },
     async submit() {

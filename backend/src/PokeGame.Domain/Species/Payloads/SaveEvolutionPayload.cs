@@ -12,7 +12,7 @@ namespace PokeGame.Domain.Species.Payloads
     public byte Level { get; set; }
     public string? Location { get; set; }
     public Guid? MoveId { get; set; }
-    public Region? Region { get; set; }
+    public Guid? RegionId { get; set; }
     public TimeOfDay? TimeOfDay { get; set; }
 
     public string? Notes { get; set; }

@@ -3,6 +3,7 @@ using MediatR;
 using PokeGame.Application.Species.Models;
 using PokeGame.Domain.Items;
 using PokeGame.Domain.Moves;
+using PokeGame.Domain.Regions;
 using PokeGame.Domain.Species;
 using PokeGame.Domain.Species.Payloads;
 
@@ -43,6 +44,11 @@ namespace PokeGame.Application.Species.Mutations
       if (payload.MoveId.HasValue && await _repository.LoadAsync<Move>(payload.MoveId.Value, cancellationToken) == null)
       {
         throw new EntityNotFoundException<Move>(payload.MoveId.Value, nameof(payload.MoveId));
+      }
+
+      if (payload.RegionId.HasValue && await _repository.LoadAsync<Region>(payload.RegionId.Value, cancellationToken) == null)
+      {
+        throw new EntityNotFoundException<Region>(payload.RegionId.Value, nameof(payload.RegionId));
       }
 
       species.SaveEvolution(evolvedSpecies, payload);

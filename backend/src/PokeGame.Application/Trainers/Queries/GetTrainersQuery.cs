@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using PokeGame.Application.Models;
 using PokeGame.Application.Trainers.Models;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Application.Trainers.Queries
@@ -9,7 +8,7 @@ namespace PokeGame.Application.Trainers.Queries
   public class GetTrainersQuery : IRequest<ListModel<TrainerModel>>
   {
     public TrainerGender? Gender { get; set; }
-    public Region? Region { get; set; }
+    public Guid? RegionId { get; set; }
     public string? Search { get; set; }
     public Guid? UserId { get; set; }
 

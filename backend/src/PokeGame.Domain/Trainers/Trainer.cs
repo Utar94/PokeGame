@@ -16,7 +16,6 @@ namespace PokeGame.Domain.Trainers
 
     public Guid? UserId { get; private set; }
 
-    public Region Region { get; private set; }
     public Guid? RegionId { get; private set; }
     public int Number { get; private set; }
 

@@ -69,7 +69,6 @@ namespace PokeGame.ReadModel.Entities
     {
       base.Synchronize(trainer);
 
-      LegacyRegion = trainer.Region;
       Number = trainer.Number;
 
       Money = trainer.Money;
@@ -84,7 +83,7 @@ namespace PokeGame.ReadModel.Entities
       Reference = trainer.Reference;
     }
 
-    public  void UpdatePokedex(int regionalCount)
+    public void UpdatePokedex(int regionalCount)
     {
       int currentCount = Pokedex.Where(x => x.Species != null)
         .Count(x => x.Species!.RegionalSpecies.Any(y => y.Region == LegacyRegion));

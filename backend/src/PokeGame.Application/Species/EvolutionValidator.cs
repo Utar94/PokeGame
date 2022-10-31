@@ -44,7 +44,7 @@ namespace PokeGame.Application.Species
           .Null();
         RuleFor(x => x.MoveId)
           .Null();
-        RuleFor(x => x.Region)
+        RuleFor(x => x.RegionId)
           .Null();
         RuleFor(x => x.TimeOfDay)
           .Null();

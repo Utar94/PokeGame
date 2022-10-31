@@ -6,14 +6,15 @@
     :options="options"
     :placeholder="placeholder"
     :required="required"
-    :value="value"
-    @input="$emit('input', $event)"
+    :value="value ? value.id : null"
+    @input="onInput"
   >
     <slot />
   </form-select>
 </template>
 
 <script>
+import Vue from 'vue'
 import { getRegions } from '@/api/regions'
 
 export default {
@@ -47,23 +48,35 @@ export default {
   },
   data() {
     return {
-      regions: []
+      regions: null
     }
   },
   computed: {
     options() {
-      return this.regions
-        .filter(({ id }) => !this.exclude.includes(id))
-        .map(({ id, name }) => ({
-          text: name,
-          value: id
-        }))
+      return this.regions === null
+        ? []
+        : Object.values(this.regions)
+            .filter(({ id }) => !this.exclude.includes(id))
+            .map(({ id, name }) => ({
+              text: name,
+              value: id
+            }))
+    }
+  },
+  methods: {
+    onInput($event) {
+      if (this.regions) {
+        this.$emit('input', this.regions[$event] ?? null)
+      }
     }
   },
   async created() {
     try {
       const { data } = await getRegions({ sort: 'Name', desc: false })
-      this.regions = data.items
+      this.regions = {}
+      for (const region of data.items) {
+        Vue.set(this.regions, region.id, region)
+      }
       this.$emit('refresh', data)
     } catch (e) {
       this.handleError(e)

@@ -2,7 +2,6 @@
 using PokeGame.Application.Models;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 using PokeGame.ReadModel.Entities;
 
@@ -29,7 +28,7 @@ namespace PokeGame.ReadModel.Queriers
       return await _mappingService.MapAsync<TrainerModel>(trainer, cancellationToken);
     }
 
-    public async Task<ListModel<TrainerModel>> GetPagedAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
+    public async Task<ListModel<TrainerModel>> GetPagedAsync(TrainerGender? gender, Guid? regionId, string? search, Guid? userId,
       TrainerSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
@@ -42,9 +41,9 @@ namespace PokeGame.ReadModel.Queriers
       {
         query = query.Where(x => x.Gender == gender.Value);
       }
-      if (region.HasValue)
+      if (regionId.HasValue)
       {
-        query = query.Where(x => x.LegacyRegion == region.Value);
+        query = query.Where(x => x.Region!.Id == regionId.Value);
       }
       if (search != null)
       {

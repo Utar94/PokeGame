@@ -57,6 +57,7 @@ namespace PokeGame.ReadModel.Queriers
         .Include(x => x.EvolvedSpecies)
         .Include(x => x.Item)
         .Include(x => x.Move)
+        .Include(x => x.Region)
         .SingleOrDefaultAsync(x => x.EvolvingSpecies!.Id == id && x.EvolvedSpecies!.Id == speciesId, cancellationToken);
 
       return await _mappingService.MapAsync<EvolutionModel>(evolution, cancellationToken);
@@ -68,6 +69,7 @@ namespace PokeGame.ReadModel.Queriers
         .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies).ThenInclude(x => x!.SpeciesAbilities).ThenInclude(x => x.Ability)
         .Include(x => x.Evolutions).ThenInclude(x => x.Item)
         .Include(x => x.Evolutions).ThenInclude(x => x.Move)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Region)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return species == null ? null : await _mappingService.MapAsync<IEnumerable<EvolutionModel>>(species.Evolutions, cancellationToken);

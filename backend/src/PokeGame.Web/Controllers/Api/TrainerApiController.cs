@@ -5,7 +5,6 @@ using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Application.Trainers.Mutations;
 using PokeGame.Application.Trainers.Queries;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 using PokeGame.Domain.Trainers.Payloads;
 
@@ -41,7 +40,7 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<TrainerModel>> GetAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
+    public async Task<ActionResult<TrainerModel>> GetAsync(TrainerGender? gender, Guid? regionId, string? search, Guid? userId,
       TrainerSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
@@ -49,7 +48,7 @@ namespace PokeGame.Web.Controllers.Api
       return Ok(await _mediator.Send(new GetTrainersQuery
       {
         Gender = gender,
-        Region = region,
+        RegionId = regionId,
         Search = search,
         UserId = userId,
         Sort = sort,
