@@ -31,6 +31,16 @@ namespace PokeGame.ReadModel.Handlers.Trainers
       Trainer? trainer = await _repository.LoadAsync<Trainer>(id, version, cancellationToken);
       if (trainer != null)
       {
+        RegionEntity? region = null;
+        if (trainer.RegionId.HasValue)
+        {
+          region = await _readContext.Regions.SingleOrDefaultAsync(x => x.Id == trainer.RegionId.Value, cancellationToken);
+          if (region == null)
+          {
+            return null;
+          }
+        }
+
         UserEntity? user = null;
         if (trainer.UserId.HasValue)
         {
@@ -48,6 +58,7 @@ namespace PokeGame.ReadModel.Handlers.Trainers
         }
 
         entity.Synchronize(trainer);
+        entity.SetRegion(region);
         entity.SetUser(user);
 
         await _readContext.SaveChangesAsync(cancellationToken);

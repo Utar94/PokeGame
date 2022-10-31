@@ -4,6 +4,8 @@
   {
     public Guid? UserId { get; set; }
 
+    public Guid? RegionId { get; set; }
+
     public int Money { get; set; }
     public int PlayTime { get; set; }
 

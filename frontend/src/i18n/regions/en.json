@@ -8,6 +8,10 @@
   "editTitle": "Edit region: {name}",
   "empty": "This list is empty.",
   "newTitle": "Create region",
+  "select": {
+    "label": "Region",
+    "placeholder": "Select a region"
+  },
   "sort": {
     "options": {
       "Name": "Name",

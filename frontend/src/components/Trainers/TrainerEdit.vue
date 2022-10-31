@@ -24,7 +24,7 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
-              <region-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="region" />
+              <new-region-select class="col" required v-model="regionId" />
               <gender-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="gender" />
               <form-field class="col" disabled id="number" label="trainers.number" :required="!trainer" type="number" v-model.number="number">
                 <b-input-group-append>
@@ -64,6 +64,7 @@
 <script>
 import GenderSelect from './GenderSelect.vue'
 import InventoryTab from './InventoryTab.vue'
+import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
 import PokedexTab from './PokedexTab.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
@@ -75,6 +76,7 @@ export default {
   components: {
     GenderSelect,
     InventoryTab,
+    NewRegionSelect,
     PokedexTab,
     TrainerIcon,
     UserSelect
@@ -102,7 +104,7 @@ export default {
       picture: null,
       playTime: 0,
       reference: null,
-      region: null,
+      regionId: null,
       trainer: null,
       userId: null
     }
@@ -115,7 +117,8 @@ export default {
     },
     hasChanges() {
       return (
-        (!this.trainer && (this.gender || this.number || this.region)) ||
+        (!this.trainer && (this.gender || this.number)) ||
+        this.regionId !== (this.trainer?.region?.id ?? null) ||
         this.money !== (this.trainer?.money ?? 0) ||
         this.playTime !== (this.trainer?.playTime ?? 0) ||
         this.userId !== (this.trainer?.user?.id ?? null) ||
@@ -135,10 +138,10 @@ export default {
         description: this.description,
         reference: this.reference || null,
         picture: this.picture || null,
+        regionId: this.regionId,
         notes: this.notes
       }
       if (!this.trainer) {
-        payload.region = this.region
         payload.number = this.number
         payload.gender = this.gender
       }
@@ -207,7 +210,7 @@ export default {
       this.picture = trainer.picture
       this.playTime = trainer.playTime
       this.reference = trainer.reference
-      this.region = trainer.legacyRegion
+      this.regionId = trainer.region?.id ?? null
       this.userId = trainer.user?.id ?? null
     },
     async submit() {

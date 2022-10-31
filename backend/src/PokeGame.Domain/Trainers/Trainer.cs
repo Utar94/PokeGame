@@ -17,8 +17,8 @@ namespace PokeGame.Domain.Trainers
     public Guid? UserId { get; private set; }
 
     public Region Region { get; private set; }
+    public Guid? RegionId { get; private set; }
     public int Number { get; private set; }
-    public byte Checksum => string.Concat((char)Region, Number).Checksum();
 
     public int Money { get; private set; }
     public int PlayTime { get; private set; }
@@ -112,7 +112,6 @@ namespace PokeGame.Domain.Trainers
     }
     protected virtual void Apply(TrainerCreated @event)
     {
-      Region = @event.Payload.Region;
       Number = @event.Payload.Number;
 
       Gender = @event.Payload.Gender;
@@ -167,6 +166,8 @@ namespace PokeGame.Domain.Trainers
     private void Apply(SaveTrainerPayload payload)
     {
       UserId = payload.UserId;
+
+      RegionId = payload.RegionId;
 
       Money = payload.Money;
       PlayTime = payload.PlayTime;

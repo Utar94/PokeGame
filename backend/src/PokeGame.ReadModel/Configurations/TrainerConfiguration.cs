@@ -17,7 +17,6 @@ namespace PokeGame.ReadModel.Configurations
       builder.HasIndex(x => x.LegacyRegion);
       builder.HasIndex(x => new { x.LegacyRegion, x.Number, x.Name }).IsUnique();
 
-      builder.Property(x => x.Checksum).HasDefaultValue(0);
       builder.Property(x => x.Gender).HasDefaultValue(default(TrainerGender));
       builder.Property(x => x.Money).HasDefaultValue(0);
       builder.Property(x => x.Name).HasMaxLength(100);

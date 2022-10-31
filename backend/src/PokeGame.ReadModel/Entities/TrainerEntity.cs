@@ -11,8 +11,9 @@ namespace PokeGame.ReadModel.Entities
     [Obsolete("To be replaced by the Region entity.")]
     public Region LegacyRegion { get; private set; }
 
+    public RegionEntity? Region { get; private set; }
+    public int? RegionId { get; private set; }
     public int Number { get; private set; }
-    public byte Checksum { get; private set; }
 
     public int Money { get; private set; }
     public int PlayTime { get; private set; }
@@ -52,6 +53,12 @@ namespace PokeGame.ReadModel.Entities
       return entity;
     }
 
+    public void SetRegion(RegionEntity? region)
+    {
+      Region = region;
+      RegionId = region?.Sid;
+    }
+
     public void SetUser(UserEntity? user)
     {
       User = user;
@@ -64,7 +71,6 @@ namespace PokeGame.ReadModel.Entities
 
       LegacyRegion = trainer.Region;
       Number = trainer.Number;
-      Checksum = trainer.Checksum;
 
       Money = trainer.Money;
       PlayTime = trainer.PlayTime;

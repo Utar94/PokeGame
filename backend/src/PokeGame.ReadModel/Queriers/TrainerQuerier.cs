@@ -22,6 +22,7 @@ namespace PokeGame.ReadModel.Queriers
     public async Task<TrainerModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       TrainerEntity? trainer = await _trainers.AsNoTracking()
+        .Include(x => x.Region)
         .Include(x => x.User)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -34,6 +35,7 @@ namespace PokeGame.ReadModel.Queriers
       CancellationToken cancellationToken)
     {
       IQueryable<TrainerEntity> query = _trainers.AsNoTracking()
+        .Include(x => x.Region)
         .Include(x => x.User);
 
       if (gender.HasValue)

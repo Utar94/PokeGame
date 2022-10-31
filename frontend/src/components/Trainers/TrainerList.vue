@@ -45,7 +45,7 @@
               <template v-else>&mdash;</template>
             </td>
             <td v-text="trainer.number" />
-            <td>{{ $t(`region.options.${trainer.legacyRegion}`) }}</td>
+            <td v-text="trainer.region ? trainer.region.name : '—'" />
             <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedOn || trainer.createdOn" /></td>
             <td>
               <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />

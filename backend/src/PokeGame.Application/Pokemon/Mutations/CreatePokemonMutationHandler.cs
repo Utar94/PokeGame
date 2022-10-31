@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using PokeGame.Application.Moves;
 using PokeGame.Application.Pokemon.Models;
-using PokeGame.Domain.Moves;
 using PokeGame.Domain.Pokemon.Payloads;
 
 namespace PokeGame.Application.Pokemon.Mutations
