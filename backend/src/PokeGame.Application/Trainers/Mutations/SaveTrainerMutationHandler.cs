@@ -14,9 +14,9 @@ namespace PokeGame.Application.Trainers.Mutations
 
     protected async Task EnsureRegionExistsAsync(SaveTrainerPayload payload, CancellationToken cancellationToken)
     {
-      if (payload.RegionId.HasValue && await Repository.LoadAsync<Region>(payload.RegionId.Value, cancellationToken) == null)
+      if (await Repository.LoadAsync<Region>(payload.RegionId, cancellationToken) == null)
       {
-        throw new EntityNotFoundException<Region>(payload.RegionId.Value, nameof(payload.RegionId));
+        throw new EntityNotFoundException<Region>(payload.RegionId, nameof(payload.RegionId));
       }
     }
   }

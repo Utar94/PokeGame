@@ -2,6 +2,7 @@
 using PokeGame.Application;
 using PokeGame.Domain.Trainers;
 using PokeGame.ReadModel.Entities;
+using PokeGame.ReadModel.Handlers.Regions;
 
 namespace PokeGame.ReadModel.Handlers.Trainers
 {
@@ -9,11 +10,13 @@ namespace PokeGame.ReadModel.Handlers.Trainers
   {
     private readonly ReadContext _readContext;
     private readonly IRepository _repository;
+    private readonly SynchronizeRegion _synchronizeRegion;
 
-    public SynchronizeTrainer(ReadContext readContext, IRepository repository)
+    public SynchronizeTrainer(ReadContext readContext, IRepository repository, SynchronizeRegion synchronizeRegion)
     {
       _readContext = readContext;
       _repository = repository;
+      _synchronizeRegion = synchronizeRegion;
     }
 
     public async Task<TrainerEntity?> ExecuteAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
@@ -31,14 +34,11 @@ namespace PokeGame.ReadModel.Handlers.Trainers
       Trainer? trainer = await _repository.LoadAsync<Trainer>(id, version, cancellationToken);
       if (trainer != null)
       {
-        RegionEntity? region = null;
-        if (trainer.RegionId.HasValue)
+        RegionEntity? region = await _readContext.Regions.SingleOrDefaultAsync(x => x.Id == trainer.RegionId, cancellationToken)
+          ?? await _synchronizeRegion.ExecuteAsync(trainer.RegionId, version: null, cancellationToken);
+        if (region == null)
         {
-          region = await _readContext.Regions.SingleOrDefaultAsync(x => x.Id == trainer.RegionId.Value, cancellationToken);
-          if (region == null)
-          {
-            return null;
-          }
+          return null;
         }
 
         UserEntity? user = null;
