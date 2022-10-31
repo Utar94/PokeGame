@@ -6,12 +6,14 @@ using PokeGame.Application.Items;
 using PokeGame.Application.Moves;
 using PokeGame.Application.Pokedex;
 using PokeGame.Application.Pokemon;
+using PokeGame.Application.Regions;
 using PokeGame.Application.Species;
 using PokeGame.Application.Trainers;
 using PokeGame.ReadModel.Handlers.Abilities;
 using PokeGame.ReadModel.Handlers.Items;
 using PokeGame.ReadModel.Handlers.Moves;
 using PokeGame.ReadModel.Handlers.Pokemon;
+using PokeGame.ReadModel.Handlers.Regions;
 using PokeGame.ReadModel.Handlers.Species;
 using PokeGame.ReadModel.Handlers.Trainers;
 using PokeGame.ReadModel.Queriers;
@@ -43,6 +45,7 @@ namespace PokeGame.ReadModel
         .AddScoped<IMoveQuerier, MoveQuerier>()
         .AddScoped<IPokedexQuerier, PokedexQuerier>()
         .AddScoped<IPokemonQuerier, PokemonQuerier>()
+        .AddScoped<IRegionQuerier, RegionQuerier>()
         .AddScoped<ISpeciesQuerier, SpeciesQuerier>()
         .AddScoped<ITrainerQuerier, TrainerQuerier>();
     }
@@ -56,6 +59,7 @@ namespace PokeGame.ReadModel
         .AddScoped<SynchronizeMove>()
         .AddScoped<SynchronizePokedex>()
         .AddScoped<SynchronizePokemon>()
+        .AddScoped<SynchronizeRegion>()
         .AddScoped<SynchronizeSpecies>()
         .AddScoped<SynchronizeTrainer>();
     }

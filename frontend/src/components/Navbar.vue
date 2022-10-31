@@ -33,6 +33,10 @@
               <font-awesome-icon icon="dog" />
               {{ $t('pokemon.title') }}
             </b-nav-item>
+            <b-nav-item href="/regions">
+              <font-awesome-icon icon="globe-americas" />
+              {{ $t('regions.title') }}
+            </b-nav-item>
             <b-nav-item href="/species">
               <font-awesome-icon icon="paw" />
               {{ $t('species.title') }}

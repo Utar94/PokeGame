@@ -17,6 +17,8 @@ export default {
   PokemonList: () => import(/* webpackChunkName: "pokemonList" */ './Pokemon/PokemonList.vue'),
   Profile: () => import(/* webpackChunkName: "profile" */ './Account/Profile.vue'),
   RecoverPassword: () => import(/* webpackChunkName: "recoverPassword" */ './Account/RecoverPassword.vue'),
+  RegionEdit: () => import(/* webpackChunkName: "regionEdit" */ './Regions/RegionEdit.vue'),
+  RegionList: () => import(/* webpackChunkName: "regionList" */ './Regions/RegionList.vue'),
   ResetPassword: () => import(/* webpackChunkName: "resetPassword" */ './Account/ResetPassword.vue'),
   SignIn: () => import(/* webpackChunkName: "signIn" */ './Account/SignIn.vue'),
   SignUp: () => import(/* webpackChunkName: "signUp" */ './Account/SignUp.vue'),
