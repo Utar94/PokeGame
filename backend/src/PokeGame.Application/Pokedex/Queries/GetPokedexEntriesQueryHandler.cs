@@ -15,7 +15,7 @@ namespace PokeGame.Application.Pokedex.Queries
 
     public async Task<ListModel<PokedexModel>> Handle(GetPokedexEntriesQuery request, CancellationToken cancellationToken)
     {
-      return await _querier.GetPagedAsync(request.TrainerId, request.HasCaught, request.Region, request.Search, request.Type,
+      return await _querier.GetPagedAsync(request.TrainerId, request.HasCaught, request.RegionId, request.Search, request.Type,
         request.Sort, request.Desc,
         request.Index, request.Count,
         cancellationToken);

@@ -10,6 +10,7 @@ namespace PokeGame.ReadModel.Entities
     public string? Notes { get; private set; }
     public string? Reference { get; private set; }
 
+    public List<RegionalSpeciesEntity> RegionalSpecies { get; private set; } = new();
     public List<TrainerEntity> Trainers { get; private set; } = new();
 
     public void Synchronize(Region region)

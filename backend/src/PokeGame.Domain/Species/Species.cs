@@ -42,7 +42,7 @@ namespace PokeGame.Domain.Species
 
     public List<Guid> AbilityIds { get; private set; } = new();
     public Dictionary<Guid, Evolution> Evolutions { get; private set; } = new();
-    public Dictionary<Region, int> RegionalNumbers { get; private set; } = new();
+    public Dictionary<Guid, int> RegionalNumbers { get; private set; } = new();
 
     public void Delete() => ApplyChange(new SpeciesDeleted());
     public void Update(UpdateSpeciesPayload payload) => ApplyChange(new SpeciesUpdated(payload));
@@ -142,7 +142,7 @@ namespace PokeGame.Domain.Species
       {
         foreach (RegionalNumberPayload regionalNumber in payload.RegionalNumbers)
         {
-          RegionalNumbers[regionalNumber.Region] = regionalNumber.Number;
+          RegionalNumbers[regionalNumber.RegionId] = regionalNumber.Number;
         }
       }
     }

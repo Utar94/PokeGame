@@ -7,7 +7,7 @@ namespace PokeGame.Application.Species.Queries
 {
   public class GetSpeciesListQuery : IRequest<ListModel<SpeciesModel>>
   {
-    public Region? Region { get; set; }
+    public Guid? RegionId { get; set; }
     public string? Search { get; set; }
     public PokemonType? Type { get; set; }
 

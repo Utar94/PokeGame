@@ -1,4 +1,5 @@
 ﻿using PokeGame.Application.Pokedex.Models;
+using PokeGame.Application.Regions.Models;
 using PokeGame.Application.Species.Models;
 using PokeGame.Domain;
 
@@ -6,15 +7,13 @@ namespace PokeGame.Web.Models.Api.Game
 {
   public class GamePokedexEntryModel
   {
-    public GamePokedexEntryModel(PokedexModel model, Region? region = null)
+    public GamePokedexEntryModel(PokedexModel model, RegionModel? region = null)
     {
       HasCaught = model.HasCaught;
 
       SpeciesModel species = model.Species ?? throw new ArgumentException($"The {nameof(model.Species)} is required.", nameof(model));
 
-      Number = region.HasValue
-        ? species.RegionalNumbers.Single(x => x.Region == region.Value).Number
-        : species.Number;
+      Number = region == null ? species.Number : species.RegionalNumbers.Single(x => x.Region?.Id == region.Id).Number;
 
       Name = species.Name;
 

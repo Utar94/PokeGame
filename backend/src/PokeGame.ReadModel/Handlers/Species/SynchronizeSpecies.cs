@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokeGame.Application;
-using PokeGame.Domain;
 using PokeGame.ReadModel.Entities;
 using PokeGame.ReadModel.Handlers.Abilities;
 
@@ -68,13 +67,23 @@ namespace PokeGame.ReadModel.Handlers.Species
           }
         }
 
-        Dictionary<Region, RegionalSpeciesEntity> regionalSpecies = entity.RegionalSpecies.ToDictionary(x => x.Region, x => x);
-        foreach (var (region, number) in species.RegionalNumbers)
+        IEnumerable<Guid> regionIds = species.RegionalNumbers.Select(x => x.Key);
+        Dictionary<Guid, RegionEntity> regions = await _readContext.Regions
+          .Where(x => regionIds.Contains(x.Id))
+          .ToDictionaryAsync(x => x.Id, x => x, cancellationToken);
+
+        Dictionary<int, RegionalSpeciesEntity> regionalSpecies = entity.RegionalSpecies.ToDictionary(x => x.RegionId, x => x);
+        foreach (var (regionId, number) in species.RegionalNumbers)
         {
-          if (!regionalSpecies.TryGetValue(region, out RegionalSpeciesEntity? regionalEntity))
+          if (!regions.TryGetValue(regionId, out RegionEntity? region))
+          {
+            return null;
+          }
+
+          if (!regionalSpecies.TryGetValue(region.Sid, out RegionalSpeciesEntity? regionalEntity))
           {
             regionalEntity = new(entity, region);
-            regionalSpecies.Add(region, regionalEntity);
+            regionalSpecies.Add(region.Sid, regionalEntity);
 
             entity.RegionalSpecies.Add(regionalEntity);
           }
@@ -84,7 +93,7 @@ namespace PokeGame.ReadModel.Handlers.Species
 
         foreach (RegionalSpeciesEntity regionalEntity in regionalSpecies.Values)
         {
-          if (!species.RegionalNumbers.ContainsKey(regionalEntity.Region))
+          if (regionalEntity.Region == null || !species.RegionalNumbers.ContainsKey(regionalEntity.Region.Id))
           {
             entity.RegionalSpecies.Remove(regionalEntity);
           }

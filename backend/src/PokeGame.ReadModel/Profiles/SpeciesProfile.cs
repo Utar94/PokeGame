@@ -16,9 +16,10 @@ namespace PokeGame.ReadModel.Profiles
         .ForMember(x => x.Abilities, x => x.MapFrom(GetAbilities))
         .ForMember(x => x.BaseStatistics, x => x.MapFrom(GetBaseStatistics))
         .ForMember(x => x.EvYield, x => x.MapFrom(GetEvYield))
-        .ForMember(x => x.RegionalNumbers, x => x.MapFrom(GetRegionalNumbers));
+        .ForMember(x => x.RegionalNumbers, x => x.MapFrom(y => y.RegionalSpecies));
       CreateMap<EvolutionEntity, EvolutionModel>()
         .ForMember(x => x.Species, x => x.MapFrom(y => y.EvolvedSpecies));
+      CreateMap< RegionalSpeciesEntity, RegionalNumberModel >();
     }
 
     private static IEnumerable<AbilityModel> GetAbilities(SpeciesEntity species, SpeciesModel model, IEnumerable<AbilityModel> abilities, ResolutionContext context)
@@ -48,15 +49,6 @@ namespace PokeGame.ReadModel.Profiles
           Statistic = Enum.Parse<Statistic>(values[0]),
           Value = byte.Parse(values[1])
         };
-      });
-    }
-
-    private static IEnumerable<RegionalNumberModel> GetRegionalNumbers(SpeciesEntity species, SpeciesModel model)
-    {
-      return species.RegionalSpecies.Select(x => new RegionalNumberModel
-      {
-        Number = x.Number,
-        Region = x.Region
       });
     }
   }

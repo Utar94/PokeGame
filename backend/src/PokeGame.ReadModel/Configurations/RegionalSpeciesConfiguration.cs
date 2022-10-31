@@ -8,8 +8,8 @@ namespace PokeGame.ReadModel.Configurations
   {
     public void Configure(EntityTypeBuilder<RegionalSpeciesEntity> builder)
     {
-      builder.HasKey(x => new { x.SpeciesId, x.Region });
-      builder.HasIndex(x => new { x.Region, x.Number }).IsUnique();
+      builder.HasKey(x => new { x.SpeciesId, x.RegionId });
+      builder.HasIndex(x => new { x.RegionId, x.Number }).IsUnique();
     }
   }
 }

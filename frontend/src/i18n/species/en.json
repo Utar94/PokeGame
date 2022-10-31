@@ -100,6 +100,10 @@
   },
   "primaryType": "Primary Type",
   "regional": {
+    "addNumber": "Add number",
+    "conflict": "Conflict",
+    "editNumber": "Edit number",
+    "empty": "This list is empty.",
     "numbersAlreadyUsed": "Some regional numbers are already used.",
     "title": "Regional"
   },

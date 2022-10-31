@@ -1,5 +1,4 @@
 ﻿using PokeGame.Application.Trainers.Models;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Web.Models.Api.Game
@@ -10,7 +9,7 @@ namespace PokeGame.Web.Models.Api.Game
     {
       Id = model.Id;
 
-      Region = model.LegacyRegion;
+      Region = model.Region?.Name;
       Number = model.Number;
 
       Gender = model.Gender;
@@ -28,7 +27,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public Guid Id { get; set; }
 
-    public Region Region { get; set; }
+    public string? Region { get; set; }
     public int Number { get; set; }
 
     public TrainerGender Gender { get; set; }

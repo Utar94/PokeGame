@@ -1,6 +1,7 @@
-﻿using PokeGame.Application.Species.Models;
-using PokeGame.Domain;
+﻿using PokeGame.Application.Regions;
+using PokeGame.Application.Species.Models;
 using PokeGame.Domain.Abilities;
+using PokeGame.Domain.Regions;
 using PokeGame.Domain.Species.Payloads;
 
 namespace PokeGame.Application.Species.Mutations
@@ -35,14 +36,23 @@ namespace PokeGame.Application.Species.Mutations
     {
       if (payload.RegionalNumbers?.Any() == true)
       {
-        var conflicts = new List<KeyValuePair<Region, int>>(capacity: payload.RegionalNumbers.Count());
+        IEnumerable<Guid> regionIds = payload.RegionalNumbers.Select(x => x.RegionId).Distinct();
+        IEnumerable<Region> regions = await Repository.LoadAsync<Region>(regionIds, cancellationToken);
+
+        IEnumerable<Guid> missingRegions = regionIds.Except(regions.Select(x => x.Id)).Distinct();
+        if (missingRegions.Any())
+        {
+          throw new RegionsNotFoundException(missingRegions);
+        }
+
+        var conflicts = new List<KeyValuePair<Guid, int>>(capacity: payload.RegionalNumbers.Count());
 
         foreach (RegionalNumberPayload regionalNumber in payload.RegionalNumbers)
         {
-          SpeciesModel? conflict = await Querier.GetAsync(regionalNumber.Region, regionalNumber.Number, cancellationToken);
+          SpeciesModel? conflict = await Querier.GetAsync(regionalNumber.RegionId, regionalNumber.Number, cancellationToken);
           if (conflict != null && conflict.Id != species?.Id)
           {
-            conflicts.Add(new KeyValuePair<Region, int>(regionalNumber.Region, regionalNumber.Number));
+            conflicts.Add(new KeyValuePair<Guid, int>(regionalNumber.RegionId, regionalNumber.Number));
           }
         }
 

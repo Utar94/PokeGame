@@ -164,6 +164,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import AbilitySelect from '@/components/Abilities/AbilitySelect.vue'
 import BaseStatistics from './BaseStatistics.vue'
 import EvolutionTab from './EvolutionTab.vue'
@@ -228,17 +229,7 @@ export default {
       picture: null,
       primaryType: null,
       reference: null,
-      regionalNumbers: {
-        Alola: 0,
-        Galar: 0,
-        Hoenn: 0,
-        Indigo: 0,
-        Johto: 0,
-        Kalos: 0,
-        Kanto: 0,
-        Sinnoh: 0,
-        Unova: 0
-      },
+      regionalNumbers: [],
       regionalNumbersAlreadyUsed: false,
       secondaryType: null,
       species: null,
@@ -270,7 +261,8 @@ export default {
         (this.description ?? '') !== (this.species?.description ?? '') ||
         JSON.stringify(this.payload.evYield) !== JSON.stringify(this.species?.evYield ?? {}) ||
         JSON.stringify(this.payload.baseStatistics) !== JSON.stringify(this.species?.baseStatistics ?? {}) ||
-        JSON.stringify(this.payload.regionalNumbers) !== JSON.stringify(this.species?.regionalNumbers ?? {}) ||
+        JSON.stringify(this.orderBy(this.regionalNumbers.map(({ number, region }) => `${region?.id ?? null}_${number}`))) !==
+          JSON.stringify(this.orderBy(this.species?.regionalNumbers.map(({ number, region }) => `${region?.id ?? null}_${number}`) ?? [])) ||
         (this.reference ?? '') !== (this.species?.reference ?? '') ||
         (this.picture ?? '') !== (this.species?.picture ?? '') ||
         (this.notes ?? '') !== (this.species?.notes ?? '')
@@ -302,9 +294,7 @@ export default {
         baseStatistics: Object.entries(this.baseStatistics)
           .filter(([, value]) => value > 0)
           .map(([statistic, value]) => ({ statistic, value })),
-        regionalNumbers: Object.entries(this.regionalNumbers)
-          .filter(([, number]) => number > 0)
-          .map(([region, number]) => ({ region, number })),
+        regionalNumbers: this.regionalNumbers.map(({ region, number }) => ({ regionId: region?.id ?? null, number })),
         reference: this.reference || null,
         picture: this.picture || null,
         notes: this.notes
@@ -344,6 +334,7 @@ export default {
       this.picture = species.picture
       this.primaryType = species.primaryType
       this.reference = species.reference
+      this.regionalNumbers = species.regionalNumbers.map(({ number, region }) => ({ number, region }))
       this.secondaryType = species.secondaryType
       this.weight = species.weight ?? 0
 
@@ -362,17 +353,6 @@ export default {
       this.baseStatistics.SpecialAttack = baseStatistics.SpecialAttack ?? 0
       this.baseStatistics.SpecialDefense = baseStatistics.SpecialDefense ?? 0
       this.baseStatistics.Speed = baseStatistics.Speed ?? 0
-
-      const regionalNumbers = Object.fromEntries(species.regionalNumbers.map(({ region, number }) => [region, number]))
-      this.regionalNumbers.Kanto = regionalNumbers.Kanto ?? 0
-      this.regionalNumbers.Johto = regionalNumbers.Johto ?? 0
-      this.regionalNumbers.Hoenn = regionalNumbers.Hoenn ?? 0
-      this.regionalNumbers.Sinnoh = regionalNumbers.Sinnoh ?? 0
-      this.regionalNumbers.Unova = regionalNumbers.Unova ?? 0
-      this.regionalNumbers.Kalos = regionalNumbers.Kalos ?? 0
-      this.regionalNumbers.Alola = regionalNumbers.Alola ?? 0
-      this.regionalNumbers.Galar = regionalNumbers.Galar ?? 0
-      this.regionalNumbers.Indigo = regionalNumbers.Indigo ?? 0
     },
     async submit() {
       if (!this.loading) {
@@ -399,6 +379,11 @@ export default {
               return
             } else if (data?.field === 'RegionalNumbers') {
               this.regionalNumbersAlreadyUsed = true
+              for (let i = 0; i < this.regionalNumbers.length; i++) {
+                const regionalNumber = this.regionalNumbers[i]
+                regionalNumber.conflict = Boolean(data.regionalNumbers[regionalNumber.region.id])
+                Vue.set(this.regionalNumbers, i, regionalNumber)
+              }
               return
             }
           }

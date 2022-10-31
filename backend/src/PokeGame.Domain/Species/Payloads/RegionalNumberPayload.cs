@@ -2,7 +2,7 @@
 {
   public class RegionalNumberPayload
   {
-    public Region Region { get; set; }
+    public Guid RegionId { get; set; }
     public int Number { get; set; }
   }
 }

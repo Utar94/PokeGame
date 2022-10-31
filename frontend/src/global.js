@@ -18,7 +18,6 @@ import PictureField from './components/shared/PictureField.vue'
 import PokemonDollar from './components/shared/PokemonDollar.vue'
 import PokemonIcon from './components/shared/PokemonIcon.vue'
 import ReferenceField from './components/shared/ReferenceField.vue'
-import RegionSelect from './components/shared/RegionSelect.vue'
 import SearchField from './components/shared/SearchField.vue'
 import SortSelect from './components/shared/SortSelect.vue'
 import StatusCell from './components/shared/StatusCell.vue'
@@ -44,7 +43,6 @@ Vue.component('picture-field', PictureField)
 Vue.component('pokemon-dollar', PokemonDollar)
 Vue.component('pokemon-icon', PokemonIcon)
 Vue.component('reference-field', ReferenceField)
-Vue.component('region-select', RegionSelect)
 Vue.component('search-field', SearchField)
 Vue.component('sort-select', SortSelect)
 Vue.component('status-cell', StatusCell)

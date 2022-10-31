@@ -5,7 +5,7 @@
       {{ ' ' }}
       <gender-icon :gender="gameTrainer.gender" />
       {{ gameTrainer.name }}
-      ({{ $t(`region.options.${gameTrainer.region}`) }} #{{ gameTrainer.number }})
+      ({{ gameTrainer.region }} #{{ gameTrainer.number }})
     </h1>
     <b-card-group deck>
       <b-card class="mb-2 menu-item" img-alt="Pokédex" :img-src="'/img/pokedex.jpg'" img-top no-body tag="article" @click="navigateGame('Pokédex')">

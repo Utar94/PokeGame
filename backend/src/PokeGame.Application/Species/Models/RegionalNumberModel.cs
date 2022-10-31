@@ -1,10 +1,10 @@
-﻿using PokeGame.Domain;
+﻿using PokeGame.Application.Regions.Models;
 
 namespace PokeGame.Application.Species.Models
 {
   public class RegionalNumberModel
   {
-    public Region Region { get; set; }
+    public RegionModel? Region { get; set; }
     public int Number { get; set; }
   }
 }

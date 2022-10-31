@@ -61,7 +61,7 @@ namespace PokeGame.ReadModel.Handlers.Trainers
       }
 
       int regionalCount = await _readContext.RegionalSpecies.AsNoTracking()
-          .Where(x => x.Region == trainerEntity.LegacyRegion)
+          .Where(x => x.Region!.Sid == trainerEntity.RegionId)
           .CountAsync(cancellationToken);
 
       trainerEntity.UpdatePokedex(regionalCount);

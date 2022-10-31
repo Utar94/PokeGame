@@ -3,132 +3,96 @@
     <b-alert dismissible variant="warning" :show="conflict" @input="$emit('dismissed', $event)">
       <strong v-t="'species.regional.numbersAlreadyUsed'" />
     </b-alert>
-    <b-row>
-      <form-field
-        class="col"
-        id="numberKanto"
-        label="region.options.Kanto"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Kanto"
-        @input="onInput('Kanto', Number($event))"
+    <div class="my-2">
+      <icon-button
+        class="mx-1"
+        :disabled="excludedRegions.length === regions"
+        icon="plus"
+        text="species.regional.addNumber"
+        variant="success"
+        v-b-modal.addNumber
       />
-      <form-field
-        class="col"
-        id="numberJohto"
-        label="region.options.Johto"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Johto"
-        @input="onInput('Johto', Number($event))"
-      />
-      <form-field
-        class="col"
-        id="numberHoenn"
-        label="region.options.Hoenn"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Hoenn"
-        @input="onInput('Hoenn', Number($event))"
-      />
-      <form-field
-        class="col"
-        id="numberSinnoh"
-        label="region.options.Sinnoh"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Sinnoh"
-        @input="onInput('Sinnoh', Number($event))"
-      />
-    </b-row>
-    <b-row>
-      <form-field
-        class="col"
-        id="numberUnova"
-        label="region.options.Unova"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Unova"
-        @input="onInput('Unova', Number($event))"
-      />
-      <form-field
-        class="col"
-        id="numberKalos"
-        label="region.options.Kalos"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Kalos"
-        @input="onInput('Kalos', Number($event))"
-      />
-      <form-field
-        class="col"
-        id="numberAlola"
-        label="region.options.Alola"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Alola"
-        @input="onInput('Alola', Number($event))"
-      />
-      <form-field
-        class="col"
-        id="numberGalar"
-        label="region.options.Galar"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Galar"
-        @input="onInput('Galar', Number($event))"
-      />
-    </b-row>
-    <b-row>
-      <form-field
-        class="col"
-        id="numberIndigo"
-        label="region.options.Indigo"
-        :minValue="0"
-        :maxValue="999"
-        :step="1"
-        type="number"
-        :value="value.Indigo"
-        @input="onInput('Indigo', Number($event))"
-      />
-    </b-row>
+      <regional-number-modal :exclude="excludedRegions" id="addNumber" @ok="addNumber" />
+    </div>
+    <table v-if="value.length > 0" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" v-t="'regions.select.label'" />
+          <th scope="col" v-t="'species.number.label'" />
+          <th scope="col" />
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(regionalNumber, index) in value" :key="index">
+          <td>
+            <b-badge v-if="regionalNumber.conflict" variant="warning">{{ $t('species.regional.conflict') }}</b-badge> {{ regionalNumber.region.name }}
+          </td>
+          <td v-text="regionalNumber.number" />
+          <td>
+            <icon-button class="mx-1" icon="edit" variant="primary" v-b-modal="`editNumber_${index}`" />
+            <icon-button class="mx-1" icon="times" variant="danger" @click="onRemove(index)" />
+            <regional-number-modal :exclude="excludedRegions" :id="`editNumber_${index}`" :regionalNumber="regionalNumber" @ok="editNumber(index, $event)" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p v-else v-t="'species.regional.empty'" />
   </b-tab>
 </template>
 
 <script>
+import Vue from 'vue'
+import RegionalNumberModal from './RegionalNumberModal.vue'
+import { getRegions } from '@/api/regions'
+
 export default {
   name: 'RegionalTab',
+  components: {
+    RegionalNumberModal
+  },
   props: {
     conflict: {
       type: Boolean,
       default: false
     },
     value: {
-      type: Object,
+      type: Array,
       required: true
     }
   },
+  data() {
+    return {
+      regions: 0
+    }
+  },
+  computed: {
+    excludedRegions() {
+      return this.value.filter(({ region }) => Boolean(region)).map(({ region }) => region.id)
+    }
+  },
   methods: {
-    onInput(region, number) {
-      const regionalNumbers = { ...this.value }
-      regionalNumbers[region] = number
-      this.$emit('input', regionalNumbers)
+    addNumber({ number, region }) {
+      const values = [...this.value]
+      values.push({ number, region })
+      this.$emit('input', values)
+    },
+    editNumber(index, { number, region }) {
+      const values = [...this.value]
+      Vue.set(values, index, { number, region })
+      this.$emit('input', values)
+    },
+    onRemove(index) {
+      const values = [...this.value]
+      Vue.delete(values, index)
+      this.$emit('input', values)
+    }
+  },
+  async created() {
+    try {
+      const { data } = await getRegions()
+      this.regions = data.total
+    } catch (e) {
+      this.handleError(e)
     }
   }
 }

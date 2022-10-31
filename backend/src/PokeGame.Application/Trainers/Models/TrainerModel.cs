@@ -1,6 +1,5 @@
 ﻿using PokeGame.Application.Models;
 using PokeGame.Application.Regions.Models;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Application.Trainers.Models
@@ -8,9 +7,6 @@ namespace PokeGame.Application.Trainers.Models
   public class TrainerModel : AggregateModel
   {
     public ActorModel? User { get; set; }
-
-    [Obsolete("To be replaced by the Region model.")]
-    public Region LegacyRegion { get; set; }
 
     public RegionModel? Region { get; set; }
     public int Number { get; set; }
