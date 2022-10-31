@@ -10,7 +10,7 @@ namespace PokeGame.Web.Models.Api.Game
     {
       Id = model.Id;
 
-      Region = model.Region;
+      Region = model.LegacyRegion;
       Number = model.Number;
 
       Gender = model.Gender;

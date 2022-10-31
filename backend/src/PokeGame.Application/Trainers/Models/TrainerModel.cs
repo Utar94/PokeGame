@@ -8,7 +8,9 @@ namespace PokeGame.Application.Trainers.Models
   {
     public ActorModel? User { get; set; }
 
-    public Region Region { get; set; }
+    [Obsolete("To be replaced by the Region model.")]
+    public Region LegacyRegion { get; set; }
+
     public int Number { get; set; }
     public byte Checksum { get; set; }
 

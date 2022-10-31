@@ -42,7 +42,7 @@ namespace PokeGame.ReadModel.Queriers
       }
       if (region.HasValue)
       {
-        query = query.Where(x => x.Region == region.Value);
+        query = query.Where(x => x.LegacyRegion == region.Value);
       }
       if (search != null)
       {

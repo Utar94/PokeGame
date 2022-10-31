@@ -207,7 +207,7 @@ export default {
       this.picture = trainer.picture
       this.playTime = trainer.playTime
       this.reference = trainer.reference
-      this.region = trainer.region
+      this.region = trainer.legacyRegion
       this.userId = trainer.user?.id ?? null
     },
     async submit() {

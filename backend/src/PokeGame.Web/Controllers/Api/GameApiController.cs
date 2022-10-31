@@ -98,7 +98,7 @@ namespace PokeGame.Web.Controllers.Api
         return Forbid();
       }
 
-      Region? region = national ? null : trainer.Region;
+      Region? region = national ? null : trainer.LegacyRegion;
 
       ListModel<PokedexModel> pokedex = await _mediator.Send(new GetPokedexEntriesQuery
       {

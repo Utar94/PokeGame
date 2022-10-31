@@ -8,7 +8,9 @@ namespace PokeGame.ReadModel.Entities
     public UserEntity? User { get; private set; }
     public int? UserId { get; private set; }
 
-    public Region Region { get; private set; }
+    [Obsolete("To be replaced by the Region entity.")]
+    public Region LegacyRegion { get; private set; }
+
     public int Number { get; private set; }
     public byte Checksum { get; private set; }
 
@@ -60,7 +62,7 @@ namespace PokeGame.ReadModel.Entities
     {
       base.Synchronize(trainer);
 
-      Region = trainer.Region;
+      LegacyRegion = trainer.Region;
       Number = trainer.Number;
       Checksum = trainer.Checksum;
 
@@ -79,7 +81,7 @@ namespace PokeGame.ReadModel.Entities
     public  void UpdatePokedex(int regionalCount)
     {
       int currentCount = Pokedex.Where(x => x.Species != null)
-        .Count(x => x.Species!.RegionalSpecies.Any(y => y.Region == Region));
+        .Count(x => x.Species!.RegionalSpecies.Any(y => y.Region == LegacyRegion));
       NationalPokedex = currentCount == regionalCount;
 
       PokedexCount = NationalPokedex ? Pokedex.Count : currentCount;
