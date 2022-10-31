@@ -24,7 +24,7 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
-              <new-region-select class="col" required v-model="region" />
+              <region-select class="col" required v-model="region" />
               <gender-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="gender" />
               <form-field class="col" disabled id="number" label="trainers.number" :required="!trainer" type="number" v-model.number="number">
                 <b-input-group-append>
@@ -64,7 +64,7 @@
 <script>
 import GenderSelect from './GenderSelect.vue'
 import InventoryTab from './InventoryTab.vue'
-import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import PokedexTab from './PokedexTab.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
@@ -76,7 +76,7 @@ export default {
   components: {
     GenderSelect,
     InventoryTab,
-    NewRegionSelect,
+    RegionSelect,
     PokedexTab,
     TrainerIcon,
     UserSelect

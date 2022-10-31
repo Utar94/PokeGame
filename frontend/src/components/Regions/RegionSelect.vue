@@ -18,7 +18,7 @@ import Vue from 'vue'
 import { getRegions } from '@/api/regions'
 
 export default {
-  name: 'NewRegionSelect',
+  name: 'RegionSelect',
   props: {
     disabled: {
       type: Boolean,

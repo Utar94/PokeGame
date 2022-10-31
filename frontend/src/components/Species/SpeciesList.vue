@@ -7,7 +7,7 @@
     </div>
     <b-row>
       <type-select class="col" v-model="type" />
-      <new-region-select class="col" v-model="region" />
+      <region-select class="col" v-model="region" />
     </b-row>
     <b-row>
       <search-field class="col" v-model="search" />
@@ -38,14 +38,14 @@
 </template>
 
 <script>
-import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import SpeciesRow from './SpeciesRow.vue'
 import { deleteSpecies, getSpeciesList } from '@/api/species'
 
 export default {
   name: 'SpeciesList',
   components: {
-    NewRegionSelect,
+    RegionSelect,
     SpeciesRow
   },
   data() {

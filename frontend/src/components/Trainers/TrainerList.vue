@@ -7,7 +7,7 @@
     </div>
     <b-row>
       <gender-select class="col" v-model="gender" />
-      <new-region-select class="col" v-model="region" />
+      <region-select class="col" v-model="region" />
       <user-select class="col" v-model="userId" />
     </b-row>
     <b-row>
@@ -69,7 +69,7 @@
 
 <script>
 import GenderSelect from './GenderSelect.vue'
-import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserAvatar from '@/components/Users/UserAvatar.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
@@ -79,7 +79,7 @@ export default {
   name: 'TrainerList',
   components: {
     GenderSelect,
-    NewRegionSelect,
+    RegionSelect,
     TrainerIcon,
     UserAvatar,
     UserSelect

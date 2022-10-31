@@ -37,7 +37,7 @@
             </b-row>
             <template v-if="evolution">
               <b-row>
-                <new-region-select v-if="evolution.region" class="col" required v-model="region" />
+                <region-select v-if="evolution.region" class="col" required v-model="region" />
                 <form-field
                   v-if="evolution.location"
                   class="col"
@@ -126,7 +126,7 @@
 
 <script>
 import EvolutionCondition from './EvolutionCondition.vue'
-import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import TimeOfDaySelect from '@/components/Species/TimeOfDaySelect.vue'
 import { evolvePokemon } from '@/api/pokemon'
 import { getInventory } from '@/api/inventory'
@@ -135,7 +135,7 @@ export default {
   name: 'PokemonEvolution',
   components: {
     EvolutionCondition,
-    NewRegionSelect,
+    RegionSelect,
     TimeOfDaySelect
   },
   props: {

@@ -7,7 +7,7 @@
     </div>
     <b-row>
       <search-field class="col" v-model="search" />
-      <new-region-select class="col" v-model="region" />
+      <region-select class="col" v-model="region" />
       <sort-select class="col" :desc="desc" :options="sortOptions" v-model="sort" @desc="desc = $event" />
       <count-select class="col" v-model="count" />
     </b-row>
@@ -44,7 +44,7 @@
 
 <script>
 import EditEntryModal from './EditEntryModal.vue'
-import NewRegionSelect from '@/components/Regions/NewRegionSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import PokedexEntry from './PokedexEntry.vue'
 import { deleteEntry, getEntries } from '@/api/pokedex'
 
@@ -52,7 +52,7 @@ export default {
   name: 'PokedexTab',
   components: {
     EditEntryModal,
-    NewRegionSelect,
+    RegionSelect,
     PokedexEntry
   },
   props: {
