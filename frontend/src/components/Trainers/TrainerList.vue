@@ -23,7 +23,7 @@
             <th scope="col" v-t="'name.label'" />
             <th scope="col" v-t="'users.select.label'" />
             <th scope="col" v-t="'trainers.number'" />
-            <th scope="col" v-t="'region.label'" />
+            <th scope="col" v-t="'regions.select.label'" />
             <th scope="col" v-t="'updated'" />
             <th scope="col" />
           </tr>
@@ -45,7 +45,7 @@
               <template v-else>&mdash;</template>
             </td>
             <td v-text="trainer.number" />
-            <td>{{ $t(`region.options.${trainer.region}`) }}</td>
+            <td v-text="trainer.region ? trainer.region.name : '—'" />
             <td><status-cell :actor="trainer.updatedBy || trainer.createdBy" :date="trainer.updatedOn || trainer.createdOn" /></td>
             <td>
               <icon-button disabled icon="trash-alt" text="actions.delete" variant="danger" v-b-modal="`delete_${trainer.id}`" />
@@ -69,6 +69,7 @@
 
 <script>
 import GenderSelect from './GenderSelect.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserAvatar from '@/components/Users/UserAvatar.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
@@ -78,6 +79,7 @@ export default {
   name: 'TrainerList',
   components: {
     GenderSelect,
+    RegionSelect,
     TrainerIcon,
     UserAvatar,
     UserSelect
@@ -101,7 +103,7 @@ export default {
     params() {
       return {
         gender: this.gender,
-        region: this.region,
+        regionId: this.region?.id ?? null,
         search: this.search,
         userId: this.userId,
         sort: this.sort,
@@ -167,7 +169,7 @@ export default {
           oldValue &&
           (newValue.search !== oldValue.search ||
             newValue.gender !== oldValue.gender ||
-            newValue.region !== oldValue.region ||
+            (newValue.region?.id ?? null) !== (oldValue.region?.id ?? null) ||
             newValue.userId !== oldValue.userId ||
             newValue.count !== oldValue.count)
         ) {

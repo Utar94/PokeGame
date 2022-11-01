@@ -5,6 +5,7 @@ using PokeGame.Domain.Species.Events;
 using PokeGame.ReadModel.Entities;
 using PokeGame.ReadModel.Handlers.Items;
 using PokeGame.ReadModel.Handlers.Moves;
+using PokeGame.ReadModel.Handlers.Regions;
 
 namespace PokeGame.ReadModel.Handlers.Species
 {
@@ -14,6 +15,7 @@ namespace PokeGame.ReadModel.Handlers.Species
     private readonly IRepository _repository;
     private readonly SynchronizeItem _synchronizeItem;
     private readonly SynchronizeMove _synchronizeMove;
+    private readonly SynchronizeRegion _synchronizeRegion;
     private readonly SynchronizeSpecies _synchronizeSpecies;
 
     public SpeciesEvolutionSavedHandler(
@@ -21,6 +23,7 @@ namespace PokeGame.ReadModel.Handlers.Species
       IRepository repository,
       SynchronizeItem synchronizeItem,
       SynchronizeMove synchronizeMove,
+      SynchronizeRegion synchronizeRegion,
       SynchronizeSpecies synchronizeSpecies
     )
     {
@@ -28,6 +31,7 @@ namespace PokeGame.ReadModel.Handlers.Species
       _repository = repository;
       _synchronizeItem = synchronizeItem;
       _synchronizeMove = synchronizeMove;
+      _synchronizeRegion = synchronizeRegion;
       _synchronizeSpecies = synchronizeSpecies;
     }
 
@@ -76,11 +80,21 @@ namespace PokeGame.ReadModel.Handlers.Species
           }
         }
 
+        RegionEntity? region = null;
+        if (evolution.RegionId.HasValue)
+        {
+          region = await _synchronizeRegion.ExecuteAsync(evolution.RegionId.Value, version: null, cancellationToken);
+          if (region == null)
+          {
+            return;
+          }
+        }
+
         EvolutionEntity? entity = evolvingSpecies.Evolutions
           .SingleOrDefault(x => x.EvolvedSpeciesId == evolvedSpecies.Sid)
           ?? evolvingSpecies.Add(evolvedSpecies);
 
-        entity.Synchronize(evolution, item, move);
+        entity.Synchronize(evolution, item, move, region);
 
         await _readContext.SaveChangesAsync(cancellationToken);
       }

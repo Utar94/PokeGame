@@ -127,9 +127,9 @@ namespace PokeGame.Application.Pokemon.Mutations
       {
         errors.Add($"MoveId: (Expected={evolution.MoveId.Value})");
       }
-      if (evolution.Region?.Equals(payload.Region) == false)
+      if (evolution.RegionId?.Equals(payload.RegionId) == false)
       {
-        errors.Add($"Region: (Expected={evolution.Region}, Actual={payload.Region})");
+        errors.Add($"Region: (Expected={evolution.RegionId}, Actual={payload.RegionId})");
       }
       if (evolution.TimeOfDay?.Equals(payload.TimeOfDay) == false)
       {

@@ -8,7 +8,7 @@ namespace PokeGame.Application.Pokedex.Queries
   public class GetPokedexEntriesQuery : IRequest<ListModel<PokedexModel>>
   {
     public bool? HasCaught { get; set; }
-    public Region? Region { get; set; }
+    public Guid? RegionId { get; set; }
     public string? Search { get; set; }
     public Guid TrainerId { get; set; }
     public PokemonType? Type { get; set; }

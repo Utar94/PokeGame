@@ -7,6 +7,9 @@ namespace PokeGame.Application.Trainers
   {
     public TrainerValidator()
     {
+      RuleFor(x => x.RegionId)
+        .NotEmpty();
+
       RuleFor(x => x.Number)
         .InclusiveBetween(100000, 999999);
 

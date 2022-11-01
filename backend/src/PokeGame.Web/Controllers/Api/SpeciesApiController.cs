@@ -48,14 +48,14 @@ namespace PokeGame.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<ActionResult<SpeciesModel>> GetAsync(Region? region, string? search, PokemonType? type,
+    public async Task<ActionResult<SpeciesModel>> GetAsync(Guid? regionId, string? search, PokemonType? type,
       SpeciesSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
       return Ok(await _mediator.Send(new GetSpeciesListQuery
       {
-        Region = region,
+        RegionId = regionId,
         Search = search,
         Type = type,
         Sort = sort,

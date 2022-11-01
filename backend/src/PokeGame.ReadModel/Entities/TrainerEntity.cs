@@ -1,5 +1,4 @@
-﻿using PokeGame.Domain;
-using PokeGame.Domain.Trainers;
+﻿using PokeGame.Domain.Trainers;
 
 namespace PokeGame.ReadModel.Entities
 {
@@ -8,9 +7,9 @@ namespace PokeGame.ReadModel.Entities
     public UserEntity? User { get; private set; }
     public int? UserId { get; private set; }
 
-    public Region Region { get; private set; }
+    public RegionEntity? Region { get; private set; }
+    public int? RegionId { get; private set; }
     public int Number { get; private set; }
-    public byte Checksum { get; private set; }
 
     public int Money { get; private set; }
     public int PlayTime { get; private set; }
@@ -50,6 +49,12 @@ namespace PokeGame.ReadModel.Entities
       return entity;
     }
 
+    public void SetRegion(RegionEntity? region)
+    {
+      Region = region;
+      RegionId = region?.Sid;
+    }
+
     public void SetUser(UserEntity? user)
     {
       User = user;
@@ -60,9 +65,7 @@ namespace PokeGame.ReadModel.Entities
     {
       base.Synchronize(trainer);
 
-      Region = trainer.Region;
       Number = trainer.Number;
-      Checksum = trainer.Checksum;
 
       Money = trainer.Money;
       PlayTime = trainer.PlayTime;
@@ -76,10 +79,10 @@ namespace PokeGame.ReadModel.Entities
       Reference = trainer.Reference;
     }
 
-    public  void UpdatePokedex(int regionalCount)
+    public void UpdatePokedex(int regionalCount)
     {
       int currentCount = Pokedex.Where(x => x.Species != null)
-        .Count(x => x.Species!.RegionalSpecies.Any(y => y.Region == Region));
+        .Count(x => x.Species!.RegionalSpecies.Any(y => y.RegionId == RegionId));
       NationalPokedex = currentCount == regionalCount;
 
       PokedexCount = NationalPokedex ? Pokedex.Count : currentCount;

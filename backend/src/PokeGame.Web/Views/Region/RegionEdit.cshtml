@@ -1,0 +1,17 @@
+﻿@using PokeGame.Application.Regions.Models;
+
+@model RegionModel
+@{
+  Layout = "_Layout";
+
+  ViewBag.Title = Model?.Name ?? "Create region";
+}
+
+@if (Model == null)
+{
+  <region-edit></region-edit>
+}
+else
+{
+  <region-edit json="@(ModelSerializer.Serialize(Model))" status="@(Context.Request.Query["status"])"></region-edit>
+}

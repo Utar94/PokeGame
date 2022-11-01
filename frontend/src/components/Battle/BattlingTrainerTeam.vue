@@ -6,7 +6,7 @@
         <tr>
           <th scope="col" v-t="'name.label'" />
           <th scope="col" v-t="'trainers.number'" />
-          <th scope="col" v-t="'region.label'" />
+          <th scope="col" v-t="'regions.select.label'" />
           <th scope="col" />
         </tr>
       </thead>

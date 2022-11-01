@@ -53,10 +53,13 @@
   "playTime": "Play Time (Minutes)",
   "pokedex": {
     "add": "Add entry",
+    "count": "Pokédex count: {count}",
     "edit": "Edit entry",
     "empty": "This list is empty.",
     "hasCaught": "Caught",
     "label": "Pokédex",
+    "national": "National",
+    "regional": "Regional",
     "remove": {
       "confirm": "Do you really want to remove the following Pokédex entry?",
       "success": "The Pokédex entry entry has been removed.",

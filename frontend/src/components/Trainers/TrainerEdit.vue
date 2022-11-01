@@ -24,7 +24,7 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
-              <region-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="region" />
+              <region-select class="col" id="trainerRegion" required v-model="region" />
               <gender-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="gender" />
               <form-field class="col" disabled id="number" label="trainers.number" :required="!trainer" type="number" v-model.number="number">
                 <b-input-group-append>
@@ -49,7 +49,7 @@
             <description-field v-model="description" />
           </b-tab>
           <inventory-tab v-if="trainer" :trainer="trainer" @updated="onInventoryUpdated" />
-          <pokedex-tab v-if="trainer" :trainerId="trainer.id" />
+          <pokedex-tab v-if="trainer" :trainer="trainer" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <picture-field validate v-model="picture" />
@@ -64,6 +64,7 @@
 <script>
 import GenderSelect from './GenderSelect.vue'
 import InventoryTab from './InventoryTab.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import PokedexTab from './PokedexTab.vue'
 import TrainerIcon from './TrainerIcon.vue'
 import UserSelect from '@/components/Users/UserSelect.vue'
@@ -75,6 +76,7 @@ export default {
   components: {
     GenderSelect,
     InventoryTab,
+    RegionSelect,
     PokedexTab,
     TrainerIcon,
     UserSelect
@@ -115,7 +117,8 @@ export default {
     },
     hasChanges() {
       return (
-        (!this.trainer && (this.gender || this.number || this.region)) ||
+        (!this.trainer && (this.gender || this.number)) ||
+        (this.region?.id ?? null) !== (this.trainer?.region?.id ?? null) ||
         this.money !== (this.trainer?.money ?? 0) ||
         this.playTime !== (this.trainer?.playTime ?? 0) ||
         this.userId !== (this.trainer?.user?.id ?? null) ||
@@ -135,10 +138,10 @@ export default {
         description: this.description,
         reference: this.reference || null,
         picture: this.picture || null,
+        regionId: this.region?.id ?? null,
         notes: this.notes
       }
       if (!this.trainer) {
-        payload.region = this.region
         payload.number = this.number
         payload.gender = this.gender
       }

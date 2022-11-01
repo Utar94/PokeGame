@@ -3,7 +3,7 @@
     <td><trainer-icon :trainer="trainer" /></td>
     <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
     <td v-text="trainer.number" />
-    <td>{{ $t(`region.options.${trainer.region}`) }}</td>
+    <td v-text="trainer.region ? trainer.region.name : '—'" />
     <td><icon-button icon="times" variant="danger" @click="toggle" /></td>
   </tr>
 </template>

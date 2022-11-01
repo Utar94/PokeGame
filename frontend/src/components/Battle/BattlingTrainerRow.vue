@@ -2,7 +2,7 @@
   <tr>
     <td><gender-icon :gender="trainer.gender" /> {{ trainer.name }}</td>
     <td v-text="trainer.number" />
-    <td>{{ $t(`region.options.${trainer.region}`) }}</td>
+    <td v-text="trainer.region ? trainer.region.name : '—'" />
     <td>
       <use-item class="mx-1" :team="team" :trainer="trainer" />
       <throw-ball v-if="!isTrainerBattle" class="mx-1" :trainer="trainer" />

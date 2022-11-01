@@ -2,7 +2,6 @@
 using PokeGame.Application.Models;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
-using PokeGame.Domain;
 using PokeGame.Domain.Trainers;
 using PokeGame.ReadModel.Entities;
 
@@ -22,27 +21,29 @@ namespace PokeGame.ReadModel.Queriers
     public async Task<TrainerModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       TrainerEntity? trainer = await _trainers.AsNoTracking()
+        .Include(x => x.Region)
         .Include(x => x.User)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return await _mappingService.MapAsync<TrainerModel>(trainer, cancellationToken);
     }
 
-    public async Task<ListModel<TrainerModel>> GetPagedAsync(TrainerGender? gender, Region? region, string? search, Guid? userId,
+    public async Task<ListModel<TrainerModel>> GetPagedAsync(TrainerGender? gender, Guid? regionId, string? search, Guid? userId,
       TrainerSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
       IQueryable<TrainerEntity> query = _trainers.AsNoTracking()
+        .Include(x => x.Region)
         .Include(x => x.User);
 
       if (gender.HasValue)
       {
         query = query.Where(x => x.Gender == gender.Value);
       }
-      if (region.HasValue)
+      if (regionId.HasValue)
       {
-        query = query.Where(x => x.Region == region.Value);
+        query = query.Where(x => x.Region!.Id == regionId.Value);
       }
       if (search != null)
       {

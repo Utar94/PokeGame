@@ -10,10 +10,10 @@ using PokeGame.Application.Pokedex.Queries;
 using PokeGame.Application.Pokemon;
 using PokeGame.Application.Pokemon.Models;
 using PokeGame.Application.Pokemon.Queries;
+using PokeGame.Application.Regions.Models;
 using PokeGame.Application.Trainers;
 using PokeGame.Application.Trainers.Models;
 using PokeGame.Application.Trainers.Queries;
-using PokeGame.Domain;
 using PokeGame.Infrastructure;
 using PokeGame.Web.Models.Api.Game;
 
@@ -98,11 +98,11 @@ namespace PokeGame.Web.Controllers.Api
         return Forbid();
       }
 
-      Region? region = national ? null : trainer.Region;
+      RegionModel? region = national ? null : trainer.Region;
 
       ListModel<PokedexModel> pokedex = await _mediator.Send(new GetPokedexEntriesQuery
       {
-        Region = region,
+        RegionId = region?.Id,
         TrainerId = trainer.Id
       }, cancellationToken);
 

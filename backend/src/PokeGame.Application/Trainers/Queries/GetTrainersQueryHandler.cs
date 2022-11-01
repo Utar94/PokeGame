@@ -15,7 +15,7 @@ namespace PokeGame.Application.Trainers.Queries
 
     public async Task<ListModel<TrainerModel>> Handle(GetTrainersQuery request, CancellationToken cancellationToken)
     {
-      return await _querier.GetPagedAsync(request.Gender, request.Region, request.Search, request.UserId,
+      return await _querier.GetPagedAsync(request.Gender, request.RegionId, request.Search, request.UserId,
         request.Sort, request.Desc,
         request.Index, request.Count,
         cancellationToken);

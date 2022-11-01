@@ -50,8 +50,8 @@ export default {
       default: false
     },
     region: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     },
     trainerId: {
       type: String,
@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     regionalNumber() {
-      return (this.region ? this.species.regionalNumbers.find(({ region }) => region === this.region)?.number : null) ?? 0
+      return (this.region ? this.species.regionalNumbers.find(({ region }) => region?.id === this.region.id)?.number : null) ?? 0
     },
     species() {
       return this.entry.species

@@ -23,7 +23,7 @@ namespace PokeGame.ReadModel.Queriers
     public async Task<SpeciesModel?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
-        .Include(x => x.RegionalSpecies)
+        .Include(x => x.RegionalSpecies).ThenInclude(x => x.Region)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -33,19 +33,19 @@ namespace PokeGame.ReadModel.Queriers
     public async Task<SpeciesModel?> GetAsync(int number, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
-        .Include(x => x.RegionalSpecies)
+        .Include(x => x.RegionalSpecies).ThenInclude(x => x.Region)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
         .SingleOrDefaultAsync(x => x.Number == number, cancellationToken);
 
       return await _mappingService.MapAsync<SpeciesModel>(species, cancellationToken);
     }
 
-    public async Task<SpeciesModel?> GetAsync(Region region, int number, CancellationToken cancellationToken)
+    public async Task<SpeciesModel?> GetAsync(Guid regionId, int number, CancellationToken cancellationToken)
     {
       SpeciesEntity? species = await _species.AsNoTracking()
-        .Include(x => x.RegionalSpecies)
+        .Include(x => x.RegionalSpecies).ThenInclude(x => x.Region)
         .Include(x => x.SpeciesAbilities).ThenInclude(x => x.Ability)
-        .SingleOrDefaultAsync(x => x.RegionalSpecies.Any(y => y.Region == region && y.Number == number), cancellationToken);
+        .SingleOrDefaultAsync(x => x.RegionalSpecies.Any(y => y.Region!.Id == regionId && y.Number == number), cancellationToken);
 
       return await _mappingService.MapAsync<SpeciesModel>(species, cancellationToken);
     }
@@ -57,6 +57,7 @@ namespace PokeGame.ReadModel.Queriers
         .Include(x => x.EvolvedSpecies)
         .Include(x => x.Item)
         .Include(x => x.Move)
+        .Include(x => x.Region)
         .SingleOrDefaultAsync(x => x.EvolvingSpecies!.Id == id && x.EvolvedSpecies!.Id == speciesId, cancellationToken);
 
       return await _mappingService.MapAsync<EvolutionModel>(evolution, cancellationToken);
@@ -68,22 +69,23 @@ namespace PokeGame.ReadModel.Queriers
         .Include(x => x.Evolutions).ThenInclude(x => x.EvolvedSpecies).ThenInclude(x => x!.SpeciesAbilities).ThenInclude(x => x.Ability)
         .Include(x => x.Evolutions).ThenInclude(x => x.Item)
         .Include(x => x.Evolutions).ThenInclude(x => x.Move)
+        .Include(x => x.Evolutions).ThenInclude(x => x.Region)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
       return species == null ? null : await _mappingService.MapAsync<IEnumerable<EvolutionModel>>(species.Evolutions, cancellationToken);
     }
 
-    public async Task<ListModel<SpeciesModel>> GetPagedAsync(Region? region, string? search, PokemonType? type,
+    public async Task<ListModel<SpeciesModel>> GetPagedAsync(Guid? regionId, string? search, PokemonType? type,
       SpeciesSort? sort, bool desc,
       int? index, int? count,
       CancellationToken cancellationToken)
     {
       IQueryable<SpeciesEntity> query = _species.AsNoTracking()
-        .Include(x => x.RegionalSpecies);
+        .Include(x => x.RegionalSpecies).ThenInclude(x => x.Region);
 
-      if (region.HasValue)
+      if (regionId.HasValue)
       {
-        query = query.Where(x => x.RegionalSpecies.Any(y => y.Region == region.Value));
+        query = query.Where(x => x.RegionalSpecies.Any(y => y.Region!.Id == regionId.Value));
       }
       if (search != null)
       {

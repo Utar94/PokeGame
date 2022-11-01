@@ -1,0 +1,23 @@
+{
+  "created": "The region has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following region?",
+    "success": "The region has been deleted.",
+    "title": "Delete region"
+  },
+  "editTitle": "Edit region: {name}",
+  "empty": "This list is empty.",
+  "newTitle": "Create region",
+  "select": {
+    "label": "Region",
+    "placeholder": "Select a region"
+  },
+  "sort": {
+    "options": {
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": "Regions",
+  "updated": "The region has been updated."
+}

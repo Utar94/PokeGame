@@ -25,7 +25,7 @@ namespace PokeGame.Web.Models.Api.Game
       {
         Number = trainer.NationalPokedex
           ? species.Number
-          : species.RegionalNumbers.SingleOrDefault(x => x.Region == trainer.Region)?.Number;
+          : species.RegionalNumbers.SingleOrDefault(x => x.Region?.Id == trainer.Region?.Id)?.Number;
         Name = pokemon.Surname ?? species.Name;
 
         PrimaryType = species.PrimaryType;

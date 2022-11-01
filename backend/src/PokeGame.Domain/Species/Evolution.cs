@@ -19,19 +19,19 @@ namespace PokeGame.Domain.Species
     public byte Level { get; private set; }
     public string? Location { get; private set; }
     public Guid? MoveId { get; private set; }
-    public Region? Region { get; private set; }
+    public Guid? RegionId { get; private set; }
     public TimeOfDay? TimeOfDay { get; private set; }
 
     public string? Notes { get; private set; }
 
-    public static Evolution Item(Guid itemId, PokemonGender? gender = null, Region? region = null, string? notes = null)
+    public static Evolution Item(Guid itemId, PokemonGender? gender = null, Guid? regionId = null, string? notes = null)
       => new(EvolutionMethod.Item, itemId, notes)
       {
         Gender = gender,
-        Region = region
+        RegionId = regionId
       };
     public static Evolution LevelUp(PokemonGender? gender = null, bool highFriendship = false, Guid? itemId = null,
-      byte level = 0, string? location = null, Guid? moveId = null, Region? region = null, TimeOfDay? timeOfDay = null, string? notes = null)
+      byte level = 0, string? location = null, Guid? moveId = null, Guid? regionId = null, TimeOfDay? timeOfDay = null, string? notes = null)
       => new(EvolutionMethod.LevelUp, itemId, notes)
       {
         Gender = gender,
@@ -39,7 +39,7 @@ namespace PokeGame.Domain.Species
         Level = level,
         Location = location,
         MoveId = moveId,
-        Region = region,
+        RegionId = regionId,
         TimeOfDay = timeOfDay
       };
     public static Evolution Trade(Guid? itemId = null, string? notes = null)

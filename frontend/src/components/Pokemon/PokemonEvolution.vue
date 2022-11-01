@@ -82,8 +82,8 @@
                     <td><evolution-condition :success="conditions.gender" /></td>
                   </tr>
                   <tr v-if="evolution.region">
-                    <td>{{ $t('species.evolutions.regionFormat', { region: evolution.region }) }}</td>
-                    <td>{{ region ? $t(`region.options.${region}`) : '—' }}</td>
+                    <td>{{ $t('species.evolutions.regionFormat', { region: evolution.region.name }) }}</td>
+                    <td>{{ region ? region.name : '—' }}</td>
                     <td><evolution-condition :success="conditions.region" /></td>
                   </tr>
                   <tr v-if="evolution.location">
@@ -126,6 +126,7 @@
 
 <script>
 import EvolutionCondition from './EvolutionCondition.vue'
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import TimeOfDaySelect from '@/components/Species/TimeOfDaySelect.vue'
 import { evolvePokemon } from '@/api/pokemon'
 import { getInventory } from '@/api/inventory'
@@ -134,6 +135,7 @@ export default {
   name: 'PokemonEvolution',
   components: {
     EvolutionCondition,
+    RegionSelect,
     TimeOfDaySelect
   },
   props: {
@@ -175,7 +177,7 @@ export default {
         level: !this.evolution.level || this.pokemon.level >= this.evolution.level,
         location: !this.evolution.location || this.location === this.evolution.location,
         move: !this.evolution.move || this.pokemon.moves.some(({ move }) => move.id === this.evolution.move.id),
-        region: !this.evolution.region || this.region === this.evolution.region,
+        region: !this.evolution.region || this.region?.id === this.evolution.region.id,
         timeOfDay: !this.evolution.timeOfDay || this.timeOfDay === this.evolution.timeOfDay
       }
     },
@@ -187,7 +189,7 @@ export default {
         speciesId: this.speciesId,
         abilityId: this.abilityId,
         location: this.evolution.location ? this.location : null,
-        region: this.evolution.region ? this.region : null,
+        regionId: this.evolution.region ? this.region?.id ?? null : null,
         timeOfDay: this.evolution.timeOfDay ? this.timeOfDay : null
       }
     },

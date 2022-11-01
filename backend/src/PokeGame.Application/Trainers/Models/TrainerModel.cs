@@ -1,5 +1,5 @@
 ﻿using PokeGame.Application.Models;
-using PokeGame.Domain;
+using PokeGame.Application.Regions.Models;
 using PokeGame.Domain.Trainers;
 
 namespace PokeGame.Application.Trainers.Models
@@ -8,9 +8,8 @@ namespace PokeGame.Application.Trainers.Models
   {
     public ActorModel? User { get; set; }
 
-    public Region Region { get; set; }
+    public RegionModel? Region { get; set; }
     public int Number { get; set; }
-    public byte Checksum { get; set; }
 
     public int Money { get; set; }
     public int PlayTime { get; set; }

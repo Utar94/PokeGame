@@ -42,7 +42,7 @@ namespace PokeGame.Domain.Species
 
     public List<Guid> AbilityIds { get; private set; } = new();
     public Dictionary<Guid, Evolution> Evolutions { get; private set; } = new();
-    public Dictionary<Region, int> RegionalNumbers { get; private set; } = new();
+    public Dictionary<Guid, int> RegionalNumbers { get; private set; } = new();
 
     public void Delete() => ApplyChange(new SpeciesDeleted());
     public void Update(UpdateSpeciesPayload payload) => ApplyChange(new SpeciesUpdated(payload));
@@ -81,9 +81,9 @@ namespace PokeGame.Domain.Species
 
       Evolutions[@event.SpeciesId] = payload.Method switch
       {
-        EvolutionMethod.Item => Evolution.Item(payload.ItemId ?? default, payload.Gender, payload.Region, payload.Notes),
+        EvolutionMethod.Item => Evolution.Item(payload.ItemId ?? default, payload.Gender, payload.RegionId, payload.Notes),
         EvolutionMethod.LevelUp => Evolution.LevelUp(payload.Gender, payload.HighFriendship, payload.ItemId,
-          payload.Level, payload.Location, payload.MoveId, payload.Region, payload.TimeOfDay, payload.Notes),
+          payload.Level, payload.Location, payload.MoveId, payload.RegionId, payload.TimeOfDay, payload.Notes),
         EvolutionMethod.Trade => Evolution.Trade(payload.ItemId, payload.Notes),
         _ => throw new ArgumentException($"The evolution method '{payload.Method}' is not supported.", nameof(@event)),
       };
@@ -142,7 +142,7 @@ namespace PokeGame.Domain.Species
       {
         foreach (RegionalNumberPayload regionalNumber in payload.RegionalNumbers)
         {
-          RegionalNumbers[regionalNumber.Region] = regionalNumber.Number;
+          RegionalNumbers[regionalNumber.RegionId] = regionalNumber.Number;
         }
       }
     }

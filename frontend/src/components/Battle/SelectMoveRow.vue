@@ -9,7 +9,7 @@
     </td>
     <td>{{ $t(`type.options.${move.type}`) }}</td>
     <td>{{ $t(`moves.category.options.${move.category}`) }}</td>
-    <td v-text="move.power || '—'"></td>
+    <td v-text="move.power || '—'" />
     <td>{{ move.accuracy === null ? '—' : $n(move.accuracy / 100, 'percent') }}</td>
     <td>{{ data.remainingPowerPoints }}/{{ move.powerPoints }}</td>
     <td v-text="move.description" />

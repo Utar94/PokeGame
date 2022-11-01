@@ -846,7 +846,7 @@ namespace PokeGame.ReadModel.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Region")
+                    b.Property<int?>("RegionId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("TimeOfDay")
@@ -859,6 +859,8 @@ namespace PokeGame.ReadModel.Migrations
                     b.HasIndex("ItemId");
 
                     b.HasIndex("MoveId");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Evolutions", "ReadModel");
                 });
@@ -1296,18 +1298,78 @@ namespace PokeGame.ReadModel.Migrations
                     b.Property<int>("SpeciesId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Region")
+                    b.Property<int>("RegionId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.HasKey("SpeciesId", "Region");
+                    b.HasKey("SpeciesId", "RegionId");
 
-                    b.HasIndex("Region", "Number")
+                    b.HasIndex("RegionId", "Number")
                         .IsUnique();
 
                     b.ToTable("RegionalSpecies", "ReadModel");
+                });
+
+            modelBuilder.Entity("PokeGame.ReadModel.Entities.RegionEntity", b =>
+                {
+                    b.Property<int>("Sid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("RegionId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
+
+                    b.Property<Guid>("CreatedById")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<Guid?>("UpdatedById")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Sid");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Regions", "ReadModel");
                 });
 
             modelBuilder.Entity("PokeGame.ReadModel.Entities.SpeciesAbilityEntity", b =>
@@ -1458,11 +1520,6 @@ namespace PokeGame.ReadModel.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Sid"));
 
-                    b.Property<byte>("Checksum")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((byte)0);
-
                     b.Property<Guid>("CreatedById")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
@@ -1525,10 +1582,8 @@ namespace PokeGame.ReadModel.Migrations
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
 
-                    b.Property<int>("Region")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("UpdatedById")
                         .HasColumnType("uuid");
@@ -1553,11 +1608,9 @@ namespace PokeGame.ReadModel.Migrations
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("Region");
-
                     b.HasIndex("UserId");
 
-                    b.HasIndex("Region", "Number", "Name")
+                    b.HasIndex("RegionId", "Number", "Name")
                         .IsUnique();
 
                     b.ToTable("Trainers", "ReadModel");
@@ -1652,6 +1705,10 @@ namespace PokeGame.ReadModel.Migrations
                         .WithMany("Evolutions")
                         .HasForeignKey("MoveId");
 
+                    b.HasOne("PokeGame.ReadModel.Entities.RegionEntity", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
                     b.Navigation("EvolvedSpecies");
 
                     b.Navigation("EvolvingSpecies");
@@ -1659,6 +1716,8 @@ namespace PokeGame.ReadModel.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Move");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("PokeGame.ReadModel.Entities.InventoryEntity", b =>
@@ -1782,11 +1841,19 @@ namespace PokeGame.ReadModel.Migrations
 
             modelBuilder.Entity("PokeGame.ReadModel.Entities.RegionalSpeciesEntity", b =>
                 {
+                    b.HasOne("PokeGame.ReadModel.Entities.RegionEntity", "Region")
+                        .WithMany("RegionalSpecies")
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PokeGame.ReadModel.Entities.SpeciesEntity", "Species")
                         .WithMany("RegionalSpecies")
                         .HasForeignKey("SpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Region");
 
                     b.Navigation("Species");
                 });
@@ -1812,9 +1879,15 @@ namespace PokeGame.ReadModel.Migrations
 
             modelBuilder.Entity("PokeGame.ReadModel.Entities.TrainerEntity", b =>
                 {
+                    b.HasOne("PokeGame.ReadModel.Entities.RegionEntity", "Region")
+                        .WithMany("Trainers")
+                        .HasForeignKey("RegionId");
+
                     b.HasOne("PokeGame.ReadModel.Entities.UserEntity", "User")
                         .WithMany("Trainers")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Region");
 
                     b.Navigation("User");
                 });
@@ -1845,6 +1918,13 @@ namespace PokeGame.ReadModel.Migrations
                     b.Navigation("Moves");
 
                     b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("PokeGame.ReadModel.Entities.RegionEntity", b =>
+                {
+                    b.Navigation("RegionalSpecies");
+
+                    b.Navigation("Trainers");
                 });
 
             modelBuilder.Entity("PokeGame.ReadModel.Entities.SpeciesEntity", b =>

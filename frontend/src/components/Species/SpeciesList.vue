@@ -38,12 +38,14 @@
 </template>
 
 <script>
+import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import SpeciesRow from './SpeciesRow.vue'
 import { deleteSpecies, getSpeciesList } from '@/api/species'
 
 export default {
   name: 'SpeciesList',
   components: {
+    RegionSelect,
     SpeciesRow
   },
   data() {
@@ -63,7 +65,7 @@ export default {
   computed: {
     params() {
       return {
-        region: this.region,
+        regionId: this.region?.id ?? null,
         search: this.search,
         type: this.type,
         sort: this.sort,
@@ -127,7 +129,10 @@ export default {
         if (
           newValue?.index &&
           oldValue &&
-          (newValue.region !== oldValue.region || newValue.search !== oldValue.search || newValue.type !== oldValue.type || newValue.count !== oldValue.count)
+          ((newValue.region?.id ?? null) !== (oldValue.region?.id ?? null) ||
+            newValue.search !== oldValue.search ||
+            newValue.type !== oldValue.type ||
+            newValue.count !== oldValue.count)
         ) {
           this.page = 1
           await this.refresh()
