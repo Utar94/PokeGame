@@ -3,8 +3,13 @@
     <div class="my-2">
       <icon-button class="mx-1" :disabled="loading" icon="sync-alt" :loading="loading" text="actions.refresh" variant="primary" @click="refresh()" />
       <icon-button class="mx-1" icon="plus" text="trainers.pokedex.add" variant="success" v-b-modal.addEntry />
-      <edit-entry-modal :exclude="speciesIds" id="addEntry" :trainerId="trainerId" @updated="refresh()" />
+      <edit-entry-modal :exclude="speciesIds" id="addEntry" :trainerId="trainer.id" @updated="refresh()" />
     </div>
+    <p>
+      {{ $t('trainers.pokedex.count', { count: pokedexCount }) }}
+      <b-badge v-if="nationalPokedex" class="mx-1" variant="info">{{ $t('trainers.pokedex.national') }}</b-badge>
+      <b-badge v-else class="mx-1">{{ $t('trainers.pokedex.regional') }}</b-badge>
+    </p>
     <b-row>
       <search-field class="col" v-model="search" />
       <region-select class="col" v-model="region" />
@@ -30,7 +35,7 @@
             :entry="entry"
             :loading="loading"
             :region="region"
-            :trainerId="trainerId"
+            :trainerId="trainer.id"
             @removed="onRemove(entry, $event)"
             @updated="onUpdate()"
           />
@@ -47,6 +52,7 @@ import EditEntryModal from './EditEntryModal.vue'
 import RegionSelect from '@/components/Regions/RegionSelect.vue'
 import PokedexEntry from './PokedexEntry.vue'
 import { deleteEntry, getEntries } from '@/api/pokedex'
+import { getTrainer } from '@/api/trainers'
 
 export default {
   name: 'PokedexTab',
@@ -56,8 +62,8 @@ export default {
     PokedexEntry
   },
   props: {
-    trainerId: {
-      type: String,
+    trainer: {
+      type: Object,
       required: true
     }
   },
@@ -68,6 +74,8 @@ export default {
       entries: [],
       hasCaught: null,
       loading: false,
+      nationalPokedex: false,
+      pokedexCount: 0,
       page: 1,
       region: null,
       search: null,
@@ -104,7 +112,7 @@ export default {
         this.loading = true
         let refresh = false
         try {
-          await deleteEntry(this.trainerId, species.id)
+          await deleteEntry(this.trainer.id, species.id)
           refresh = true
           this.toast('success', 'trainers.pokedex.remove.success')
           if (typeof callback === 'function') {
@@ -131,9 +139,12 @@ export default {
       if (!this.loading) {
         this.loading = true
         try {
-          const { data } = await getEntries(this.trainerId, params ?? this.params)
-          this.entries = data.items
-          this.total = data.total
+          const pokedex = await getEntries(this.trainer.id, params ?? this.params)
+          this.entries = pokedex.data.items
+          this.total = pokedex.data.total
+          const trainer = await getTrainer(this.trainer.id)
+          this.nationalPokedex = trainer.data.nationalPokedex
+          this.pokedexCount = trainer.data.pokedexCount
         } catch (e) {
           this.handleError(e)
         } finally {
@@ -160,6 +171,14 @@ export default {
         } else {
           await this.refresh(newValue)
         }
+      }
+    },
+    trainer: {
+      deep: true,
+      immediate: true,
+      handler(trainer) {
+        this.nationalPokedex = trainer?.nationalPokedex ?? false
+        this.pokedexCount = trainer?.pokedexCount ?? 0
       }
     }
   }

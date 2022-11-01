@@ -24,7 +24,7 @@
         <b-tabs content-class="mt-3">
           <b-tab :title="$t('gameData')">
             <b-row>
-              <region-select class="col" required v-model="region" />
+              <region-select class="col" id="trainerRegion" required v-model="region" />
               <gender-select class="col" :disabled="Boolean(trainer)" :required="!trainer" v-model="gender" />
               <form-field class="col" disabled id="number" label="trainers.number" :required="!trainer" type="number" v-model.number="number">
                 <b-input-group-append>
@@ -49,7 +49,7 @@
             <description-field v-model="description" />
           </b-tab>
           <inventory-tab v-if="trainer" :trainer="trainer" @updated="onInventoryUpdated" />
-          <pokedex-tab v-if="trainer" :trainerId="trainer.id" />
+          <pokedex-tab v-if="trainer" :trainer="trainer" />
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
             <picture-field validate v-model="picture" />

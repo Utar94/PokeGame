@@ -166,7 +166,7 @@ namespace PokeGame.Domain.Trainers
     {
       UserId = payload.UserId;
 
-      RegionId = payload.RegionId;
+      RegionId = payload.RegionId ?? Guid.Empty;
 
       Money = payload.Money;
       PlayTime = payload.PlayTime;
