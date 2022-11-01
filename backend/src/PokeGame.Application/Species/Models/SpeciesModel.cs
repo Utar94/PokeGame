@@ -29,8 +29,12 @@ namespace PokeGame.Application.Species.Models
     public IEnumerable<StatisticValueModel> BaseStatistics { get; set; } = Enumerable.Empty<StatisticValueModel>();
     public IEnumerable<StatisticValueModel> EvYield { get; set; } = Enumerable.Empty<StatisticValueModel>();
 
-    public string? Notes { get; set; }
     public string? Picture { get; set; }
+    public string? PictureFemale { get; set; }
+    public string? PictureShiny { get; set; }
+    public string? PictureShinyFemale { get; set; }
+
+    public string? Notes { get; set; }
     public string? Reference { get; set; }
 
     public IEnumerable<AbilityModel> Abilities { get; set; } = Enumerable.Empty<AbilityModel>();

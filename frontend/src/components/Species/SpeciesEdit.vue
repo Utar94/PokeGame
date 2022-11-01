@@ -152,9 +152,29 @@
           </b-tab>
           <regional-tab :conflict="regionalNumbersAlreadyUsed" v-model="regionalNumbers" @dismissed="regionalNumbersAlreadyUsed = $event" />
           <evolution-tab v-if="species" :id="species.id" />
+          <b-tab :title="$t('species.picture.title')">
+            <picture-field :label="pictureLabel" :required="Boolean(pictureFemale) || Boolean(pictureShiny)" validate v-model="picture" />
+            <picture-field
+              v-if="!genderUnknown && genderRatio > 0 && genderRatio < 100"
+              id="pictureFemale"
+              label="species.picture.female.label"
+              placeholder="species.picture.female.placeholder"
+              :required="Boolean(pictureShinyFemale)"
+              validate
+              v-model="pictureFemale"
+            />
+            <picture-field id="pictureShiny" :label="pictureShinyLabel" :required="Boolean(pictureShinyFemale)" validate v-model="pictureShiny" />
+            <picture-field
+              v-if="!genderUnknown && genderRatio > 0 && genderRatio < 100"
+              id="pictureShinyFemale"
+              label="species.picture.female.shiny"
+              placeholder="species.picture.female.placeholder"
+              validate
+              v-model="pictureShinyFemale"
+            />
+          </b-tab>
           <b-tab :title="$t('metadata')">
             <reference-field v-model="reference" />
-            <picture-field validate v-model="picture" />
             <notes-field v-model="notes" />
           </b-tab>
         </b-tabs>
@@ -227,6 +247,9 @@ export default {
       number: 0,
       numberAlreadyUsed: false,
       picture: null,
+      pictureFemale: null,
+      pictureShiny: null,
+      pictureShinyFemale: null,
       primaryType: null,
       reference: null,
       regionalNumbers: [],
@@ -242,6 +265,9 @@ export default {
     },
     eggCycles() {
       return Math.floor(this.hatchSteps / 257)
+    },
+    evYieldExceeded() {
+      return this.totalEvYield > 3
     },
     hasChanges() {
       return (
@@ -263,8 +289,11 @@ export default {
         JSON.stringify(this.payload.baseStatistics) !== JSON.stringify(this.species?.baseStatistics ?? {}) ||
         JSON.stringify(this.orderBy(this.regionalNumbers.map(({ number, region }) => `${region?.id ?? null}_${number}`))) !==
           JSON.stringify(this.orderBy(this.species?.regionalNumbers.map(({ number, region }) => `${region?.id ?? null}_${number}`) ?? [])) ||
-        (this.reference ?? '') !== (this.species?.reference ?? '') ||
         (this.picture ?? '') !== (this.species?.picture ?? '') ||
+        (this.pictureFemale ?? '') !== (this.species?.pictureFemale ?? '') ||
+        (this.pictureShiny ?? '') !== (this.species?.pictureShiny ?? '') ||
+        (this.pictureShinyFemale ?? '') !== (this.species?.pictureShinyFemale ?? '') ||
+        (this.reference ?? '') !== (this.species?.reference ?? '') ||
         (this.notes ?? '') !== (this.species?.notes ?? '')
       )
     },
@@ -295,8 +324,11 @@ export default {
           .filter(([, value]) => value > 0)
           .map(([statistic, value]) => ({ statistic, value })),
         regionalNumbers: this.regionalNumbers.map(({ region, number }) => ({ regionId: region?.id ?? null, number })),
-        reference: this.reference || null,
         picture: this.picture || null,
+        pictureFemale: this.pictureFemale || null,
+        pictureShiny: this.pictureShiny || null,
+        pictureShinyFemale: this.pictureShinyFemale || null,
+        reference: this.reference || null,
         notes: this.notes
       }
       if (!this.species) {
@@ -306,8 +338,11 @@ export default {
       }
       return payload
     },
-    evYieldExceeded() {
-      return this.totalEvYield > 3
+    pictureLabel() {
+      return this.genderUnknown ? 'picture.label' : this.genderRatio <= 0 ? 'species.picture.female.label' : 'species.picture.male.label'
+    },
+    pictureShinyLabel() {
+      return this.genderUnknown ? 'species.picture.shiny' : this.genderRatio <= 0 ? 'species.picture.female.shiny' : 'species.picture.male.shiny'
     },
     totalEvYield() {
       return Object.values(this.evYield).reduce((a, b) => a + b, 0) || 0
@@ -332,6 +367,9 @@ export default {
       this.notes = species.notes
       this.number = species.number
       this.picture = species.picture
+      this.pictureFemale = species.pictureFemale
+      this.pictureShiny = species.pictureShiny
+      this.pictureShinyFemale = species.pictureShinyFemale
       this.primaryType = species.primaryType
       this.reference = species.reference
       this.regionalNumbers = species.regionalNumbers.map(({ number, region }) => ({ number, region }))
@@ -409,10 +447,19 @@ export default {
         this.ability2 = null
       }
     },
-    genderUnknown(genderUnknown) {
-      if (genderUnknown) {
-        this.genderRatio = 0
+    genderRatio(genderRatio) {
+      if (genderRatio === 0) {
+        this.picture = this.pictureFemale ?? this.picture
+        this.pictureShiny = this.pictureShinyFemale ?? this.pictureShiny
+        this.pictureFemale = null
+        this.pictureShinyFemale = null
+      } else if (genderRatio === 100) {
+        this.pictureFemale = null
+        this.pictureShinyFemale = null
       }
+    },
+    genderUnknown(genderUnknown) {
+      this.genderRatio = genderUnknown ? 0 : 50
     }
   }
 }

@@ -28,8 +28,12 @@ namespace PokeGame.ReadModel.Entities
     public string? BaseStatistics { get; private set; }
     public string? EvYield { get; private set; }
 
-    public string? Notes { get; private set; }
     public string? Picture { get; private set; }
+    public string? PictureFemale { get; private set; }
+    public string? PictureShiny { get; private set; }
+    public string? PictureShinyFemale { get; private set; }
+
+    public string? Notes { get; private set; }
     public string? Reference { get; private set; }
 
     public List<EvolutionEntity> EvolvedFrom { get; private set; } = new();
@@ -80,8 +84,12 @@ namespace PokeGame.ReadModel.Entities
         ? string.Join('|', evYield.Select(pair => string.Join(':', pair.Key, pair.Value)))
         : null;
 
-      Notes = species.Notes;
       Picture = species.Picture;
+      PictureFemale = species.PictureFemale;
+      PictureShiny = species.PictureShiny;
+      PictureShinyFemale = species.PictureShinyFemale;
+
+      Notes = species.Notes;
       Reference = species.Reference;
     }
   }

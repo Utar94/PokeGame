@@ -36,8 +36,12 @@ namespace PokeGame.Domain.Species
     public Dictionary<Statistic, byte> BaseStatistics { get; private set; } = new();
     public Dictionary<Statistic, byte> EvYield { get; private set; } = new();
 
-    public string? Notes { get; private set; }
     public string? Picture { get; private set; }
+    public string? PictureFemale { get; private set; }
+    public string? PictureShiny { get; private set; }
+    public string? PictureShinyFemale { get; private set; }
+
+    public string? Notes { get; private set; }
     public string? Reference { get; private set; }
 
     public List<Guid> AbilityIds { get; private set; } = new();
@@ -127,8 +131,12 @@ namespace PokeGame.Domain.Species
         }
       }
 
-      Notes = payload.Notes?.CleanTrim();
       Picture = payload.Picture;
+      PictureFemale = payload.PictureFemale;
+      PictureShiny = payload.PictureShiny;
+      PictureShinyFemale = payload.PictureShinyFemale;
+
+      Notes = payload.Notes?.CleanTrim();
       Reference = payload.Reference;
 
       AbilityIds.Clear();
