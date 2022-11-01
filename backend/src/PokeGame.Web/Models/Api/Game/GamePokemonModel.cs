@@ -16,7 +16,7 @@ namespace PokeGame.Web.Models.Api.Game
       {
         SpeciesModel species = pokemon.Species ?? throw new ArgumentException($"The {nameof(pokemon.Species)} is required.", nameof(pokemon));
 
-        Picture = species.Picture;
+        Picture = pokemon.GetPicture();
 
         Name = pokemon.Surname ?? species.Name;
         Gender = pokemon.Gender;

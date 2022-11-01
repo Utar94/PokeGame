@@ -98,6 +98,19 @@
     "alreadyUsed": "The species number is already used.",
     "label": "Number"
   },
+  "picture": {
+    "female": {
+      "label": "Picture (Female)",
+      "placeholder": "(same as Male)",
+      "shiny": "Shiny Picture (Female)"
+    },
+    "male": {
+      "label": "Picture (Male)",
+      "shiny": "Shiny Picture (Male)"
+    },
+    "shiny": "Shiny Picture",
+    "title": "Pictures"
+  },
   "primaryType": "Primary Type",
   "regional": {
     "addNumber": "Add number",

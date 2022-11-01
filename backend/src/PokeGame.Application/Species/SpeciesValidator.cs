@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PokeGame.Application.Species
 {
@@ -47,6 +46,45 @@ namespace PokeGame.Application.Species
 
       RuleFor(x => x.Picture)
         .Must(ValidationRules.BeAValidUrl);
+
+      When(x => x.Picture == null, () =>
+      {
+        RuleFor(x => x.PictureShiny)
+          .Null();
+      }).Otherwise(() =>
+      {
+        RuleFor(x => x.PictureShiny)
+          .Must(ValidationRules.BeAValidUrl);
+      });
+
+      When(x => x.GenderRatio == null || x.GenderRatio == 100.0, () =>
+      {
+        RuleFor(x => x.PictureFemale)
+          .Null();
+        RuleFor(x => x.PictureShinyFemale)
+          .Null();
+      }).Otherwise(() =>
+      {
+        When(x => x.Picture == null, () =>
+        {
+          RuleFor(x => x.PictureFemale)
+            .Null();
+        }).Otherwise(() =>
+        {
+          RuleFor(x => x.PictureFemale)
+            .Must(ValidationRules.BeAValidUrl);
+        });
+
+        When(x => x.PictureFemale == null || x.PictureShiny == null, () =>
+        {
+          RuleFor(x => x.PictureShinyFemale)
+            .Null();
+        }).Otherwise(() =>
+        {
+          RuleFor(x => x.PictureShinyFemale)
+            .Must(ValidationRules.BeAValidUrl);
+        });
+      });
 
       RuleFor(x => x.Reference)
         .Must(ValidationRules.BeAValidUrl);

@@ -26,7 +26,18 @@ export default {
         return '/img/egg.webp'
       }
       const species = this.species ?? this.pokemon?.species ?? null
-      return species?.picture ?? this.pokemon?.picture ?? null
+      if (species) {
+        if (this.pokemon) {
+          if (this.pokemon.isShiny) {
+            return this.pokemon.gender === 'Female'
+              ? species.pictureShinyFemale ?? species.pictureShiny ?? species.pictureFemale ?? species.picture
+              : species.pictureShiny ?? species.picture
+          }
+          return this.pokemon.gender === 'Female' ? species.pictureFemale ?? species.picture : species.picture
+        }
+        return species.picture
+      }
+      return this.pokemon?.picture ?? null
     }
   }
 }

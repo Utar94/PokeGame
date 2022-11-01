@@ -57,7 +57,7 @@ namespace PokeGame.Web.Models.Api.Game
         Ability = pokemon.Ability == null ? null : new(pokemon.Ability);
         Moves = pokemon.Moves.Select(move => new PokemonMoveSummary(move));
 
-        Picture = species.Picture;
+        Picture = pokemon.GetPicture();
       }
 
       CaughtBall = history.Ball == null ? null : new(history.Ball);
