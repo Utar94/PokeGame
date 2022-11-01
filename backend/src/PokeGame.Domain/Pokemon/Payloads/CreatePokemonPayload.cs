@@ -13,6 +13,7 @@ namespace PokeGame.Domain.Pokemon.Payloads
     public ushort RemainingHatchSteps { get; set; }
 
     public PokemonGender Gender { get; set; }
+    public bool IsShiny { get; set; }
     public string Nature { get; set; } = string.Empty;
 
     public IEnumerable<StatisticValuePayload>? IndividualValues { get; set; }

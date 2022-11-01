@@ -28,6 +28,7 @@ namespace PokeGame.Domain.Pokemon
 
     public double? GenderRatio { get; private set; }
     public PokemonGender Gender { get; private set; }
+    public bool IsShiny { get; private set; }
     public Nature Nature { get; private set; } = null!;
     public Characteristic Characteristic { get; private set; }
     public string SpeciesName { get; private set; } = string.Empty;
@@ -145,6 +146,7 @@ namespace PokeGame.Domain.Pokemon
 
       GenderRatio = @event.GenderRatio;
       Gender = payload.Gender;
+      IsShiny = payload.IsShiny;
       Nature = Nature.GetNature(payload.Nature, nameof(payload.Nature));
       Characteristic = payload.Characteristic;
       SpeciesName = @event.SpeciesName;

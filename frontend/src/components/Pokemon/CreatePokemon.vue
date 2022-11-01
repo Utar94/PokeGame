@@ -69,6 +69,9 @@
             v-model.number="remainingHatchSteps"
           />
         </b-row>
+        <b-form-group>
+          <b-form-checkbox id="shiny" size="lg" switch v-model="isShiny">{{ $t('pokemon.isShiny') }}</b-form-checkbox>
+        </b-form-group>
         <h3 v-t="'pokemon.individualValues.title'" />
         <b-row>
           <form-field
@@ -312,6 +315,7 @@ export default {
         Speed: 0
       },
       inParty: true,
+      isShiny: false,
       level: 1,
       loading: false,
       metLevel: 1,
@@ -373,6 +377,7 @@ export default {
         abilityId: this.abilityId,
         level: this.level,
         gender: this.gender,
+        isShiny: this.isShiny,
         nature: this.nature,
         characteristic: this.characteristic,
         surname: this.surname,

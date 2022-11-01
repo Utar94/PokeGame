@@ -12,6 +12,10 @@
       <b-link :href="`/pokemon/${pokemon.id}`" target="_blank">
         {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }} <font-awesome-icon icon="external-link-alt" />
       </b-link>
+      <template v-if="pokemon.isShiny">
+        {{ ' ' }}
+        <font-awesome-icon icon="star" />
+      </template>
       <br />
       <template v-if="trainer">
         <gender-icon :gender="trainer.gender" />

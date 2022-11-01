@@ -20,6 +20,7 @@ namespace PokeGame.Web.Models.Api.Game
 
         Name = pokemon.Surname ?? species.Name;
         Gender = pokemon.Gender;
+        IsShiny = pokemon.IsShiny;
 
         Level = pokemon.Level;
         CurrentHitPoints = pokemon.CurrentHitPoints;
@@ -38,6 +39,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public string? Name { get; set; }
     public PokemonGender? Gender { get; set; }
+    public bool IsShiny { get; set; }
 
     public byte? Level { get; set; }
     public ushort? CurrentHitPoints { get; set; }

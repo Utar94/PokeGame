@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PokeGame.ReadModel;
@@ -11,9 +12,10 @@ using PokeGame.ReadModel;
 namespace PokeGame.ReadModel.Migrations
 {
     [DbContext(typeof(ReadContext))]
-    partial class ReadContextModelSnapshot : ModelSnapshot
+    [Migration("20221101113756_AddedPokemonShininess")]
+    partial class AddedPokemonShininess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

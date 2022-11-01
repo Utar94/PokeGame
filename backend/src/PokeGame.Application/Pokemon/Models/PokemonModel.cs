@@ -20,6 +20,7 @@ namespace PokeGame.Application.Pokemon.Models
     public ushort RemainingHatchSteps { get; set; }
 
     public PokemonGender Gender { get; set; }
+    public bool IsShiny { get; set; }
     public string Nature { get; set; } = string.Empty;
     public Characteristic? Characteristic { get; set; }
     public string? Surname { get; set; }

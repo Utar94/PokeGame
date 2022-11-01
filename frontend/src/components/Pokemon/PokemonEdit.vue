@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1><pokemon-icon :pokemon="pokemon" /> {{ $t('pokemon.editTitle', { name }) }}</h1>
+    <h1><pokemon-icon :pokemon="pokemon" /> {{ $t('pokemon.editTitle', { name }) }} <font-awesome-icon v-if="pokemon.isShiny" icon="star" /></h1>
     <status-detail :model="pokemon" />
     <validation-observer ref="form">
       <b-form @submit.prevent="submit">
@@ -84,6 +84,9 @@
                 </b-input-group-append>
               </form-field>
             </b-row>
+            <b-form-group>
+              <b-form-checkbox :checked="pokemon.isShiny" disabled id="shiny" size="lg">{{ $t('pokemon.isShiny') }}</b-form-checkbox>
+            </b-form-group>
             <item-select id="heldItem" label="pokemon.heldItem.label" v-model="heldItemId">
               <b-input-group-append v-if="pokemon.history && pokemon.history.trainer">
                 <icon-button icon="shopping-cart" text="trainers.inventory.label" variant="primary" v-b-modal.heldItem />

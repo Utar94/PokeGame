@@ -25,6 +25,7 @@ namespace PokeGame.ReadModel.Configurations
       builder.Property(x => x.Friendship).HasDefaultValue(0);
       builder.Property(x => x.Gender).HasDefaultValue(default(PokemonGender));
       builder.Property(x => x.IndividualValues).HasMaxLength(100);
+      builder.Property(x => x.IsShiny).HasDefaultValue(false);
       builder.Property(x => x.MetLocation).HasMaxLength(100);
       builder.Property(x => x.Nature).HasMaxLength(10);
       builder.Property(x => x.Reference).HasMaxLength(2048);
