@@ -39,6 +39,7 @@ namespace PokeGame.Web.Models.Api.Game
 
         Level = pokemon.Level;
         Gender = pokemon.Gender;
+        IsShiny = pokemon.IsShiny;
         Nature = new NatureSummary(pokemon.Nature);
         Characteristic = pokemon.Characteristic;
 
@@ -82,6 +83,7 @@ namespace PokeGame.Web.Models.Api.Game
 
     public byte? Level { get; set; }
     public PokemonGender? Gender { get; set; }
+    public bool IsShiny { get; set; }
     public NatureSummary? Nature { get; set; }
     public Characteristic? Characteristic { get; set; }
 

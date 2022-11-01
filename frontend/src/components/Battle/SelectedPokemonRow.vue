@@ -13,6 +13,10 @@
         <br />
       </template>
       <gender-icon :gender="pokemon.gender" /> {{ pokemon.species.name }} {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
+      <template v-if="pokemon.isShiny">
+        {{ ' ' }}
+        <font-awesome-icon icon="star" />
+      </template>
     </td>
     <td><pokemon-condition :pokemon="pokemon" /></td>
   </tr>

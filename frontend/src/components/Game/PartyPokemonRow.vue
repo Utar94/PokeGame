@@ -7,6 +7,10 @@
         {{ pokemon.name }}
         {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
         <gender-icon :gender="pokemon.gender" />
+        <template v-if="pokemon.isShiny">
+          {{ ' ' }}
+          <font-awesome-icon icon="star" />
+        </template>
         <b-progress :value="pokemon.currentHitPoints" :max="pokemon.maximumHitPoints" variant="success" />
         {{ $t('battle.hpFormat', { current: pokemon.currentHitPoints, max: pokemon.maximumHitPoints }) }}
       </td>

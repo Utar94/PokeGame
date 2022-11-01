@@ -53,6 +53,7 @@
                 <gender-icon :gender="item.gender" />
                 {{ item.species.name }}
                 {{ $t('pokemon.levelFormat', { level: item.level }) }}
+                <font-awesome-icon v-if="item.isShiny" icon="star" />
               </b-link>
             </td>
             <td>

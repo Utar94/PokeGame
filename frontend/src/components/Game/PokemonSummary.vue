@@ -18,6 +18,10 @@
             {{ pokemon.name }}
             {{ $t('pokemon.levelFormat', { level: pokemon.level }) }}
             <gender-icon :gender="pokemon.gender" />
+            <template v-if="pokemon.isShiny">
+              {{ ' ' }}
+              <font-awesome-icon icon="star" />
+            </template>
           </template>
         </h6>
         <b-img :alt="alt" fluid :src="src" />

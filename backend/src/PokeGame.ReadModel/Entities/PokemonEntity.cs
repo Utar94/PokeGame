@@ -15,6 +15,7 @@ namespace PokeGame.ReadModel.Entities
     public ushort RemainingHatchSteps { get; private set; }
 
     public PokemonGender Gender { get; private set; }
+    public bool IsShiny { get; private set; }
     public string Nature { get; private set; } = string.Empty;
     public Characteristic Characteristic { get; private set; }
     public string? Surname { get; private set; }
@@ -98,6 +99,7 @@ namespace PokeGame.ReadModel.Entities
       RemainingHatchSteps = pokemon.RemainingHatchSteps;
 
       Gender = pokemon.Gender;
+      IsShiny = pokemon.IsShiny;
       Nature = pokemon.Nature.Name;
       Characteristic = pokemon.Characteristic;
       Surname = pokemon.Surname;
