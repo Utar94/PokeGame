@@ -8,6 +8,8 @@ public class AbilityAggregate : AggregateRoot
 {
   private AbilityUpdatedEvent _updatedEvent = new();
 
+  public new AbilityId Id => new(base.Id);
+
   private UniqueNameUnit? _uniqueName = null;
   public UniqueNameUnit UniqueName
   {

@@ -1,6 +1,8 @@
 ﻿namespace PokeGame.Domain;
 public record DisplayNameUnit
 {
+  public const int MaximumLength = byte.MaxValue;
+
   public string Value { get; }
 
   public DisplayNameUnit(string value)
