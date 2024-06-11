@@ -1,9 +1,10 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Domain.Shared;
+using Logitar.Identity.Domain.Users;
 using Logitar.Portal.Contracts.Actors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PokeGame.Domain.Validators;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore.Configurations;
@@ -23,8 +24,8 @@ internal class ActorConfiguration : IEntityTypeConfiguration<ActorEntity>
 
     builder.Property(x => x.Id).IsRequired().HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.Type).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<ActorType>());
-    builder.Property(x => x.DisplayName).HasMaxLength(byte.MaxValue);
-    builder.Property(x => x.EmailAddress).HasMaxLength(byte.MaxValue);
-    builder.Property(x => x.PictureUrl).HasMaxLength(UrlValidator.MaximumLength);
+    builder.Property(x => x.DisplayName).HasMaxLength(DisplayNameUnit.MaximumLength);
+    builder.Property(x => x.EmailAddress).HasMaxLength(EmailUnit.MaximumLength);
+    builder.Property(x => x.PictureUrl).HasMaxLength(UrlUnit.MaximumLength);
   }
 }
