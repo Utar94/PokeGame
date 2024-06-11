@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Portal.Client;
 using PokeGame.Application;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
@@ -66,6 +67,8 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
+
+    services.AddLogitarPortalClient(_configuration);
   }
 
   public override void Configure(IApplicationBuilder builder)
