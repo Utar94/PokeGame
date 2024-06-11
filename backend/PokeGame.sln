@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C93B2428-86C1-4086-8B35-DCD9C2736A7C}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Contracts", "src\PokeGame.Contracts\PokeGame.Contracts.csproj", "{84E024C1-84FD-4736-B298-27D4F327FECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Domain", "src\PokeGame.Domain\PokeGame.Domain.csproj", "{50302053-4B09-41F3-A765-9D38FCEFCB4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Application", "src\PokeGame.Application\PokeGame.Application.csproj", "{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84E024C1-84FD-4736-B298-27D4F327FECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84E024C1-84FD-4736-B298-27D4F327FECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84E024C1-84FD-4736-B298-27D4F327FECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84E024C1-84FD-4736-B298-27D4F327FECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50302053-4B09-41F3-A765-9D38FCEFCB4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50302053-4B09-41F3-A765-9D38FCEFCB4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50302053-4B09-41F3-A765-9D38FCEFCB4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50302053-4B09-41F3-A765-9D38FCEFCB4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE7AF727-AA5A-4139-87C4-773AB58C4C48}
+	EndGlobalSection
+EndGlobal
