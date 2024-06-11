@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application;
 using PokeGame.Application.Abilities.Commands;
+using PokeGame.Application.Abilities.Queries;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Extensions;
 
@@ -30,19 +31,19 @@ public class AbilityController : ControllerBase
     return Created(location, ability);
   }
 
-  //[HttpGet("{id}")]
-  //public async Task<ActionResult<Ability>> ReadAsync(Guid id, CancellationToken cancellationToken)
-  //{
-  //  Ability? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(id, UniqueName: null), cancellationToken);
-  //  return ability == null ? NotFound() : Ok(ability);
-  //} // TODO(fpion): Read
+  [HttpGet("{id}")]
+  public async Task<ActionResult<Ability>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    Ability? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(id, UniqueName: null), cancellationToken);
+    return ability == null ? NotFound() : Ok(ability);
+  }
 
-  //[HttpGet("unique-name:{uniqueName}")]
-  //public async Task<ActionResult<Ability>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
-  //{
-  //  Ability? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(Id: null, uniqueName), cancellationToken);
-  //  return ability == null ? NotFound() : Ok(ability);
-  //} // TODO(fpion): Read
+  [HttpGet("unique-name:{uniqueName}")]
+  public async Task<ActionResult<Ability>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    Ability? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(Id: null, uniqueName), cancellationToken);
+    return ability == null ? NotFound() : Ok(ability);
+  }
 
   //[HttpPut("{id}")]
   //public async Task<ActionResult<Ability>> ReplaceAsync(Guid id, [FromBody] ReplaceAbilityPayload payload, long? version, CancellationToken cancellationToken = default)
