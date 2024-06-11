@@ -3,14 +3,13 @@ using Logitar.Portal.Contracts.Actors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using PokeGame.EntityFrameworkCore.Constants;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore.Configurations;
 
 internal class ActorConfiguration : IEntityTypeConfiguration<ActorEntity>
 {
-  private const int UrlMaximumLength = 2048;
-
   public void Configure(EntityTypeBuilder<ActorEntity> builder)
   {
     builder.ToTable(nameof(PokemonContext.Actors));
@@ -26,6 +25,6 @@ internal class ActorConfiguration : IEntityTypeConfiguration<ActorEntity>
     builder.Property(x => x.Type).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<ActorType>());
     builder.Property(x => x.DisplayName).HasMaxLength(byte.MaxValue);
     builder.Property(x => x.EmailAddress).HasMaxLength(byte.MaxValue);
-    builder.Property(x => x.PictureUrl).HasMaxLength(UrlMaximumLength);
+    builder.Property(x => x.PictureUrl).HasMaxLength(Constraints.UrlMaximumLength);
   }
 }

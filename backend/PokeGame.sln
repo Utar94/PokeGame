@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Infrastructure", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore", "src\PokeGame.EntityFrameworkCore\PokeGame.EntityFrameworkCore.csproj", "{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore.SqlServer", "src\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj", "{4D2BD66D-D6AD-4526-AB08-98216301D1D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame", "src\PokeGame\PokeGame.csproj", "{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +52,14 @@ Global
 		{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D2BD66D-D6AD-4526-AB08-98216301D1D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D2BD66D-D6AD-4526-AB08-98216301D1D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D2BD66D-D6AD-4526-AB08-98216301D1D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D2BD66D-D6AD-4526-AB08-98216301D1D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
