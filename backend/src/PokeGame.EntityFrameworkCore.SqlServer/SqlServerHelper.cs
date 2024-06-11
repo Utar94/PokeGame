@@ -3,7 +3,7 @@ using Logitar.Data.SqlServer;
 
 namespace PokeGame.EntityFrameworkCore.SqlServer;
 
-internal class SqlServerHelper : ISqlHelper
+internal class SqlServerHelper : SqlHelper
 {
-  public IQueryBuilder QueryFrom(TableId table) => SqlServerQueryBuilder.From(table);
+  public override IQueryBuilder QueryFrom(TableId table) => SqlServerQueryBuilder.From(table);
 }

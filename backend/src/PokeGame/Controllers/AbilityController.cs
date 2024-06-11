@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application;
 using PokeGame.Application.Abilities.Commands;
 using PokeGame.Application.Abilities.Queries;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Extensions;
+using PokeGame.Models.Abilities;
 
 namespace PokeGame.Controllers;
 
@@ -52,10 +54,10 @@ public class AbilityController : ControllerBase
   //  return ability == null ? NotFound() : Ok(ability);
   //} // TODO(fpion): Replace
 
-  //[HttpGet]
-  //public async Task<ActionResult<SearchResults<Ability>>> SearchAsync([FromQuery] SearchAbilitiesParameters parameters, CancellationToken cancellationToken)
-  //{
-  //  SearchResults<Ability> abilities = await _pipeline.ExecuteAsync(new SearchAbilitiesQuery(parameters.ToPayload()), cancellationToken);
-  //  return Ok(abilities);
-  //} // TODO(fpion): Search
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<Ability>>> SearchAsync([FromQuery] SearchAbilitiesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<Ability> abilities = await _pipeline.ExecuteAsync(new SearchAbilitiesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(abilities);
+  }
 }
