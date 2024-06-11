@@ -2,9 +2,9 @@
 using Logitar.Data;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
+using Logitar.Identity.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Abilities;
-using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
 
 namespace PokeGame.EntityFrameworkCore.Repositories;

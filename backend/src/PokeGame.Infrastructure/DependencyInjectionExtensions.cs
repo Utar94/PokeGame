@@ -1,10 +1,13 @@
 ﻿using Logitar.EventSourcing.Infrastructure;
+using Logitar.Identity.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application;
+using PokeGame.Application.Accounts;
 using PokeGame.Application.Caching;
 using PokeGame.Infrastructure.Caching;
 using PokeGame.Infrastructure.Converters;
+using PokeGame.Infrastructure.IdentityServices;
 using PokeGame.Infrastructure.Settings;
 
 namespace PokeGame.Infrastructure;
@@ -14,13 +17,26 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddPokeGameInfrastructure(this IServiceCollection services)
   {
     return services
-      .AddLogitarEventSourcingInfrastructure()
+      .AddLogitarIdentityInfrastructure()
+      .AddIdentityServices()
       .AddMemoryCache()
       .AddPokeGameApplication()
       .AddSingleton(InitializeCachingSettings)
       .AddSingleton<ICacheService, CacheService>()
-      .AddSingleton<IEventSerializer>(InitializeEventSerializer())
+      .AddSingleton<IEventSerializer>(InitializeEventSerializer)
       .AddTransient<IEventBus, EventBus>();
+  }
+
+  private static IServiceCollection AddIdentityServices(this IServiceCollection services)
+  {
+    return services
+      .AddTransient<IApiKeyService, ApiKeyService>()
+      .AddTransient<IMessageService, MessageService>()
+      .AddTransient<IOneTimePasswordService, OneTimePasswordService>()
+      .AddTransient<IRealmService, RealmService>()
+      .AddTransient<ISessionService, SessionService>()
+      .AddTransient<ITokenService, TokenService>()
+      .AddTransient<IUserService, UserService>();
   }
 
   private static CachingSettings InitializeCachingSettings(IServiceProvider serviceProvider)
@@ -29,13 +45,14 @@ public static class DependencyInjectionExtensions
     return configuration.GetSection("Caching").Get<CachingSettings>() ?? new();
   }
 
-  private static EventSerializer InitializeEventSerializer() => new(
-  [
-    new AbilityIdConverter(),
-    new DescriptionConverter(),
-    new DisplayNameConverter(),
-    new NotesConverter(),
-    new ReferenceConverter(),
-    new UniqueNameConverter()
-  ]);
+  private static EventSerializer InitializeEventSerializer(IServiceProvider serviceProvider)
+  {
+    EventSerializer eventSerializer = new(serviceProvider.GetLogitarIdentityJsonConverters());
+
+    eventSerializer.RegisterConverter(new AbilityIdConverter());
+    eventSerializer.RegisterConverter(new NotesConverter());
+    eventSerializer.RegisterConverter(new ReferenceConverter());
+
+    return eventSerializer;
+  }
 }

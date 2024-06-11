@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Logitar.Identity.Domain.Shared;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PokeGame.Domain;
-using PokeGame.Domain.Validators;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore.Configurations;
@@ -22,6 +21,6 @@ internal class AbilityConfiguration : AggregateConfiguration<AbilityEntity>, IEn
     builder.Property(x => x.UniqueName).HasMaxLength(UniqueNameUnit.MaximumLength);
     builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueNameUnit.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayNameUnit.MaximumLength);
-    builder.Property(x => x.Reference).HasMaxLength(UrlValidator.MaximumLength);
+    builder.Property(x => x.Reference).HasMaxLength(UrlUnit.MaximumLength);
   }
 }

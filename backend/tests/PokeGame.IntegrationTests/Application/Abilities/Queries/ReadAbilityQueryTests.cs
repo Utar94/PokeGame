@@ -1,7 +1,7 @@
 ﻿using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Contracts.Abilities;
-using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
 
 namespace PokeGame.Application.Abilities.Queries;

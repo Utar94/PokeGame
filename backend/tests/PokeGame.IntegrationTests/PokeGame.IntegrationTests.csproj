@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="35.5.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -46,9 +45,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\PokeGame.Tests\PokeGame.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.Globalization" />
+    <Using Include="System.Text" />
     <Using Include="Xunit" />
   </ItemGroup>
 

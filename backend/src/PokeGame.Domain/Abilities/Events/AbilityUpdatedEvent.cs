@@ -1,17 +1,18 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Contracts;
+using Logitar.Identity.Domain.Shared;
 using MediatR;
-using PokeGame.Contracts;
 
 namespace PokeGame.Domain.Abilities.Events;
 
 public class AbilityUpdatedEvent : DomainEvent, INotification
 {
   public UniqueNameUnit? UniqueName { get; set; }
-  public Change<DisplayNameUnit>? DisplayName { get; set; }
-  public Change<DescriptionUnit>? Description { get; set; }
+  public Modification<DisplayNameUnit>? DisplayName { get; set; }
+  public Modification<DescriptionUnit>? Description { get; set; }
 
-  public Change<ReferenceUnit>? Reference { get; set; }
-  public Change<NotesUnit>? Notes { get; set; }
+  public Modification<ReferenceUnit>? Reference { get; set; }
+  public Modification<NotesUnit>? Notes { get; set; }
 
   public bool HasChanges => UniqueName != null || DisplayName != null || Description != null
     || Reference != null || Notes != null;

@@ -1,10 +1,9 @@
 ﻿using FluentValidation.Results;
 using Logitar;
+using Logitar.Identity.Domain.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Contracts.Abilities;
-using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
-using PokeGame.Domain.Validators;
 
 namespace PokeGame.Application.Abilities.Commands;
 
