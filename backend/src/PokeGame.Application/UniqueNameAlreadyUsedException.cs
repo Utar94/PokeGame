@@ -1,7 +1,7 @@
 ﻿using Logitar;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts.Errors;
 using PokeGame.Contracts.Errors;
-using PokeGame.Domain;
 
 namespace PokeGame.Application;
 

@@ -1,4 +1,4 @@
-﻿using PokeGame.Domain;
+﻿using Logitar.Identity.Domain.Shared;
 using PokeGame.Domain.Abilities;
 
 namespace PokeGame.Application.Abilities;

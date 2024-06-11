@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Shared;
 using MediatR;
 using PokeGame.Application.Abilities.Validators;
 using PokeGame.Contracts.Abilities;
