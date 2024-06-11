@@ -1,7 +1,9 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using PokeGame.Application;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
+using PokeGame.Filters;
 using PokeGame.Infrastructure;
 using PokeGame.Settings;
 
@@ -26,8 +28,24 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
-    services.AddControllers()
+    OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection("OAuth").Get<OpenAuthenticationSettings>() ?? new();
+    services.AddSingleton(openAuthenticationSettings);
+    // TODO(fpion): Authentication
+
+    // TODO(fpion): Authorization
+
+    CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+    services.AddDistributedMemoryCache();
+
+    services.AddControllers(options => options.Filters.Add<ExceptionHandling>()) // TODO(fpion): LoggingFilter
       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    services.AddTransient<IActivityContextResolver, HttpActivityContextResolver>();
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -59,6 +77,11 @@ internal class Startup : StartupBase
 
     builder.UseHttpsRedirection();
     builder.UseCors();
+    builder.UseSession();
+    //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
+    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): ession Renewal
+    builder.UseAuthentication();
+    builder.UseAuthorization();
 
     if (builder is WebApplication application)
     {
