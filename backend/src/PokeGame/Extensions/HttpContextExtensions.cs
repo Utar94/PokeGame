@@ -1,4 +1,5 @@
 ﻿using Logitar.Net.Http;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.ApiKeys;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
@@ -43,6 +44,21 @@ internal static class HttpContextExtensions
     return builder.BuildUri();
   }
 
+  public static IEnumerable<CustomAttribute> GetSessionCustomAttributes(this HttpContext context)
+  {
+    List<CustomAttribute> customAttributes = new(capacity: 2)
+    {
+      new("AdditionalInformation", context.GetAdditionalInformation())
+    };
+
+    string? ipAddress = context.GetClientIpAddress();
+    if (ipAddress != null)
+    {
+      customAttributes.Add(new("IpAddress", ipAddress));
+    }
+
+    return customAttributes;
+  }
   public static string GetAdditionalInformation(this HttpContext context)
   {
     return JsonSerializer.Serialize(context.Request.Headers);
