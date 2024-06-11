@@ -46,18 +46,18 @@ services:
     ports:
       - 8892:8080
 
-  # pokegame_seeding:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: /tools/PokeGame.Seeding.Portal.Worker/Dockerfile
-  #   image: pokegame_portal_seeding
-  #   container_name: PokeGame.Seeding.Portal.Worker_seeding
-  #   depends_on:
-  #     - pokegame_portal
-  #   restart: unless-stopped
-  #   environment:
-  #     DOTNET_ENVIRONMENT: Development
-  #     Portal:BaseUrl: http://pokegame_portal:8080
+  pokegame_seeding:
+    build:
+      context: ./backend
+      dockerfile: /tools/PokeGame.Seeding.Worker/Dockerfile
+    image: pokegame_seeding
+    container_name: PokeGame.Seeding.Worker_seeding
+    depends_on:
+      - pokegame_portal
+    restart: unless-stopped
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      Portal:BaseUrl: http://pokegame_portal:8080
 
   pokegame_backend:
     build:
