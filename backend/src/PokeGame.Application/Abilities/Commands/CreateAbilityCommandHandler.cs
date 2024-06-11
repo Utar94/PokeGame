@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Logitar.Identity.Contracts.Settings;
 using MediatR;
 using PokeGame.Application.Abilities.Validators;
 using PokeGame.Contracts.Abilities;
@@ -20,10 +21,12 @@ internal class CreateAbilityCommandHandler : IRequestHandler<CreateAbilityComman
 
   public async Task<Ability> Handle(CreateAbilityCommand command, CancellationToken cancellationToken)
   {
-    CreateAbilityPayload payload = command.Payload;
-    new CreateAbilityValidator().ValidateAndThrow(payload);
+    IUniqueNameSettings uniqueNameSettings = AbilityAggregate.UniqueNameSettings;
 
-    AbilityAggregate ability = new(new UniqueNameUnit(payload.UniqueName), command.ActorId)
+    CreateAbilityPayload payload = command.Payload;
+    new CreateAbilityValidator(uniqueNameSettings).ValidateAndThrow(payload);
+
+    AbilityAggregate ability = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName), command.ActorId)
     {
       DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName),
       Description = DescriptionUnit.TryCreate(payload.Description),

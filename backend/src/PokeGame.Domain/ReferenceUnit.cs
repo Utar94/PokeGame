@@ -1,4 +1,7 @@
-﻿namespace PokeGame.Domain;
+﻿using FluentValidation;
+using PokeGame.Domain.Validators;
+
+namespace PokeGame.Domain;
 public record ReferenceUnit
 {
   public string Value { get; }
@@ -6,7 +9,7 @@ public record ReferenceUnit
   public ReferenceUnit(string value)
   {
     Value = value.Trim();
-    // TODO(fpion): validate Value
+    new ReferenceValidator().ValidateAndThrow(Value);
   }
 
   public static ReferenceUnit? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);

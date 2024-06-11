@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Contracts.Settings;
 using PokeGame.Contracts;
 using PokeGame.Domain.Abilities.Events;
 
@@ -6,6 +7,8 @@ namespace PokeGame.Domain.Abilities;
 
 public class AbilityAggregate : AggregateRoot
 {
+  public static readonly IUniqueNameSettings UniqueNameSettings = new ReadOnlyUniqueNameSettings("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_");
+
   private AbilityUpdatedEvent _updatedEvent = new();
 
   public new AbilityId Id => new(base.Id);

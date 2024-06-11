@@ -1,4 +1,7 @@
-﻿namespace PokeGame.Domain;
+﻿using FluentValidation;
+using PokeGame.Domain.Validators;
+
+namespace PokeGame.Domain;
 public record DisplayNameUnit
 {
   public const int MaximumLength = byte.MaxValue;
@@ -8,7 +11,7 @@ public record DisplayNameUnit
   public DisplayNameUnit(string value)
   {
     Value = value.Trim();
-    // TODO(fpion): validate Value
+    new DisplayNameValidator().ValidateAndThrow(Value);
   }
 
   public static DisplayNameUnit? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);

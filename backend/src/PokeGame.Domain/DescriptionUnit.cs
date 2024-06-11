@@ -1,4 +1,7 @@
-﻿namespace PokeGame.Domain;
+﻿using FluentValidation;
+using PokeGame.Domain.Validators;
+
+namespace PokeGame.Domain;
 public record DescriptionUnit
 {
   public string Value { get; }
@@ -6,7 +9,7 @@ public record DescriptionUnit
   public DescriptionUnit(string value)
   {
     Value = value.Trim();
-    // TODO(fpion): validate Value
+    new DescriptionValidator().ValidateAndThrow(Value);
   }
 
   public static DescriptionUnit? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
