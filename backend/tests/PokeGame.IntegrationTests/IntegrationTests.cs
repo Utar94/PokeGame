@@ -19,8 +19,6 @@ using PokeGame.EntityFrameworkCore.Entities;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Infrastructure;
 using PokeGame.Infrastructure.Commands;
-using System.Globalization;
-using System.Text;
 
 namespace PokeGame;
 

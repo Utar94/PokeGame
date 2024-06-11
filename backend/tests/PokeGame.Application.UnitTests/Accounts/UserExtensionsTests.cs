@@ -6,8 +6,6 @@ using Logitar.Portal.Contracts.Users;
 using Logitar.Security.Claims;
 using PokeGame.Application.Constants;
 using PokeGame.Contracts.Accounts;
-using System.Globalization;
-using System.Security.Claims;
 
 namespace PokeGame.Application.Accounts;
 

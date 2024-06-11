@@ -4,7 +4,6 @@ using Logitar.Portal.Contracts.Users;
 using Logitar.Security.Claims;
 using PokeGame.Application.Accounts;
 using PokeGame.Application.Constants;
-using System.Security.Claims;
 
 namespace PokeGame.Infrastructure.IdentityServices;
 

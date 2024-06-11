@@ -9,7 +9,6 @@ using Logitar.Security.Claims;
 using Moq;
 using PokeGame.Application.Constants;
 using PokeGame.Contracts.Accounts;
-using System.Globalization;
 
 namespace PokeGame.Application.Accounts.Commands;
 
