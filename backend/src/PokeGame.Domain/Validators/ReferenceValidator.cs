@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Logitar.Identity.Domain.Shared;
 
 namespace PokeGame.Domain.Validators;
 

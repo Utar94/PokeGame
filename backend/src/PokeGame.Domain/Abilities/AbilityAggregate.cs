@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Contracts;
 using Logitar.Identity.Contracts.Settings;
-using PokeGame.Contracts;
+using Logitar.Identity.Domain.Shared;
 using PokeGame.Domain.Abilities.Events;
 
 namespace PokeGame.Domain.Abilities;
@@ -35,7 +36,7 @@ public class AbilityAggregate : AggregateRoot
       if (value != _displayName)
       {
         _displayName = value;
-        _updatedEvent.DisplayName = new Change<DisplayNameUnit>(value);
+        _updatedEvent.DisplayName = new Modification<DisplayNameUnit>(value);
       }
     }
   }
@@ -48,7 +49,7 @@ public class AbilityAggregate : AggregateRoot
       if (value != _description)
       {
         _description = value;
-        _updatedEvent.Description = new Change<DescriptionUnit>(value);
+        _updatedEvent.Description = new Modification<DescriptionUnit>(value);
       }
     }
   }
@@ -62,7 +63,7 @@ public class AbilityAggregate : AggregateRoot
       if (value != _reference)
       {
         _reference = value;
-        _updatedEvent.Reference = new Change<ReferenceUnit>(value);
+        _updatedEvent.Reference = new Modification<ReferenceUnit>(value);
       }
     }
   }
@@ -75,7 +76,7 @@ public class AbilityAggregate : AggregateRoot
       if (value != _notes)
       {
         _notes = value;
-        _updatedEvent.Notes = new Change<NotesUnit>(value);
+        _updatedEvent.Notes = new Modification<NotesUnit>(value);
       }
     }
   }
