@@ -57,10 +57,10 @@ internal class ReplaceAbilityCommandHandler : IRequestHandler<ReplaceAbilityComm
       ability.Description = description;
     }
 
-    ReferenceUnit? urlReference = ReferenceUnit.TryCreate(payload.Reference);
-    if (reference == null || urlReference != reference.Reference)
+    UrlUnit? url = UrlUnit.TryCreate(payload.Reference);
+    if (reference == null || url != reference.Reference)
     {
-      ability.Reference = urlReference;
+      ability.Reference = url;
     }
     NotesUnit? notes = NotesUnit.TryCreate(payload.Notes);
     if (reference == null || notes != reference.Notes)

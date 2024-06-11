@@ -54,8 +54,8 @@ public class AbilityAggregate : AggregateRoot
     }
   }
 
-  private ReferenceUnit? _reference = null;
-  public ReferenceUnit? Reference
+  private UrlUnit? _reference = null;
+  public UrlUnit? Reference
   {
     get => _reference;
     set
@@ -63,7 +63,7 @@ public class AbilityAggregate : AggregateRoot
       if (value != _reference)
       {
         _reference = value;
-        _updatedEvent.Reference = new Modification<ReferenceUnit>(value);
+        _updatedEvent.Reference = new Modification<UrlUnit>(value);
       }
     }
   }

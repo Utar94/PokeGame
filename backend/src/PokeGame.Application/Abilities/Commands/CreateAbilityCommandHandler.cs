@@ -31,7 +31,7 @@ internal class CreateAbilityCommandHandler : IRequestHandler<CreateAbilityComman
     {
       DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName),
       Description = DescriptionUnit.TryCreate(payload.Description),
-      Reference = ReferenceUnit.TryCreate(payload.Reference),
+      Reference = UrlUnit.TryCreate(payload.Reference),
       Notes = NotesUnit.TryCreate(payload.Notes)
     };
     ability.Update(command.ActorId);

@@ -29,6 +29,36 @@ services:
     ports:
       - 5442:5432
 
+  pokegame_portal:
+    image: fpion/portal:v4.1.0
+    container_name: PokeGame_portal
+    depends_on:
+      - pokegame_mongo
+      - pokegame_mssql
+      - pokegame_postgres
+    restart: unless-stopped
+    environment:
+      EnableBasicAuthentication: "true"
+      EnableMigrations: "true"
+      MongoDB:ConnectionString: mongodb://pokegame:kYpKaNJvVUAX3Eg9@pokegame_mongo:27017/
+      POSTGRESQLCONNSTR_Portal: "User ID=postgres;Password=TRs5VEJQZKDzh4ur;Host=pokegame_postgres;Port=5432;Database=Portal;"
+      SQLCONNSTR_Portal: "Server=pokegame_mssql;Database=Portal;User Id=SA;Password=AT42S6a5KdL3HxnC;Persist Security Info=False;Encrypt=False;"
+    ports:
+      - 8892:8080
+
+  # pokegame_seeding:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: /tools/PokeGame.Seeding.Portal.Worker/Dockerfile
+  #   image: pokegame_portal_seeding
+  #   container_name: PokeGame.Seeding.Portal.Worker_seeding
+  #   depends_on:
+  #     - pokegame_portal
+  #   restart: unless-stopped
+  #   environment:
+  #     DOTNET_ENVIRONMENT: Development
+  #     Portal:BaseUrl: http://pokegame_portal:8080
+
   pokegame_backend:
     build:
       context: ./backend
@@ -42,6 +72,7 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_Environment: Development
+      Portal:BaseUrl: http://pokegame_portal:8080
       POSTGRESQLCONNSTR_Pokemon: "User ID=postgres;Password=TRs5VEJQZKDzh4ur;Host=pokegame_postgres;Port=5432;Database=Pokemon;"
       SQLCONNSTR_Pokemon: "Server=pokegame_mssql;Database=Pokemon;User Id=SA;Password=AT42S6a5KdL3HxnC;Persist Security Info=False;Encrypt=False;"
     ports:
