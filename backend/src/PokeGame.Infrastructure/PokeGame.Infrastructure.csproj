@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,16 +16,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokeGame.Contracts\PokeGame.Contracts.csproj" />
+    <PackageReference Include="Logitar.EventSourcing.Infrastructure" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Logitar.EventSourcing" Version="6.0.0" />
-    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    <ProjectReference Include="..\PokeGame.Application\PokeGame.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
 </Project>
