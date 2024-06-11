@@ -2,7 +2,7 @@
 
 namespace PokeGame.Domain.Validators;
 
-internal class AllowedCharactersValidator : AbstractValidator<string>
+public class AllowedCharactersValidator : AbstractValidator<string>
 {
   public AllowedCharactersValidator(string? allowedCharacters)
   {

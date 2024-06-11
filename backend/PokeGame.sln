@@ -12,19 +12,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Contracts", "src\PokeGame.Contracts\PokeGame.Contracts.csproj", "{84E024C1-84FD-4736-B298-27D4F327FECD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Contracts", "src\PokeGame.Contracts\PokeGame.Contracts.csproj", "{84E024C1-84FD-4736-B298-27D4F327FECD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Domain", "src\PokeGame.Domain\PokeGame.Domain.csproj", "{50302053-4B09-41F3-A765-9D38FCEFCB4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Domain", "src\PokeGame.Domain\PokeGame.Domain.csproj", "{50302053-4B09-41F3-A765-9D38FCEFCB4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Application", "src\PokeGame.Application\PokeGame.Application.csproj", "{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Application", "src\PokeGame.Application\PokeGame.Application.csproj", "{98A83194-B4E2-4FF0-8CF2-AC2B6DB1F2AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Infrastructure", "src\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj", "{23737FB8-1334-4D77-88E6-A46DEAA97ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Infrastructure", "src\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj", "{23737FB8-1334-4D77-88E6-A46DEAA97ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore", "src\PokeGame.EntityFrameworkCore\PokeGame.EntityFrameworkCore.csproj", "{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.EntityFrameworkCore", "src\PokeGame.EntityFrameworkCore\PokeGame.EntityFrameworkCore.csproj", "{7B4DA7DF-3BF4-46AB-B866-C8F49B0ABEEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore.SqlServer", "src\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj", "{4D2BD66D-D6AD-4526-AB08-98216301D1D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.EntityFrameworkCore.SqlServer", "src\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj", "{4D2BD66D-D6AD-4526-AB08-98216301D1D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame", "src\PokeGame\PokeGame.csproj", "{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame", "src\PokeGame\PokeGame.csproj", "{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6C5BBB70-B37C-4862-A6A3-222BF1F58429}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.IntegrationTests", "tests\PokeGame.IntegrationTests\PokeGame.IntegrationTests.csproj", "{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,9 +64,16 @@ Global
 		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EDDF5C2-EB5A-4E62-9CC7-892D2E4222C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325} = {6C5BBB70-B37C-4862-A6A3-222BF1F58429}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE7AF727-AA5A-4139-87C4-773AB58C4C48}

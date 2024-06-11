@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="PokeGame.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="System.Reflection" />
     <Using Include="System.Text" />
   </ItemGroup>
