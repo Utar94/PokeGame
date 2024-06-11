@@ -48,12 +48,12 @@ public class AbilityController : ControllerBase
     return ability == null ? NotFound() : Ok(ability);
   }
 
-  //[HttpPut("{id}")]
-  //public async Task<ActionResult<Ability>> ReplaceAsync(Guid id, [FromBody] ReplaceAbilityPayload payload, long? version, CancellationToken cancellationToken = default)
-  //{
-  //  Ability? ability = await _pipeline.ExecuteAsync(new ReplaceAbilityCommand(id, payload, version), cancellationToken);
-  //  return ability == null ? NotFound() : Ok(ability);
-  //} // TODO(fpion): Replace
+  [HttpPut("{id}")]
+  public async Task<ActionResult<Ability>> ReplaceAsync(Guid id, [FromBody] ReplaceAbilityPayload payload, long? version, CancellationToken cancellationToken = default)
+  {
+    Ability? ability = await _pipeline.ExecuteAsync(new ReplaceAbilityCommand(id, payload, version), cancellationToken);
+    return ability == null ? NotFound() : Ok(ability);
+  }
 
   [HttpGet]
   public async Task<ActionResult<SearchResults<Ability>>> SearchAsync([FromQuery] SearchAbilitiesParameters parameters, CancellationToken cancellationToken)
