@@ -41,6 +41,12 @@
     <Content Include="Portal\Templates\PasswordRecovery.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="Portal\Dictionaries\en.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Portal\Dictionaries\fr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -58,14 +64,5 @@
     <Using Include="System.Reflection" />
     <Using Include="System.Text" />
     <Using Include="System.Text.Json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Portal\Dictionaries\en.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Portal\Dictionaries\fr.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

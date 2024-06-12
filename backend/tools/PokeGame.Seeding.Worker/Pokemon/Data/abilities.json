@@ -1,0 +1,86 @@
+﻿[
+  {
+    "UniqueName": "Overgrow",
+    "DisplayName": null,
+    "Description": "Powers up Grass-type moves when the Pokémon's HP is low.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Overgrow_(Ability)",
+    "Notes": "+50% Attack or Special Attack when using a Grass-type move if the user has less than or equal to ⅓ of its maximum HP remaining."
+  },
+  {
+    "UniqueName": "Blaze",
+    "DisplayName": null,
+    "Description": "Powers up Fire-type moves when the Pokémon's HP is low.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Blaze_(Ability)",
+    "Notes": "+50% Attack or Special Attack when using a Fire-type move if the user has less than or equal to ⅓ of its maximum HP remaining."
+  },
+  {
+    "UniqueName": "Torrent",
+    "DisplayName": null,
+    "Description": "Powers up Water-type moves when the Pokémon's HP is low.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Torrent_(Ability)",
+    "Notes": "+50% Attack or Special Attack when using a Water-type move if the user has less than or equal to ⅓ of its maximum HP remaining."
+  },
+  {
+    "UniqueName": "Guts",
+    "DisplayName": null,
+    "Description": "It's so gutsy that having a status condition boosts the Pokémon's Attack stat.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Guts_(Ability)",
+    "Notes": "+50% Attack when the user has a status condition; does not lose Attack due to burn."
+  },
+  {
+    "UniqueName": "AirLock",
+    "DisplayName": "Air Lock",
+    "Description": "Eliminates the effects of weather.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Air_Lock_(Ability)",
+    "Notes": null
+  },
+  {
+    "UniqueName": "CloudNine",
+    "DisplayName": "Cloud Nine",
+    "Description": "Eliminates the effects of weather.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Cloud_Nine_(Ability)",
+    "Notes": null
+  },
+  {
+    "UniqueName": "FlashFire",
+    "DisplayName": "Flash Fire",
+    "Description": "If hit by a Fire-type move, the Pokémon absorbs the flames and uses them to power up its own Fire-type moves.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Flash_Fire_(Ability)",
+    "Notes": "The user is immune to Fire-type moves. When hit by a Fire-type move, +50% Attack or Special Attack when using a Fire-type move."
+  },
+  {
+    "UniqueName": "BattleArmor",
+    "DisplayName": "Battle Armor",
+    "Description": "Hard armor protects the Pokémon from critical hits.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Battle_Armor_(Ability)",
+    "Notes": null
+  },
+  {
+    "UniqueName": "ShellArmor",
+    "DisplayName": "Shell Armor",
+    "Description": "A hard shell protects the Pokémon from critical hits.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Shell_Armor_(Ability)",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Merciless",
+    "DisplayName": null,
+    "Description": "The Pokémon's attacks become critical hits if the target is poisoned.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Merciless_(Ability)",
+    "Notes": "Attacks used by the Pokémon with this Ability will always become critical hits against poisoned targets, unless that target has Battle Armor or Shell Armor or is under the effects of Lucky Chant."
+  },
+  {
+    "UniqueName": "Adaptability",
+    "DisplayName": null,
+    "Description": "Powers up moves of the same type as the Pokémon.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Adaptability_(Ability)",
+    "Notes": "Adaptability increases STAB of a Pokémon with this Ability from 1.5 to 2."
+  },
+  {
+    "UniqueName": "Scrappy",
+    "DisplayName": null,
+    "Description": "The Pokémon can hit Ghost-type Pokémon with Normal- and Fighting-type moves. It is also unaffected by Intimidate.",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Scrappy_(Ability)",
+    "Notes": null
+  }
+]

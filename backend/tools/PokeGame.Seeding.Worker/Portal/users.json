@@ -1,0 +1,22 @@
+﻿[
+  {
+    "EmailAddress": "master@pokegame.ca",
+    "Password": "P@s$W0rD",
+    "FirstName": "Alex",
+    "LastName": "Clark",
+    "Locale": "en",
+    "TimeZone": "America/Toronto",
+    "Picture": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/41.jpg",
+    "IsGamemaster": true
+  },
+  {
+    "EmailAddress": "player@pokegame.ca",
+    "Password": "P@s$W0rD",
+    "FirstName": "François",
+    "LastName": "Vertefeuille",
+    "Locale": "fr",
+    "TimeZone": "America/Toronto",
+    "Picture": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/132.jpg",
+    "IsGamemaster": false
+  }
+]

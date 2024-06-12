@@ -25,19 +25,19 @@ internal class SeedRealmCommandHandler : INotificationHandler<SeedRealmCommand>
     Realm? realm = await _realms.ReadAsync(id: null, _uniqueSlug, context);
     if (realm == null)
     {
-      CreateRealmPayload payload = new(_uniqueSlug, secret: string.Empty);
-      realm = await _realms.CreateAsync(payload, context);
+      CreateRealmPayload createPayload = new(_uniqueSlug, secret: string.Empty);
+      realm = await _realms.CreateAsync(createPayload, context);
       status = "created";
     }
 
-    ReplaceRealmPayload replace = new(realm.UniqueSlug, realm.Secret)
+    ReplaceRealmPayload replacePayload = new(realm.UniqueSlug, realm.Secret)
     {
       DisplayName = "PokéGame",
       Description = "This is the realm of the Pokémon game management system.",
       DefaultLocale = "en",
       Url = "http://localhost:7792"
     };
-    realm = await _realms.ReplaceAsync(realm.Id, replace, realm.Version, context)
+    realm = await _realms.ReplaceAsync(realm.Id, replacePayload, realm.Version, context)
       ?? throw new InvalidOperationException($"The realm 'Id={realm.Id}' replace result should not be null.");
 
     WorkerPortalSettings.Instance.SetRealm(realm);

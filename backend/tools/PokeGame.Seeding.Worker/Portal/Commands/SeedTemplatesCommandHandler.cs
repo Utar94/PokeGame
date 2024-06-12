@@ -26,19 +26,19 @@ internal class SeedTemplatesCommandHandler : INotificationHandler<SeedTemplatesC
   {
     RequestContext context = new(cancellationToken);
 
-    SearchResults<Template> results = await _templates.SearchAsync(new SearchTemplatesPayload(), context);
-    Dictionary<string, Template> templates = new(capacity: results.Items.Count);
-    foreach (Template template in results.Items)
-    {
-      templates[template.UniqueKey] = template;
-    }
-
-    Dictionary<string, Content> contents = await LoadContentsAsync(cancellationToken);
-
     string json = await File.ReadAllTextAsync("Portal/templates.json", Encoding.UTF8, cancellationToken);
     IEnumerable<TemplateSummary>? summaries = JsonSerializer.Deserialize<IEnumerable<TemplateSummary>>(json);
     if (summaries != null)
     {
+      SearchResults<Template> results = await _templates.SearchAsync(new SearchTemplatesPayload(), context);
+      Dictionary<string, Template> templates = new(capacity: results.Items.Count);
+      foreach (Template template in results.Items)
+      {
+        templates[template.UniqueKey] = template;
+      }
+
+      Dictionary<string, Content> contents = await LoadContentsAsync(cancellationToken);
+
       foreach (TemplateSummary summary in summaries)
       {
         string status = "created";
