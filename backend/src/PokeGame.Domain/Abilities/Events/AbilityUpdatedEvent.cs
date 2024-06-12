@@ -11,7 +11,7 @@ public class AbilityUpdatedEvent : DomainEvent, INotification
   public Modification<DisplayNameUnit>? DisplayName { get; set; }
   public Modification<DescriptionUnit>? Description { get; set; }
 
-  public Modification<ReferenceUnit>? Reference { get; set; }
+  public Modification<UrlUnit>? Reference { get; set; }
   public Modification<NotesUnit>? Notes { get; set; }
 
   public bool HasChanges => UniqueName != null || DisplayName != null || Description != null
