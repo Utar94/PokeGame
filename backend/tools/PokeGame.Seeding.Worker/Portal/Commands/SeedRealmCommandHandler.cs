@@ -21,24 +21,27 @@ internal class SeedRealmCommandHandler : INotificationHandler<SeedRealmCommand>
   {
     RequestContext context = new(cancellationToken);
 
+    string status = "updated";
     Realm? realm = await _realms.ReadAsync(id: null, _uniqueSlug, context);
     if (realm == null)
     {
-      CreateRealmPayload payload = new(_uniqueSlug, secret: string.Empty)
-      {
-        DisplayName = "PokéGame",
-        Description = "This is the realm of the Pokémon game management system.",
-        DefaultLocale = "en",
-        Url = "http://localhost:7792"
-      };
+      CreateRealmPayload payload = new(_uniqueSlug, secret: string.Empty);
       realm = await _realms.CreateAsync(payload, context);
-      _logger.LogInformation("The realm '{UniqueSlug}' has been created (Id={Id}).", realm.UniqueSlug, realm.Id);
-    }
-    else
-    {
-      _logger.LogInformation("The realm '{UniqueSlug}' already exists (Id={Id}).", realm.UniqueSlug, realm.Id); // TODO(fpion): replace realm
+      status = "created";
     }
 
+    ReplaceRealmPayload replace = new(realm.UniqueSlug, realm.Secret)
+    {
+      DisplayName = "PokéGame",
+      Description = "This is the realm of the Pokémon game management system.",
+      DefaultLocale = "en",
+      Url = "http://localhost:7792"
+    };
+    realm = await _realms.ReplaceAsync(realm.Id, replace, realm.Version, context)
+      ?? throw new InvalidOperationException($"The realm 'Id={realm.Id}' replace result should not be null.");
+
     WorkerPortalSettings.Instance.SetRealm(realm);
+
+    _logger.LogInformation("The realm '{UniqueSlug}' has been {Status} (Id={Id}).", realm.UniqueSlug, status, realm.Id);
   }
 }

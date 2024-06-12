@@ -40,17 +40,31 @@ internal class SeedSendersCommandHandler : INotificationHandler<SeedSendersComma
       string? key = payload.GetKey();
       if (key != null)
       {
+        string status = "updated";
         string[] values = key.Split(':');
         if (senders.TryGetValue(key, out Sender? sender))
         {
-          _logger.LogInformation("The {ContactType} sender '{ContactValue}' already exists (Id={Id}).", values[0], values[1], sender.Id); // TODO(fpion): replace sender
+          ReplaceSenderPayload replace = new()
+          {
+            EmailAddress = payload.EmailAddress,
+            PhoneNumber = payload.PhoneNumber,
+            DisplayName = payload.DisplayName,
+            Description = payload.Description,
+            Mailgun = payload.Mailgun,
+            SendGrid = payload.SendGrid,
+            Twilio = payload.Twilio
+          };
+          sender = await _senders.ReplaceAsync(sender.Id, replace, sender.Version, context)
+            ?? throw new InvalidOperationException($"The sender 'Id={sender.Id}' replace result should not be null.");
         }
         else
         {
           sender = await _senders.CreateAsync(payload, context);
           senders[key] = sender;
-          _logger.LogInformation("The {ContactType} sender '{ContactValue}' has been created (Id={Id}).", values[0], values[1], sender.Id);
+          status = "created";
         }
+
+        _logger.LogInformation("The {ContactType} sender '{ContactValue}' has been {Status} (Id={Id}).", values[0], values[1], status, sender.Id);
       }
     }
   }

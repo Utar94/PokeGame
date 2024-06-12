@@ -41,23 +41,29 @@ internal class SeedTemplatesCommandHandler : INotificationHandler<SeedTemplatesC
     {
       foreach (TemplateSummary summary in summaries)
       {
+        string status = "created";
+        string subject = $"{summary.UniqueKey}_Subject";
+        Content content = contents[summary.UniqueKey];
         if (templates.TryGetValue(summary.UniqueKey, out Template? template))
         {
-          _logger.LogInformation("The template '{UniqueKey}' already exists (Id={Id}).", template.UniqueKey, template.Id); // TODO(fpion): replace template
+          status = "updated";
         }
         else
         {
-          string subject = $"{summary.UniqueKey}_Subject";
-          Content content = contents[summary.UniqueKey];
-          CreateTemplatePayload payload = new(summary.UniqueKey, subject, content)
-          {
-            DisplayName = summary.DisplayName,
-            Description = summary.Description
-          };
+          CreateTemplatePayload payload = new(summary.UniqueKey, subject, content);
           template = await _templates.CreateAsync(payload, context);
           templates[summary.UniqueKey] = template;
-          _logger.LogInformation("The template '{UniqueKey}' has been created (Id={Id}).", template.UniqueKey, template.Id);
         }
+
+        ReplaceTemplatePayload replace = new(summary.UniqueKey, subject, content)
+        {
+          DisplayName = summary.DisplayName,
+          Description = summary.Description
+        };
+        template = await _templates.ReplaceAsync(template.Id, replace, template.Version)
+          ?? throw new InvalidOperationException($"The template 'Id={template.Id}' replace result should not be null.");
+
+        _logger.LogInformation("The template '{UniqueKey}' has been {Status} (Id={Id}).", template.UniqueKey, status, template.Id);
       }
     }
   }

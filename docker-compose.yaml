@@ -30,7 +30,7 @@ services:
       - 5442:5432
 
   pokegame_portal:
-    image: fpion/portal:v4.1.0
+    image: fpion/portal:v4.1.1
     container_name: PokeGame_portal
     depends_on:
       - pokegame_mongo
