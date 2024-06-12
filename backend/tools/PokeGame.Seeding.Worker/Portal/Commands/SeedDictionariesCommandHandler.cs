@@ -20,43 +20,46 @@ internal class SeedDictionariesCommandHandler : INotificationHandler<SeedDiction
   {
     RequestContext context = new(cancellationToken);
 
-    SearchResults<Dictionary> results = await _dictionaries.SearchAsync(new SearchDictionariesPayload(), context);
-    Dictionary<string, Dictionary> dictionaries = new(capacity: results.Items.Count);
-    foreach (Dictionary dictionary in results.Items)
-    {
-      dictionaries[dictionary.Locale.Code] = dictionary;
-    }
-
     string[] files = Directory.GetFiles("Portal/Dictionaries");
-    foreach (string path in files)
+    if (files.Length > 0)
     {
-      string status = "created";
-      string locale = Path.GetFileNameWithoutExtension(path);
-      if (dictionaries.TryGetValue(locale, out Dictionary? dictionary))
+      SearchResults<Dictionary> results = await _dictionaries.SearchAsync(new SearchDictionariesPayload(), context);
+      Dictionary<string, Dictionary> dictionaries = new(capacity: results.Items.Count);
+      foreach (Dictionary dictionary in results.Items)
       {
-        status = "updated";
-      }
-      else
-      {
-        CreateDictionaryPayload payload = new(locale);
-        dictionary = await _dictionaries.CreateAsync(payload, context);
-        dictionaries[locale] = dictionary;
+        dictionaries[dictionary.Locale.Code] = dictionary;
       }
 
-      string json = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
-      Dictionary<string, string>? entries = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
-      if (entries != null)
+      foreach (string path in files)
       {
-        ReplaceDictionaryPayload replace = new(locale);
-        foreach (KeyValuePair<string, string> entry in entries)
+        string status = "created";
+        string locale = Path.GetFileNameWithoutExtension(path);
+        if (dictionaries.TryGetValue(locale, out Dictionary? dictionary))
         {
-          replace.Entries.Add(new DictionaryEntry(entry));
+          status = "updated";
         }
-        dictionary = await _dictionaries.ReplaceAsync(dictionary.Id, replace, dictionary.Version, context)
-          ?? throw new InvalidOperationException($"The dictionary 'Id={dictionary.Id}' replace result should not be null.");
-      }
+        else
+        {
+          CreateDictionaryPayload payload = new(locale);
+          dictionary = await _dictionaries.CreateAsync(payload, context);
+          dictionaries[locale] = dictionary;
+        }
 
-      _logger.LogInformation("The dictionary '{Locale}' has been {Status} (Id={Id}).", dictionary.Locale.Code, status, dictionary.Id);
+        string json = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
+        Dictionary<string, string>? entries = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        if (entries != null)
+        {
+          ReplaceDictionaryPayload replace = new(locale);
+          foreach (KeyValuePair<string, string> entry in entries)
+          {
+            replace.Entries.Add(new DictionaryEntry(entry));
+          }
+          dictionary = await _dictionaries.ReplaceAsync(dictionary.Id, replace, dictionary.Version, context)
+            ?? throw new InvalidOperationException($"The dictionary 'Id={dictionary.Id}' replace result should not be null.");
+        }
+
+        _logger.LogInformation("The dictionary '{Locale}' has been {Status} (Id={Id}).", dictionary.Locale.Code, status, dictionary.Id);
+      }
     }
   }
 }

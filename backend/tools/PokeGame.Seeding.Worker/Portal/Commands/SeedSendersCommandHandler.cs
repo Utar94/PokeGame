@@ -22,49 +22,52 @@ internal class SeedSendersCommandHandler : INotificationHandler<SeedSendersComma
   {
     RequestContext context = new(cancellationToken);
 
-    SearchResults<Sender> results = await _senders.SearchAsync(new SearchSendersPayload(), context);
-    Dictionary<string, Sender> senders = new(capacity: results.Items.Count);
-    foreach (Sender sender in results.Items)
-    {
-      string? key = sender.GetKey();
-      if (key != null)
-      {
-        senders[key] = sender;
-      }
-    }
-
     IEnumerable<CreateSenderPayload> payloads = _configuration.GetSection("Portal:Senders").GetChildren()
       .Select(section => section.Get<CreateSenderPayload>() ?? new());
-    foreach (CreateSenderPayload payload in payloads)
+    if (payloads.Any())
     {
-      string? key = payload.GetKey();
-      if (key != null)
+      SearchResults<Sender> results = await _senders.SearchAsync(new SearchSendersPayload(), context);
+      Dictionary<string, Sender> senders = new(capacity: results.Items.Count);
+      foreach (Sender sender in results.Items)
       {
-        string status = "updated";
-        string[] values = key.Split(':');
-        if (senders.TryGetValue(key, out Sender? sender))
+        string? key = sender.GetKey();
+        if (key != null)
         {
-          ReplaceSenderPayload replace = new()
-          {
-            EmailAddress = payload.EmailAddress,
-            PhoneNumber = payload.PhoneNumber,
-            DisplayName = payload.DisplayName,
-            Description = payload.Description,
-            Mailgun = payload.Mailgun,
-            SendGrid = payload.SendGrid,
-            Twilio = payload.Twilio
-          };
-          sender = await _senders.ReplaceAsync(sender.Id, replace, sender.Version, context)
-            ?? throw new InvalidOperationException($"The sender 'Id={sender.Id}' replace result should not be null.");
-        }
-        else
-        {
-          sender = await _senders.CreateAsync(payload, context);
           senders[key] = sender;
-          status = "created";
         }
+      }
 
-        _logger.LogInformation("The {ContactType} sender '{ContactValue}' has been {Status} (Id={Id}).", values[0], values[1], status, sender.Id);
+      foreach (CreateSenderPayload payload in payloads)
+      {
+        string? key = payload.GetKey();
+        if (key != null)
+        {
+          string status = "updated";
+          string[] values = key.Split(':');
+          if (senders.TryGetValue(key, out Sender? sender))
+          {
+            ReplaceSenderPayload replace = new()
+            {
+              EmailAddress = payload.EmailAddress,
+              PhoneNumber = payload.PhoneNumber,
+              DisplayName = payload.DisplayName,
+              Description = payload.Description,
+              Mailgun = payload.Mailgun,
+              SendGrid = payload.SendGrid,
+              Twilio = payload.Twilio
+            };
+            sender = await _senders.ReplaceAsync(sender.Id, replace, sender.Version, context)
+              ?? throw new InvalidOperationException($"The sender 'Id={sender.Id}' replace result should not be null.");
+          }
+          else
+          {
+            sender = await _senders.CreateAsync(payload, context);
+            senders[key] = sender;
+            status = "created";
+          }
+
+          _logger.LogInformation("The {ContactType} sender '{ContactValue}' has been {Status} (Id={Id}).", values[0], values[1], status, sender.Id);
+        }
       }
     }
   }
