@@ -30,13 +30,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6C5BBB70
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.IntegrationTests", "tests\PokeGame.IntegrationTests\PokeGame.IntegrationTests.csproj", "{A8DB820D-C367-4D0A-8C4A-2A71A4BB1325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Application.UnitTests", "tests\PokeGame.Application.UnitTests\PokeGame.Application.UnitTests.csproj", "{D90A534D-6B94-43B9-A92E-D27BCF60EC33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Application.UnitTests", "tests\PokeGame.Application.UnitTests\PokeGame.Application.UnitTests.csproj", "{D90A534D-6B94-43B9-A92E-D27BCF60EC33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Tests", "tests\PokeGame.Tests\PokeGame.Tests.csproj", "{D2B51A63-BB9F-4BA0-AA54-BE1D3E1E0DFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Tests", "tests\PokeGame.Tests\PokeGame.Tests.csproj", "{D2B51A63-BB9F-4BA0-AA54-BE1D3E1E0DFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{42B9B5B2-320C-48D9-8DE4-B7AAE1D7E740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Seeding.Worker", "tools\PokeGame.Seeding.Worker\PokeGame.Seeding.Worker.csproj", "{80189DD6-7D0E-47B2-9525-13964D464ABB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Seeding.Worker", "tools\PokeGame.Seeding.Worker\PokeGame.Seeding.Worker.csproj", "{80189DD6-7D0E-47B2-9525-13964D464ABB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.MongoDB", "src\PokeGame.MongoDB\PokeGame.MongoDB.csproj", "{6A3234B9-AC06-4785-B86A-EE5B429CF6FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,10 @@ Global
 		{80189DD6-7D0E-47B2-9525-13964D464ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80189DD6-7D0E-47B2-9525-13964D464ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80189DD6-7D0E-47B2-9525-13964D464ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A3234B9-AC06-4785-B86A-EE5B429CF6FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A3234B9-AC06-4785-B86A-EE5B429CF6FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A3234B9-AC06-4785-B86A-EE5B429CF6FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A3234B9-AC06-4785-B86A-EE5B429CF6FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

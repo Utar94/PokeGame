@@ -23,7 +23,7 @@ public static class DependencyInjectionExtensions
       .AddPokeGameApplication()
       .AddSingleton(InitializeCachingSettings)
       .AddSingleton<ICacheService, CacheService>()
-      .AddSingleton<IEventSerializer>(InitializeEventSerializer())
+      .AddSingleton<IEventSerializer>(InitializeEventSerializer)
       .AddTransient<IEventBus, EventBus>();
   }
 
@@ -45,17 +45,14 @@ public static class DependencyInjectionExtensions
     return configuration.GetSection("Caching").Get<CachingSettings>() ?? new();
   }
 
-  private static EventSerializer InitializeEventSerializer()
-  {
-    EventSerializer eventSerializer = new();
-
-    eventSerializer.RegisterConverter(new AbilityIdConverter());
-    eventSerializer.RegisterConverter(new DescriptionConverter());
-    eventSerializer.RegisterConverter(new DisplayNameConverter());
-    eventSerializer.RegisterConverter(new NotesConverter());
-    eventSerializer.RegisterConverter(new UniqueNameConverter());
-    eventSerializer.RegisterConverter(new UrlConverter());
-
-    return eventSerializer;
-  }
+  private static EventSerializer InitializeEventSerializer(IServiceProvider serviceProvider) => new(serviceProvider.GetJsonConverters());
+  public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) =>
+  [
+    new AbilityIdConverter(),
+    new DescriptionConverter(),
+    new DisplayNameConverter(),
+    new NotesConverter(),
+    new UniqueNameConverter(),
+    new UrlConverter()
+  ];
 }

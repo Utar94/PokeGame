@@ -57,6 +57,7 @@ services:
     restart: unless-stopped
     environment:
       DOTNET_ENVIRONMENT: Development
+      Pokemon:BaseUrl: http://pokegame_backend:8080
       Portal:BaseUrl: http://pokegame_portal:8080
 
   pokegame_backend:
@@ -72,6 +73,7 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_Environment: Development
+      MongoDB:ConnectionString: mongodb://pokegame:kYpKaNJvVUAX3Eg9@pokegame_mongo:27017/
       Portal:BaseUrl: http://pokegame_portal:8080
       POSTGRESQLCONNSTR_Pokemon: "User ID=postgres;Password=TRs5VEJQZKDzh4ur;Host=pokegame_postgres;Port=5432;Database=Pokemon;"
       SQLCONNSTR_Pokemon: "Server=pokegame_mssql;Database=Pokemon;User Id=SA;Password=AT42S6a5KdL3HxnC;Persist Security Info=False;Encrypt=False;"

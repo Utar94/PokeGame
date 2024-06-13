@@ -5,9 +5,12 @@ namespace PokeGame.Application;
 
 public abstract record Activity : IActivity
 {
+  [JsonIgnore]
   private ActivityContext? _context = null;
+  [JsonIgnore]
   protected ActivityContext Context => _context ?? throw new InvalidOperationException($"The activity has not been contextualized. You must call the '{nameof(Contextualize)}' method once.");
 
+  [JsonIgnore]
   public Actor Actor
   {
     get
@@ -24,7 +27,13 @@ public abstract record Activity : IActivity
       return Actor.System;
     }
   }
+  [JsonIgnore]
   public ActorId ActorId => new(Actor.Id);
+
+  public virtual IActivity Anonymize()
+  {
+    return this;
+  }
 
   public void Contextualize(ActivityContext context)
   {
