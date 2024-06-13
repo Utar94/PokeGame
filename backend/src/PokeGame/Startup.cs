@@ -11,6 +11,7 @@ using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
 using PokeGame.Filters;
 using PokeGame.Infrastructure;
+using PokeGame.Middlewares;
 using PokeGame.Settings;
 
 namespace PokeGame;
@@ -102,7 +103,7 @@ internal class Startup : StartupBase
     builder.UseCors();
     builder.UseSession();
     //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
-    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): Session Renewal
+    builder.UseMiddleware<RenewSession>();
     builder.UseAuthentication();
     builder.UseAuthorization();
 
