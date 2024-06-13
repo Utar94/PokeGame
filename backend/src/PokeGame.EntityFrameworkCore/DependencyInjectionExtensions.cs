@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application.Abilities;
+using PokeGame.Application.Logging;
 using PokeGame.EntityFrameworkCore.Actors;
 using PokeGame.EntityFrameworkCore.Queriers;
 using PokeGame.EntityFrameworkCore.Repositories;
@@ -28,6 +29,8 @@ public static class DependencyInjectionExtensions
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
-    return services.AddTransient<IAbilityRepository, AbilityRepository>();
+    return services
+      .AddTransient<IAbilityRepository, AbilityRepository>()
+      .AddTransient<ILogRepository, LogRepository>();
   }
 }

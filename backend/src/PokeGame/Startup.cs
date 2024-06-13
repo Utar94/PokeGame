@@ -12,6 +12,7 @@ using PokeGame.Extensions;
 using PokeGame.Filters;
 using PokeGame.Infrastructure;
 using PokeGame.Middlewares;
+using PokeGame.MongoDB;
 using PokeGame.Settings;
 
 namespace PokeGame;
@@ -66,8 +67,11 @@ internal class Startup : StartupBase
     });
     services.AddDistributedMemoryCache();
 
-    services.AddControllers(options => options.Filters.Add<ExceptionHandling>()) // TODO(fpion): LoggingFilter
-      .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    services.AddControllers(options =>
+    {
+      options.Filters.Add<ExceptionHandling>();
+      options.Filters.Add<OperationLogging>();
+    }).AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     services.AddTransient<IActivityContextResolver, HttpActivityContextResolver>();
 
     services.AddApplicationInsightsTelemetry();
@@ -89,6 +93,7 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
+    services.AddPokeGameWithMongoDB(_configuration);
 
     services.AddLogitarPortalClient(_configuration);
   }
@@ -103,7 +108,7 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseSession();
-    //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
+    builder.UseMiddleware<Logging>();
     builder.UseMiddleware<RenewSession>();
     builder.UseAuthentication();
     builder.UseAuthorization();
