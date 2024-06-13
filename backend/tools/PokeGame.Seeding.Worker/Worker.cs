@@ -1,5 +1,6 @@
 ﻿using Logitar.Portal.Client;
 using MediatR;
+using PokeGame.Seeding.Worker.Pokemon.Commands;
 using PokeGame.Seeding.Worker.Portal.Commands;
 
 namespace PokeGame.Seeding.Worker;
@@ -33,6 +34,8 @@ internal class Worker : BackgroundService
     await _publisher.Publish(new SeedTemplatesCommand(), cancellationToken);
     await _publisher.Publish(new SeedRolesCommand(), cancellationToken);
     await _publisher.Publish(new SeedUsersCommand(), cancellationToken);
+
+    await _publisher.Publish(new SeedAbilitiesCommand(), cancellationToken);
 
     chrono.Stop();
     _logger.LogInformation("Worker completed oprations after {Elapsed}ms at {Timestamp}.", chrono.ElapsedMilliseconds, DateTimeOffset.Now);

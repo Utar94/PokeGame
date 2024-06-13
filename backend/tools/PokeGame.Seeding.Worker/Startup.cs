@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Client;
+using PokeGame.Seeding.Worker.Pokemon;
 using PokeGame.Seeding.Worker.Portal;
 
 namespace PokeGame.Seeding.Worker;
@@ -14,7 +15,12 @@ internal class Startup
 
   public void ConfigureServices(IServiceCollection services)
   {
+    PokemonSettings pokemonSettings = _configuration.GetSection("Pokemon").Get<PokemonSettings>() ?? new();
+    services.AddSingleton(pokemonSettings);
+
+    services.AddHttpClient();
     services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+    services.AddSingleton<IPokemonClient, PokemonClient>();
 
     IPortalSettings portalSettings = _configuration.GetSection("Portal").Get<PortalSettings>() ?? new();
     portalSettings = WorkerPortalSettings.Initialize(portalSettings);
