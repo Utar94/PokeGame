@@ -3,9 +3,6 @@ using Logitar.Portal.Client;
 using Logitar.Portal.Contracts.Errors;
 using Logitar.Portal.Contracts.Search;
 using PokeGame.Contracts.Abilities;
-using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 
 namespace PokeGame.Seeding.Worker.Pokemon;
 
