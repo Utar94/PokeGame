@@ -40,7 +40,7 @@ internal class Startup : StartupBase
     OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection("OAuth").Get<OpenAuthenticationSettings>() ?? new();
     services.AddSingleton(openAuthenticationSettings);
     AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
-    //  .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): API Key Authentication
+      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { })
     //  .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { }) // TODO(fpion): Bearer Authentication
       .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     if (_authenticationSchemes.Contains(Schemes.Basic))
@@ -50,7 +50,7 @@ internal class Startup : StartupBase
 
     services.AddAuthorizationBuilder()
       .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes).RequireAuthenticatedUser().Build())
-      .AddPolicy(Policies.Gamemaster, new AuthorizationPolicyBuilder()
+      .AddPolicy(Policies.Gamemaster, new AuthorizationPolicyBuilder(_authenticationSchemes)
         .RequireAuthenticatedUser()
         .AddRequirements(new RoleAuthorizationRequirement("gamemaster"))
         .Build());

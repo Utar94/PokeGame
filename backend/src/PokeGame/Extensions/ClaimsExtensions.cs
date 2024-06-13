@@ -21,6 +21,11 @@ internal static class ClaimsExtensions
       identity.AddClaim(ClaimHelper.Create(Rfc7519ClaimNames.AuthenticationTime, apiKey.AuthenticatedOn.Value));
     }
 
+    foreach (Role role in apiKey.Roles)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.Roles, role.UniqueName));
+    }
+
     return identity;
   }
 

@@ -1,6 +1,5 @@
-﻿using Logitar.Portal.Contracts.Users;
+﻿using Logitar.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using PokeGame.Extensions;
 
 namespace PokeGame.Authorization;
 
@@ -18,8 +17,8 @@ internal class RoleAuthorizationHandler : AuthorizationHandler<RoleAuthorization
     HttpContext? httpContext = _httpContextAccessor.HttpContext;
     if (httpContext != null)
     {
-      User? user = httpContext.GetUser();
-      if (user != null && user.Roles.Any(role => role.UniqueName.Equals(requirement.Role, StringComparison.InvariantCultureIgnoreCase)))
+      IEnumerable<Claim> roles = httpContext.User.FindAll(Rfc7519ClaimNames.Roles);
+      if (roles.Any(claim => claim.Value.Equals(requirement.Role, StringComparison.InvariantCultureIgnoreCase)))
       {
         context.Succeed(requirement);
       }
