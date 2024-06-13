@@ -51,7 +51,7 @@ services:
       context: ./backend
       dockerfile: /tools/PokeGame.Seeding.Worker/Dockerfile
     image: pokegame_seeding
-    container_name: PokeGame.Seeding.Worker_seeding
+    container_name: PokeGame_seeding
     depends_on:
       - pokegame_portal
     restart: unless-stopped

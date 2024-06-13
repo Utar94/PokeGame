@@ -1,6 +1,11 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Portal.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using PokeGame.Application;
+using PokeGame.Authentication;
+using PokeGame.Authorization;
+using PokeGame.Constants;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
@@ -13,11 +18,13 @@ namespace PokeGame;
 internal class Startup : StartupBase
 {
   private readonly IConfiguration _configuration;
+  private readonly string[] _authenticationSchemes;
   private readonly bool _enableOpenApi;
 
   public Startup(IConfiguration configuration)
   {
     _configuration = configuration;
+    _authenticationSchemes = Schemes.GetEnabled(configuration);
     _enableOpenApi = _configuration.GetValue<bool>("EnableOpenApi");
   }
 
@@ -31,9 +38,22 @@ internal class Startup : StartupBase
 
     OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection("OAuth").Get<OpenAuthenticationSettings>() ?? new();
     services.AddSingleton(openAuthenticationSettings);
-    // TODO(fpion): Authentication
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication();
+    //  .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): API Key Authentication
+    //  .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { }) // TODO(fpion): Bearer Authentication
+    //  .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { }); // TODO(fpion): Session Authentication
+    if (_authenticationSchemes.Contains(Schemes.Basic))
+    {
+      authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    }
 
-    // TODO(fpion): Authorization
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes).RequireAuthenticatedUser().Build())
+      .AddPolicy(Policies.Gamemaster, new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddRequirements(new RoleAuthorizationRequirement("gamemaster"))
+        .Build());
+    services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
 
     CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);
@@ -82,7 +102,7 @@ internal class Startup : StartupBase
     builder.UseCors();
     builder.UseSession();
     //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
-    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): ession Renewal
+    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): Session Renewal
     builder.UseAuthentication();
     builder.UseAuthorization();
 
