@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Logitar.Portal.Contracts.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application;
+using PokeGame.Application.Accounts;
 using PokeGame.Application.Accounts.Commands;
 using PokeGame.Contracts.Accounts;
 using PokeGame.Extensions;
@@ -27,5 +30,13 @@ public class AccountController : ControllerBase
     }
 
     return Ok(new SignInResponse(result));
+  }
+
+  [Authorize]
+  [HttpGet("/profile")]
+  public ActionResult<UserProfile> GetProfile()
+  {
+    User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+    return Ok(user.ToUserProfile());
   }
 }

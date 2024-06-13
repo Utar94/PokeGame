@@ -38,10 +38,10 @@ internal class Startup : StartupBase
 
     OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection("OAuth").Get<OpenAuthenticationSettings>() ?? new();
     services.AddSingleton(openAuthenticationSettings);
-    AuthenticationBuilder authenticationBuilder = services.AddAuthentication();
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
     //  .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): API Key Authentication
     //  .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { }) // TODO(fpion): Bearer Authentication
-    //  .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { }); // TODO(fpion): Session Authentication
+      .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     if (_authenticationSchemes.Contains(Schemes.Basic))
     {
       authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
