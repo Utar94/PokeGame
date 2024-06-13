@@ -2,6 +2,7 @@
 
 internal static class Schemes
 {
+  public const string ApiKey = nameof(ApiKey);
   public const string Basic = nameof(Basic);
   public const string Session = nameof(Session);
 
@@ -9,6 +10,7 @@ internal static class Schemes
   {
     List<string> schemes = new(capacity: 4)
     {
+      ApiKey,
       Session
     };
 
