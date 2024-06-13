@@ -48,7 +48,7 @@ internal class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthentic
             MultiFactorAuthenticationMode mfaMode = user.GetMultiFactorAuthenticationMode() ?? MultiFactorAuthenticationMode.None;
             if (mfaMode != MultiFactorAuthenticationMode.None)
             {
-              // TODO(fpion): implement
+              return AuthenticateResult.Fail($"The Multi-Factor Authentication mode '{mfaMode}' cannot be used with {Scheme.Name} authentication.");
             }
 
             Context.SetUser(user);
