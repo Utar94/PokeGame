@@ -59,7 +59,14 @@ internal class MoveQuerier : IMoveQuerier
       .ApplyIdInFilter(PokemonDb.Moves.AggregateId, payload);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, PokemonDb.Moves.UniqueName, PokemonDb.Moves.DisplayName);
 
-    // TODO(fpion): additional filters
+    if (payload.Type.HasValue)
+    {
+      builder.Where(PokemonDb.Moves.Type, Operators.IsEqualTo((int)payload.Type.Value));
+    }
+    if (payload.Category.HasValue)
+    {
+      builder.Where(PokemonDb.Moves.Category, Operators.IsEqualTo((int)payload.Category.Value));
+    }
 
     IQueryable<MoveEntity> query = _moves.FromQuery(builder).AsNoTracking();
 
@@ -70,11 +77,25 @@ internal class MoveQuerier : IMoveQuerier
     {
       switch (sort.Field)
       {
-        // TODO(fpion): additional sort options
+        case MoveSort.Accuracy:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Accuracy) : query.OrderBy(x => x.Accuracy))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Accuracy) : ordered.ThenBy(x => x.Accuracy));
+          break;
         case MoveSort.DisplayName:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
+          break;
+        case MoveSort.Power:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Power) : query.OrderBy(x => x.Power))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Power) : ordered.ThenBy(x => x.Power));
+          break;
+        case MoveSort.PowerPoints:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.PowerPoints) : query.OrderBy(x => x.PowerPoints))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.PowerPoints) : ordered.ThenBy(x => x.PowerPoints));
           break;
         case MoveSort.UniqueName:
           ordered = (ordered == null)
