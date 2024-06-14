@@ -78,11 +78,11 @@ const onSubmit = handleSubmit(async () => {
         uniqueName: uniqueName.value,
         displayName: displayName.value,
         description: description.value,
-        accuracy: undefined, // TODO(fpion): implement
-        power: undefined, // TODO(fpion): implement
-        powerPoints: 0, // TODO(fpion): implement
-        statisticChanges: [], // TODO(fpion): implement
-        statusConditions: [], // TODO(fpion): implement
+        accuracy: move.value.accuracy, // TODO(fpion): implement
+        power: move.value.power, // TODO(fpion): implement
+        powerPoints: move.value.powerPoints, // TODO(fpion): implement
+        statisticChanges: [...move.value.statisticChanges], // TODO(fpion): implement
+        statusConditions: [...move.value.statusConditions], // TODO(fpion): implement
         reference: reference.value,
         notes: notes.value,
       };
