@@ -1,0 +1,200 @@
+﻿[
+  {
+    "Type": "Normal",
+    "Category": "Physical",
+    "UniqueName": "Tackle",
+    "DisplayName": null,
+    "Description": "A physical attack in which the user charges and slams into the target with its whole body.",
+    "Accuracy": 100,
+    "Power": 40,
+    "PowerPoints": 35,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Tackle_(move)",
+    "Notes": null
+  },
+  {
+    "Type": "Normal",
+    "Category": "Status",
+    "UniqueName": "Growl",
+    "DisplayName": null,
+    "Description": "The user growls in an endearing way, making opposing Pokémon less wary. This lowers their Attack stats.",
+    "Accuracy": 100,
+    "Power": null,
+    "PowerPoints": 40,
+    "StatisticChanges": [
+      {
+        "Statistic": "Attack",
+        "Stages": -1
+      }
+    ],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Growl_(move)",
+    "Notes": "Growl decreases the Attack stat of all adjacent opponents by one stage."
+  },
+  {
+    "Type": "Grass",
+    "Category": "Physical",
+    "UniqueName": "Leafage",
+    "DisplayName": null,
+    "Description": "The user attacks by pelting the target with leaves.",
+    "Accuracy": 100,
+    "Power": 40,
+    "PowerPoints": 40,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Leafage_(move)",
+    "Notes": null
+  },
+  {
+    "Type": "Normal",
+    "Category": "Status",
+    "UniqueName": "Leer",
+    "DisplayName": null,
+    "Description": "The user gives opposing Pokémon an intimidating leer that lowers their Defense stats.",
+    "Accuracy": 100,
+    "Power": null,
+    "PowerPoints": 30,
+    "StatisticChanges": [
+      {
+        "Statistic": "Defense",
+        "Stages": -1
+      }
+    ],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Leer_(move)",
+    "Notes": "Leer decreases the Defense stat of all adjacent opponents by one stage."
+  },
+  {
+    "Type": "Normal",
+    "Category": "Status",
+    "UniqueName": "Smokescreen",
+    "DisplayName": null,
+    "Description": "The user releases an obscuring cloud of smoke or ink. This lowers the target's accuracy.",
+    "Accuracy": 100,
+    "Power": null,
+    "PowerPoints": 20,
+    "StatisticChanges": [
+      {
+        "Statistic": "Accuracy",
+        "Stages": -1
+      }
+    ],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Smokescreen_(move)",
+    "Notes": "Smokescreen lowers the target's accuracy stat by one stage."
+  },
+  {
+    "Type": "Fire",
+    "Category": "Special",
+    "UniqueName": "Ember",
+    "DisplayName": null,
+    "Description": "The target is attacked with small flames. This may also leave the target with a burn.",
+    "Accuracy": 100,
+    "Power": 40,
+    "PowerPoints": 25,
+    "StatisticChanges": [],
+    "StatusConditions": [
+      {
+        "StatusCondition": "Burn",
+        "Chance": 10
+      }
+    ],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Smokescreen_(move)",
+    "Notes": "Ember deals damage and has a 10% chance of burning the target."
+  },
+  {
+    "Type": "Normal",
+    "Category": "Physical",
+    "UniqueName": "QuickAttack",
+    "DisplayName": "Quick Attack",
+    "Description": "The user lunges at the target to inflict damage, moving at blinding speed. This move always goes first.",
+    "Accuracy": 100,
+    "Power": 40,
+    "PowerPoints": 30,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Quick_Attack_(move)",
+    "Notes": "Quick Attack inflicts damage. It has a priority of +1, so it is used before all moves that do not have increased priority."
+  },
+  {
+    "Type": "Normal",
+    "Category": "Special",
+    "UniqueName": "Swift",
+    "DisplayName": null,
+    "Description": "Star-shaped rays are shot at opposing Pokémon. This attack never misses.",
+    "Accuracy": null,
+    "Power": 60,
+    "PowerPoints": 20,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Swift_(move)",
+    "Notes": "Swift hits opposing adjacent Pokémon in battles featuring multiple Pokémon."
+  },
+  {
+    "Type": "Normal",
+    "Category": "Status",
+    "UniqueName": "TailWhip",
+    "DisplayName": "Tail Whip",
+    "Description": "The user wags its tail cutely, making opposing Pokémon less wary. This lowers their Defense stats.",
+    "Accuracy": 100,
+    "Power": null,
+    "PowerPoints": 30,
+    "StatisticChanges": [
+      {
+        "Statistic": "Defense",
+        "Stages": -1
+      }
+    ],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Tail_Whip_(move)",
+    "Notes": "Tail Whip decreases the Defense stat of all adjacent opponents by one stage."
+  },
+  {
+    "Type": "Water",
+    "Category": "Special",
+    "UniqueName": "WaterGun",
+    "DisplayName": "Water Gun",
+    "Description": "",
+    "Accuracy": 100,
+    "Power": 40,
+    "PowerPoints": 25,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Water_Gun_(move)",
+    "Notes": null
+  },
+  {
+    "Type": "Bug",
+    "Category": "Physical",
+    "UniqueName": "FuryCutter",
+    "DisplayName": "Fury Cutter",
+    "Description": "The user attacks by slashing the target with scythes, claws, or the like. This attack becomes more powerful if it hits in succession.",
+    "Accuracy": 95,
+    "Power": 40,
+    "PowerPoints": 20,
+    "StatisticChanges": [],
+    "StatusConditions": [],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Water_Gun_(move)",
+    "Notes": null
+  },
+  {
+    "Type": "Electric",
+    "Category": "Status",
+    "UniqueName": "ThunderWave",
+    "DisplayName": "Thunder Wave",
+    "Description": "The user launches a weak jolt of electricity that paralyzes the target.",
+    "Accuracy": 90,
+    "Power": null,
+    "PowerPoints": 20,
+    "StatisticChanges": [],
+    "StatusConditions": [
+      {
+        "StatusCondition": "Paralysis",
+        "Chance": 100
+      }
+    ],
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Thunder_Wave_(move)",
+    "Notes": null
+  }
+]
