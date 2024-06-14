@@ -1,25 +1,16 @@
 {
-  "address": {
-    "country": {
-      "label": "Pays",
-      "placeholder": "Sélectionnez un pays"
-    },
-    "locality": "Ville",
-    "postalCode": "Code postal",
-    "region": {
-      "label": "Région",
-      "placeholder": "Sélectionnez une région"
-    },
-    "street": "Numéro et nom de rue",
-    "title": "Adresse postale",
-    "verified": "Vérifiée"
-  },
   "authenticatedOn": "Dernière connexion",
+  "authenticationLink": {
+    "Email": "Un lien d’authentification a été envoyé à votre adresse courriel",
+    "Phone": "Un lien d’authentification a été envoyé à votre numéro de téléphone",
+    "confirmationNumber": "En cas de problème, veuillez contacter notre équipe de support. Votre numéro de confirmation est",
+    "help": "Vous pouvez fermer cet onglet. Si vous n’avez pas reçu de message, vérifiez votre courrier indésirable.",
+    "sent": "Lien d’authentification envoyé"
+  },
   "birthdate": "Date de naissance",
   "createdOn": "Création",
   "email": {
-    "address": "Adresse courriel",
-    "verified": "Vérifiée"
+    "address": "Adresse courriel"
   },
   "gender": {
     "label": "Genre",
@@ -38,31 +29,16 @@
     "first": "Prénom",
     "full": "Nom complet",
     "last": "Nom de famille",
-    "middle": "Nom intermédiaire",
-    "nick": "Surnom"
+    "middle": "Nom intermédiaire"
   },
   "password": {
-    "changed": "Votre mot de passe a été modifié.",
-    "changedOn": "Dernière modification le {date}",
-    "confirm": "Confirmation du mot de passe",
-    "current": "Mot de passe actuel",
-    "failed": "Modification du mot de passe échouée !",
-    "invalid": "Veuillez vérifier que vous avez entré le bon mot de passe actuel.",
-    "label": "Mot de passe",
-    "new": "Nouveau mot de passe",
-    "submit": "Modifier le mot de passe"
+    "label": "Mot de passe"
   },
   "phone": {
-    "e164": "Téléphone (E.164)",
-    "extension": "Extension téléphonique",
-    "number": "Numéro de téléphone",
-    "verified": "Vérifié"
+    "number": "Numéro de téléphone"
   },
-  "pictureUrl": "Photo (URL)",
   "profile": {
-    "saved": "Votre profil a été enregistré.",
-    "title": "Profil",
-    "url": "Profil (URL)"
+    "title": "Profil"
   },
   "signIn": {
     "failed": "Connexion échouée !",
@@ -71,16 +47,9 @@
     "title": "Connexion"
   },
   "signOut": "Déconnexion",
-  "tabs": {
-    "authentication": "Informations d’authentification",
-    "contact": "Informations de contact",
-    "personal": "Informations personnelles"
-  },
   "timeZone": {
     "label": "Fuseau horaire",
     "placeholder": "Sélectionnez votre fuseau horaire"
   },
-  "updatedOn": "Dernière modification",
-  "username": "Nom d’utilisateur",
-  "websiteUrl": "Site Web (URL)"
+  "updatedOn": "Dernière modification"
 }

@@ -6,10 +6,9 @@ namespace PokeGame.Seeding.Worker.Pokemon.Commands;
 
 internal class SeedMovesCommandHandler : INotificationHandler<SeedMovesCommand>
 {
-  private static readonly JsonSerializerOptions _serializerOptions;
+  private static readonly JsonSerializerOptions _serializerOptions = new();
   static SeedMovesCommandHandler()
   {
-    _serializerOptions = new();
     _serializerOptions.Converters.Add(new JsonStringEnumConverter());
   }
 

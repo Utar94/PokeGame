@@ -97,9 +97,9 @@ watchEffect(() => {
             </ul>
           </li>
           <template v-if="user">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <RouterLink :to="{ name: 'TodoList' }" class="nav-link"><font-awesome-icon icon="fas fa-list-check" /> {{ t("todos.title.list") }}</RouterLink>
-            </li>
+            </li> -->
           </template>
         </ul>
 
