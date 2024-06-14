@@ -56,8 +56,6 @@ export type PropertyError = Error & {
   propertyName?: string;
 };
 
-export type ValidationError = {
-  code: string;
-  message: string;
+export type ValidationError = Error & {
   errors: PropertyError[];
 };

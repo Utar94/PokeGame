@@ -9,7 +9,7 @@ const props = defineProps<{
   type: PersonNameType;
 }>();
 
-const inputId = computed<string>(() => (props.type === "nick" ? "nickname" : `${props.type}-name`));
+const inputId = computed<string>(() => `${props.type}-name`);
 const inputLabel = computed<string>(() => `users.names.${props.type}`);
 
 defineEmits<{

@@ -11,7 +11,6 @@ const router = createRouter({
       name: "Home",
       path: "/",
       component: HomeView,
-      meta: { isPublic: true },
     },
     // Account
     {
@@ -32,22 +31,6 @@ const router = createRouter({
       name: "SignOut",
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
-    },
-    // Todos
-    {
-      name: "TodoList",
-      path: "/todos",
-      component: () => import("./views/todos/TodoList.vue"),
-    },
-    {
-      name: "TodoEdit",
-      path: "/todos/:id",
-      component: () => import("./views/todos/TodoEdit.vue"),
-    },
-    {
-      name: "CreateTodo",
-      path: "/create-todo",
-      component: () => import("./views/todos/TodoEdit.vue"),
     },
     // NotFound
     {

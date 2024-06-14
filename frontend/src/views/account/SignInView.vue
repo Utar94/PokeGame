@@ -5,10 +5,11 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import UsernameInput from "@/components/users/UsernameInput.vue";
-import PasswordInput from "@/components/users/PasswordInput.vue";
 import AppInput from "@/components/shared/AppInput.vue";
+import EmailAddressInput from "@/components/users/EmailAddressInput.vue";
+import PasswordInput from "@/components/users/PasswordInput.vue";
 import type { ApiError, Error } from "@/types/api";
+import type { Credentials, SignInPayload, SignInResponse } from "@/types/account";
 import { handleErrorKey } from "@/inject/App";
 import { signIn } from "@/api/account";
 import { useAccountStore } from "@/stores/account";
@@ -17,30 +18,41 @@ const account = useAccountStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
+const credentials = ref<Credentials>({ emailAddress: "master@pokegame.ca" });
 const invalidCredentials = ref<boolean>(false);
-const password = ref<string>("");
+const isPasswordRequired = ref<boolean>(false);
 const passwordRef = ref<InstanceType<typeof AppInput> | null>(null);
-const username = ref<string>("");
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    invalidCredentials.value = false;
-    const currentUser = await signIn({ username: username.value, password: password.value });
-    account.signIn(currentUser);
-    const redirect: string | undefined = route.query.redirect?.toString();
-    router.push(redirect ?? { name: "Profile" });
-  } catch (e: unknown) {
-    const { data, status } = e as ApiError;
-    if (status === 400 && (data as Error)?.code === "InvalidCredentials") {
-      invalidCredentials.value = true;
-      password.value = "";
-      passwordRef.value?.focus();
-    } else {
-      handleError(e);
+    // invalidCredentials.value = false;
+    const payload: SignInPayload = {
+      locale: locale.value,
+      credentials: credentials.value,
+    };
+    const response: SignInResponse = await signIn(payload);
+    if (response.currentUser) {
+      account.signIn(response.currentUser);
+      const redirect: string | undefined = route.query.redirect?.toString();
+      router.push(redirect ?? { name: "Profile" });
+    } // TODO(fpion): profileCompletionToken
+    else if (response.isPasswordRequired) {
+      isPasswordRequired.value = response.isPasswordRequired;
     }
+    // TODO(fpion): oneTimePasswordValidation
+    // TODO(fpion): authenticationLinkSentTo
+  } catch (e: unknown) {
+    // const { data, status } = e as ApiError;
+    // if (status === 400 && (data as Error)?.code === "InvalidCredentials") {
+    //   invalidCredentials.value = true;
+    //   password.value = "";
+    //   passwordRef.value?.focus();
+    // } else {
+    handleError(e);
+    // }
   }
 });
 </script>
@@ -52,8 +64,8 @@ const onSubmit = handleSubmit(async () => {
       <strong>{{ t("users.signIn.failed") }}</strong> {{ t("users.signIn.invalidCredentials") }}
     </TarAlert>
     <form @submit.prevent="onSubmit">
-      <UsernameInput required v-model="username" />
-      <PasswordInput required ref="passwordRef" v-model="password" />
+      <EmailAddressInput required v-model="credentials.emailAddress" />
+      <PasswordInput v-if="isPasswordRequired" required ref="passwordRef" v-model="credentials.password" />
       <TarButton
         :disabled="isSubmitting"
         icon="fas fa-arrow-right-to-bracket"
