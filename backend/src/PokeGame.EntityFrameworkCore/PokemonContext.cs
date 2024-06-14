@@ -14,6 +14,9 @@ public class PokemonContext : DbContext
   internal DbSet<LogEventEntity> LogEvents { get; private set; }
   internal DbSet<LogExceptionEntity> LogExceptions { get; private set; }
   internal DbSet<LogEntity> Logs { get; private set; }
+  internal DbSet<MoveCategoryEntity> MoveCategories { get; private set; }
+  internal DbSet<MoveEntity> Moves { get; private set; }
+  internal DbSet<PokemonTypeEntity> PokemonTypes { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

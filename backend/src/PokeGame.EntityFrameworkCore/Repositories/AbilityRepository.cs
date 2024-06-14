@@ -34,6 +34,7 @@ internal class AbilityRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
   {
     return await LoadAsync<AbilityAggregate>(id.AggregateId, version, cancellationToken);
   }
+
   public async Task<AbilityAggregate?> LoadAsync(UniqueNameUnit uniqueName, CancellationToken cancellationToken)
   {
     IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table).SelectAll(EventDb.Events.Table)

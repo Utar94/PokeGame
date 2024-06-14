@@ -64,7 +64,7 @@ public class ReplaceAbilityCommandTests : IntegrationTests
   [Fact(DisplayName = "It should return null when the ability could not be found.")]
   public async Task It_should_return_null_when_the_ability_could_not_be_found()
   {
-    ReplaceAbilityPayload payload = new("SubTitle");
+    ReplaceAbilityPayload payload = new("Overgrow");
     ReplaceAbilityCommand command = new(Id: Guid.NewGuid(), payload, Version: null);
     Assert.Null(await Pipeline.ExecuteAsync(command));
   }

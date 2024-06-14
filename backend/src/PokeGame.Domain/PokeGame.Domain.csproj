@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.Collections.Immutable" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 
