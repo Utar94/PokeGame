@@ -93,6 +93,14 @@ internal static class PokemonDb
     public static readonly ColumnId UserId = new(nameof(LogEntity.UserId));
   }
 
+  public static class MoveCategories
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.MoveCategories));
+
+    public static readonly ColumnId MoveCategoryId = new("MoveCategoryId", Table);
+    public static readonly ColumnId Name = new("Name", Table);
+  }
+
   public static class Moves
   {
     public static readonly TableId Table = new(nameof(PokemonContext.Moves));
@@ -117,14 +125,6 @@ internal static class PokemonDb
     public static readonly ColumnId UpdatedBy = new(nameof(MoveEntity.UpdatedBy), Table);
     public static readonly ColumnId UpdatedOn = new(nameof(MoveEntity.UpdatedOn), Table);
     public static readonly ColumnId Version = new(nameof(MoveEntity.Version), Table);
-  }
-
-  public static class MoveCategories
-  {
-    public static readonly TableId Table = new(nameof(PokemonContext.MoveCategories));
-
-    public static readonly ColumnId MoveCategoryId = new("MoveCategoryId", Table);
-    public static readonly ColumnId Name = new("Name", Table);
   }
 
   public static class PokemonTypes
