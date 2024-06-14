@@ -1,0 +1,33 @@
+{
+  "category": {
+    "label": "Category",
+    "options": {
+      "Physical": "Physical",
+      "Special": "Special",
+      "Status": "Status"
+    },
+    "placeholder": "Select a category"
+  },
+  "created": "The move has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following move?",
+    "title": "Delete move"
+  },
+  "deleted": "The move has been deleted.",
+  "empty": "This list is empty.",
+  "sort": {
+    "options": {
+      "Accuracy": "Accuracy",
+      "DisplayName": "Display name",
+      "Power": "Power",
+      "PowerPoints": "Power points",
+      "UniqueName": "Unique name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": {
+    "list": "Moves",
+    "new": "New move"
+  },
+  "updated": "The move has been updated."
+}

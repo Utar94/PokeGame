@@ -49,7 +49,7 @@ export default createI18n<[MessageSchema], "en" | "fr">({
       },
       percent: {
         style: "percent",
-        minimumFractionDigits: 3,
+        minimumFractionDigits: 0,
       },
     },
     fr: {
@@ -65,7 +65,7 @@ export default createI18n<[MessageSchema], "en" | "fr">({
       },
       percent: {
         style: "percent",
-        minimumFractionDigits: 3,
+        minimumFractionDigits: 0,
       },
     },
   },

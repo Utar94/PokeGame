@@ -1,0 +1,33 @@
+{
+  "category": {
+    "label": "Catégorie",
+    "options": {
+      "Physical": "Physique",
+      "Special": "Spéciale",
+      "Status": "Statut"
+    },
+    "placeholder": "Sélectionnez une catégorie"
+  },
+  "created": "L’attaque a été créée.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer l’attaque suivante ?",
+    "title": "Supprimer l’attaque"
+  },
+  "deleted": "L’attaque a été supprimée.",
+  "empty": "Cette liste est vide.",
+  "sort": {
+    "options": {
+      "Accuracy": "Précision",
+      "DisplayName": "Nom d’affichage",
+      "Power": "Puissance",
+      "PowerPoints": "Points de pouvoir",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": {
+    "list": "Attaques",
+    "new": "Nouvelle attaque"
+  },
+  "updated": "L’attaque a été enregistrée."
+}
