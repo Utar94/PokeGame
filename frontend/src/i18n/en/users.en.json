@@ -1,5 +1,12 @@
 {
   "authenticatedOn": "Last signed-in on",
+  "authenticationLink": {
+    "Email": "",
+    "Phone": "",
+    "confirmationNumber": "",
+    "help": "",
+    "sent": ""
+  },
   "birthdate": "Date of birth",
   "createdOn": "Created on",
   "email": {

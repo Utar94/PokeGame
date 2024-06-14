@@ -10,7 +10,7 @@ namespace PokeGame.Seeding.Worker.Pokemon;
 internal class PokemonClient : IPokemonClient
 {
   private readonly JsonApiClient _client;
-  private readonly JsonSerializerOptions _serializerOptions;
+  private readonly JsonSerializerOptions _serializerOptions = new();
 
   private const string AbilitiesPath = "/abilities";
   private static readonly Uri AbilitiesUri = new(AbilitiesPath, UriKind.Relative);
@@ -21,7 +21,6 @@ internal class PokemonClient : IPokemonClient
   {
     _client = new JsonApiClient(client, settings.ToHttpApiSettings());
 
-    _serializerOptions = new();
     _serializerOptions.Converters.Add(new JsonStringEnumConverter());
     _serializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
   }
