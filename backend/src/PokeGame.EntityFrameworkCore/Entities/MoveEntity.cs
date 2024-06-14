@@ -101,7 +101,7 @@ internal class MoveEntity : AggregateEntity
     }
     if (@event.PowerPoints.HasValue)
     {
-      Power = (byte?)@event.PowerPoints.Value;
+      PowerPoints = (byte)@event.PowerPoints.Value;
     }
 
     foreach (KeyValuePair<string, int> statisticChange in @event.StatisticChanges)
