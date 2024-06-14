@@ -1,11 +1,11 @@
 {
   "authenticatedOn": "Last signed-in on",
   "authenticationLink": {
-    "Email": "",
-    "Phone": "",
-    "confirmationNumber": "",
-    "help": "",
-    "sent": ""
+    "Email": "An authentication link has been sent to your email address",
+    "Phone": "An authentication link has been sent to your phone number",
+    "confirmationNumber": "In case you run into an issue, please contact our support team. Your confirmation number is",
+    "help": "You can close this tab. If you have not received a message, please check your spam box.",
+    "sent": "Authentication Link Sent"
   },
   "birthdate": "Date of birth",
   "createdOn": "Created on",

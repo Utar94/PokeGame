@@ -1,11 +1,11 @@
 {
   "authenticatedOn": "Dernière connexion",
   "authenticationLink": {
-    "Email": "",
-    "Phone": "",
-    "confirmationNumber": "",
-    "help": "",
-    "sent": ""
+    "Email": "Un lien d’authentification a été envoyé à votre adresse courriel",
+    "Phone": "Un lien d’authentification a été envoyé à votre numéro de téléphone",
+    "confirmationNumber": "En cas de problème, veuillez contacter notre équipe de support. Votre numéro de confirmation est",
+    "help": "Vous pouvez fermer cet onglet. Si vous n’avez pas reçu de message, vérifiez votre courrier indésirable.",
+    "sent": "Lien d’authentification envoyé"
   },
   "birthdate": "Date de naissance",
   "createdOn": "Création",
