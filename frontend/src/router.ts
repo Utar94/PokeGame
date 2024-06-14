@@ -32,6 +32,17 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
+    // Abilities
+    {
+      name: "AbilityList",
+      path: "/abilities",
+      component: () => import("./views/abilities/AbilityList.vue"),
+    },
+    {
+      name: "AbilityEdit",
+      path: "/abilities/:id",
+      component: () => import("./views/abilities/AbilityEdit.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

@@ -15,13 +15,16 @@
   "count": "Nombre de résultats",
   "description": "Description",
   "displayName": "Nom d’affichage",
+  "gameData": "Données de jeu",
   "loading": "Chargement…",
+  "metadata": "Métadonnées",
   "no": "Non",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",
     "lead": "Page introuvable",
     "link": "Aller à l’accueil"
   },
+  "notes": "Notes",
   "pagination": {
     "first": "Première page",
     "label": "Pagination",
@@ -29,6 +32,7 @@
     "next": "Prochaine page",
     "previous": "Page précédente"
   },
+  "reference": "Référence (URL)",
   "search": "Recherche",
   "sort": {
     "isDescending": "Descendant",
@@ -52,6 +56,10 @@
       "signedOut": "Vous avez été déconnecté, veuillez vous reconnecter à votre compte.",
       "title": "Attention !"
     }
+  },
+  "uniqueName": {
+    "alreadyUsed": "Le nom unique est déjà utilisé.",
+    "label": "Nom unique"
   },
   "yes": "Oui"
 }
