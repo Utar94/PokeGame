@@ -128,7 +128,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <CreateAbility :unique-name="search" @error="handleError" />
+      <CreateAbility @error="handleError" />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />

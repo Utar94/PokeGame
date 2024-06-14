@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton, TarModal } from "logitar-vue3-ui";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -20,12 +20,10 @@ const props = withDefaults(
   defineProps<{
     close?: string;
     id?: string;
-    uniqueName?: string;
   }>(),
   {
     close: "actions.close",
     id: () => nanoid(),
-    uniqueName: "",
   },
 );
 
@@ -62,11 +60,6 @@ const onSubmit = handleSubmit(async () => {
     }
   }
 });
-
-watch(
-  () => props.uniqueName,
-  (uniqueName) => (payload.value.uniqueName = uniqueName),
-);
 </script>
 
 <template>
