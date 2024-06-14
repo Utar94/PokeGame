@@ -216,13 +216,13 @@ public class MoveAggregate : AggregateRoot
     {
       if (_statusConditions.Remove(statusCondition))
       {
-        _updatedEvent.StatisticChanges[statusCondition.ToString()] = 0;
+        _updatedEvent.StatusConditions[statusCondition.Value] = 0;
       }
     }
     else if (!_statusConditions.TryGetValue(statusCondition, out int existingChance) || chance != existingChance)
     {
       _statusConditions[statusCondition] = chance;
-      _updatedEvent.StatisticChanges[statusCondition.Value] = chance;
+      _updatedEvent.StatusConditions[statusCondition.Value] = chance;
     }
   }
 
