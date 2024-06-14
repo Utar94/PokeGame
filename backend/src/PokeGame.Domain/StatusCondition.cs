@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace PokeGame.Domain;
+﻿namespace PokeGame.Domain;
 
 public readonly struct StatusCondition
 {

@@ -92,4 +92,46 @@ internal static class PokemonDb
     public static readonly ColumnId UniqueId = new(nameof(LogEntity.UniqueId));
     public static readonly ColumnId UserId = new(nameof(LogEntity.UserId));
   }
+
+  public static class Moves
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.Moves));
+
+    public static readonly ColumnId Accuracy = new(nameof(MoveEntity.AggregateId), Table);
+    public static readonly ColumnId AggregateId = new(nameof(MoveEntity.AggregateId), Table);
+    public static readonly ColumnId Category = new(nameof(MoveEntity.Category), Table);
+    public static readonly ColumnId CreatedBy = new(nameof(MoveEntity.CreatedBy), Table);
+    public static readonly ColumnId CreatedOn = new(nameof(MoveEntity.CreatedOn), Table);
+    public static readonly ColumnId Description = new(nameof(MoveEntity.Description), Table);
+    public static readonly ColumnId DisplayName = new(nameof(MoveEntity.DisplayName), Table);
+    public static readonly ColumnId MoveId = new(nameof(MoveEntity.MoveId), Table);
+    public static readonly ColumnId Notes = new(nameof(MoveEntity.Notes), Table);
+    public static readonly ColumnId Power = new(nameof(MoveEntity.Power), Table);
+    public static readonly ColumnId PowerPoints = new(nameof(MoveEntity.PowerPoints), Table);
+    public static readonly ColumnId Reference = new(nameof(MoveEntity.Reference), Table);
+    public static readonly ColumnId StatisticChanges = new(nameof(MoveEntity.StatisticChanges), Table);
+    public static readonly ColumnId StatusConditions = new(nameof(MoveEntity.StatusConditions), Table);
+    public static readonly ColumnId Type = new(nameof(MoveEntity.Type), Table);
+    public static readonly ColumnId UniqueName = new(nameof(MoveEntity.UniqueName), Table);
+    public static readonly ColumnId UniqueNameNormalized = new(nameof(MoveEntity.UniqueNameNormalized), Table);
+    public static readonly ColumnId UpdatedBy = new(nameof(MoveEntity.UpdatedBy), Table);
+    public static readonly ColumnId UpdatedOn = new(nameof(MoveEntity.UpdatedOn), Table);
+    public static readonly ColumnId Version = new(nameof(MoveEntity.Version), Table);
+  }
+
+  public static class MoveCategories
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.MoveCategories));
+
+    public static readonly ColumnId MoveCategoryId = new("MoveCategoryId", Table);
+    public static readonly ColumnId Name = new("Name", Table);
+  }
+
+  public static class PokemonTypes
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.PokemonTypes));
+
+    public static readonly ColumnId Name = new("Name", Table);
+    public static readonly ColumnId PokemonTypeId = new("PokemonTypeId", Table);
+  }
 }

@@ -2,6 +2,7 @@
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Contracts.Moves;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore;
@@ -42,6 +43,35 @@ internal class Mapper
       Reference = source.Reference,
       Notes = source.Notes
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Move ToMove(MoveEntity source)
+  {
+    Move destination = new(source.UniqueName)
+    {
+      Type = source.Type,
+      Category = source.Category,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Accuracy = source.Accuracy,
+      Power = source.Power,
+      PowerPoints = source.PowerPoints,
+      Reference = source.Reference,
+      Notes = source.Notes
+    };
+
+    foreach (KeyValuePair<string, int> statisticChange in source.StatisticChanges)
+    {
+      destination.StatisticChanges.Add(new StatisticChange(statisticChange));
+    }
+    foreach (KeyValuePair<string, int> statusCondition in source.StatusConditions)
+    {
+      destination.StatusConditions.Add(new InflictedStatusCondition(statusCondition));
+    }
 
     MapAggregate(source, destination);
 
