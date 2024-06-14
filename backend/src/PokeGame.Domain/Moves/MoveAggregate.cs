@@ -156,16 +156,9 @@ public class MoveAggregate : AggregateRoot
         ErrorCode = "InvalidStatisticChange"
       });
     }
-    if (stages < -6)
+    if (stages < -6 || stages > 6)
     {
-      errors.Add(new ValidationFailure("Stages", "'{PropertyName}' must be greater than or equal to -6.", stages)
-      {
-        ErrorCode = "InvalidStatisticChange"
-      });
-    }
-    else if (stages > 6)
-    {
-      errors.Add(new ValidationFailure("Stages", "'{PropertyName}' must be less than or equal to 6.", stages)
+      errors.Add(new ValidationFailure("Stages", "'{PropertyName}' must be between -6 and 6.", stages)
       {
         ErrorCode = "InvalidStatisticChange"
       });

@@ -2,6 +2,8 @@
 
 public readonly struct StatusCondition
 {
+  public const int MaximumLength = byte.MaxValue;
+
   public static readonly IImmutableSet<string> NonVolatileConditions = ImmutableHashSet.Create(["Burn", "Freeze", "Paralysis", "Poison", "Sleep"]);
 
   private readonly string? _value;
@@ -11,6 +13,17 @@ public readonly struct StatusCondition
 
   public StatusCondition(string value)
   {
+    if (string.IsNullOrWhiteSpace(value))
+    {
+      throw new ArgumentException("The value is required.", nameof(value));
+    }
+
+    value = value.Trim();
+    if (value.Length > MaximumLength)
+    {
+      throw new ArgumentOutOfRangeException(nameof(value), $"The value may contain up to {MaximumLength} characters.");
+    }
+
     _value = Format(value);
   }
 
