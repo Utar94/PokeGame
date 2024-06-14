@@ -1,0 +1,21 @@
+{
+  "created": "L’habileté a été créée.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer l’habileté suivante ?",
+    "title": "Supprimer l’habileté"
+  },
+  "deleted": "L’habileté a été supprimée.",
+  "empty": "Cette liste est vide.",
+  "sort": {
+    "options": {
+      "DisplayName": "Nom d’affichage",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": {
+    "list": "Habiletés",
+    "new": "Nouvelle habileté"
+  },
+  "updated": "L’habileté a été enregistrée."
+}

@@ -15,13 +15,16 @@
   "count": "Count",
   "description": "Description",
   "displayName": "Display Name",
+  "gameData": "Game Data",
   "loading": "Loading…",
+  "metadata": "Metadata",
   "no": "No",
   "notFound": {
     "help": "The requested page could not be found.",
     "lead": "Page Not Found",
     "link": "Go to Home"
   },
+  "notes": "Notes",
   "pagination": {
     "first": "First",
     "label": "Pagination",
@@ -29,6 +32,7 @@
     "next": "Next",
     "previous": "Previous"
   },
+  "reference": "Reference (URL)",
   "search": "Search",
   "sort": {
     "isDescending": "Is descending",
@@ -52,6 +56,10 @@
       "signedOut": "You have been signed-out, please try sign-in to your account again.",
       "title": "Warning!"
     }
+  },
+  "uniqueName": {
+    "alreadyUsed": "The unique name is already used.",
+    "label": "Unique Name"
   },
   "yes": "Yes"
 }
