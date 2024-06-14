@@ -3,6 +3,7 @@ using Logitar.Portal.Client;
 using Logitar.Portal.Contracts.Errors;
 using Logitar.Portal.Contracts.Search;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Contracts.Moves;
 
 namespace PokeGame.Seeding.Worker.Pokemon;
 
@@ -13,6 +14,8 @@ internal class PokemonClient : IPokemonClient
 
   private const string AbilitiesPath = "/abilities";
   private static readonly Uri AbilitiesUri = new(AbilitiesPath, UriKind.Relative);
+  private const string MovesPath = "/moves";
+  private static readonly Uri MovesUri = new(MovesPath, UriKind.Relative);
 
   public PokemonClient(HttpClient client, PokemonSettings settings)
   {
@@ -29,10 +32,21 @@ internal class PokemonClient : IPokemonClient
       ?? throw CreateInvalidApiResponseException(nameof(CreateAbilityAsync), HttpMethod.Post, AbilitiesUri, payload);
   }
 
+  public async Task<Move> CreateMoveAsync(CreateMovePayload payload, CancellationToken cancellationToken)
+  {
+    return await SendAsync<Move>(HttpMethod.Post, MovesUri, payload, cancellationToken)
+      ?? throw CreateInvalidApiResponseException(nameof(CreateMoveAsync), HttpMethod.Post, MovesUri, payload);
+  }
+
   public async Task<Ability?> ReplaceAbilityAsync(Guid id, ReplaceAbilityPayload payload, long? version, CancellationToken cancellationToken)
   {
     Uri uri = new UrlBuilder().SetPath($"{AbilitiesPath}/{id}").SetVersion(version).BuildUri(UriKind.Relative);
     return await SendAsync<Ability>(HttpMethod.Put, uri, payload, cancellationToken);
+  }
+  public async Task<Move?> ReplaceMoveAsync(Guid id, ReplaceMovePayload payload, long? version, CancellationToken cancellationToken)
+  {
+    Uri uri = new UrlBuilder().SetPath($"{MovesPath}/{id}").SetVersion(version).BuildUri(UriKind.Relative);
+    return await SendAsync<Move>(HttpMethod.Put, uri, payload, cancellationToken);
   }
 
   public async Task<SearchResults<Ability>> SearchAbilitiesAsync(SearchAbilitiesPayload payload, CancellationToken cancellationToken)
@@ -40,6 +54,21 @@ internal class PokemonClient : IPokemonClient
     Uri uri = new UrlBuilder().SetPath(AbilitiesPath).SetQuery(payload).BuildUri(UriKind.Relative);
     return await SendAsync<SearchResults<Ability>>(HttpMethod.Get, uri, content: null, cancellationToken)
       ?? throw CreateInvalidApiResponseException(nameof(SearchAbilitiesAsync), HttpMethod.Get, uri, content: null);
+  }
+  public async Task<SearchResults<Move>> SearchMovesAsync(SearchMovesPayload payload, CancellationToken cancellationToken)
+  {
+    IUrlBuilder builder = new UrlBuilder().SetPath(MovesPath).SetQuery(payload);
+    if (payload.Type.HasValue)
+    {
+      builder.SetQuery("type", payload.Type.Value.ToString());
+    }
+    if (payload.Category.HasValue)
+    {
+      builder.SetQuery("category", payload.Category.Value.ToString());
+    }
+    Uri uri = builder.BuildUri(UriKind.Relative);
+    return await SendAsync<SearchResults<Move>>(HttpMethod.Get, uri, content: null, cancellationToken)
+      ?? throw CreateInvalidApiResponseException(nameof(SearchMovesAsync), HttpMethod.Get, uri, content: null);
   }
 
   private async Task<T?> SendAsync<T>(HttpMethod method, Uri uri, object? content, CancellationToken cancellationToken)

@@ -36,6 +36,7 @@ internal class Worker : BackgroundService
     await _publisher.Publish(new SeedUsersCommand(), cancellationToken);
 
     await _publisher.Publish(new SeedAbilitiesCommand(), cancellationToken);
+    await _publisher.Publish(new SeedMovesCommand(), cancellationToken);
 
     chrono.Stop();
     _logger.LogInformation("Worker completed oprations after {Elapsed}ms at {Timestamp}.", chrono.ElapsedMilliseconds, DateTimeOffset.Now);
