@@ -159,6 +159,8 @@ onMounted(async () => {
           <PowerInput class="col-lg-4" :disabled="move.category === 'Status'" v-model="power" />
           <AccuracyInput class="col-lg-4" v-model="accuracy" />
         </div>
+        <!-- TODO(fpion): Statistic Changes -->
+        <!-- TODO(fpion): Status Conditions -->
         <h3>{{ t("metadata") }}</h3>
         <ReferenceInput v-model="reference" />
         <NotesTextarea v-model="notes" />
