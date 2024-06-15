@@ -4,12 +4,17 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AccuracyInput from "@/components/moves/AccuracyInput.vue";
 import AppBackButton from "@/components/shared/AppBackButton.vue";
 import AppDelete from "@/components/shared/AppDelete.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
+import MoveCategorySelect from "@/components/moves/MoveCategorySelect.vue";
 import NotesTextarea from "@/components/shared/NotesTextarea.vue";
+import PokemonTypeSelect from "@/components/pokemon/PokemonTypeSelect.vue";
+import PowerInput from "@/components/moves/PowerInput.vue";
+import PowerPointsInput from "@/components/moves/PowerPointsInput.vue";
 import ReferenceInput from "@/components/shared/ReferenceInput.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
@@ -26,11 +31,14 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const accuracy = ref<number>(0);
 const description = ref<string>("");
 const displayName = ref<string>("");
 const isDeleting = ref<boolean>(false);
 const move = ref<Move>();
 const notes = ref<string>("");
+const power = ref<number>(0);
+const powerPoints = ref<number>(1);
 const reference = ref<string>("");
 const uniqueName = ref<string>("");
 
@@ -41,6 +49,9 @@ const hasChanges = computed<boolean>(
     (uniqueName.value !== (move.value?.uniqueName ?? "") ||
       displayName.value !== (move.value?.displayName ?? "") ||
       description.value !== (move.value?.description ?? "") ||
+      power.value !== (move.value?.power ?? 0) ||
+      powerPoints.value !== (move.value?.powerPoints ?? 1) ||
+      accuracy.value !== (move.value?.accuracy ?? 0) ||
       reference.value !== (move.value?.reference ?? "") ||
       notes.value !== (move.value?.notes ?? "")),
 );
@@ -63,9 +74,12 @@ async function onDelete(hideModal: () => void): Promise<void> {
 
 function setModel(model: Move): void {
   move.value = model;
+  accuracy.value = model.accuracy ?? 0;
   description.value = model.description ?? "";
   displayName.value = model.displayName ?? "";
   notes.value = model.notes ?? "";
+  power.value = model.power ?? 0;
+  powerPoints.value = model.powerPoints;
   reference.value = model.reference ?? "";
   uniqueName.value = model.uniqueName;
 }
@@ -78,9 +92,9 @@ const onSubmit = handleSubmit(async () => {
         uniqueName: uniqueName.value,
         displayName: displayName.value,
         description: description.value,
-        accuracy: move.value.accuracy, // TODO(fpion): implement
-        power: move.value.power, // TODO(fpion): implement
-        powerPoints: move.value.powerPoints, // TODO(fpion): implement
+        accuracy: accuracy.value === 0 ? undefined : accuracy.value,
+        power: power.value === 0 ? undefined : power.value,
+        powerPoints: powerPoints.value,
         statisticChanges: [...move.value.statisticChanges], // TODO(fpion): implement
         statusConditions: [...move.value.statusConditions], // TODO(fpion): implement
         reference: reference.value,
@@ -132,10 +146,19 @@ onMounted(async () => {
         </div>
         <h3>{{ t("gameData") }}</h3>
         <div class="row">
+          <PokemonTypeSelect class="col-lg-6" disabled :model-value="move.type" />
+          <MoveCategorySelect class="col-lg-6" disabled :model-value="move.category" />
+        </div>
+        <div class="row">
           <UniqueNameInput class="col-lg-6" required v-model="uniqueName" />
           <DisplayNameInput class="col-lg-6" v-model="displayName" />
         </div>
         <DescriptionTextarea v-model="description" />
+        <div class="row">
+          <PowerPointsInput class="col-lg-4" v-model="powerPoints" />
+          <PowerInput class="col-lg-4" :disabled="move.category === 'Status'" v-model="power" />
+          <AccuracyInput class="col-lg-4" v-model="accuracy" />
+        </div>
         <h3>{{ t("metadata") }}</h3>
         <ReferenceInput v-model="reference" />
         <NotesTextarea v-model="notes" />

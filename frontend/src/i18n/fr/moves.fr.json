@@ -1,4 +1,8 @@
 {
+  "accuracy": {
+    "label": "Précision",
+    "neverMisses": "Ne rate jamais"
+  },
   "category": {
     "label": "Catégorie",
     "options": {
@@ -15,6 +19,10 @@
   },
   "deleted": "L’attaque a été supprimée.",
   "empty": "Cette liste est vide.",
+  "power": {
+    "label": "Puissance"
+  },
+  "powerPoints": "Points de pouvoir (PP)",
   "sort": {
     "options": {
       "Accuracy": "Précision",

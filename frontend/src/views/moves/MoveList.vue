@@ -163,6 +163,9 @@ watch(
           <tr>
             <th scope="col">{{ t("moves.sort.options.UniqueName") }}</th>
             <th scope="col">{{ t("moves.sort.options.DisplayName") }}</th>
+            <!-- TODO(fpion): Type -->
+            <!-- TODO(fpion): Category -->
+            <!-- TODO(fpion): Fewer columns? -->
             <th scope="col">{{ t("moves.sort.options.Accuracy") }}</th>
             <th scope="col">{{ t("moves.sort.options.Power") }}</th>
             <th scope="col">{{ t("moves.sort.options.PowerPoints") }}</th>
