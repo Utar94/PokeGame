@@ -1,5 +1,6 @@
 {
   "type": {
+    "icon": "{type}-type icon",
     "label": "Pokémon Type",
     "options": {
       "Bug": "Bug",

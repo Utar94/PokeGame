@@ -4,6 +4,7 @@
     "neverMisses": "Ne rate jamais"
   },
   "category": {
+    "icon": "Icône de {category}",
     "label": "Catégorie",
     "options": {
       "Physical": "Physique",
@@ -37,5 +38,6 @@
     "list": "Attaques",
     "new": "Nouvelle attaque"
   },
+  "typeAndCategory": "Type / Catégorie",
   "updated": "L’attaque a été enregistrée."
 }

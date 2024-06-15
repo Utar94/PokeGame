@@ -8,7 +8,9 @@ import { useRoute, useRouter } from "vue-router";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateMove from "@/components/moves/CreateMove.vue";
+import MoveCategoryIcon from "@/components/moves/MoveCategoryIcon.vue";
 import MoveCategorySelect from "@/components/moves/MoveCategorySelect.vue";
+import PokemonTypeIcon from "@/components/pokemon/PokemonTypeIcon.vue";
 import PokemonTypeSelect from "@/components/pokemon/PokemonTypeSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -161,11 +163,8 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("moves.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("moves.sort.options.DisplayName") }}</th>
-            <!-- TODO(fpion): Type -->
-            <!-- TODO(fpion): Category -->
-            <!-- TODO(fpion): Fewer columns? -->
+            <th scope="col">{{ t("names") }}</th>
+            <th scope="col">{{ t("moves.typeAndCategory") }}</th>
             <th scope="col">{{ t("moves.sort.options.Accuracy") }}</th>
             <th scope="col">{{ t("moves.sort.options.Power") }}</th>
             <th scope="col">{{ t("moves.sort.options.PowerPoints") }}</th>
@@ -176,8 +175,18 @@ watch(
           <tr v-for="move in moves" :key="move.id">
             <td>
               <RouterLink :to="{ name: 'MoveEdit', params: { id: move.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ move.uniqueName }} </RouterLink>
+              <template v-if="move.displayName">
+                <br />
+                {{ move.displayName }}
+              </template>
             </td>
-            <td>{{ move.displayName ?? "—" }}</td>
+            <td>
+              <PokemonTypeIcon size="20" :type="move.type" />
+              {{ t(`pokemon.type.options.${move.type}`) }}
+              <br />
+              <MoveCategoryIcon :category="move.category" size="20" />
+              {{ t(`moves.category.options.${move.category}`) }}
+            </td>
             <td>{{ move.accuracy ? n(move.accuracy / 100, "percent") : "—" }}</td>
             <td>{{ move.power ?? "—" }}</td>
             <td>{{ move.powerPoints }}</td>

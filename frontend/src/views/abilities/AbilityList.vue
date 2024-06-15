@@ -146,8 +146,7 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("abilities.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("abilities.sort.options.DisplayName") }}</th>
+            <th scope="col">{{ t("names") }}</th>
             <th scope="col">{{ t("abilities.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
@@ -157,8 +156,11 @@ watch(
               <RouterLink :to="{ name: 'AbilityEdit', params: { id: ability.id } }">
                 <font-awesome-icon icon="fas fa-edit" />{{ ability.uniqueName }}
               </RouterLink>
+              <template v-if="ability.displayName">
+                <br />
+                {{ ability.displayName }}
+              </template>
             </td>
-            <td>{{ ability.displayName ?? "—" }}</td>
             <td><StatusBlock :actor="ability.updatedBy" :date="ability.updatedOn" /></td>
           </tr>
         </tbody>

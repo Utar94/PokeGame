@@ -5,6 +5,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
+import PokemonTypeIcon from "./PokemonTypeIcon.vue";
+import type { PokemonType } from "@/types/pokemon";
 
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
@@ -13,7 +15,7 @@ withDefaults(
   defineProps<{
     disabled?: boolean | string;
     id?: string;
-    modelValue?: string;
+    modelValue?: PokemonType;
     required?: boolean | string;
   }>(),
   {
@@ -29,7 +31,7 @@ const options = computed<SelectOption[]>(() =>
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: string): void;
+  (e: "update:model-value", value?: PokemonType): void;
 }>();
 </script>
 
@@ -45,5 +47,11 @@ defineEmits<{
     :required="required"
     :show-status="required ? 'touched' : 'never'"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #prepend>
+      <span v-if="modelValue" class="input-group-text">
+        <PokemonTypeIcon size="40" :type="modelValue" />
+      </span>
+    </template>
+  </AppSelect>
 </template>

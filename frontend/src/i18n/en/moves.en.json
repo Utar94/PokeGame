@@ -4,6 +4,7 @@
     "neverMisses": "Never misses"
   },
   "category": {
+    "icon": "{category} icon",
     "label": "Category",
     "options": {
       "Physical": "Physical",
@@ -37,5 +38,6 @@
     "list": "Moves",
     "new": "New move"
   },
+  "typeAndCategory": "Type / Category",
   "updated": "The move has been updated."
 }
