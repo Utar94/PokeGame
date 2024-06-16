@@ -1,0 +1,39 @@
+{
+  "statistic": {
+    "options": {
+      "Accuracy": "Accuracy",
+      "Attack": "Attack",
+      "Defense": "Defense",
+      "Evasion": "Evasion",
+      "HP": "HP",
+      "SpecialAttack": "Special Attack",
+      "SpecialDefense": "Special Defense",
+      "Speed": "Speed"
+    }
+  },
+  "type": {
+    "icon": "{type}-type icon",
+    "label": "Pokémon Type",
+    "options": {
+      "Bug": "Bug",
+      "Dark": "Dark",
+      "Dragon": "Dragon",
+      "Electric": "Electric",
+      "Fairy": "Fairy",
+      "Fighting": "Fighting",
+      "Fire": "Fire",
+      "Flying": "Flying",
+      "Ghost": "Ghost",
+      "Grass": "Grass",
+      "Ground": "Ground",
+      "Ice": "Ice",
+      "Normal": "Normal",
+      "Poison": "Poison",
+      "Psychic": "Psychic",
+      "Rock": "Rock",
+      "Steel": "Steel",
+      "Water": "Water"
+    },
+    "placeholder": "Select a Pokémon type"
+  }
+}

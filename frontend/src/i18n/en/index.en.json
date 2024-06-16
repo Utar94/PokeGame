@@ -1,5 +1,6 @@
 {
   "actions": {
+    "add": "Add",
     "back": "Go back",
     "cancel": "Cancel",
     "clear": "Clear",
@@ -9,15 +10,16 @@
     "refresh": "Refresh",
     "save": "Save"
   },
-  "brand": "Logitar",
+  "brand": "PokéGame",
   "by": "By",
-  "copyright": "© Logitar {version} {year}.",
+  "copyright": "© PokéGame {version} {year}.",
   "count": "Count",
   "description": "Description",
   "displayName": "Display Name",
   "gameData": "Game Data",
   "loading": "Loading…",
   "metadata": "Metadata",
+  "names": "Names",
   "no": "No",
   "notFound": {
     "help": "The requested page could not be found.",

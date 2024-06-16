@@ -43,6 +43,17 @@ const router = createRouter({
       path: "/abilities/:id",
       component: () => import("./views/abilities/AbilityEdit.vue"),
     },
+    // Moves
+    {
+      name: "MoveList",
+      path: "/moves",
+      component: () => import("./views/moves/MoveList.vue"),
+    },
+    {
+      name: "MoveEdit",
+      path: "/moves/:id",
+      component: () => import("./views/moves/MoveEdit.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

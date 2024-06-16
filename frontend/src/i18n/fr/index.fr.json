@@ -1,5 +1,6 @@
 {
   "actions": {
+    "add": "Ajouter",
     "back": "Retour",
     "cancel": "Annuler",
     "clear": "Vider",
@@ -9,15 +10,16 @@
     "refresh": "Rafraîchir",
     "save": "Enregistrer"
   },
-  "brand": "Logitar",
+  "brand": "PokéGame",
   "by": "Par",
-  "copyright": "© Logitar {version} {year}.",
+  "copyright": "© PokéGame {version} {year}.",
   "count": "Nombre de résultats",
   "description": "Description",
   "displayName": "Nom d’affichage",
   "gameData": "Données de jeu",
   "loading": "Chargement…",
   "metadata": "Métadonnées",
+  "names": "Noms",
   "no": "Non",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",

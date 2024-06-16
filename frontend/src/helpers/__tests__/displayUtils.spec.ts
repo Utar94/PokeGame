@@ -1,9 +1,10 @@
 import { nanoid } from "nanoid";
 import { describe, it, expect } from "vitest";
 
-import { formatAbility } from "../displayUtils";
 import type { Ability } from "@/types/abilities";
 import type { Actor } from "@/types/actor";
+import type { Move } from "@/types/moves";
+import { formatAbility, formatMove } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -42,5 +43,45 @@ describe("formatAbility", () => {
       displayName: undefined,
     };
     expect(formatAbility(ability)).toBe("AirLock");
+  });
+});
+
+describe("formatMove", () => {
+  it.concurrent("should format correctly the move with display name", () => {
+    const move: Move = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      type: "Dark",
+      category: "Special",
+      uniqueName: "DarkPulse",
+      displayName: "Dark Pulse",
+      powerPoints: 15,
+      statisticChanges: [],
+      statusConditions: [{ statusCondition: "Flinch", chance: 20 }],
+    };
+    expect(formatMove(move)).toBe("Dark Pulse (DarkPulse)");
+  });
+
+  it.concurrent("should format correctly the move without display name", () => {
+    const move: Move = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      type: "Dark",
+      category: "Special",
+      uniqueName: "DarkPulse",
+      displayName: undefined,
+      powerPoints: 15,
+      statisticChanges: [],
+      statusConditions: [{ statusCondition: "Flinch", chance: 20 }],
+    };
+    expect(formatMove(move)).toBe("DarkPulse");
   });
 });

@@ -1,0 +1,50 @@
+{
+  "accuracy": {
+    "label": "Précision",
+    "neverMisses": "Ne rate jamais"
+  },
+  "category": {
+    "icon": "Icône de {category}",
+    "label": "Catégorie",
+    "options": {
+      "Physical": "Physique",
+      "Special": "Spéciale",
+      "Status": "Statut"
+    },
+    "placeholder": "Sélectionnez une catégorie"
+  },
+  "created": "L’attaque a été créée.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer l’attaque suivante ?",
+    "title": "Supprimer l’attaque"
+  },
+  "deleted": "L’attaque a été supprimée.",
+  "empty": "Cette liste est vide.",
+  "power": {
+    "label": "Puissance"
+  },
+  "powerPoints": "Points de pouvoir (PP)",
+  "sort": {
+    "options": {
+      "Accuracy": "Précision",
+      "DisplayName": "Nom d’affichage",
+      "Power": "Puissance",
+      "PowerPoints": "Points de pouvoir",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "statisticChanges": "Modifications de statistiques",
+  "statusConditions": {
+    "chance": "Chance",
+    "empty": "Cette liste est vide.",
+    "label": "Problèmes d’état",
+    "statusCondition": "Problème d’état"
+  },
+  "title": {
+    "list": "Attaques",
+    "new": "Nouvelle attaque"
+  },
+  "typeAndCategory": "Type / Catégorie",
+  "updated": "L’attaque a été enregistrée."
+}

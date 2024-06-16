@@ -1,0 +1,39 @@
+{
+  "statistic": {
+    "options": {
+      "Accuracy": "Précision",
+      "Attack": "Attaque",
+      "Defense": "Défense",
+      "Evasion": "Esquive",
+      "HP": "PV",
+      "SpecialAttack": "Attaque Spéciale",
+      "SpecialDefense": "Défense Spéciale",
+      "Speed": "Vitesse"
+    }
+  },
+  "type": {
+    "icon": "Icône du type {type}",
+    "label": "Type de Pokémon",
+    "options": {
+      "Bug": "Insecte",
+      "Dark": "Ténèbres",
+      "Dragon": "Dragon",
+      "Electric": "Électrik",
+      "Fairy": "Fée",
+      "Fighting": "Combat",
+      "Fire": "Feu",
+      "Flying": "Vol",
+      "Ghost": "Spectre",
+      "Grass": "Plante",
+      "Ground": "Sol",
+      "Ice": "Glace",
+      "Normal": "Normal",
+      "Poison": "Poison",
+      "Psychic": "Psy",
+      "Rock": "Roche",
+      "Steel": "Acier",
+      "Water": "Eau"
+    },
+    "placeholder": "Sélectionnez un type de Pokémon"
+  }
+}
