@@ -21,6 +21,7 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { Move, ReplaceMovePayload } from "@/types/moves";
+import type { PokemonStatistic } from "@/types/pokemon";
 import { formatMove } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
 import { readMove, replaceMove } from "@/api/moves";
@@ -32,7 +33,8 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
-// TODO(fpion): statistic changes
+const defaultStatisticChanges = { Accuracy: 0, Attack: 0, Defense: 0, Evasion: 0, HP: 0, SpecialAttack: 0, SpecialDefense: 0, Speed: 0 };
+
 // TODO(fpion): status conditions
 const accuracy = ref<number>(0);
 const description = ref<string>("");
@@ -43,6 +45,8 @@ const notes = ref<string>("");
 const power = ref<number>(0);
 const powerPoints = ref<number>(1);
 const reference = ref<string>("");
+const referenceStatisticChanges = ref({ ...defaultStatisticChanges });
+const statisticChanges = ref({ ...defaultStatisticChanges });
 const uniqueName = ref<string>("");
 
 const formatted = computed<string>(() => (move.value ? formatMove(move.value) : ""));
@@ -56,8 +60,8 @@ const hasChanges = computed<boolean>(
       powerPoints.value !== (move.value?.powerPoints ?? 1) ||
       accuracy.value !== (move.value?.accuracy ?? 0) ||
       reference.value !== (move.value?.reference ?? "") ||
-      notes.value !== (move.value?.notes ?? "")),
-  // TODO(fpion): statistic changes
+      notes.value !== (move.value?.notes ?? "") ||
+      JSON.stringify(statisticChanges.value) !== JSON.stringify(referenceStatisticChanges.value)),
   // TODO(fpion): status conditions
 );
 
@@ -87,7 +91,14 @@ function setModel(model: Move): void {
   powerPoints.value = model.powerPoints;
   reference.value = model.reference ?? "";
   uniqueName.value = model.uniqueName;
-  // TODO(fpion): statistic changes
+
+  referenceStatisticChanges.value = { ...defaultStatisticChanges };
+  statisticChanges.value = { ...defaultStatisticChanges };
+  model.statisticChanges.forEach(({ statistic, stages }) => {
+    referenceStatisticChanges.value[statistic] = stages;
+    statisticChanges.value[statistic] = stages;
+  });
+
   // TODO(fpion): status conditions
 }
 
@@ -102,7 +113,9 @@ const onSubmit = handleSubmit(async () => {
         accuracy: accuracy.value === 0 ? undefined : accuracy.value,
         power: power.value === 0 ? undefined : power.value,
         powerPoints: powerPoints.value,
-        statisticChanges: [...move.value.statisticChanges], // TODO(fpion): statistic changes
+        statisticChanges: Object.entries(statisticChanges.value)
+          .filter(([, stages]) => stages !== 0)
+          .map(([statistic, stages]) => ({ statistic: statistic as PokemonStatistic, stages })),
         statusConditions: [...move.value.statusConditions], // TODO(fpion): status conditions
         reference: reference.value,
         notes: notes.value,
@@ -168,17 +181,17 @@ onMounted(async () => {
         </div>
         <h3>{{ t("moves.statisticChanges") }}</h3>
         <div class="row">
-          <StatisticChangeInput class="col-lg-6" statistic="Attack" />
-          <StatisticChangeInput class="col-lg-6" statistic="Defense" />
+          <StatisticChangeInput class="col-lg-6" statistic="Attack" v-model="statisticChanges.Attack" />
+          <StatisticChangeInput class="col-lg-6" statistic="Defense" v-model="statisticChanges.Defense" />
         </div>
         <div class="row">
-          <StatisticChangeInput class="col-lg-6" statistic="SpecialAttack" />
-          <StatisticChangeInput class="col-lg-6" statistic="SpecialDefense" />
+          <StatisticChangeInput class="col-lg-6" statistic="SpecialAttack" v-model="statisticChanges.SpecialAttack" />
+          <StatisticChangeInput class="col-lg-6" statistic="SpecialDefense" v-model="statisticChanges.SpecialDefense" />
         </div>
         <div class="row">
-          <StatisticChangeInput class="col-lg-4" statistic="Accuracy" />
-          <StatisticChangeInput class="col-lg-4" statistic="Evasion" />
-          <StatisticChangeInput class="col-lg-4" statistic="Speed" />
+          <StatisticChangeInput class="col-lg-4" statistic="Accuracy" v-model="statisticChanges.Accuracy" />
+          <StatisticChangeInput class="col-lg-4" statistic="Evasion" v-model="statisticChanges.Evasion" />
+          <StatisticChangeInput class="col-lg-4" statistic="Speed" v-model="statisticChanges.Speed" />
         </div>
         <!-- TODO(fpion): Status Conditions -->
         <h3>{{ t("metadata") }}</h3>

@@ -15,8 +15,8 @@ public class MoveUpdatedEvent : DomainEvent, INotification
   public Modification<int?>? Power { get; set; }
   public int? PowerPoints { get; set; }
 
-  public Dictionary<string, int> StatisticChanges { get; } = [];
-  public Dictionary<string, int> StatusConditions { get; } = [];
+  public Dictionary<string, int> StatisticChanges { get; set; } = [];
+  public Dictionary<string, int> StatusConditions { get; set; } = [];
 
   public Modification<UrlUnit>? Reference { get; set; }
   public Modification<NotesUnit>? Notes { get; set; }
