@@ -1,4 +1,16 @@
 {
+  "statistic": {
+    "options": {
+      "Accuracy": "Accuracy",
+      "Attack": "Attack",
+      "Defense": "Defense",
+      "Evasion": "Evasion",
+      "HP": "HP",
+      "SpecialAttack": "Special Attack",
+      "SpecialDefense": "Special Defense",
+      "Speed": "Speed"
+    }
+  },
   "type": {
     "icon": "{type}-type icon",
     "label": "Pokémon Type",

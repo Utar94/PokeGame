@@ -34,6 +34,7 @@
       "UpdatedOn": "Dernière modification"
     }
   },
+  "statisticChanges": "Modifications de statistiques",
   "title": {
     "list": "Attaques",
     "new": "Nouvelle attaque"

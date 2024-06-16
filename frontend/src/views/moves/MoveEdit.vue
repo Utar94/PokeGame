@@ -16,6 +16,7 @@ import PokemonTypeSelect from "@/components/pokemon/PokemonTypeSelect.vue";
 import PowerInput from "@/components/moves/PowerInput.vue";
 import PowerPointsInput from "@/components/moves/PowerPointsInput.vue";
 import ReferenceInput from "@/components/shared/ReferenceInput.vue";
+import StatisticChangeInput from "@/components/moves/StatisticChangeInput.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
@@ -31,6 +32,8 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+// TODO(fpion): statistic changes
+// TODO(fpion): status conditions
 const accuracy = ref<number>(0);
 const description = ref<string>("");
 const displayName = ref<string>("");
@@ -54,6 +57,8 @@ const hasChanges = computed<boolean>(
       accuracy.value !== (move.value?.accuracy ?? 0) ||
       reference.value !== (move.value?.reference ?? "") ||
       notes.value !== (move.value?.notes ?? "")),
+  // TODO(fpion): statistic changes
+  // TODO(fpion): status conditions
 );
 
 async function onDelete(hideModal: () => void): Promise<void> {
@@ -82,6 +87,8 @@ function setModel(model: Move): void {
   powerPoints.value = model.powerPoints;
   reference.value = model.reference ?? "";
   uniqueName.value = model.uniqueName;
+  // TODO(fpion): statistic changes
+  // TODO(fpion): status conditions
 }
 
 const { handleSubmit, isSubmitting } = useForm();
@@ -95,8 +102,8 @@ const onSubmit = handleSubmit(async () => {
         accuracy: accuracy.value === 0 ? undefined : accuracy.value,
         power: power.value === 0 ? undefined : power.value,
         powerPoints: powerPoints.value,
-        statisticChanges: [...move.value.statisticChanges], // TODO(fpion): implement
-        statusConditions: [...move.value.statusConditions], // TODO(fpion): implement
+        statisticChanges: [...move.value.statisticChanges], // TODO(fpion): statistic changes
+        statusConditions: [...move.value.statusConditions], // TODO(fpion): status conditions
         reference: reference.value,
         notes: notes.value,
       };
@@ -159,7 +166,20 @@ onMounted(async () => {
           <PowerInput class="col-lg-4" :disabled="move.category === 'Status'" v-model="power" />
           <AccuracyInput class="col-lg-4" v-model="accuracy" />
         </div>
-        <!-- TODO(fpion): Statistic Changes -->
+        <h3>{{ t("moves.statisticChanges") }}</h3>
+        <div class="row">
+          <StatisticChangeInput class="col-lg-6" statistic="Attack" />
+          <StatisticChangeInput class="col-lg-6" statistic="Defense" />
+        </div>
+        <div class="row">
+          <StatisticChangeInput class="col-lg-6" statistic="SpecialAttack" />
+          <StatisticChangeInput class="col-lg-6" statistic="SpecialDefense" />
+        </div>
+        <div class="row">
+          <StatisticChangeInput class="col-lg-4" statistic="Accuracy" />
+          <StatisticChangeInput class="col-lg-4" statistic="Evasion" />
+          <StatisticChangeInput class="col-lg-4" statistic="Speed" />
+        </div>
         <!-- TODO(fpion): Status Conditions -->
         <h3>{{ t("metadata") }}</h3>
         <ReferenceInput v-model="reference" />
