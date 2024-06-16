@@ -35,6 +35,12 @@
     }
   },
   "statisticChanges": "Statistic Changes",
+  "statusConditions": {
+    "chance": "Chance",
+    "empty": "This list is empty.",
+    "label": "Status Conditions",
+    "statusCondition": "Status Condition"
+  },
   "title": {
     "list": "Moves",
     "new": "New move"

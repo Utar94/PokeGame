@@ -35,6 +35,12 @@
     }
   },
   "statisticChanges": "Modifications de statistiques",
+  "statusConditions": {
+    "chance": "Chance",
+    "empty": "Cette liste est vide.",
+    "label": "Problèmes d’état",
+    "statusCondition": "Problème d’état"
+  },
   "title": {
     "list": "Attaques",
     "new": "Nouvelle attaque"

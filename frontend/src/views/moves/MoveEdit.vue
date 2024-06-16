@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { TarButton } from "logitar-vue3-ui";
 import { computed, inject, onMounted, ref } from "vue";
+import { parsingUtils } from "logitar-js";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
@@ -7,6 +9,7 @@ import { useRoute, useRouter } from "vue-router";
 import AccuracyInput from "@/components/moves/AccuracyInput.vue";
 import AppBackButton from "@/components/shared/AppBackButton.vue";
 import AppDelete from "@/components/shared/AppDelete.vue";
+import AppInput from "@/components/shared/AppInput.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
@@ -20,7 +23,7 @@ import StatisticChangeInput from "@/components/moves/StatisticChangeInput.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
-import type { Move, ReplaceMovePayload } from "@/types/moves";
+import type { InflictedStatusCondition, Move, ReplaceMovePayload } from "@/types/moves";
 import type { PokemonStatistic } from "@/types/pokemon";
 import { formatMove } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
@@ -31,11 +34,11 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
 const defaultStatisticChanges = { Accuracy: 0, Attack: 0, Defense: 0, Evasion: 0, HP: 0, SpecialAttack: 0, SpecialDefense: 0, Speed: 0 };
 
-// TODO(fpion): status conditions
 const accuracy = ref<number>(0);
 const description = ref<string>("");
 const displayName = ref<string>("");
@@ -47,6 +50,7 @@ const powerPoints = ref<number>(1);
 const reference = ref<string>("");
 const referenceStatisticChanges = ref({ ...defaultStatisticChanges });
 const statisticChanges = ref({ ...defaultStatisticChanges });
+const statusConditions = ref<InflictedStatusCondition[]>([]);
 const uniqueName = ref<string>("");
 
 const formatted = computed<string>(() => (move.value ? formatMove(move.value) : ""));
@@ -61,8 +65,8 @@ const hasChanges = computed<boolean>(
       accuracy.value !== (move.value?.accuracy ?? 0) ||
       reference.value !== (move.value?.reference ?? "") ||
       notes.value !== (move.value?.notes ?? "") ||
-      JSON.stringify(statisticChanges.value) !== JSON.stringify(referenceStatisticChanges.value)),
-  // TODO(fpion): status conditions
+      JSON.stringify(statisticChanges.value) !== JSON.stringify(referenceStatisticChanges.value) ||
+      JSON.stringify(statusConditions.value) !== JSON.stringify(move.value?.statusConditions ?? [])),
 );
 
 async function onDelete(hideModal: () => void): Promise<void> {
@@ -99,7 +103,8 @@ function setModel(model: Move): void {
     statisticChanges.value[statistic] = stages;
   });
 
-  // TODO(fpion): status conditions
+  statusConditions.value = [];
+  model.statusConditions.forEach(({ statusCondition, chance }) => statusConditions.value.push({ statusCondition, chance }));
 }
 
 const { handleSubmit, isSubmitting } = useForm();
@@ -116,7 +121,7 @@ const onSubmit = handleSubmit(async () => {
         statisticChanges: Object.entries(statisticChanges.value)
           .filter(([, stages]) => stages !== 0)
           .map(([statistic, stages]) => ({ statistic: statistic as PokemonStatistic, stages })),
-        statusConditions: [...move.value.statusConditions], // TODO(fpion): status conditions
+        statusConditions: statusConditions.value,
         reference: reference.value,
         notes: notes.value,
       };
@@ -128,6 +133,16 @@ const onSubmit = handleSubmit(async () => {
     handleError(e);
   }
 });
+
+function addStatusCondition(): void {
+  statusConditions.value.push({ statusCondition: "", chance: 1 });
+}
+function removeStatusCondition(index: number): void {
+  statusConditions.value.splice(index, 1);
+}
+function updateStatusCondition(index: number, statusCondition: InflictedStatusCondition): void {
+  statusConditions.value.splice(index, 1, { ...statusCondition });
+}
 
 onMounted(async () => {
   try {
@@ -179,6 +194,7 @@ onMounted(async () => {
           <PowerInput class="col-lg-4" :disabled="move.category === 'Status'" v-model="power" />
           <AccuracyInput class="col-lg-4" v-model="accuracy" />
         </div>
+        <!-- TODO(fpion): refactor statistic changes -->
         <h3>{{ t("moves.statisticChanges") }}</h3>
         <div class="row">
           <StatisticChangeInput class="col-lg-6" statistic="Attack" v-model="statisticChanges.Attack" />
@@ -193,7 +209,44 @@ onMounted(async () => {
           <StatisticChangeInput class="col-lg-4" statistic="Evasion" v-model="statisticChanges.Evasion" />
           <StatisticChangeInput class="col-lg-4" statistic="Speed" v-model="statisticChanges.Speed" />
         </div>
-        <!-- TODO(fpion): Status Conditions -->
+        <!-- TODO(fpion): refactor status conditions -->
+        <h3>{{ t("moves.statusConditions.label") }}</h3>
+        <div class="mb-3">
+          <TarButton icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addStatusCondition" />
+        </div>
+        <template v-if="statusConditions.length > 0">
+          <div class="row" v-for="(statusCondition, index) in statusConditions" :key="index">
+            <AppInput
+              class="col"
+              floating
+              :id="`status-conditions-${index}-status-condition`"
+              label="moves.statusConditions.statusCondition"
+              max="255"
+              :model-value="statusCondition.statusCondition"
+              placeholder="moves.statusConditions.statusCondition"
+              required
+              @update:model-value="updateStatusCondition(index, { statusCondition: $event, chance: statusCondition.chance })"
+            >
+              <template #prepend>
+                <TarButton icon="fas fa-times" variant="danger" @click="removeStatusCondition(index)" />
+              </template>
+            </AppInput>
+            <AppInput
+              class="col"
+              floating
+              :id="`status-conditions-${index}-chance`"
+              label="moves.statusConditions.chance"
+              min="1"
+              max="100"
+              :model-value="statusCondition.chance.toString()"
+              placeholder="moves.statusConditions.chance"
+              required
+              type="number"
+              @update:model-value="updateStatusCondition(index, { statusCondition: statusCondition.statusCondition, chance: parseNumber($event) ?? 0 })"
+            />
+          </div>
+        </template>
+        <p v-else>{{ t("moves.statusConditions.empty") }}</p>
         <h3>{{ t("metadata") }}</h3>
         <ReferenceInput v-model="reference" />
         <NotesTextarea v-model="notes" />
