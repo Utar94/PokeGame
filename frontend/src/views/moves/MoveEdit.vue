@@ -25,9 +25,9 @@ import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { InflictedStatusCondition, Move, ReplaceMovePayload } from "@/types/moves";
 import type { PokemonStatistic } from "@/types/pokemon";
+import { deleteMove, readMove, replaceMove } from "@/api/moves";
 import { formatMove } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
-import { readMove, replaceMove } from "@/api/moves";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -73,7 +73,7 @@ async function onDelete(hideModal: () => void): Promise<void> {
   if (move.value && !isDeleting.value) {
     isDeleting.value = true;
     try {
-      alert("Deleting moves is not yet implemented."); // await deleteMove(move.value.id); // TODO(fpion): delete move
+      await deleteMove(move.value.id);
       hideModal();
       toasts.success("moves.deleted");
       router.push({ name: "MoveList" });

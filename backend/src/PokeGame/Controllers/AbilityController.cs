@@ -34,6 +34,13 @@ public class AbilityController : ControllerBase
     return Created(location, ability);
   }
 
+  [HttpDelete("{id}")]
+  public async Task<ActionResult<Ability>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+  {
+    Ability? ability = await _pipeline.ExecuteAsync(new DeleteAbilityCommand(id), cancellationToken);
+    return ability == null ? NotFound() : Ok(ability);
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<Ability>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
