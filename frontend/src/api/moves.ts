@@ -2,7 +2,7 @@ import { urlUtils } from "logitar-js";
 
 import type { Move, CreateMovePayload, ReplaceMovePayload, SearchMovesPayload } from "@/types/moves";
 import type { SearchResults } from "@/types/search";
-import { get, post, put } from ".";
+import { _delete, get, post, put } from ".";
 
 const path: string = "/moves";
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
@@ -12,6 +12,11 @@ function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
 export async function createMove(payload: CreateMovePayload): Promise<Move> {
   const url: string = createUrlBuilder().buildRelative();
   return (await post<CreateMovePayload, Move>(url, payload)).data;
+}
+
+export async function deleteMove(id: string): Promise<Move> {
+  const url: string = createUrlBuilder(id).buildRelative();
+  return (await _delete<Move>(url)).data;
 }
 
 export async function readMove(id: string): Promise<Move> {

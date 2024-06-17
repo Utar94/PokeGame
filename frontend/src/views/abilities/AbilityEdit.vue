@@ -15,9 +15,9 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { Ability, ReplaceAbilityPayload } from "@/types/abilities";
 import type { ApiError } from "@/types/api";
+import { deleteAbility, readAbility, replaceAbility } from "@/api/abilities";
 import { formatAbility } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
-import { readAbility, replaceAbility } from "@/api/abilities";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -49,7 +49,7 @@ async function onDelete(hideModal: () => void): Promise<void> {
   if (ability.value && !isDeleting.value) {
     isDeleting.value = true;
     try {
-      alert("Deleting abilities is not yet implemented."); // await deleteAbility(ability.value.id); // TODO(fpion): delete ability
+      await deleteAbility(ability.value.id);
       hideModal();
       toasts.success("abilities.deleted");
       router.push({ name: "AbilityList" });

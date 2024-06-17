@@ -2,7 +2,7 @@ import { urlUtils } from "logitar-js";
 
 import type { Ability, CreateAbilityPayload, ReplaceAbilityPayload, SearchAbilitiesPayload } from "@/types/abilities";
 import type { SearchResults } from "@/types/search";
-import { get, post, put } from ".";
+import { _delete, get, post, put } from ".";
 
 const path: string = "/abilities";
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
@@ -12,6 +12,11 @@ function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
 export async function createAbility(payload: CreateAbilityPayload): Promise<Ability> {
   const url: string = createUrlBuilder().buildRelative();
   return (await post<CreateAbilityPayload, Ability>(url, payload)).data;
+}
+
+export async function deleteAbility(id: string): Promise<Ability> {
+  const url: string = createUrlBuilder(id).buildRelative();
+  return (await _delete<Ability>(url)).data;
 }
 
 export async function readAbility(id: string): Promise<Ability> {
