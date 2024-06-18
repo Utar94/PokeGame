@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Logging;
 using PokeGame.Application.Moves;
+using PokeGame.Application.Regions;
 using PokeGame.EntityFrameworkCore.Actors;
 using PokeGame.EntityFrameworkCore.Queriers;
 using PokeGame.EntityFrameworkCore.Repositories;
@@ -27,7 +28,8 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IAbilityQuerier, AbilityQuerier>()
-      .AddTransient<IMoveQuerier, MoveQuerier>();
+      .AddTransient<IMoveQuerier, MoveQuerier>()
+      .AddTransient<IRegionQuerier, RegionQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
@@ -35,6 +37,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddTransient<IAbilityRepository, AbilityRepository>()
       .AddTransient<ILogRepository, LogRepository>()
-      .AddTransient<IMoveRepository, MoveRepository>();
+      .AddTransient<IMoveRepository, MoveRepository>()
+      .AddTransient<IRegionRepository, RegionRepository>();
   }
 }
