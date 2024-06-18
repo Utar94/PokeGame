@@ -1,0 +1,16 @@
+﻿using PokeGame.Domain.Items;
+
+namespace PokeGame.Infrastructure.Converters;
+
+internal class ItemIdConverter : JsonConverter<ItemId?>
+{
+  public override ItemId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  {
+    return ItemId.TryCreate(reader.GetString());
+  }
+
+  public override void Write(Utf8JsonWriter writer, ItemId? itemId, JsonSerializerOptions options)
+  {
+    writer.WriteStringValue(itemId?.Value);
+  }
+}

@@ -51,6 +51,7 @@ public static class DependencyInjectionExtensions
     new AbilityIdConverter(),
     new DescriptionConverter(),
     new DisplayNameConverter(),
+    new ItemIdConverter(),
     new MoveIdConverter(),
     new NotesConverter(),
     new RegionIdConverter(),

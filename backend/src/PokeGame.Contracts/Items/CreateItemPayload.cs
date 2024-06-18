@@ -1,0 +1,24 @@
+﻿namespace PokeGame.Contracts.Items;
+
+public record CreateItemPayload
+{
+  public ItemCategory Category { get; set; }
+  public int? Price { get; set; }
+
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
+  public string? Description { get; set; }
+  public string? Picture { get; set; }
+
+  public string? Reference { get; set; }
+  public string? Notes { get; set; }
+
+  public CreateItemPayload() : this(string.Empty)
+  {
+  }
+
+  public CreateItemPayload(string uniqueName)
+  {
+    UniqueName = uniqueName;
+  }
+}
