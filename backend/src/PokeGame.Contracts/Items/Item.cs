@@ -15,6 +15,17 @@ public class Item : Aggregate
   public string? Reference { get; set; }
   public string? Notes { get; set; }
 
+  /* Category: Medicine
+   * - HP restore, but lowers friendship, fully
+   * - StatusConditions: Burn, Freeze, Paralysis, Poison, Sleep (5/5), any non-volatile status conditions and confusion
+   * - PP restore to all moves, to one move, fully
+   * - Revive one or all fainted Pokémon, 50% HP or full HP
+   */
+
+  /* Category: PokeBall
+   * - Catch rate modifier
+   */
+
   public Item() : this(string.Empty)
   {
   }
