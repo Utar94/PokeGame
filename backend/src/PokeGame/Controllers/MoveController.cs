@@ -37,7 +37,7 @@ public class MoveController : ControllerBase
   [HttpDelete("{id}")]
   public async Task<ActionResult<Move>> DeleteAsync(Guid id, CancellationToken cancellationToken)
   {
-    Move? move = await _pipeline.ExecuteAsync(new ReadMoveQuery(id, UniqueName: null), cancellationToken);
+    Move? move = await _pipeline.ExecuteAsync(new DeleteMoveCommand(id), cancellationToken);
     return move == null ? NotFound() : Ok(move);
   }
 

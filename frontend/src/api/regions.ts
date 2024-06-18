@@ -1,40 +1,38 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateMovePayload, Move, ReplaceMovePayload, SearchMovesPayload } from "@/types/moves";
+import type { CreateRegionPayload, Region, ReplaceRegionPayload, SearchRegionsPayload } from "@/types/regions";
 import type { SearchResults } from "@/types/search";
 import { _delete, get, post, put } from ".";
 
-const path: string = "/moves";
+const path: string = "/regions";
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: `${path}/{id}` }).setParameter("id", id) : new urlUtils.UrlBuilder({ path });
 }
 
-export async function createMove(payload: CreateMovePayload): Promise<Move> {
+export async function createRegion(payload: CreateRegionPayload): Promise<Region> {
   const url: string = createUrlBuilder().buildRelative();
-  return (await post<CreateMovePayload, Move>(url, payload)).data;
+  return (await post<CreateRegionPayload, Region>(url, payload)).data;
 }
 
-export async function deleteMove(id: string): Promise<Move> {
+export async function deleteRegion(id: string): Promise<Region> {
   const url: string = createUrlBuilder(id).buildRelative();
-  return (await _delete<Move>(url)).data;
+  return (await _delete<Region>(url)).data;
 }
 
-export async function readMove(id: string): Promise<Move> {
+export async function readRegion(id: string): Promise<Region> {
   const url: string = createUrlBuilder(id).buildRelative();
-  return (await get<Move>(url)).data;
+  return (await get<Region>(url)).data;
 }
 
-export async function replaceMove(id: string, payload: ReplaceMovePayload, version?: number): Promise<Move> {
+export async function replaceRegion(id: string, payload: ReplaceRegionPayload, version?: number): Promise<Region> {
   const url: string = createUrlBuilder(id)
     .setQuery("version", version?.toString() ?? "")
     .buildRelative();
-  return (await put<ReplaceMovePayload, Move>(url, payload)).data;
+  return (await put<ReplaceRegionPayload, Region>(url, payload)).data;
 }
 
-export async function searchMoves(payload: SearchMovesPayload): Promise<SearchResults<Move>> {
+export async function searchRegions(payload: SearchRegionsPayload): Promise<SearchResults<Region>> {
   const url: string = createUrlBuilder()
-    .setQuery("type", payload.type ?? "")
-    .setQuery("category", payload.category ?? "")
     .setQuery("ids", payload.ids)
     .setQuery(
       "search_terms",
@@ -48,5 +46,5 @@ export async function searchMoves(payload: SearchMovesPayload): Promise<SearchRe
     .setQuery("skip", payload.skip.toString())
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
-  return (await get<SearchResults<Move>>(url)).data;
+  return (await get<SearchResults<Region>>(url)).data;
 }

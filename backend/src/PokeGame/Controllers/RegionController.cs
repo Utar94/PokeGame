@@ -37,7 +37,7 @@ public class RegionController : ControllerBase
   [HttpDelete("{id}")]
   public async Task<ActionResult<Region>> DeleteAsync(Guid id, CancellationToken cancellationToken)
   {
-    Region? region = await _pipeline.ExecuteAsync(new ReadRegionQuery(id, UniqueName: null), cancellationToken);
+    Region? region = await _pipeline.ExecuteAsync(new DeleteRegionCommand(id), cancellationToken);
     return region == null ? NotFound() : Ok(region);
   }
 

@@ -6,12 +6,10 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import MoveCategorySelect from "./MoveCategorySelect.vue";
-import PokemonTypeSelect from "@/components/pokemon/PokemonTypeSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError, PropertyError } from "@/types/api";
-import type { Move, CreateMovePayload } from "@/types/moves";
-import { createMove } from "@/api/moves";
+import type { CreateRegionPayload, Region } from "@/types/regions";
+import { createRegion } from "@/api/regions";
 import { useToastStore } from "@/stores/toast";
 
 const router = useRouter();
@@ -30,7 +28,7 @@ const props = withDefaults(
 );
 
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
-const payload = ref<CreateMovePayload>({ type: "Normal", category: "Status", uniqueName: "", powerPoints: 1, statisticChanges: [], statusConditions: [] });
+const payload = ref<CreateRegionPayload>({ uniqueName: "" });
 
 const modalId = computed<string>(() => `delete-modal_${props.id}`);
 
@@ -49,10 +47,10 @@ function onCancel(): void {
 }
 const onSubmit = handleSubmit(async () => {
   try {
-    const createdMove: Move = await createMove(payload.value);
+    const createdRegion: Region = await createRegion(payload.value);
     hide();
-    toasts.success("moves.created");
-    router.push({ name: "MoveEdit", params: { id: createdMove.id } });
+    toasts.success("regions.created");
+    router.push({ name: "RegionEdit", params: { id: createdRegion.id } });
   } catch (e: unknown) {
     const { status, data } = e as ApiError;
     if (status === 409 && (data as PropertyError)?.code === "UniqueNameAlreadyUsed") {
@@ -67,10 +65,8 @@ const onSubmit = handleSubmit(async () => {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#${modalId}`" />
-    <TarModal :close="t(close)" :id="modalId" ref="modalRef" :title="t('moves.title.new')">
+    <TarModal :close="t(close)" :id="modalId" ref="modalRef" :title="t('regions.title.new')">
       <form @submit.prevent="onSubmit">
-        <PokemonTypeSelect required v-model="payload.type" />
-        <MoveCategorySelect required v-model="payload.category" />
         <UniqueNameInput required v-model="payload.uniqueName" />
       </form>
       <template #footer>

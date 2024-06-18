@@ -7,51 +7,42 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateMove from "@/components/moves/CreateMove.vue";
-import MoveCategoryIcon from "@/components/moves/MoveCategoryIcon.vue";
-import MoveCategorySelect from "@/components/moves/MoveCategorySelect.vue";
-import PokemonTypeIcon from "@/components/pokemon/PokemonTypeIcon.vue";
-import PokemonTypeSelect from "@/components/pokemon/PokemonTypeSelect.vue";
+import CreateRegion from "@/components/regions/CreateRegion.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { Move, MoveCategory, MoveSort, SearchMovesPayload } from "@/types/moves";
-import type { PokemonType } from "@/types/pokemon";
+import type { Region, RegionSort, SearchRegionsPayload } from "@/types/regions";
 import { handleErrorKey } from "@/inject/App";
-import { searchMoves } from "@/api/moves";
+import { searchRegions } from "@/api/regions";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const { isEmpty } = objectUtils;
+const { rt, t, tm } = useI18n();
 const { orderBy } = arrayUtils;
 const { parseBoolean, parseNumber } = parsingUtils;
-const { n, rt, t, tm } = useI18n();
 
 const isLoading = ref<boolean>(false);
-const moves = ref<Move[]>([]);
+const regions = ref<Region[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
-const category = computed<MoveCategory>(() => (route.query.category?.toString() as MoveCategory) ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
-const type = computed<PokemonType>(() => (route.query.type?.toString() as PokemonType) ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("moves.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("regions.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 async function refresh(): Promise<void> {
-  const payload: SearchMovesPayload = {
-    type: type.value,
-    category: category.value,
+  const payload: SearchRegionsPayload = {
     ids: [],
     search: {
       terms: search.value
@@ -60,7 +51,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as MoveSort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as RegionSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -68,9 +59,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchMoves(payload);
+    const results = await searchRegions(payload);
     if (now === timestamp.value) {
-      moves.value = results.items;
+      regions.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -85,8 +76,6 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
-    case "type":
-    case "category":
     case "search":
     case "count":
       query.page = "1";
@@ -98,15 +87,13 @@ function setQuery(key: string, value: string): void {
 watch(
   () => route,
   (route) => {
-    if (route.name === "MoveList") {
+    if (route.name === "RegionList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
           ...route,
           query: isEmpty(query)
             ? {
-                type: "",
-                category: "",
                 search: "",
                 sort: "UpdatedOn",
                 isDescending: "true",
@@ -130,7 +117,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("moves.title.list") }}</h1>
+    <h1>{{ t("regions.title.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -141,11 +128,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <CreateMove @error="handleError" />
-    </div>
-    <div class="row">
-      <PokemonTypeSelect class="col-lg-6" :model-value="type" @update:model-value="setQuery('type', $event ?? '')" />
-      <MoveCategorySelect class="col-lg-6" :model-value="category" @update:model-value="setQuery('category', $event ?? '')" />
+      <CreateRegion :unique-name="search" @error="handleError" />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
@@ -159,43 +142,29 @@ watch(
       />
       <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="moves.length">
+    <template v-if="regions.length">
       <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">{{ t("names") }}</th>
-            <th scope="col">{{ t("moves.typeAndCategory") }}</th>
-            <th scope="col">{{ t("moves.sort.options.Accuracy") }}</th>
-            <th scope="col">{{ t("moves.sort.options.Power") }}</th>
-            <th scope="col">{{ t("moves.sort.options.PowerPoints") }}</th>
-            <th scope="col">{{ t("moves.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("regions.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="move in moves" :key="move.id">
+          <tr v-for="region in regions" :key="region.id">
             <td>
-              <RouterLink :to="{ name: 'MoveEdit', params: { id: move.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ move.uniqueName }} </RouterLink>
-              <template v-if="move.displayName">
+              <RouterLink :to="{ name: 'RegionEdit', params: { id: region.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ region.uniqueName }} </RouterLink>
+              <template v-if="region.displayName">
                 <br />
-                {{ move.displayName }}
+                {{ region.displayName }}
               </template>
             </td>
-            <td>
-              <PokemonTypeIcon size="20" :type="move.type" />
-              {{ t(`pokemon.type.options.${move.type}`) }}
-              <br />
-              <MoveCategoryIcon :category="move.category" size="20" />
-              {{ t(`moves.category.options.${move.category}`) }}
-            </td>
-            <td>{{ move.accuracy ? n(move.accuracy / 100, "percent") : "—" }}</td>
-            <td>{{ move.power ?? "—" }}</td>
-            <td>{{ move.powerPoints }}</td>
-            <td><StatusBlock :actor="move.updatedBy" :date="move.updatedOn" /></td>
+            <td><StatusBlock :actor="region.updatedBy" :date="region.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("moves.empty") }}</p>
+    <p v-else>{{ t("regions.empty") }}</p>
   </main>
 </template>
