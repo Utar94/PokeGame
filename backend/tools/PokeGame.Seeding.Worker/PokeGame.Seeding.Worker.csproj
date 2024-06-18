@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pokemon\Data\regions.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Portal\Templates\AccountAuthentication.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
