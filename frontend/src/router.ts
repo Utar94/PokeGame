@@ -54,6 +54,17 @@ const router = createRouter({
       path: "/moves/:id",
       component: () => import("./views/moves/MoveEdit.vue"),
     },
+    // Regions
+    {
+      name: "RegionList",
+      path: "/regions",
+      component: () => import("./views/regions/RegionList.vue"),
+    },
+    {
+      name: "RegionEdit",
+      path: "/regions/:id",
+      component: () => import("./views/regions/RegionEdit.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

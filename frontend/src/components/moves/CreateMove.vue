@@ -24,10 +24,8 @@ const props = withDefaults(
     id?: string;
   }>(),
   {
-    category: "Status",
     close: "actions.close",
     id: () => nanoid(),
-    type: "Normal",
   },
 );
 

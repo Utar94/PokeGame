@@ -6,7 +6,7 @@ namespace PokeGame.Application.Moves;
 
 public interface IMoveQuerier
 {
-  Task<Move> ReadAsync(MoveAggregate ability, CancellationToken cancellationToken = default);
+  Task<Move> ReadAsync(MoveAggregate move, CancellationToken cancellationToken = default);
   Task<Move?> ReadAsync(MoveId id, CancellationToken cancellationToken = default);
   Task<Move?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
   Task<Move?> ReadAsync(string uniqueName, CancellationToken cancellationToken = default);

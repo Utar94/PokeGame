@@ -3,6 +3,7 @@ using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Contracts.Moves;
+using PokeGame.Contracts.Regions;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore;
@@ -72,6 +73,21 @@ internal class Mapper
     {
       destination.StatusConditions.Add(new InflictedStatusCondition(statusCondition));
     }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Region ToRegion(RegionEntity source)
+  {
+    Region destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Reference = source.Reference,
+      Notes = source.Notes
+    };
 
     MapAggregate(source, destination);
 

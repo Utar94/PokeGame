@@ -141,7 +141,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <CreateMove :category="category" :type="type" :unique-name="search" @error="handleError" />
+      <CreateMove @error="handleError" />
     </div>
     <div class="row">
       <PokemonTypeSelect class="col-lg-6" :model-value="type" @update:model-value="setQuery('type', $event ?? '')" />

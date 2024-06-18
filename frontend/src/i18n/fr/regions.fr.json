@@ -1,0 +1,21 @@
+{
+  "created": "La région a été créée.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer la région suivante ?",
+    "title": "Supprimer la région"
+  },
+  "deleted": "La région a été supprimée.",
+  "empty": "Cette liste est vide.",
+  "sort": {
+    "options": {
+      "DisplayName": "Nom d’affichage",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": {
+    "list": "Régions",
+    "new": "Nouvelle région"
+  },
+  "updated": "La région a été enregistrée."
+}

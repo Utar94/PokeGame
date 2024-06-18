@@ -1,6 +1,6 @@
 import { urlUtils } from "logitar-js";
 
-import type { Move, CreateMovePayload, ReplaceMovePayload, SearchMovesPayload } from "@/types/moves";
+import type { CreateMovePayload, Move, ReplaceMovePayload, SearchMovesPayload } from "@/types/moves";
 import type { SearchResults } from "@/types/search";
 import { _delete, get, post, put } from ".";
 

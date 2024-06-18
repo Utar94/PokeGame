@@ -1,0 +1,72 @@
+﻿[
+  {
+    "UniqueName": "Kanto",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Kanto",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Johto",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Johto",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Hoenn",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Hoenn",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Sinnoh",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Unova",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Unova",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Kalos",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Kalos",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Alola",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Alola",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Galar",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Galar",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Hisui",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Hisui",
+    "Notes": null
+  },
+  {
+    "UniqueName": "Paldea",
+    "DisplayName": null,
+    "Description": null,
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Paldea",
+    "Notes": null
+  }
+]

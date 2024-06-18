@@ -4,7 +4,8 @@ import { describe, it, expect } from "vitest";
 import type { Ability } from "@/types/abilities";
 import type { Actor } from "@/types/actor";
 import type { Move } from "@/types/moves";
-import { formatAbility, formatMove } from "../displayUtils";
+import type { Region } from "@/types/regions";
+import { formatAbility, formatMove, formatRegion } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -83,5 +84,35 @@ describe("formatMove", () => {
       statusConditions: [{ statusCondition: "Flinch", chance: 20 }],
     };
     expect(formatMove(move)).toBe("DarkPulse");
+  });
+});
+
+describe("formatRegion", () => {
+  it.concurrent("should format correctly the region with display name", () => {
+    const region: Region = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      uniqueName: "kanto",
+      displayName: "Kanto",
+    };
+    expect(formatRegion(region)).toBe("Kanto (kanto)");
+  });
+
+  it.concurrent("should format correctly the region without display name", () => {
+    const region: Region = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      uniqueName: "Kanto",
+      displayName: undefined,
+    };
+    expect(formatRegion(region)).toBe("Kanto");
   });
 });
