@@ -2,12 +2,16 @@
 
 public interface IMedicineProperties
 {
-  /* TODO(fpion):
-   * - (2) HP restore: number and unit (value or %)
-   * - (1) Does it lower friendship?
-   * - (1) Does it revive fainted Pokémon?
-   * - (1) Cure one status condition
-   * - (1) Cure all status conditions
-   * - (3) PP restore: number and unit (value or %), to one or all moves
-   */
+  int? HitPoints { get; } // TODO(fpion): rename
+  bool IsHitPointPercentage { get; } // TODO(fpion): rename
+  bool IsReviveOrRemoveFainted { get; } // TODO(fpion): rename
+
+  string? RemoveStatusCondition { get; } // TODO(fpion): rename
+  bool RemoveAllStatusConditions { get; } // TODO(fpion): rename
+
+  int? PowerPoints { get; } // TODO(fpion): rename
+  bool IsPowerPointPercentage { get; } // TODO(fpion): rename
+  bool RestoreAllMovePowerPoints { get; } // TODO(fpion): rename
+
+  int? FriendshipPenalty { get; } // TODO(fpion): rename
 }

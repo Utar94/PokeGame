@@ -68,7 +68,18 @@ internal class Mapper
     switch (source.Category)
     {
       case ItemCategory.Medicine:
-        // TODO(fpion): implement
+        destination.Medicine = new MedicineProperties
+        {
+          HitPoints = source.TryGetInt32Property(nameof(IMedicineProperties.HitPoints)),
+          IsHitPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsHitPointPercentage)) ?? false,
+          IsReviveOrRemoveFainted = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsReviveOrRemoveFainted)) ?? false,
+          RemoveStatusCondition = source.TryGetStringProperty(nameof(IMedicineProperties.RemoveStatusCondition)),
+          RemoveAllStatusConditions = source.TryGetBooleanProperty(nameof(IMedicineProperties.RemoveAllStatusConditions)) ?? false,
+          PowerPoints = source.TryGetInt32Property(nameof(IMedicineProperties.PowerPoints)),
+          IsPowerPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsPowerPointPercentage)) ?? false,
+          RestoreAllMovePowerPoints = source.TryGetBooleanProperty(nameof(IMedicineProperties.RestoreAllMovePowerPoints)) ?? false,
+          FriendshipPenalty = source.TryGetInt32Property(nameof(IMedicineProperties.FriendshipPenalty))
+        };
         break;
       case ItemCategory.PokeBall:
         destination.PokeBall = new PokeBallProperties
