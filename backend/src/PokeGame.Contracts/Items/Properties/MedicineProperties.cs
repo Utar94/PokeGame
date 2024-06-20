@@ -6,7 +6,8 @@ public record MedicineProperties : IMedicineProperties
   {
   }
 
-  public MedicineProperties(IMedicineProperties medicine) : this()
+  public MedicineProperties(IMedicineProperties _) : this()
   {
+    // TODO(fpion): implement
   }
 }

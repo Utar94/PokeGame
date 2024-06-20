@@ -5,6 +5,7 @@ using Logitar.Identity.Contracts.Settings;
 using Logitar.Identity.Domain.Shared;
 using PokeGame.Contracts.Items;
 using PokeGame.Domain.Items.Events;
+using PokeGame.Domain.Items.Properties;
 using PokeGame.Domain.Items.Validators;
 
 namespace PokeGame.Domain.Items;
@@ -92,6 +93,9 @@ public class ItemAggregate : AggregateRoot
     }
   }
 
+  private ItemProperties? _properties = null;
+  public ItemProperties Properties => _properties ?? throw new InvalidOperationException($"The {nameof(Properties)} has not been initialized yet.");
+
   private UrlUnit? _reference = null;
   public UrlUnit? Reference
   {
@@ -146,6 +150,38 @@ public class ItemAggregate : AggregateRoot
     {
       Raise(new ItemDeletedEvent(), actorId);
     }
+  }
+
+  public void SetProperties(ReadOnlyMedicineProperties properties, ActorId actorId = default)
+  {
+    if (Category != ItemCategory.Medicine)
+    {
+      throw new ItemCategoryMismatchException(this, ItemCategory.Medicine);
+    }
+    else if (properties != _properties)
+    {
+      Raise(new MedicinePropertiesChangedEvent(properties), actorId);
+    }
+  }
+  protected virtual void Apply(MedicinePropertiesChangedEvent @event)
+  {
+    _properties = @event.Properties;
+  }
+
+  public void SetProperties(ReadOnlyPokeBallProperties properties, ActorId actorId = default)
+  {
+    if (Category != ItemCategory.PokeBall)
+    {
+      throw new ItemCategoryMismatchException(this, ItemCategory.PokeBall);
+    }
+    else if (properties != _properties)
+    {
+      Raise(new PokeBallPropertiesChangedEvent(properties), actorId);
+    }
+  }
+  protected virtual void Apply(PokeBallPropertiesChangedEvent @event)
+  {
+    _properties = @event.Properties;
   }
 
   public void Update(ActorId actorId = default)
