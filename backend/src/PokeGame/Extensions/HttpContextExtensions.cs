@@ -36,7 +36,7 @@ internal static class HttpContextExtensions
   public static Uri BuildLocation(this HttpContext context, string path, IEnumerable<KeyValuePair<string, string>> parameters)
   {
     UrlBuilder builder = new(context.GetBaseUri());
-    builder.SetPath(path);
+    builder.SetPath($"{path.TrimEnd('/')}/{{id}}");
     foreach (KeyValuePair<string, string> parameter in parameters)
     {
       builder.SetParameter(parameter.Key, parameter.Value);
