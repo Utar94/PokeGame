@@ -4,16 +4,16 @@ namespace PokeGame.Domain.Items.Properties;
 
 public record ReadOnlyMedicineProperties : ItemProperties, IMedicineProperties
 {
-  public int? HitPoints { get; }
+  public int? HitPointHealing { get; }
   public bool IsHitPointPercentage { get; }
-  public bool IsReviveOrRemoveFainted { get; }
+  public bool DoesReviveFainted { get; }
 
   public string? RemoveStatusCondition { get; }
   public bool RemoveAllStatusConditions { get; }
 
-  public int? PowerPoints { get; }
+  public int? RestorePowerPoints { get; }
   public bool IsPowerPointPercentage { get; }
-  public bool RestoreAllMovePowerPoints { get; }
+  public bool RestoreAllMoves { get; }
 
   public int? FriendshipPenalty { get; }
 
@@ -21,26 +21,26 @@ public record ReadOnlyMedicineProperties : ItemProperties, IMedicineProperties
   {
   }
 
-  public ReadOnlyMedicineProperties(IMedicineProperties medicine) : this(medicine.HitPoints, medicine.IsHitPointPercentage, medicine.IsReviveOrRemoveFainted,
-    medicine.RemoveStatusCondition, medicine.RemoveAllStatusConditions, medicine.PowerPoints, medicine.IsPowerPointPercentage, medicine.RestoreAllMovePowerPoints,
-    medicine.FriendshipPenalty) // TODO(fpion): rearrange
+  public ReadOnlyMedicineProperties(IMedicineProperties medicine) : this(medicine.HitPointHealing, medicine.IsHitPointPercentage, medicine.DoesReviveFainted,
+    medicine.RemoveStatusCondition, medicine.RemoveAllStatusConditions, medicine.RestorePowerPoints, medicine.IsPowerPointPercentage, medicine.RestoreAllMoves,
+    medicine.FriendshipPenalty)
   {
   }
 
-  public ReadOnlyMedicineProperties(int? hitPoints = null, bool isHitPointPercentage = false, bool isReviveOrRemoveFainted = false,
-    string? removeStatusCondition = null, bool removeAllStatusConditions = false, int? powerPoints = null, bool isPowerPointPercentage = false,
-    bool restoreAllMovePowerPoints = false, int? friendshipPenalty = null) // TODO(fpion): rename
+  public ReadOnlyMedicineProperties(int? hitPointHealing = null, bool isHitPointPercentage = false, bool doesReviveFainted = false,
+    string? removeStatusCondition = null, bool removeAllStatusConditions = false, int? restorePowerPoints = null, bool isPowerPointPercentage = false,
+    bool restoreAllMoves = false, int? friendshipPenalty = null)
   {
-    HitPoints = hitPoints;
+    HitPointHealing = hitPointHealing;
     IsHitPointPercentage = isHitPointPercentage;
-    IsReviveOrRemoveFainted = isReviveOrRemoveFainted;
+    DoesReviveFainted = doesReviveFainted;
 
     RemoveStatusCondition = removeStatusCondition;
     RemoveAllStatusConditions = removeAllStatusConditions;
 
-    PowerPoints = powerPoints;
+    RestorePowerPoints = restorePowerPoints;
     IsPowerPointPercentage = isPowerPointPercentage;
-    RestoreAllMovePowerPoints = restoreAllMovePowerPoints;
+    RestoreAllMoves = restoreAllMoves;
 
     FriendshipPenalty = friendshipPenalty;
   }

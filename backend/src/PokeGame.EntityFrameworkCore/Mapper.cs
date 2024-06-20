@@ -70,14 +70,14 @@ internal class Mapper
       case ItemCategory.Medicine:
         destination.Medicine = new MedicineProperties
         {
-          HitPoints = source.TryGetInt32Property(nameof(IMedicineProperties.HitPoints)),
+          HitPointHealing = source.TryGetInt32Property(nameof(IMedicineProperties.HitPointHealing)),
           IsHitPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsHitPointPercentage)) ?? false,
-          IsReviveOrRemoveFainted = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsReviveOrRemoveFainted)) ?? false,
+          DoesReviveFainted = source.TryGetBooleanProperty(nameof(IMedicineProperties.DoesReviveFainted)) ?? false,
           RemoveStatusCondition = source.TryGetStringProperty(nameof(IMedicineProperties.RemoveStatusCondition)),
           RemoveAllStatusConditions = source.TryGetBooleanProperty(nameof(IMedicineProperties.RemoveAllStatusConditions)) ?? false,
-          PowerPoints = source.TryGetInt32Property(nameof(IMedicineProperties.PowerPoints)),
+          RestorePowerPoints = source.TryGetInt32Property(nameof(IMedicineProperties.RestorePowerPoints)),
           IsPowerPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsPowerPointPercentage)) ?? false,
-          RestoreAllMovePowerPoints = source.TryGetBooleanProperty(nameof(IMedicineProperties.RestoreAllMovePowerPoints)) ?? false,
+          RestoreAllMoves = source.TryGetBooleanProperty(nameof(IMedicineProperties.RestoreAllMoves)) ?? false,
           FriendshipPenalty = source.TryGetInt32Property(nameof(IMedicineProperties.FriendshipPenalty))
         };
         break;

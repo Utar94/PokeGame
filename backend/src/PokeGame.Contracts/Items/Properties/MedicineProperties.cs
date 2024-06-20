@@ -2,16 +2,16 @@
 
 public record MedicineProperties : IMedicineProperties
 {
-  public int? HitPoints { get; set; }
+  public int? HitPointHealing { get; set; }
   public bool IsHitPointPercentage { get; set; }
-  public bool IsReviveOrRemoveFainted { get; set; }
+  public bool DoesReviveFainted { get; set; }
 
   public string? RemoveStatusCondition { get; set; }
   public bool RemoveAllStatusConditions { get; set; }
 
-  public int? PowerPoints { get; set; }
+  public int? RestorePowerPoints { get; set; }
   public bool IsPowerPointPercentage { get; set; }
-  public bool RestoreAllMovePowerPoints { get; set; }
+  public bool RestoreAllMoves { get; set; }
 
   public int? FriendshipPenalty { get; set; }
 
@@ -21,16 +21,16 @@ public record MedicineProperties : IMedicineProperties
 
   public MedicineProperties(IMedicineProperties medicine) : this()
   {
-    HitPoints = medicine.HitPoints;
+    HitPointHealing = medicine.HitPointHealing;
     IsHitPointPercentage = medicine.IsHitPointPercentage;
-    IsReviveOrRemoveFainted = medicine.IsReviveOrRemoveFainted;
+    DoesReviveFainted = medicine.DoesReviveFainted;
 
     RemoveStatusCondition = medicine.RemoveStatusCondition;
     RemoveAllStatusConditions = medicine.RemoveAllStatusConditions;
 
-    PowerPoints = medicine.PowerPoints;
+    RestorePowerPoints = medicine.RestorePowerPoints;
     IsPowerPointPercentage = medicine.IsPowerPointPercentage;
-    RestoreAllMovePowerPoints = medicine.RestoreAllMovePowerPoints;
+    RestoreAllMoves = medicine.RestoreAllMoves;
 
     FriendshipPenalty = medicine.FriendshipPenalty;
   }

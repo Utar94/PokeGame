@@ -59,14 +59,14 @@ internal class ItemEntity : AggregateEntity
     Update(@event);
 
     Properties.Clear();
-    SetProperty(nameof(IMedicineProperties.HitPoints), @event.Properties.HitPoints?.ToString());
+    SetProperty(nameof(IMedicineProperties.HitPointHealing), @event.Properties.HitPointHealing?.ToString());
     SetProperty(nameof(IMedicineProperties.IsHitPointPercentage), @event.Properties.IsHitPointPercentage.ToString());
-    SetProperty(nameof(IMedicineProperties.IsReviveOrRemoveFainted), @event.Properties.IsReviveOrRemoveFainted.ToString());
+    SetProperty(nameof(IMedicineProperties.DoesReviveFainted), @event.Properties.DoesReviveFainted.ToString());
     SetProperty(nameof(IMedicineProperties.RemoveStatusCondition), @event.Properties.RemoveStatusCondition?.ToString());
     SetProperty(nameof(IMedicineProperties.RemoveAllStatusConditions), @event.Properties.RemoveAllStatusConditions.ToString());
-    SetProperty(nameof(IMedicineProperties.PowerPoints), @event.Properties.PowerPoints?.ToString());
+    SetProperty(nameof(IMedicineProperties.RestorePowerPoints), @event.Properties.RestorePowerPoints?.ToString());
     SetProperty(nameof(IMedicineProperties.IsPowerPointPercentage), @event.Properties.IsPowerPointPercentage.ToString());
-    SetProperty(nameof(IMedicineProperties.RestoreAllMovePowerPoints), @event.Properties.RestoreAllMovePowerPoints.ToString());
+    SetProperty(nameof(IMedicineProperties.RestoreAllMoves), @event.Properties.RestoreAllMoves.ToString());
     SetProperty(nameof(IMedicineProperties.FriendshipPenalty), @event.Properties.FriendshipPenalty?.ToString());
   }
   public void SetProperties(PokeBallPropertiesChangedEvent @event)
