@@ -3,9 +3,10 @@ import { describe, it, expect } from "vitest";
 
 import type { Ability } from "@/types/abilities";
 import type { Actor } from "@/types/actor";
+import type { Item } from "@/types/items";
 import type { Move } from "@/types/moves";
 import type { Region } from "@/types/regions";
-import { formatAbility, formatMove, formatRegion } from "../displayUtils";
+import { formatAbility, formatItem, formatMove, formatRegion } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -44,6 +45,38 @@ describe("formatAbility", () => {
       displayName: undefined,
     };
     expect(formatAbility(ability)).toBe("AirLock");
+  });
+});
+
+describe("formatItem", () => {
+  it.concurrent("should format correctly the item with display name", () => {
+    const item: Item = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      category: "Medicine",
+      uniqueName: "potion",
+      displayName: "Potion",
+    };
+    expect(formatItem(item)).toBe("Potion (potion)");
+  });
+
+  it.concurrent("should format correctly the item without display name", () => {
+    const item: Item = {
+      id: nanoid(),
+      version: 1,
+      category: "Medicine",
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+      uniqueName: "Potion",
+      displayName: undefined,
+    };
+    expect(formatItem(item)).toBe("Potion");
   });
 });
 

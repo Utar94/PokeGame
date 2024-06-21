@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts;
+using PokeGame.Contracts.Items.Properties;
 
 namespace PokeGame.Contracts.Items;
 
@@ -12,19 +13,11 @@ public class Item : Aggregate
   public string? Description { get; set; }
   public string? Picture { get; set; }
 
+  public MedicineProperties? Medicine { get; set; }
+  public PokeBallProperties? PokeBall { get; set; }
+
   public string? Reference { get; set; }
   public string? Notes { get; set; }
-
-  /* Category: Medicine
-   * - HP restore, but lowers friendship, fully
-   * - StatusConditions: Burn, Freeze, Paralysis, Poison, Sleep (5/5), any non-volatile status conditions and confusion
-   * - PP restore to all moves, to one move, fully
-   * - Revive one or all fainted Pokémon, 50% HP or full HP
-   */
-
-  /* Category: PokeBall
-   * - Catch rate modifier
-   */
 
   public Item() : this(string.Empty)
   {

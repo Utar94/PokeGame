@@ -174,7 +174,7 @@ watch(
         <tbody>
           <tr v-for="move in moves" :key="move.id">
             <td>
-              <RouterLink :to="{ name: 'MoveEdit', params: { id: move.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ move.uniqueName }} </RouterLink>
+              <RouterLink :to="{ name: 'MoveEdit', params: { id: move.id } }"><font-awesome-icon icon="fas fa-edit" />{{ move.uniqueName }}</RouterLink>
               <template v-if="move.displayName">
                 <br />
                 {{ move.displayName }}

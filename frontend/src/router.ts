@@ -43,6 +43,17 @@ const router = createRouter({
       path: "/abilities/:id",
       component: () => import("./views/abilities/AbilityEdit.vue"),
     },
+    // Items
+    {
+      name: "ItemList",
+      path: "/items",
+      component: () => import("./views/items/ItemList.vue"),
+    },
+    {
+      name: "ItemEdit",
+      path: "/items/:id",
+      component: () => import("./views/items/ItemEdit.vue"),
+    },
     // Moves
     {
       name: "MoveList",

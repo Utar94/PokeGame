@@ -147,6 +147,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder statement = new();
     statement.AppendLine(SqlServerDeleteBuilder.From(PokemonDb.Regions.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(PokemonDb.Moves.Table).Build().Text);
+    statement.AppendLine(SqlServerDeleteBuilder.From(PokemonDb.Items.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(PokemonDb.Abilities.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(PokemonDb.Actors.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(EventDb.Events.Table).Build().Text);

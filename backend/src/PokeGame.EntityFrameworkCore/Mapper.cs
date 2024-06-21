@@ -2,6 +2,8 @@
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Contracts.Items;
+using PokeGame.Contracts.Items.Properties;
 using PokeGame.Contracts.Moves;
 using PokeGame.Contracts.Regions;
 using PokeGame.EntityFrameworkCore.Entities;
@@ -44,6 +46,48 @@ internal class Mapper
       Reference = source.Reference,
       Notes = source.Notes
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Item ToItem(ItemEntity source)
+  {
+    Item destination = new(source.UniqueName)
+    {
+      Category = source.Category,
+      Price = source.Price,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Picture = source.Picture,
+      Reference = source.Reference,
+      Notes = source.Notes
+    };
+
+    switch (source.Category)
+    {
+      case ItemCategory.Medicine:
+        destination.Medicine = new MedicineProperties
+        {
+          HitPointHealing = source.TryGetInt32Property(nameof(IMedicineProperties.HitPointHealing)),
+          IsHitPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsHitPointPercentage)) ?? false,
+          DoesReviveFainted = source.TryGetBooleanProperty(nameof(IMedicineProperties.DoesReviveFainted)) ?? false,
+          RemoveStatusCondition = source.TryGetStringProperty(nameof(IMedicineProperties.RemoveStatusCondition)),
+          RemoveAllStatusConditions = source.TryGetBooleanProperty(nameof(IMedicineProperties.RemoveAllStatusConditions)) ?? false,
+          RestorePowerPoints = source.TryGetInt32Property(nameof(IMedicineProperties.RestorePowerPoints)),
+          IsPowerPointPercentage = source.TryGetBooleanProperty(nameof(IMedicineProperties.IsPowerPointPercentage)) ?? false,
+          RestoreAllMoves = source.TryGetBooleanProperty(nameof(IMedicineProperties.RestoreAllMoves)) ?? false,
+          FriendshipPenalty = source.TryGetInt32Property(nameof(IMedicineProperties.FriendshipPenalty))
+        };
+        break;
+      case ItemCategory.PokeBall:
+        destination.PokeBall = new PokeBallProperties
+        {
+          CatchRateModifier = source.TryGetDoubleProperty(nameof(IPokeBallProperties.CatchRateModifier))
+        };
+        break;
+    }
 
     MapAggregate(source, destination);
 

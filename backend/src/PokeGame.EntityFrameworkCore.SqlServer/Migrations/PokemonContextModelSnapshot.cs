@@ -152,6 +152,166 @@ namespace PokeGame.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("Actors", (string)null);
                 });
 
+            modelBuilder.Entity("PokeGame.EntityFrameworkCore.Entities.ItemCategoryEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("ItemCategoryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ItemCategories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 0,
+                            Name = "Medicine"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "PokeBall"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BattleItem"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Berry"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "OtherItem"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "TM"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Treasure"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "KeyItem"
+                        });
+                });
+
+            modelBuilder.Entity("PokeGame.EntityFrameworkCore.Entities.ItemEntity", b =>
+                {
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Picture")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<int?>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PropertiesSerialized")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Properties");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ItemId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("Price");
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UniqueNameNormalized")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.ToTable("Items", (string)null);
+                });
+
             modelBuilder.Entity("PokeGame.EntityFrameworkCore.Entities.LogEntity", b =>
                 {
                     b.Property<long>("LogId")

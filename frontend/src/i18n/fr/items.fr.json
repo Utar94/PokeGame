@@ -1,0 +1,55 @@
+{
+  "category": {
+    "icon": "Icône de {category}",
+    "label": "Catégorie",
+    "options": {
+      "BattleItem": "TODO: Battle Item",
+      "Berry": "TODO: Berry",
+      "KeyItem": "TODO: Key Item",
+      "Medicine": "TODO: Medicine",
+      "OtherItem": "TODO: Other Item",
+      "PokeBall": "TODO: Poké Ball",
+      "TM": "TODO: TM",
+      "Treasure": "TODO: Treasure"
+    },
+    "placeholder": "Sélectionnez une catégorie"
+  },
+  "created": "L’article a été créé.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer l’article suivant ?",
+    "title": "Supprimer l’article"
+  },
+  "deleted": "L’article a été supprimé.",
+  "empty": "Cette liste est vide.",
+  "price": "Prix",
+  "properties": {
+    "label": "Propriétés",
+    "medicine": {
+      "doesReviveFainted": "TODO: Revives fainted?",
+      "friendshipPenalty": "TODO: Friendship Penalty",
+      "hitPointHealing": "TODO: Hit Point Healing",
+      "isHitPointPercentage": "TODO: Is percentage?",
+      "isPowerPointPercentage": "TODO: Is percentage?",
+      "removeAllStatusConditions": "TODO: Remove all status conditions",
+      "removeStatusCondition": "TODO: Remove status condition",
+      "restoreAllMoves": "TODO: Restore all moves?",
+      "restorePowerPoints": "TODO: Restore Power Points"
+    },
+    "pokeBall": {
+      "catchRateModifier": "TODO: Catch Rate Modifier"
+    }
+  },
+  "sort": {
+    "options": {
+      "DisplayName": "Nom d’affichage",
+      "Price": "Prix",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": {
+    "list": "Articles",
+    "new": "Nouvel article"
+  },
+  "updated": "L’article a été enregistré."
+}

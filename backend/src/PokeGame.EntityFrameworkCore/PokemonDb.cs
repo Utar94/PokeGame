@@ -39,6 +39,37 @@ internal static class PokemonDb
     public static readonly ColumnId Type = new(nameof(ActorEntity.Type), Table);
   }
 
+  public static class ItemCategories
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.ItemCategories));
+
+    public static readonly ColumnId ItemCategoryId = new("ItemCategoryId", Table);
+    public static readonly ColumnId Name = new("Name", Table);
+  }
+
+  public static class Items
+  {
+    public static readonly TableId Table = new(nameof(PokemonContext.Items));
+
+    public static readonly ColumnId AggregateId = new(nameof(ItemEntity.AggregateId), Table);
+    public static readonly ColumnId Category = new(nameof(ItemEntity.Category), Table);
+    public static readonly ColumnId CreatedBy = new(nameof(ItemEntity.CreatedBy), Table);
+    public static readonly ColumnId CreatedOn = new(nameof(ItemEntity.CreatedOn), Table);
+    public static readonly ColumnId Description = new(nameof(ItemEntity.Description), Table);
+    public static readonly ColumnId DisplayName = new(nameof(ItemEntity.DisplayName), Table);
+    public static readonly ColumnId ItemId = new(nameof(ItemEntity.ItemId), Table);
+    public static readonly ColumnId Notes = new(nameof(ItemEntity.Notes), Table);
+    public static readonly ColumnId Picture = new(nameof(ItemEntity.Picture), Table);
+    public static readonly ColumnId Price = new(nameof(ItemEntity.Price), Table);
+    public static readonly ColumnId Properties = new(nameof(ItemEntity.Properties), Table);
+    public static readonly ColumnId Reference = new(nameof(ItemEntity.Reference), Table);
+    public static readonly ColumnId UniqueName = new(nameof(ItemEntity.UniqueName), Table);
+    public static readonly ColumnId UniqueNameNormalized = new(nameof(ItemEntity.UniqueNameNormalized), Table);
+    public static readonly ColumnId UpdatedBy = new(nameof(ItemEntity.UpdatedBy), Table);
+    public static readonly ColumnId UpdatedOn = new(nameof(ItemEntity.UpdatedOn), Table);
+    public static readonly ColumnId Version = new(nameof(ItemEntity.Version), Table);
+  }
+
   public static class LogEvents
   {
     public static readonly TableId Table = new(nameof(PokemonContext.LogEvents));
@@ -105,7 +136,7 @@ internal static class PokemonDb
   {
     public static readonly TableId Table = new(nameof(PokemonContext.Moves));
 
-    public static readonly ColumnId Accuracy = new(nameof(MoveEntity.AggregateId), Table);
+    public static readonly ColumnId Accuracy = new(nameof(MoveEntity.Accuracy), Table);
     public static readonly ColumnId AggregateId = new(nameof(MoveEntity.AggregateId), Table);
     public static readonly ColumnId Category = new(nameof(MoveEntity.Category), Table);
     public static readonly ColumnId CreatedBy = new(nameof(MoveEntity.CreatedBy), Table);
@@ -139,7 +170,6 @@ internal static class PokemonDb
   {
     public static readonly TableId Table = new(nameof(PokemonContext.Regions));
 
-    public static readonly ColumnId Accuracy = new(nameof(RegionEntity.AggregateId), Table);
     public static readonly ColumnId AggregateId = new(nameof(RegionEntity.AggregateId), Table);
     public static readonly ColumnId CreatedBy = new(nameof(RegionEntity.CreatedBy), Table);
     public static readonly ColumnId CreatedOn = new(nameof(RegionEntity.CreatedOn), Table);

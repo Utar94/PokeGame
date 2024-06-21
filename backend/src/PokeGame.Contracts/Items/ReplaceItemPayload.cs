@@ -1,4 +1,6 @@
-﻿namespace PokeGame.Contracts.Items;
+﻿using PokeGame.Contracts.Items.Properties;
+
+namespace PokeGame.Contracts.Items;
 
 public record ReplaceItemPayload
 {
@@ -8,6 +10,9 @@ public record ReplaceItemPayload
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
   public string? Picture { get; set; }
+
+  public MedicineProperties? Medicine { get; set; }
+  public PokeBallProperties? PokeBall { get; set; }
 
   public string? Reference { get; set; }
   public string? Notes { get; set; }

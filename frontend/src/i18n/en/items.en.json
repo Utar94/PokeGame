@@ -1,0 +1,55 @@
+{
+  "category": {
+    "icon": "{category} icon",
+    "label": "Category",
+    "options": {
+      "BattleItem": "Battle Item",
+      "Berry": "Berry",
+      "KeyItem": "Key Item",
+      "Medicine": "Medicine",
+      "OtherItem": "Other Item",
+      "PokeBall": "Poké Ball",
+      "TM": "TM",
+      "Treasure": "Treasure"
+    },
+    "placeholder": "Select a category"
+  },
+  "created": "The item has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following item?",
+    "title": "Delete item"
+  },
+  "deleted": "The item has been deleted.",
+  "empty": "This list is empty.",
+  "price": "Price",
+  "properties": {
+    "label": "Properties",
+    "medicine": {
+      "doesReviveFainted": "Revives fainted?",
+      "friendshipPenalty": "Friendship Penalty",
+      "hitPointHealing": "Hit Point Healing",
+      "isHitPointPercentage": "Is percentage?",
+      "isPowerPointPercentage": "Is percentage?",
+      "removeAllStatusConditions": "Remove all status conditions",
+      "removeStatusCondition": "Remove status condition",
+      "restoreAllMoves": "Restore all moves?",
+      "restorePowerPoints": "Restore Power Points"
+    },
+    "pokeBall": {
+      "catchRateModifier": "Catch Rate Modifier"
+    }
+  },
+  "sort": {
+    "options": {
+      "DisplayName": "Display name",
+      "Price": "Price",
+      "UniqueName": "Unique name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": {
+    "list": "Items",
+    "new": "New item"
+  },
+  "updated": "The item has been updated."
+}
