@@ -36,6 +36,7 @@ internal class Worker : BackgroundService
     await _publisher.Publish(new SeedUsersCommand(), cancellationToken);
 
     await _publisher.Publish(new SeedAbilitiesCommand(), cancellationToken);
+    await _publisher.Publish(new SeedItemsCommand(), cancellationToken);
     await _publisher.Publish(new SeedMovesCommand(), cancellationToken);
     await _publisher.Publish(new SeedRegionsCommand(), cancellationToken);
 

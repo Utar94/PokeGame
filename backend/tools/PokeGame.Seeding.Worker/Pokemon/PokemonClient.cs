@@ -3,6 +3,7 @@ using Logitar.Portal.Client;
 using Logitar.Portal.Contracts.Errors;
 using Logitar.Portal.Contracts.Search;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Contracts.Items;
 using PokeGame.Contracts.Moves;
 using PokeGame.Contracts.Regions;
 
@@ -15,6 +16,8 @@ internal class PokemonClient : IPokemonClient
 
   private const string AbilitiesPath = "/abilities";
   private static readonly Uri AbilitiesUri = new(AbilitiesPath, UriKind.Relative);
+  private const string ItemsPath = "/items";
+  private static readonly Uri ItemsUri = new(ItemsPath, UriKind.Relative);
   private const string MovesPath = "/moves";
   private static readonly Uri MovesUri = new(MovesPath, UriKind.Relative);
   private const string RegionsPath = "/regions";
@@ -34,6 +37,12 @@ internal class PokemonClient : IPokemonClient
       ?? throw CreateInvalidApiResponseException(nameof(CreateAbilityAsync), HttpMethod.Post, AbilitiesUri, payload);
   }
 
+  public async Task<Item> CreateItemAsync(CreateItemPayload payload, CancellationToken cancellationToken)
+  {
+    return await SendAsync<Item>(HttpMethod.Post, ItemsUri, payload, cancellationToken)
+      ?? throw CreateInvalidApiResponseException(nameof(CreateItemAsync), HttpMethod.Post, ItemsUri, payload);
+  }
+
   public async Task<Move> CreateMoveAsync(CreateMovePayload payload, CancellationToken cancellationToken)
   {
     return await SendAsync<Move>(HttpMethod.Post, MovesUri, payload, cancellationToken)
@@ -43,13 +52,19 @@ internal class PokemonClient : IPokemonClient
   public async Task<Region> CreateRegionAsync(CreateRegionPayload payload, CancellationToken cancellationToken)
   {
     return await SendAsync<Region>(HttpMethod.Post, RegionsUri, payload, cancellationToken)
-      ?? throw CreateInvalidApiResponseException(nameof(CreateRegionAsync), HttpMethod.Post, MovesUri, payload);
+      ?? throw CreateInvalidApiResponseException(nameof(CreateRegionAsync), HttpMethod.Post, RegionsUri, payload);
   }
 
   public async Task<Ability?> ReplaceAbilityAsync(Guid id, ReplaceAbilityPayload payload, long? version, CancellationToken cancellationToken)
   {
     Uri uri = new UrlBuilder().SetPath($"{AbilitiesPath}/{id}").SetVersion(version).BuildUri(UriKind.Relative);
     return await SendAsync<Ability>(HttpMethod.Put, uri, payload, cancellationToken);
+  }
+
+  public async Task<Item?> ReplaceItemAsync(Guid id, ReplaceItemPayload payload, long? version, CancellationToken cancellationToken)
+  {
+    Uri uri = new UrlBuilder().SetPath($"{ItemsPath}/{id}").SetVersion(version).BuildUri(UriKind.Relative);
+    return await SendAsync<Item>(HttpMethod.Put, uri, payload, cancellationToken);
   }
 
   public async Task<Move?> ReplaceMoveAsync(Guid id, ReplaceMovePayload payload, long? version, CancellationToken cancellationToken)
@@ -69,6 +84,18 @@ internal class PokemonClient : IPokemonClient
     Uri uri = new UrlBuilder().SetPath(AbilitiesPath).SetQuery(payload).BuildUri(UriKind.Relative);
     return await SendAsync<SearchResults<Ability>>(HttpMethod.Get, uri, content: null, cancellationToken)
       ?? throw CreateInvalidApiResponseException(nameof(SearchAbilitiesAsync), HttpMethod.Get, uri, content: null);
+  }
+
+  public async Task<SearchResults<Item>> SearchItemsAsync(SearchItemsPayload payload, CancellationToken cancellationToken)
+  {
+    IUrlBuilder builder = new UrlBuilder().SetPath(ItemsPath).SetQuery(payload);
+    if (payload.Category.HasValue)
+    {
+      builder.SetQuery("category", payload.Category.Value.ToString());
+    }
+    Uri uri = builder.BuildUri(UriKind.Relative);
+    return await SendAsync<SearchResults<Item>>(HttpMethod.Get, uri, content: null, cancellationToken)
+      ?? throw CreateInvalidApiResponseException(nameof(SearchItemsAsync), HttpMethod.Get, uri, content: null);
   }
 
   public async Task<SearchResults<Move>> SearchMovesAsync(SearchMovesPayload payload, CancellationToken cancellationToken)

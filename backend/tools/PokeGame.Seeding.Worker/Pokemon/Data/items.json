@@ -1,0 +1,136 @@
+﻿[
+  {
+    "Category": "Medicine",
+    "Price": 200,
+    "UniqueName": "Potion",
+    "Description": "A spray-type medicine for treating wounds. It can be used to restore 20 HP to a Pokémon.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/9/99/Potion_SV.png",
+    "Medicine": {
+      "HitPointHealing": 20
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Potion"
+  },
+  {
+    "Category": "Medicine",
+    "Price": 2000,
+    "UniqueName": "Revive",
+    "Description": "A medicine that can be used to revive a Pokémon that has fainted. It also restores half the Pokémon's max HP.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/3/34/Revive_SV.png",
+    "Medicine": {
+      "HitPointHealing": 50,
+      "IsHitPointPercentage": true,
+      "DoesReviveFainted": true
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Revive"
+  },
+  {
+    "Category": "Medicine",
+    "Price": 200,
+    "UniqueName": "Antidote",
+    "Description": "A spray-type medicine for treating poisoning. It can be used to lift the effects of being poisoned from a Pokémon.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/4/4d/Bag_Antidote_SV_Sprite.png",
+    "Medicine": {
+      "RemoveStatusCondition": "Poison"
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Antidote"
+  },
+  {
+    "Category": "Medicine",
+    "Price": 300,
+    "UniqueName": "HealPowder",
+    "DisplayName": "Heal Powder",
+    "Description": "A very bitter medicinal powder. It can be used to cure any status condition a Pokémon may have.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/6/6e/Bag_Heal_Powder_SV_Sprite.png",
+    "Medicine": {
+      "RemoveAllStatusConditions": true,
+      "FriendshipPenalty": 10
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Full_Heal"
+  },
+  {
+    "Category": "Medicine",
+    "UniqueName": "Ether",
+    "Description": "A medicine that can be used to restore 10 PP to a single move that a Pokémon knows.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/4/46/Ether_SV.png",
+    "Medicine": {
+      "RestorePowerPoints": 10
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Ether"
+  },
+  {
+    "Category": "Medicine",
+    "UniqueName": "MaxElixir",
+    "DisplayName": "Max Elixir",
+    "Description": "A medicine that can be used to fully restore the max PP of all four moves that a Pokémon knows.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/c/cb/Bag_Max_Elixir_SV_Sprite.png",
+    "Medicine": {
+      "RestorePowerPoints": 100,
+      "IsPowerPointPercentage": true,
+      "RestoreAllMoves": true
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Max_Elixir"
+  },
+  {
+    "Category": "PokeBall",
+    "Price": 200,
+    "UniqueName": "PokeBall",
+    "DisplayName": "Poké Ball",
+    "Description": " device for catching wild Pokémon. It's thrown like a ball at a Pokémon, comfortably encapsulating its target.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/0/00/Bag_Pok%C3%A9_Ball_SV_Sprite.png",
+    "PokeBall": {
+      "CatchRateModifier": 1
+    },
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9_Ball",
+    "Notes": "Must be in the player's Bag with an empty space in the party to obtain a Shedinja when Nincada evolves from Generation IV onwards."
+  },
+  {
+    "Category": "BattleItem",
+    "Price": 1000,
+    "UniqueName": "XAttack",
+    "DisplayName": "X Attack",
+    "Description": "An item that sharply boosts the Attack stat of a Pokémon in battle. This effect disappears if the Pokémon leaves the battle.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/8/83/Bag_X_Attack_SV_Sprite.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/X_Attack",
+    "Notes": "When used from the Bag during battle, it raises the Attack of a Pokémon currently in battle by 2 levels. It also increases the Pokémon's friendship a little."
+  },
+  {
+    "Category": "Berry",
+    "UniqueName": "OranBerry",
+    "DisplayName": "Oran Berry",
+    "Description": "If a Pokémon holds one of these Berries, it will be able to restore 10 HP to itself.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/2/2d/Bag_Oran_Berry_SV_Sprite.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Oran_Berry"
+  },
+  {
+    "Category": "OtherItem",
+    "Price": 3000,
+    "UniqueName": "MetalCoat",
+    "DisplayName": "Metal Coat",
+    "Description": "An item to be held by a Pokémon. It's a special metallic coating that boosts the power of the holder's Steel-type moves.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/7/7e/Bag_Metal_Coat_SV_Sprite.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Metal_Coat"
+  },
+  {
+    "Category": "TM",
+    "UniqueName": "TM001TakeDown",
+    "DisplayName": "TM001 Take Down",
+    "Description": "A reckless full-body charge attack for slamming into the target. This also damages the user a little.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/5/5b/TM_artwork_RTDX.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Take_Down_(move)"
+  },
+  {
+    "Category": "Treasure",
+    "UniqueName": "Nugget",
+    "Description": "A nugget of pure gold that gives off a lustrous gleam. It can be sold at a high price to shops.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/2/23/Nugget_SV.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Nugget"
+  },
+  {
+    "Category": "KeyItem",
+    "UniqueName": "OldRod",
+    "DisplayName": "Old Rod",
+    "Description": "An old and beat-up fishing rod. Use it at bodies of water to fish for Pokémon.",
+    "Picture": "https://archives.bulbagarden.net/media/upload/7/7e/Old_Rod_XYORAS.png",
+    "Reference": "https://bulbapedia.bulbagarden.net/wiki/Old_Rod"
+  }
+]

@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pokemon\Data\items.json" />
     <_ContentIncludedByDefault Remove="Pokemon\Data\regions.json" />
   </ItemGroup>
 
