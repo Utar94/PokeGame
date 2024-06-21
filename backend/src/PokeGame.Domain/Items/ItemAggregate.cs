@@ -93,8 +93,7 @@ public class ItemAggregate : AggregateRoot
     }
   }
 
-  private ItemProperties? _properties = null;
-  public ItemProperties Properties => _properties ?? throw new InvalidOperationException($"The {nameof(Properties)} has not been initialized yet.");
+  public ItemProperties? Properties { get; private set; }
 
   private UrlUnit? _reference = null;
   public UrlUnit? Reference
@@ -158,14 +157,14 @@ public class ItemAggregate : AggregateRoot
     {
       throw new ItemCategoryMismatchException(this, ItemCategory.Medicine);
     }
-    else if (properties != _properties)
+    else if (properties != Properties)
     {
       Raise(new MedicinePropertiesChangedEvent(properties), actorId);
     }
   }
   protected virtual void Apply(MedicinePropertiesChangedEvent @event)
   {
-    _properties = @event.Properties;
+    Properties = @event.Properties;
   }
 
   public void SetProperties(ReadOnlyPokeBallProperties properties, ActorId actorId = default)
@@ -174,14 +173,14 @@ public class ItemAggregate : AggregateRoot
     {
       throw new ItemCategoryMismatchException(this, ItemCategory.PokeBall);
     }
-    else if (properties != _properties)
+    else if (properties != Properties)
     {
       Raise(new PokeBallPropertiesChangedEvent(properties), actorId);
     }
   }
   protected virtual void Apply(PokeBallPropertiesChangedEvent @event)
   {
-    _properties = @event.Properties;
+    Properties = @event.Properties;
   }
 
   public void Update(ActorId actorId = default)
