@@ -17,7 +17,7 @@ public class ItemUpdatedEvent : DomainEvent, INotification
   public Modification<UrlUnit>? Reference { get; set; }
   public Modification<NotesUnit>? Notes { get; set; }
 
-  public bool HasChanges => Picture != null
+  public bool HasChanges => Price != null
     || UniqueName != null || DisplayName != null || Description != null || Picture != null
     || Reference != null || Notes != null;
 }

@@ -153,7 +153,7 @@ watch(
         <tbody>
           <tr v-for="region in regions" :key="region.id">
             <td>
-              <RouterLink :to="{ name: 'RegionEdit', params: { id: region.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ region.uniqueName }} </RouterLink>
+              <RouterLink :to="{ name: 'RegionEdit', params: { id: region.id } }"><font-awesome-icon icon="fas fa-edit" />{{ region.uniqueName }}</RouterLink>
               <template v-if="region.displayName">
                 <br />
                 {{ region.displayName }}

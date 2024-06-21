@@ -1,4 +1,6 @@
-﻿using PokeGame.Contracts.Items.Properties;
+﻿using FluentValidation;
+using PokeGame.Contracts.Items.Properties;
+using PokeGame.Domain.Items.Validators;
 
 namespace PokeGame.Domain.Items.Properties;
 
@@ -27,6 +29,7 @@ public record ReadOnlyMedicineProperties : ItemProperties, IMedicineProperties
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyMedicineProperties(int? hitPointHealing = null, bool isHitPointPercentage = false, bool doesReviveFainted = false,
     string? removeStatusCondition = null, bool removeAllStatusConditions = false, int? restorePowerPoints = null, bool isPowerPointPercentage = false,
     bool restoreAllMoves = false, int? friendshipPenalty = null)
@@ -35,7 +38,7 @@ public record ReadOnlyMedicineProperties : ItemProperties, IMedicineProperties
     IsHitPointPercentage = isHitPointPercentage;
     DoesReviveFainted = doesReviveFainted;
 
-    RemoveStatusCondition = removeStatusCondition;
+    RemoveStatusCondition = string.IsNullOrWhiteSpace(removeStatusCondition) ? null : new StatusCondition(removeStatusCondition).Value;
     RemoveAllStatusConditions = removeAllStatusConditions;
 
     RestorePowerPoints = restorePowerPoints;
@@ -43,5 +46,7 @@ public record ReadOnlyMedicineProperties : ItemProperties, IMedicineProperties
     RestoreAllMoves = restoreAllMoves;
 
     FriendshipPenalty = friendshipPenalty;
+
+    new MedicinePropertiesValidator().ValidateAndThrow(this);
   }
 }

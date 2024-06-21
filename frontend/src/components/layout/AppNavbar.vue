@@ -101,6 +101,9 @@ watchEffect(() => {
               <RouterLink :to="{ name: 'AbilityList' }" class="nav-link"><font-awesome-icon icon="fas fa-tools" /> {{ t("abilities.title.list") }}</RouterLink>
             </li>
             <li class="nav-item">
+              <RouterLink :to="{ name: 'ItemList' }" class="nav-link"><font-awesome-icon icon="fas fa-shopping-cart" /> {{ t("items.title.list") }}</RouterLink>
+            </li>
+            <li class="nav-item">
               <RouterLink :to="{ name: 'MoveList' }" class="nav-link"><font-awesome-icon icon="fas fa-magic" /> {{ t("moves.title.list") }}</RouterLink>
             </li>
             <li class="nav-item">

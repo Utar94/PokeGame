@@ -25,6 +25,7 @@
   <ItemGroup>
     <Using Include="System.Collections.Immutable" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
 </Project>

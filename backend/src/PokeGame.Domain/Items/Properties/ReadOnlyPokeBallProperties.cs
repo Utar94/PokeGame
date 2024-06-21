@@ -1,4 +1,6 @@
-﻿using PokeGame.Contracts.Items.Properties;
+﻿using FluentValidation;
+using PokeGame.Contracts.Items.Properties;
+using PokeGame.Domain.Items.Validators;
 
 namespace PokeGame.Domain.Items.Properties;
 
@@ -14,8 +16,10 @@ public record ReadOnlyPokeBallProperties : ItemProperties, IPokeBallProperties
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyPokeBallProperties(double? catchRateModifier)
   {
     CatchRateModifier = catchRateModifier;
+    new PokeBallPropertiesValidator().ValidateAndThrow(this);
   }
 }
