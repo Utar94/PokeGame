@@ -1,3 +1,6 @@
 ﻿namespace PokeGame.Contracts.Abilities;
 
-public enum AbilityKind;
+public enum AbilityKind
+{
+  Adaptability
+}
