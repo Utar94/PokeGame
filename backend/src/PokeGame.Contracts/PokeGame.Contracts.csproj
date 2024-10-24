@@ -14,4 +14,8 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Logitar.Portal.Contracts" Version="4.1.1" />
+  </ItemGroup>
+
 </Project>
