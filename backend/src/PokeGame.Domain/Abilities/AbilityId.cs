@@ -10,6 +10,9 @@ public readonly struct AbilityId
   public AbilityId(Guid value) : this(new AggregateId(value))
   {
   }
+  public AbilityId(string value) : this(new AggregateId(value))
+  {
+  }
   public AbilityId(AggregateId aggregateId)
   {
     AggregateId = aggregateId;
