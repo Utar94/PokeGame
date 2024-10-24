@@ -17,6 +17,8 @@ public readonly struct AbilityId
 
   public static AbilityId NewId() => new(AggregateId.NewId());
 
+  public Guid ToGuid() => AggregateId.ToGuid();
+
   public static bool operator ==(AbilityId left, AbilityId right) => left.Equals(right);
   public static bool operator !=(AbilityId left, AbilityId right) => !left.Equals(right);
 
