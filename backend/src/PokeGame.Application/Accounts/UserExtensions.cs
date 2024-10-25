@@ -7,7 +7,7 @@ using PokeGame.Contracts.Accounts;
 
 namespace PokeGame.Application.Accounts;
 
-internal static class UserExtensions
+public static class UserExtensions
 {
   private const string MultiFactorAuthenticationModeKey = nameof(MultiFactorAuthenticationMode);
   private const string ProfileCompletedOnKey = "ProfileCompletedOn";

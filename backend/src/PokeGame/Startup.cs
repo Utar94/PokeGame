@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Portal.Client;
 using PokeGame.Application;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
@@ -60,6 +61,8 @@ internal class Startup : StartupBase
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
     services.AddPokeGameWithMongoDB(_configuration);
+
+    services.AddLogitarPortalClient(_configuration);
   }
 
   public override void Configure(IApplicationBuilder builder)

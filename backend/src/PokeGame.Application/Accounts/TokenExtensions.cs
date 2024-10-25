@@ -5,7 +5,7 @@ using PokeGame.Application.Accounts.Constants;
 
 namespace PokeGame.Application.Accounts;
 
-internal static class TokenExtensions
+public static class TokenExtensions
 {
   private const string PhoneExtensionPrefix = ";ext=";
 
