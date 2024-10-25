@@ -20,4 +20,6 @@ public class AbilityModel : Aggregate
   {
     Name = name;
   }
+
+  public override string ToString() => $"{Name} | {base.ToString()}";
 }
