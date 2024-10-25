@@ -52,4 +52,6 @@ internal class AbilityEntity : AggregateEntity
       Notes = @event.Notes.Value?.Value;
     }
   }
+
+  public override string ToString() => $"{Name} | {base.ToString()}";
 }
