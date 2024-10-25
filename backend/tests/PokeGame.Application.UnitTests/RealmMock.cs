@@ -21,7 +21,7 @@ internal class RealmMock : Realm
     DisplayName = "PokéGame";
     Description = "This is the realm of the Pokémon game management Web application.";
 
-    DefaultLocale = new Locale("fr");
+    DefaultLocale = new Locale("en");
     Url = "https://pokegame.francispion.ca";
   }
 }

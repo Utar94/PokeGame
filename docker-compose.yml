@@ -77,6 +77,20 @@ services:
     ports:
       - 8092:8080
 
+  pokegame_seeding:
+    build:
+      context: ./backend
+      dockerfile: /tools/PokeGame.Seeding.Worker/Dockerfile
+    image: pokegame_seeding
+    container_name: PokeGame_seeding
+    depends_on:
+      - pokegame_portal
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      Portal:BaseUrl: http://pokegame_portal:8080
+      POSTGRESQLCONNSTR_PokeGame: "User ID=postgres;Password=vqeDP6bsg54zXSBQ;Host=pokegame_postgres;Port=5432;Database=pokegame;"
+      SQLCONNSTR_PokeGame: "Server=pokegame_mssql;Database=PokeGame;User Id=SA;Password=hBFNJkgn5eR98btr;Persist Security Info=False;Encrypt=False;"
+
 volumes:
   mongo_data:
   mssql_backup:
