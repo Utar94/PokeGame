@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Domain.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Application.UnitTests", "tests\PokeGame.Application.UnitTests\PokeGame.Application.UnitTests.csproj", "{06991054-8A52-4667-B6FA-3C33C24E67E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.MongoDB", "src\PokeGame.MongoDB\PokeGame.MongoDB.csproj", "{555CBA69-7433-4183-BCFC-A848E5E83EBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{06991054-8A52-4667-B6FA-3C33C24E67E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06991054-8A52-4667-B6FA-3C33C24E67E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06991054-8A52-4667-B6FA-3C33C24E67E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{555CBA69-7433-4183-BCFC-A848E5E83EBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555CBA69-7433-4183-BCFC-A848E5E83EBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555CBA69-7433-4183-BCFC-A848E5E83EBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555CBA69-7433-4183-BCFC-A848E5E83EBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

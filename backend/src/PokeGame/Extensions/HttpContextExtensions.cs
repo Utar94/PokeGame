@@ -4,9 +4,9 @@ using Logitar.Portal.Contracts.ApiKeys;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
 using Microsoft.Extensions.Primitives;
+using PokeGame.Application.Logging;
 using PokeGame.Constants;
 using PokeGame.Settings;
-using System.Text.Json;
 
 namespace PokeGame.Extensions;
 
@@ -85,14 +85,17 @@ internal static class HttpContextExtensions
   public static void SetApiKey(this HttpContext context, ApiKey? apiKey)
   {
     context.SetItem(ApiKeyKey, apiKey);
+    context.GetLoggingService().SetApiKey(apiKey);
   }
   public static void SetSession(this HttpContext context, Session? session)
   {
     context.SetItem(SessionKey, session);
+    context.GetLoggingService().SetSession(session);
   }
   public static void SetUser(this HttpContext context, User? user)
   {
     context.SetItem(UserKey, user);
+    context.GetLoggingService().SetUser(user);
   }
   private static void SetItem(this HttpContext context, object key, object? value)
   {
@@ -105,6 +108,8 @@ internal static class HttpContextExtensions
       context.Items[key] = value;
     }
   }
+
+  private static ILoggingService GetLoggingService(this HttpContext context) => context.RequestServices.GetRequiredService<ILoggingService>();
 
   public static Guid? GetSessionId(this HttpContext context)
   {

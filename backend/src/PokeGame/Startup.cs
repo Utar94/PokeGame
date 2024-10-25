@@ -5,6 +5,8 @@ using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
 using PokeGame.Filters;
 using PokeGame.Infrastructure;
+using PokeGame.Middlewares;
+using PokeGame.MongoDB;
 using PokeGame.Settings;
 
 namespace PokeGame;
@@ -34,6 +36,7 @@ internal class Startup : StartupBase
     services.AddControllers(options =>
     {
       options.Filters.Add<ExceptionHandling>();
+      options.Filters.Add<OperationLogging>();
     }).AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     services.AddSingleton<IActivityContextResolver, HttpActivityContextResolver>();
 
@@ -56,6 +59,7 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
+    services.AddPokeGameWithMongoDB(_configuration);
   }
 
   public override void Configure(IApplicationBuilder builder)
@@ -67,6 +71,7 @@ internal class Startup : StartupBase
 
     builder.UseHttpsRedirection();
     builder.UseCors();
+    builder.UseMiddleware<Logging>();
 
     if (builder is WebApplication application)
     {

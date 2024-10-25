@@ -39,9 +39,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\PokeGame.MongoDB\PokeGame.MongoDB.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.Text.Json" />
     <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
