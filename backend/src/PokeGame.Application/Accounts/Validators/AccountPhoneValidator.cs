@@ -17,6 +17,6 @@ internal class AccountPhoneValidator : AbstractValidator<AccountPhone>
   private static bool BeAValidPhone(AccountPhone input)
   {
     Phone phone = new(input.CountryCode, input.Number, extension: null, e164Formatted: string.Empty);
-    return phone != null; // return phone.IsValid(); // TODO(fpion): implement
+    return phone.IsValid();
   }
 }

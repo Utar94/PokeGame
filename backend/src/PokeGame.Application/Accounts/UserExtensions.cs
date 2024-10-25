@@ -1,11 +1,8 @@
 ﻿using Logitar;
 using Logitar.Identity.Contracts;
-using Logitar.Identity.Contracts.Users;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
-using PhoneNumbers;
 using PokeGame.Contracts.Accounts;
-using Locale = Logitar.Portal.Contracts.Locale;
 
 namespace PokeGame.Application.Accounts;
 
@@ -90,13 +87,6 @@ public static class UserExtensions
     Phone phone = new(source.CountryCode, source.Number, extension: null, e164Formatted: string.Empty);
     phone.E164Formatted = phone.FormatToE164();
     return phone;
-  }
-  internal static string FormatToE164(this IPhone phone)
-  {
-    string formatted = string.IsNullOrWhiteSpace(phone.Extension)
-      ? phone.Number : $"{phone.Number} x{phone.Extension}";
-    PhoneNumber phoneNumber = PhoneNumberUtil.GetInstance().Parse(formatted, phone.CountryCode ?? "US");
-    return PhoneNumberUtil.GetInstance().Format(phoneNumber, PhoneNumberFormat.E164);
   }
 
   public static ChangePasswordPayload ToChangePasswordPayload(this ChangeAccountPasswordPayload payload) => new(payload.New)
