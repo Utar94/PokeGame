@@ -1,4 +1,10 @@
-﻿using PokeGame.Extensions;
+﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using PokeGame.Application;
+using PokeGame.EntityFrameworkCore;
+using PokeGame.EntityFrameworkCore.SqlServer;
+using PokeGame.Extensions;
+using PokeGame.Filters;
+using PokeGame.Infrastructure;
 using PokeGame.Settings;
 
 namespace PokeGame;
@@ -22,7 +28,14 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
-    services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+
+    services.AddControllers(options =>
+    {
+      options.Filters.Add<ExceptionHandling>();
+    }).AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    services.AddSingleton<IActivityContextResolver, HttpActivityContextResolver>();
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -30,6 +43,18 @@ internal class Startup : StartupBase
     if (_enableOpenApi)
     {
       services.AddOpenApi();
+    }
+
+    DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
+    switch (databaseProvider)
+    {
+      case DatabaseProvider.EntityFrameworkCoreSqlServer:
+        services.AddPokeGameWithEntityFrameworkCoreSqlServer(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<PokeGameContext>();
+        break;
+      default:
+        throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
   }
 
