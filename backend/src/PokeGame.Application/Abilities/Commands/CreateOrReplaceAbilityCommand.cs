@@ -8,7 +8,7 @@ using PokeGame.Domain.Abilities;
 
 namespace PokeGame.Application.Abilities.Commands;
 
-public record CreateOrReplaceAbilityResult(AbilityModel? Model = null, bool Created = false);
+public record CreateOrReplaceAbilityResult(AbilityModel? Ability = null, bool Created = false);
 
 public record CreateOrReplaceAbilityCommand(Guid? Id, CreateOrReplaceAbilityPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceAbilityResult>;
 

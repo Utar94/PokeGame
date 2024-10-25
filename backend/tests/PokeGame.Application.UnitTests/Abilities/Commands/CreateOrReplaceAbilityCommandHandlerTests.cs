@@ -43,7 +43,7 @@ public class CreateOrReplaceAbilityCommandHandlerTests
     _abilityQuerier.Setup(x => x.ReadAsync(It.IsAny<Ability>(), _cancellationToken)).ReturnsAsync(model);
 
     CreateOrReplaceAbilityResult result = await _handler.Handle(command, _cancellationToken);
-    Assert.Same(model, result.Model);
+    Assert.Same(model, result.Ability);
     Assert.True(result.Created);
 
     _abilityRepository.Verify(x => x.SaveAsync(
@@ -70,7 +70,7 @@ public class CreateOrReplaceAbilityCommandHandlerTests
     _abilityQuerier.Setup(x => x.ReadAsync(_ability, _cancellationToken)).ReturnsAsync(model);
 
     CreateOrReplaceAbilityResult result = await _handler.Handle(command, _cancellationToken);
-    Assert.Same(model, result.Model);
+    Assert.Same(model, result.Ability);
     Assert.False(result.Created);
 
     _abilityRepository.Verify(x => x.SaveAsync(
@@ -94,7 +94,7 @@ public class CreateOrReplaceAbilityCommandHandlerTests
     command.Contextualize();
 
     CreateOrReplaceAbilityResult result = await _handler.Handle(command, _cancellationToken);
-    Assert.Null(result.Model);
+    Assert.Null(result.Ability);
     Assert.False(result.Created);
 
     _abilityRepository.Verify(x => x.SaveAsync(It.IsAny<Ability>(), _cancellationToken), Times.Never);
@@ -141,7 +141,7 @@ public class CreateOrReplaceAbilityCommandHandlerTests
     _abilityQuerier.Setup(x => x.ReadAsync(_ability, _cancellationToken)).ReturnsAsync(model);
 
     CreateOrReplaceAbilityResult result = await _handler.Handle(command, _cancellationToken);
-    Assert.Same(model, result.Model);
+    Assert.Same(model, result.Ability);
     Assert.False(result.Created);
 
     _abilityRepository.Verify(x => x.SaveAsync(
