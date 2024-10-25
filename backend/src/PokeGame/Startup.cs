@@ -1,4 +1,8 @@
-﻿using PokeGame.Extensions;
+﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using PokeGame.EntityFrameworkCore;
+using PokeGame.EntityFrameworkCore.SqlServer;
+using PokeGame.Extensions;
+using PokeGame.Infrastructure;
 using PokeGame.Settings;
 
 namespace PokeGame;
@@ -30,6 +34,18 @@ internal class Startup : StartupBase
     if (_enableOpenApi)
     {
       services.AddOpenApi();
+    }
+
+    DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
+    switch (databaseProvider)
+    {
+      case DatabaseProvider.EntityFrameworkCoreSqlServer:
+        services.AddPokeGameWithEntityFrameworkCoreSqlServer(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<PokeGameContext>();
+        break;
+      default:
+        throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
   }
 

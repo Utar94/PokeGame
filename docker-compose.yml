@@ -1,1 +1,26 @@
 name: pokegame
+services:
+  pokegame_mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: PokeGame_mssql
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: hBFNJkgn5eR98btr
+    ports:
+      - 1442:1433
+
+  pokegame_backend:
+    build:
+      context: ./backend
+      dockerfile: /src/PokeGame/Dockerfile
+    image: pokegame_backend
+    container_name: PokeGame_backend
+    depends_on:
+      - pokegame_mssql
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_Environment: Development
+      SQLCONNSTR_PokeGame: "Server=pokegame_mssql;Database=PokeGame;User Id=SA;Password=hBFNJkgn5eR98btr;Persist Security Info=False;Encrypt=False;"
+    ports:
+      - 8092:8080
