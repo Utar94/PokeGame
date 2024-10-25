@@ -34,4 +34,31 @@ internal static class AccountEvents
       await _context.SaveChangesAsync(cancellationToken);
     }
   }
+
+  public class UserUpdatedEventHandler : INotificationHandler<UserUpdatedEvent>
+  {
+    private readonly PokeGameContext _context;
+
+    public UserUpdatedEventHandler(PokeGameContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(UserUpdatedEvent @event, CancellationToken cancellationToken)
+    {
+      User user = @event.User;
+      UserEntity? entity = await _context.Users.SingleOrDefaultAsync(x => x.Id == user.Id, cancellationToken);
+      if (entity == null)
+      {
+        entity = new(user);
+        _context.Users.Add(entity);
+      }
+      else
+      {
+        entity.Update(user);
+      }
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
 }
