@@ -15,6 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="libphonenumber-csharp" Version="8.13.48" />
+    <PackageReference Include="Logitar" Version="6.3.0" />
+    <PackageReference Include="Logitar.Security" Version="6.1.1" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
@@ -26,6 +29,8 @@
 
   <ItemGroup>
     <Using Include="System.Reflection" />
+    <Using Include="System.Text" />
+    <Using Include="System.Text.Json" />
     <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 

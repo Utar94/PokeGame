@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using PokeGame.Application;
 using PokeGame.Application.Logging;
 using PokeGame.Contracts.Errors;
 
@@ -31,6 +32,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
         error.Add(new PropertyError(failure.ErrorCode, failure.ErrorMessage, failure.AttemptedValue, failure.PropertyName));
       }
       context.Result = new BadRequestObjectResult(error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is BadRequestException badRequest)
+    {
+      context.Result = new BadRequestObjectResult(badRequest.Error);
       context.ExceptionHandled = true;
     }
     else if (context.Exception is NotImplementedException)
