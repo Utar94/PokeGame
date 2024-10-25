@@ -1,6 +1,6 @@
 ﻿namespace PokeGame.Domain;
 
-internal static class CultureExtensions
+internal static class GlobalizationExtensions
 {
   public static RegionInfo? GetRegion(this CultureInfo culture)
   {
