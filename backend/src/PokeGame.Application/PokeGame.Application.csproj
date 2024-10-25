@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="libphonenumber-csharp" Version="8.13.48" />
     <PackageReference Include="Logitar" Version="6.3.0" />
     <PackageReference Include="Logitar.Security" Version="6.1.1" />
     <PackageReference Include="MediatR" Version="12.4.1" />

@@ -15,7 +15,7 @@ using PokeGame.Application.Accounts.Events;
 using PokeGame.Application.Actors;
 using PokeGame.Application.Settings;
 using PokeGame.Contracts.Accounts;
-using PokeGame.Domain;
+using Locale = PokeGame.Domain.Locale;
 
 namespace PokeGame.Application.Accounts.Commands;
 
@@ -25,7 +25,7 @@ public class SignInCommandHandlerTests
   private const string PasswordString = "P@s$W0rD";
   private const string TimeZoneId = "America/Montreal";
 
-  private static readonly LocaleUnit _locale = new("fr");
+  private static readonly Locale _locale = new("fr");
 
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();

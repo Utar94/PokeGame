@@ -13,7 +13,7 @@ using PokeGame.Application.Accounts.Events;
 using PokeGame.Application.Accounts.Validators;
 using PokeGame.Application.Settings;
 using PokeGame.Contracts.Accounts;
-using PokeGame.Domain;
+using Locale = PokeGame.Domain.Locale;
 
 namespace PokeGame.Application.Accounts.Commands;
 
@@ -70,7 +70,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
 
     SignInPayload payload = command.Payload;
     new SignInValidator(realm.PasswordSettings).ValidateAndThrow(payload);
-    LocaleUnit locale = new(payload.Locale);
+    Locale locale = new(payload.Locale);
 
     if (payload.Credentials != null)
     {
@@ -96,7 +96,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}, {nameof(payload.GoogleIdToken)}, {nameof(payload.OneTimePassword)}, {nameof(payload.Profile)}.", nameof(command));
   }
 
-  private async Task<SignInCommandResult> HandleCredentialsAsync(Credentials credentials, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> HandleCredentialsAsync(Credentials credentials, Locale locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     User? user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken);
     if (user == null || !user.HasPassword)
@@ -137,7 +137,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
       _ => await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken),
     };
   }
-  private async Task<SignInCommandResult> SendMultiFactorAuthenticationMessageAsync(User user, ContactType contactType, LocaleUnit locale, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> SendMultiFactorAuthenticationMessageAsync(User user, ContactType contactType, Locale locale, CancellationToken cancellationToken)
   {
     Contact contact = contactType switch
     {
@@ -185,7 +185,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }
 
-  private async Task<SignInCommandResult> HandleGoogleIdTokenAsync(string googleIdToken, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> HandleGoogleIdTokenAsync(string googleIdToken, Locale locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     GoogleIdentity identity = await _googleService.GetIdentityAsync(googleIdToken, cancellationToken);
 

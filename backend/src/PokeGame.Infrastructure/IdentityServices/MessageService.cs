@@ -4,7 +4,7 @@ using Logitar.Portal.Contracts.Users;
 using Microsoft.Extensions.Configuration;
 using PokeGame.Application.Accounts;
 using PokeGame.Contracts.Accounts;
-using PokeGame.Domain;
+using Locale = PokeGame.Domain.Locale;
 
 namespace PokeGame.Infrastructure.IdentityServices;
 
@@ -20,7 +20,7 @@ internal class MessageService : IMessageService
       ?? throw new ArgumentException("The configuration key 'Portal:PhoneSenderId' is required.", nameof(configuration));
   }
 
-  public async Task<SentMessages> SendAsync(string template, Email email, LocaleUnit locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
+  public async Task<SentMessages> SendAsync(string template, Email email, Locale locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
   {
     RecipientPayload recipient = new()
     {
@@ -29,7 +29,7 @@ internal class MessageService : IMessageService
     return await SendAsync(template, recipient, ContactType.Email, locale, variables, cancellationToken);
   }
 
-  public async Task<SentMessages> SendAsync(string template, Phone phone, LocaleUnit locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
+  public async Task<SentMessages> SendAsync(string template, Phone phone, Locale locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
   {
     RecipientPayload recipient = new()
     {
@@ -38,7 +38,7 @@ internal class MessageService : IMessageService
     return await SendAsync(template, recipient, ContactType.Phone, locale, variables, cancellationToken);
   }
 
-  public async Task<SentMessages> SendAsync(string template, User user, ContactType contactType, LocaleUnit locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
+  public async Task<SentMessages> SendAsync(string template, User user, ContactType contactType, Locale locale, IReadOnlyDictionary<string, string> variables, CancellationToken cancellationToken)
   {
     RecipientPayload recipient = new()
     {
@@ -47,7 +47,7 @@ internal class MessageService : IMessageService
     return await SendAsync(template, recipient, contactType, locale, variables, cancellationToken);
   }
 
-  private async Task<SentMessages> SendAsync(string template, RecipientPayload recipient, ContactType contactType, LocaleUnit locale, IEnumerable<KeyValuePair<string, string>>? variables, CancellationToken cancellationToken)
+  private async Task<SentMessages> SendAsync(string template, RecipientPayload recipient, ContactType contactType, Locale locale, IEnumerable<KeyValuePair<string, string>>? variables, CancellationToken cancellationToken)
   {
     SendMessagePayload payload = new(template)
     {
