@@ -7,7 +7,6 @@ using Microsoft.Extensions.Primitives;
 using PokeGame.Application.Logging;
 using PokeGame.Constants;
 using PokeGame.Settings;
-using System.Text.Json;
 
 namespace PokeGame.Extensions;
 

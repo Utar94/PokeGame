@@ -22,4 +22,9 @@
     <ProjectReference Include="..\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Serialization" />
+  </ItemGroup>
+
 </Project>

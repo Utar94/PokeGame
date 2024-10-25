@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PokeGame.Application.Logging;
 using PokeGame.Contracts.Errors;
-using System.Text.Json;
 
 namespace PokeGame.Filters;
 

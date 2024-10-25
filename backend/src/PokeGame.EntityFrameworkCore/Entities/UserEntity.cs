@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace PokeGame.EntityFrameworkCore.Entities;
+﻿namespace PokeGame.EntityFrameworkCore.Entities;
 
 internal class UserEntity
 {

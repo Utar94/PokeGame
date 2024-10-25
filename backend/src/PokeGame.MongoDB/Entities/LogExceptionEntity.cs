@@ -1,5 +1,4 @@
 ﻿using Logitar;
-using System.Text.Json;
 
 namespace PokeGame.MongoDB.Entities;
 

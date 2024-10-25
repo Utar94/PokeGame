@@ -3,7 +3,6 @@ using MongoDB.Driver;
 using PokeGame.Application.Logging;
 using PokeGame.Infrastructure;
 using PokeGame.MongoDB.Entities;
-using System.Text.Json;
 
 namespace PokeGame.MongoDB.Repositories;
 
