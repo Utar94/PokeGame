@@ -18,7 +18,7 @@ internal class UserEntity
   }
 
   public override bool Equals(object? obj) => obj is UserEntity user && user.Id == Id;
-  public override int GetHashCode() => Id;
+  public override int GetHashCode() => Id.GetHashCode();
   public override string ToString()
   {
     StringBuilder s = new();
