@@ -38,6 +38,25 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  pokegame_portal:
+    image: fpion/portal
+    container_name: PokeGame_portal
+    depends_on:
+      - pokegame_mongo
+      - pokegame_mssql
+      - pokegame_postgres
+    restart: unless-stopped
+    environment:
+      EnableBasicAuthentication: "true"
+      EnableMigrations: "true"
+      EnableOpenApi: "true"
+      MongoDB:ConnectionString: mongodb://pokegame:PF597GfBaTdDLu2b@pokegame_mongo:27017/
+      MongoDB:DatabaseName: portal
+      POSTGRESQLCONNSTR_Portal: "User ID=postgres;Password=vqeDP6bsg54zXSBQ;Host=pokegame_postgres;Port=5432;Database=portal;"
+      SQLCONNSTR_Portal: "Server=pokegame_mssql;Database=Portal;User Id=SA;Password=hBFNJkgn5eR98btr;Persist Security Info=False;Encrypt=False;"
+    ports:
+      - 8892:8080
+
   pokegame_backend:
     build:
       context: ./backend
@@ -48,6 +67,7 @@ services:
       - pokegame_mongo
       - pokegame_mssql
       - pokegame_postgres
+      - pokegame_portal
     restart: unless-stopped
     environment:
       ASPNETCORE_Environment: Development
