@@ -1,14 +1,42 @@
 name: pokegame
 services:
+  pokegame_mongo:
+    image: mongo
+    container_name: PokeGame_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pokegame
+      MONGO_INITDB_ROOT_PASSWORD: PF597GfBaTdDLu2b
+    ports:
+      - 27032:27017
+    volumes:
+      - mongo_data:/data/db
+
   pokegame_mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: PokeGame_mssql
     restart: unless-stopped
+    user: root
     environment:
       ACCEPT_EULA: 'Y'
       SA_PASSWORD: hBFNJkgn5eR98btr
     ports:
       - 1442:1433
+    volumes:
+      - mssql_backup:/var/opt/mssql/backup
+      - mssql_data:/var/opt/mssql/data
+      - mssql_log:/var/opt/mssql/log
+
+  pokegame_postgres:
+    image: postgres
+    container_name: PokeGame_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: vqeDP6bsg54zXSBQ
+    ports:
+      - 5442:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   pokegame_backend:
     build:
@@ -17,10 +45,21 @@ services:
     image: pokegame_backend
     container_name: PokeGame_backend
     depends_on:
+      - pokegame_mongo
       - pokegame_mssql
+      - pokegame_postgres
     restart: unless-stopped
     environment:
       ASPNETCORE_Environment: Development
+      MongoDB:ConnectionString: mongodb://pokegame:PF597GfBaTdDLu2b@pokegame_mongo:27017/
+      POSTGRESQLCONNSTR_PokeGame: "User ID=postgres;Password=vqeDP6bsg54zXSBQ;Host=pokegame_postgres;Port=5432;Database=pokegame;"
       SQLCONNSTR_PokeGame: "Server=pokegame_mssql;Database=PokeGame;User Id=SA;Password=hBFNJkgn5eR98btr;Persist Security Info=False;Encrypt=False;"
     ports:
       - 8092:8080
+
+volumes:
+  mongo_data:
+  mssql_backup:
+  mssql_data:
+  mssql_log:
+  postgres_data:

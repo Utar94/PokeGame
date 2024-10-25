@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using PokeGame.Application.Logging;
 using PokeGame.Contracts.Errors;
 using System.Text.Json;
 
@@ -13,6 +14,13 @@ internal class ExceptionHandling : ExceptionFilterAttribute
   {
     PropertyNameCaseInsensitive = true
   };
+
+  private readonly ILoggingService _loggingService;
+
+  public ExceptionHandling(ILoggingService loggingService)
+  {
+    _loggingService = loggingService;
+  }
 
   public override void OnException(ExceptionContext context)
   {
@@ -34,6 +42,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
     else
     {
       base.OnException(context);
+    }
+
+    if (context.ExceptionHandled)
+    {
+      _loggingService.Report(context.Exception);
     }
   }
 }

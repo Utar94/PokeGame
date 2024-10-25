@@ -15,22 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokeGame.Domain\PokeGame.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="System.Reflection" />
-    <Using Include="System.Text.Json.Serialization" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="PokeGame.Application.UnitTests" />
+    <ProjectReference Include="..\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

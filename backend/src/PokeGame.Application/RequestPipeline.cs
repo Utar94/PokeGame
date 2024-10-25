@@ -1,15 +1,18 @@
 ﻿using MediatR;
+using PokeGame.Application.Logging;
 
 namespace PokeGame.Application;
 
 internal class RequestPipeline : IRequestPipeline
 {
   private readonly IActivityContextResolver _contextResolver;
+  private readonly ILoggingService _loggingService;
   private readonly ISender _sender;
 
-  public RequestPipeline(IActivityContextResolver contextResolver, ISender sender)
+  public RequestPipeline(IActivityContextResolver contextResolver, ILoggingService loggingService, ISender sender)
   {
     _contextResolver = contextResolver;
+    _loggingService = loggingService;
     _sender = sender;
   }
 
@@ -19,6 +22,8 @@ internal class RequestPipeline : IRequestPipeline
     {
       ActivityContext context = await _contextResolver.ResolveAsync(cancellationToken);
       activity.Contextualize(context);
+
+      _loggingService.SetActivity(activity);
     }
 
     return await _sender.Send(request, cancellationToken);
