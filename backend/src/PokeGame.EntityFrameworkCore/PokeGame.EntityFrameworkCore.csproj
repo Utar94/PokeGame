@@ -15,7 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar" Version="6.3.0" />
+    <PackageReference Include="Logitar.EventSourcing.EntityFrameworkCore.Relational" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Reflection" />
   </ItemGroup>
 
 </Project>

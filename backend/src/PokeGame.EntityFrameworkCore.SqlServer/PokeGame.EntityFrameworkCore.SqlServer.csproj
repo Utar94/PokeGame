@@ -15,6 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar.Data.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Logitar.EventSourcing.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PokeGame.EntityFrameworkCore\PokeGame.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
