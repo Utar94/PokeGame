@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application;
 using PokeGame.Application.Abilities.Commands;
 using PokeGame.Application.Abilities.Queries;
+using PokeGame.Constants;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Extensions;
 using PokeGame.Models.Abilities;
@@ -11,7 +12,7 @@ using PokeGame.Models.Abilities;
 namespace PokeGame.Controllers;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = Policies.Administrator)]
 [Route("abilities")]
 public class AbilityController : ControllerBase
 {

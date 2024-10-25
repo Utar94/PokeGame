@@ -1,6 +1,11 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Portal.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using PokeGame.Application;
+using PokeGame.Authentication;
+using PokeGame.Authorization;
+using PokeGame.Constants;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
@@ -15,11 +20,13 @@ namespace PokeGame;
 internal class Startup : StartupBase
 {
   private readonly IConfiguration _configuration;
+  private readonly string[] _authenticationSchemes;
   private readonly bool _enableOpenApi;
 
   public Startup(IConfiguration configuration)
   {
     _configuration = configuration;
+    _authenticationSchemes = Schemes.GetEnabled(configuration);
     _enableOpenApi = configuration.GetValue<bool>("EnableOpenApi");
   }
 
@@ -31,8 +38,41 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
+    OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection(OpenAuthenticationSettings.SectionKey).Get<OpenAuthenticationSettings>() ?? new();
+    services.AddSingleton(openAuthenticationSettings);
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
+      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { })
+      .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
+      .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
+    if (_authenticationSchemes.Contains(Schemes.Basic))
+    {
+      authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    }
+    services.AddSingleton<IOpenAuthenticationService, OpenAuthenticationService>();
+
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
+        .RequireAuthenticatedUser()
+        .Build())
+      .AddPolicy(Policies.Administrator, new AuthorizationPolicyBuilder(_authenticationSchemes)
+        .RequireAuthenticatedUser()
+        .AddRequirements(new RoleAuthorizationRequirement(Roles.Administrator))
+        .Build())
+      .AddPolicy(Policies.User, new AuthorizationPolicyBuilder(_authenticationSchemes)
+        .RequireAuthenticatedUser()
+        .AddRequirements(new UserAuthorizationRequirement())
+        .Build());
+    services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+    services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
+
     CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+    services.AddDistributedMemoryCache();
 
     services.AddControllers(options =>
     {
@@ -74,7 +114,11 @@ internal class Startup : StartupBase
 
     builder.UseHttpsRedirection();
     builder.UseCors();
+    builder.UseSession();
     builder.UseMiddleware<Logging>();
+    builder.UseMiddleware<RenewSession>();
+    builder.UseAuthentication();
+    builder.UseAuthorization();
 
     if (builder is WebApplication application)
     {
