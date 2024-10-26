@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Moq;
+﻿using Moq;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
@@ -16,12 +15,14 @@ public class DeleteAbilityCommandHandlerTests
 
   private readonly DeleteAbilityCommandHandler _handler;
 
-  private readonly Ability _ability = new(new Name("Adaptability"), new ActorId());
+  private readonly UserId _userId = UserId.NewId();
+  private readonly Ability _ability;
 
   public DeleteAbilityCommandHandlerTests()
   {
     _handler = new(_abilityQuerier.Object, _abilityRepository.Object);
 
+    _ability = new(new Name("Adaptability"), _userId);
     _abilityRepository.Setup(x => x.LoadAsync(_ability.Id, _cancellationToken)).ReturnsAsync(_ability);
   }
 

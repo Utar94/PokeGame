@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Logitar.EventSourcing;
 using Moq;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Abilities;
@@ -18,12 +17,14 @@ public class UpdateAbilityCommandHandlerTests
 
   private readonly UpdateAbilityCommandHandler _handler;
 
-  private readonly Ability _ability = new(new Name("Adaptability"), new ActorId());
+  private readonly UserId _userId = UserId.NewId();
+  private readonly Ability _ability;
 
   public UpdateAbilityCommandHandlerTests()
   {
     _handler = new(_abilityQuerier.Object, _abilityRepository.Object);
 
+    _ability = new(new Name("Adaptability"), _userId);
     _abilityRepository.Setup(x => x.LoadAsync(_ability.Id, _cancellationToken)).ReturnsAsync(_ability);
   }
 
@@ -59,7 +60,7 @@ public class UpdateAbilityCommandHandlerTests
   {
     Notes notes = new("Adaptability increases STAB of a Pokémon with this Ability from 1.5 to 2.");
     _ability.Notes = notes;
-    _ability.Update(_ability.CreatedBy);
+    _ability.Update(_userId);
 
     UpdateAbilityPayload payload = new()
     {

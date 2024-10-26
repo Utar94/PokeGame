@@ -29,6 +29,8 @@ internal class AbilityEntity : AggregateEntity
 
   public void Update(Ability.UpdatedEvent @event)
   {
+    base.Update(@event);
+
     if (@event.Kind != null)
     {
       Kind = @event.Kind.Value;

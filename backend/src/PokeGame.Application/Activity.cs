@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Logitar.Portal.Contracts.Users;
+﻿using Logitar.Portal.Contracts.Users;
 using PokeGame.Domain;
 
 namespace PokeGame.Application;
@@ -25,8 +24,6 @@ public abstract record Activity : IActivity
 
     _context = context;
   }
-
-  public ActorId GetActorId() => Context.User == null ? new() : new(Context.User.Id); // TODO(fpion): replace by GetUserId
 
   public User GetUser() => TryGetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
   public UserId GetUserId() => new(GetUser().Id);
