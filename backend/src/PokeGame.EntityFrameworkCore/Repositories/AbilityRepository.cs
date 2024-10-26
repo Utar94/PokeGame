@@ -1,4 +1,5 @@
-﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+﻿using Logitar.EventSourcing;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using PokeGame.Domain.Abilities;
 
@@ -18,6 +19,12 @@ internal class AbilityRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
   public async Task<Ability?> LoadAsync(AbilityId id, long? version, CancellationToken cancellationToken)
   {
     return await LoadAsync<Ability>(id.AggregateId, version, cancellationToken);
+  }
+
+  public async Task<IReadOnlyCollection<Ability>> LoadAsync(IEnumerable<AbilityId> ids, CancellationToken cancellationToken)
+  {
+    IEnumerable<AggregateId> aggregateIds = ids.Select(id => id.AggregateId);
+    return (await LoadAsync<Ability>(aggregateIds, cancellationToken)).ToArray().AsReadOnly();
   }
 
   public async Task SaveAsync(Ability ability, CancellationToken cancellationToken)

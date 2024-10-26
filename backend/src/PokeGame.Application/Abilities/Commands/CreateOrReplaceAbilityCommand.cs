@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Logitar.EventSourcing;
 using MediatR;
 using PokeGame.Application.Abilities.Validators;
 using PokeGame.Contracts.Abilities;
@@ -35,7 +34,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
       ability = await _abilityRepository.LoadAsync(id.Value, cancellationToken);
     }
 
-    ActorId actorId = command.GetActorId();
+    UserId userId = command.GetUserId();
     bool created = false;
     if (ability == null)
     {
@@ -44,7 +43,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
         return new CreateOrReplaceAbilityResult();
       }
 
-      ability = new Ability(new Name(payload.Name), actorId, id);
+      ability = new Ability(new Name(payload.Name), userId, id);
       created = true;
     }
 
@@ -79,7 +78,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
       ability.Notes = notes;
     }
 
-    ability.Update(actorId);
+    ability.Update(userId);
     await _abilityRepository.SaveAsync(ability, cancellationToken);
 
     AbilityModel model = await _abilityQuerier.ReadAsync(ability, cancellationToken);

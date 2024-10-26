@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Logitar.EventSourcing;
 using Moq;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Domain;
@@ -17,12 +16,14 @@ public class CreateOrReplaceAbilityCommandHandlerTests
 
   private readonly CreateOrReplaceAbilityCommandHandler _handler;
 
-  private readonly Ability _ability = new(new Name("Adaptability"), new ActorId());
+  private readonly UserId _userId = UserId.NewId();
+  private readonly Ability _ability;
 
   public CreateOrReplaceAbilityCommandHandlerTests()
   {
     _handler = new(_abilityQuerier.Object, _abilityRepository.Object);
 
+    _ability = new(new Name("Adaptability"), _userId);
     _abilityRepository.Setup(x => x.LoadAsync(_ability.Id, _cancellationToken)).ReturnsAsync(_ability);
   }
 
@@ -120,12 +121,12 @@ public class CreateOrReplaceAbilityCommandHandlerTests
   [Fact(DisplayName = "It should update an existing ability.")]
   public async Task It_should_update_an_existing_ability()
   {
-    Ability reference = new(_ability.Name, _ability.CreatedBy, _ability.Id);
+    Ability reference = new(_ability.Name, _userId, _ability.Id);
     _abilityRepository.Setup(x => x.LoadAsync(reference.Id, reference.Version, _cancellationToken)).ReturnsAsync(reference);
 
     Notes notes = new("Adaptability increases STAB of a Pokémon with this Ability from 1.5 to 2.");
     _ability.Notes = notes;
-    _ability.Update(_ability.CreatedBy);
+    _ability.Update(_userId);
 
     CreateOrReplaceAbilityPayload payload = new(" Adaptability ")
     {

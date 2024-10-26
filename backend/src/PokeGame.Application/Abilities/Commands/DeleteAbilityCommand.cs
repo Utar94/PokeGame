@@ -27,7 +27,7 @@ internal class DeleteAbilityCommandHandler : IRequestHandler<DeleteAbilityComman
     }
     AbilityModel model = await _abilityQuerier.ReadAsync(ability, cancellationToken);
 
-    ability.Delete(command.GetActorId());
+    ability.Delete(command.GetUserId());
 
     await _abilityRepository.SaveAsync(ability, cancellationToken);
 

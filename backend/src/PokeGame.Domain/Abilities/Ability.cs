@@ -88,28 +88,28 @@ public class Ability : AggregateRoot
   {
   }
 
-  public Ability(Name name, ActorId actorId, AbilityId? id = null) : base((id ?? AbilityId.NewId()).AggregateId)
+  public Ability(Name name, UserId userId, AbilityId? id = null) : base((id ?? AbilityId.NewId()).AggregateId)
   {
-    Raise(new CreatedEvent(name), actorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     _name = @event.Name;
   }
 
-  public void Delete(ActorId actorId)
+  public void Delete(UserId userId)
   {
     if (!IsDeleted)
     {
-      Raise(new DeletedEvent(), actorId);
+      Raise(new DeletedEvent(), userId.ActorId);
     }
   }
 
-  public void Update(ActorId actorId)
+  public void Update(UserId userId)
   {
     if (_updatedEvent.HasChanges)
     {
-      Raise(_updatedEvent, actorId, DateTime.Now);
+      Raise(_updatedEvent, userId.ActorId, DateTime.Now);
       _updatedEvent = new();
     }
   }

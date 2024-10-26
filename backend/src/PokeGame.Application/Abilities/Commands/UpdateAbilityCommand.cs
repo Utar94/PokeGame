@@ -56,7 +56,7 @@ internal class UpdateAbilityCommandHandler : IRequestHandler<UpdateAbilityComman
       ability.Notes = Notes.TryCreate(payload.Notes.Value);
     }
 
-    ability.Update(command.GetActorId());
+    ability.Update(command.GetUserId());
     await _abilityRepository.SaveAsync(ability, cancellationToken);
 
     return await _abilityQuerier.ReadAsync(ability, cancellationToken);
