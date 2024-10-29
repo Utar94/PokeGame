@@ -3,6 +3,7 @@ using Logitar.EventSourcing;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Contracts.Regions;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore;
@@ -40,6 +41,22 @@ internal class Mapper
     {
       Id = source.Id,
       Kind = source.Kind,
+      Name = source.Name,
+      Description = source.Description,
+      Link = source.Link,
+      Notes = source.Notes
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public RegionModel ToRegion(RegionEntity source)
+  {
+    RegionModel destination = new()
+    {
+      Id = source.Id,
       Name = source.Name,
       Description = source.Description,
       Link = source.Link,

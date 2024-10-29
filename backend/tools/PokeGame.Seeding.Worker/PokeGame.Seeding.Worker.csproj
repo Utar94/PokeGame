@@ -70,4 +70,12 @@
     <Using Include="System.Text.Json" />
     <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Backend\regions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
