@@ -2,7 +2,7 @@
 
 namespace PokeGame.Contracts.Regions;
 
-public record SearchAbilitiesPayload : SearchPayload
+public record SearchRegionsPayload : SearchPayload
 {
   public new List<RegionSortOption> Sort { get; set; } = [];
 }
