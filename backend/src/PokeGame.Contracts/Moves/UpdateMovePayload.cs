@@ -11,9 +11,9 @@ public record UpdateMovePayload
   public Change<int?>? Power { get; set; }
   public int? PowerPoints { get; set; }
 
-  //public List<StatisticChangeModel> StatisticChanges { get; set; } // TODO(fpion): implement
+  public List<StatisticChangeModel> StatisticChanges { get; set; } = [];
   public Change<InflictedConditionModel>? Status { get; set; }
-  //public List<string> VolatileConditions { get; set; } // TODO(fpion): implement
+  public List<VolatileConditionUpdate> VolatileConditions { get; set; } = [];
 
   public Change<string>? Link { get; set; }
   public Change<string>? Notes { get; set; }
