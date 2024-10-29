@@ -6,7 +6,7 @@ namespace PokeGame.Application.Regions;
 
 public interface IRegionQuerier
 {
-  Task<RegionModel> ReadAsync(Region ability, CancellationToken cancellationToken = default);
+  Task<RegionModel> ReadAsync(Region region, CancellationToken cancellationToken = default);
   Task<RegionModel?> ReadAsync(RegionId id, CancellationToken cancellationToken = default);
   Task<RegionModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
 
