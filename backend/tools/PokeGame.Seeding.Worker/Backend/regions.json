@@ -1,0 +1,37 @@
+﻿[
+  {
+    "Id": "0726b289-03b2-404e-b63c-6a84245979da",
+    "Name": "Kanto",
+    "Description": "Kanto is located east of Johto, which together form a joint landmass that is south of Sinnoh.",
+    "Link": "https://bulbapedia.bulbagarden.net/wiki/Kanto",
+    "Notes": "The Kanto region (Japanese: カントー地方 Kanto region) is a region of the Pokémon world.\n\nKanto is the setting of the first generation of games and can be explored in Generations II, III, IV, and VII."
+  },
+  {
+    "Id": "14b0ba33-a474-4dd2-9d2a-86c88a1bf5a0",
+    "Name": "Johto",
+    "Description": null,
+    "Link": "https://bulbapedia.bulbagarden.net/wiki/Johto",
+    "Notes": null
+  },
+  {
+    "Id": "1c7d9b93-6e30-442b-a397-dd6f4896eb91",
+    "Name": "Hoenn",
+    "Description": null,
+    "Link": "https://bulbapedia.bulbagarden.net/wiki/Hoenn",
+    "Notes": null
+  },
+  {
+    "Id": "3f8f3952-9ba7-4a6e-b9e2-8596edea35d4",
+    "Name": "Sinnoh",
+    "Description": null,
+    "Link": "https://bulbapedia.bulbagarden.net/wiki/Sinnoh",
+    "Notes": null
+  },
+  {
+    "Id": "a7357ce2-c4af-406e-b6ec-69735b9f20b4",
+    "Name": "Unova",
+    "Description": null,
+    "Link": "https://bulbapedia.bulbagarden.net/wiki/Unova",
+    "Notes": null
+  }
+]

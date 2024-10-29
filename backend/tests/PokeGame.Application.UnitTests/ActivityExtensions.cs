@@ -6,7 +6,7 @@ internal static class ActivityExtensions
 {
   public static void Contextualize(this Activity activity)
   {
-    activity.Contextualize(user: null);
+    activity.Contextualize(new UserMock());
   }
   public static void Contextualize(this Activity activity, User? user)
   {
