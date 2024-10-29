@@ -15,6 +15,8 @@ public record VolatileCondition
     new Validator().ValidateAndThrow(this);
   }
 
+  public static VolatileCondition? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
+
   public override string ToString() => Value;
 
   private class Validator : AbstractValidator<VolatileCondition>

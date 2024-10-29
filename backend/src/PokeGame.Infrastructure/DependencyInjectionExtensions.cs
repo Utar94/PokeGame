@@ -53,6 +53,7 @@ public static class DependencyInjectionExtensions
     new MoveIdConverter(),
     new NameConverter(),
     new NotesConverter(),
-    new UrlConverter()
+    new UrlConverter(),
+    new VolatileConditionConverter()
   ];
 }
