@@ -7,8 +7,8 @@ namespace PokeGame.Domain.Moves;
 
 public class Move : AggregateRoot
 {
-  private const int PowerMaximumValue = 250;
-  private const int PowerPointsMaximumValue = 40;
+  public const int PowerMaximumValue = 250;
+  public const int PowerPointsMaximumValue = 40;
   private const int StageMaximumValue = 6;
   private const int StageMinimumValue = -6;
 
