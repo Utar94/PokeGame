@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using PokeGame.Application.Moves.Validators;
+using PokeGame.Contracts;
 using PokeGame.Contracts.Moves;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves;
@@ -75,9 +76,13 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
       move.PowerPoints = payload.PowerPoints;
     }
 
-    // TODO(fpion): StatisticChanges
-    // TODO(fpion): Status
-    // TODO(fpion): VolatileConditions
+    SetStatisticChanges(payload, move, reference);
+    InflictedCondition? status = payload.Status == null ? null : new(payload.Status);
+    if (reference.Status != status)
+    {
+      move.Status = status;
+    }
+    SetVolatileConditions(payload, move, reference);
 
     Url? link = Url.TryCreate(payload.Link);
     if (reference.Link != link)
@@ -95,5 +100,46 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
 
     MoveModel model = await _moveQuerier.ReadAsync(move, cancellationToken);
     return new CreateOrReplaceMoveResult(model, created);
+  }
+
+  private static void SetStatisticChanges(CreateOrReplaceMovePayload payload, Move move, Move reference)
+  {
+    HashSet<BattleStatistic> statistics = new(capacity: payload.StatisticChanges.Count);
+    foreach (StatisticChangeModel change in payload.StatisticChanges)
+    {
+      statistics.Add(change.Statistic);
+      if (!reference.StatisticChanges.TryGetValue(change.Statistic, out int existingStages) || existingStages != change.Stages)
+      {
+        move.SetStatisticChange(change.Statistic, change.Stages);
+      }
+    }
+    foreach (BattleStatistic statistic in reference.StatisticChanges.Keys)
+    {
+      if (!statistics.Contains(statistic))
+      {
+        move.SetStatisticChange(statistic, stages: 0);
+      }
+    }
+  }
+
+  private static void SetVolatileConditions(CreateOrReplaceMovePayload payload, Move move, Move reference)
+  {
+    HashSet<VolatileCondition> volatileConditions = new(capacity: payload.VolatileConditions.Count);
+    foreach (string value in payload.VolatileConditions)
+    {
+      VolatileCondition volatileCondition = new(value);
+      volatileConditions.Add(volatileCondition);
+      if (!reference.VolatileConditions.Contains(volatileCondition))
+      {
+        move.AddVolatileCondition(volatileCondition);
+      }
+    }
+    foreach (VolatileCondition volatileCondition in reference.VolatileConditions)
+    {
+      if (!volatileConditions.Contains(volatileCondition))
+      {
+        move.RemoveVolatileCondition(volatileCondition);
+      }
+    }
   }
 }

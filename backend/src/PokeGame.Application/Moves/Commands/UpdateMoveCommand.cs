@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using PokeGame.Application.Moves.Validators;
+using PokeGame.Contracts;
 using PokeGame.Contracts.Moves;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves;
@@ -55,9 +56,12 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
       move.PowerPoints = payload.PowerPoints.Value;
     }
 
-    // TODO(fpion): StatisticChanges
-    // TODO(fpion): Status
-    // TODO(fpion): VolatileConditions
+    SetStatisticChanges(payload, move);
+    if (payload.Status != null)
+    {
+      move.Status = payload.Status.Value == null ? null : new InflictedCondition(payload.Status.Value);
+    }
+    SetVolatileConditions(payload, move);
 
     if (payload.Link != null)
     {
@@ -72,5 +76,32 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
     await _moveRepository.SaveAsync(move, cancellationToken);
 
     return await _moveQuerier.ReadAsync(move, cancellationToken);
+  }
+
+  private static void SetStatisticChanges(UpdateMovePayload payload, Move move)
+  {
+    foreach (StatisticChangeModel change in payload.StatisticChanges)
+    {
+      move.SetStatisticChange(change.Statistic, change.Stages);
+    }
+  }
+
+  private static void SetVolatileConditions(UpdateMovePayload payload, Move move)
+  {
+    foreach (VolatileConditionUpdate update in payload.VolatileConditions)
+    {
+      VolatileCondition volatileCondition = new(update.VolatileCondition);
+      switch (update.Action)
+      {
+        case ActionKind.Add:
+          move.AddVolatileCondition(volatileCondition);
+          break;
+        case ActionKind.Remove:
+          move.RemoveVolatileCondition(volatileCondition);
+          break;
+        default:
+          throw new ActionKindNotSupportedException(update.Action);
+      }
+    }
   }
 }
