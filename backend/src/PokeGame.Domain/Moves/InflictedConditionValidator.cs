@@ -3,7 +3,7 @@ using PokeGame.Contracts.Moves;
 
 namespace PokeGame.Domain.Moves;
 
-internal class InflictedConditionValidator : AbstractValidator<IInflictedCondition>
+public class InflictedConditionValidator : AbstractValidator<IInflictedCondition>
 {
   public InflictedConditionValidator()
   {

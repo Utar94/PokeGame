@@ -9,8 +9,8 @@ public class Move : AggregateRoot
 {
   public const int PowerMaximumValue = 250;
   public const int PowerPointsMaximumValue = 40;
-  private const int StageMaximumValue = 6;
-  private const int StageMinimumValue = -6;
+  public const int StageMaximumValue = 6;
+  public const int StageMinimumValue = -6;
 
   private UpdatedEvent _updatedEvent = new();
 
@@ -92,9 +92,9 @@ public class Move : AggregateRoot
       {
         throw new ArgumentOutOfRangeException(nameof(Power));
       }
-      else if (Category == MoveCategory.Special && value.HasValue)
+      else if (Category == MoveCategory.Status && value.HasValue)
       {
-        throw new ArgumentException($"A move belonging to the '{nameof(MoveCategory.Special)}' category should not have a power value.", nameof(Power));
+        throw new ArgumentException($"A move belonging to the '{nameof(MoveCategory.Status)}' category should not have a power value.", nameof(Power)); // TODO(fpion): typed exception
       }
 
       if (_power != value)
@@ -228,16 +228,16 @@ public class Move : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(stages));
     }
 
-    if (!_statisticChanges.TryGetValue(statistic, out int existingStages) || existingStages != stages)
+    if (stages == 0)
     {
-      if (stages == 0)
+      if (_statisticChanges.Remove(statistic))
       {
-        _statisticChanges.Remove(statistic);
+        _updatedEvent.StatisticChanges[statistic] = stages;
       }
-      else
-      {
-        _statisticChanges[statistic] = stages;
-      }
+    }
+    else if (!_statisticChanges.TryGetValue(statistic, out int existingStages) || existingStages != stages)
+    {
+      _statisticChanges[statistic] = stages;
       _updatedEvent.StatisticChanges[statistic] = stages;
     }
   }

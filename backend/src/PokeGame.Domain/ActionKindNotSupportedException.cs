@@ -3,7 +3,7 @@ using PokeGame.Contracts;
 
 namespace PokeGame.Domain;
 
-internal class ActionKindNotSupportedException : NotSupportedException
+public class ActionKindNotSupportedException : NotSupportedException
 {
   private const string ErrorMessage = "The specified action kind is not supported.";
 

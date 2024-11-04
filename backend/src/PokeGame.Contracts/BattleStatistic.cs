@@ -2,7 +2,6 @@
 
 public enum BattleStatistic
 {
-  HP,
   Attack,
   Defense,
   SpecialAttack,
