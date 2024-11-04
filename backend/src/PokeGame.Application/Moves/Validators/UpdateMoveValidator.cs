@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using PokeGame.Contracts.Moves;
+using PokeGame.Domain.Moves;
 using PokeGame.Domain.Validators;
 
 namespace PokeGame.Application.Moves.Validators;
@@ -11,9 +12,13 @@ internal class UpdateMoveValidator : AbstractValidator<UpdateMovePayload>
     When(x => !string.IsNullOrWhiteSpace(x.Name), () => RuleFor(x => x.Name!).Name());
     When(x => !string.IsNullOrWhiteSpace(x.Description?.Value), () => RuleFor(x => x.Description!.Value!).Description());
 
-    // TODO(fpion): Accuracy
-    // TODO(fpion): Power
-    // TODO(fpion): PowerPoints
+    When(x => x.Accuracy?.Value != null, () => RuleFor(x => x.Accuracy!.Value).GreaterThan(0).LessThanOrEqualTo(100));
+    When(x => x.Power?.Value != null, () => RuleFor(x => x.Power!.Value).GreaterThan(0).LessThan(Move.PowerMaximumValue));
+    RuleFor(x => x.PowerPoints).GreaterThan(0).LessThan(Move.PowerPointsMaximumValue);
+
+    RuleForEach(x => x.StatisticChanges).SetValidator(new StatisticChangeValidator(allowZero: true));
+    When(x => x.Status?.Value != null, () => RuleFor(x => x.Status!.Value!).SetValidator(new InflictedConditionValidator()));
+    RuleForEach(x => x.VolatileConditions).SetValidator(new VolatileConditionUpdateValidator());
 
     When(x => !string.IsNullOrWhiteSpace(x.Link?.Value), () => RuleFor(x => x.Link!.Value!).Url());
     When(x => !string.IsNullOrWhiteSpace(x.Notes?.Value), () => RuleFor(x => x.Notes!.Value!).Notes());
