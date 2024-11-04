@@ -38,15 +38,6 @@ public class MoveTests
     Assert.Empty(_move.Changes);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when setting power to a status move.")]
-  public void It_should_throw_ArgumentException_when_setting_power_to_a_status_move()
-  {
-    Move move = new(PokemonType.Normal, MoveCategory.Status, new Name("Growl"), _userId);
-    var exception = Assert.Throws<ArgumentException>(() => move.Power = 100);
-    Assert.StartsWith("A move belonging to the 'Status' category should not have a power value.", exception.Message);
-    Assert.Equal("Power", exception.ParamName);
-  }
-
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when constructing with an undefined category.")]
   public void It_should_throw_ArgumentOutOfRangeException_when_constructing_with_an_undefined_category()
   {
@@ -96,6 +87,17 @@ public class MoveTests
   {
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _move.PowerPoints = powerPoints);
     Assert.Equal("PowerPoints", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw StatusMoveCannotHavePowerException when setting power to a status move.")]
+  public void It_should_throw_StatusMoveCannotHavePowerException_when_setting_power_to_a_status_move()
+  {
+    Move move = new(PokemonType.Normal, MoveCategory.Status, new Name("Growl"), _userId);
+    int power = 100;
+    var exception = Assert.Throws<StatusMoveCannotHavePowerException>(() => move.Power = power);
+    Assert.Equal(move.Id.ToGuid(), exception.MoveId);
+    Assert.Equal(power, exception.Power);
+    Assert.Equal("Power", exception.PropertyName);
   }
 
   [Fact(DisplayName = "RemoveVolatileCondition: it should not do anything when the volatile condition does not exist.")]

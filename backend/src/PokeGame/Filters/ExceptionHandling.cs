@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using PokeGame.Application;
 using PokeGame.Application.Logging;
 using PokeGame.Contracts.Errors;
+using PokeGame.Domain;
 
 namespace PokeGame.Filters;
 
@@ -32,6 +33,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
         error.Add(new PropertyError(failure.ErrorCode, failure.ErrorMessage, failure.AttemptedValue, failure.PropertyName));
       }
       context.Result = new BadRequestObjectResult(error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is DomainException domain)
+    {
+      context.Result = new BadRequestObjectResult(domain.Error);
       context.ExceptionHandled = true;
     }
     else if (context.Exception is BadRequestException badRequest)

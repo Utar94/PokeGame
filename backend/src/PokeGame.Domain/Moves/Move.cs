@@ -94,7 +94,7 @@ public class Move : AggregateRoot
       }
       else if (Category == MoveCategory.Status && value.HasValue)
       {
-        throw new ArgumentException($"A move belonging to the '{nameof(MoveCategory.Status)}' category should not have a power value.", nameof(Power)); // TODO(fpion): typed exception
+        throw new StatusMoveCannotHavePowerException(this, value.Value, nameof(Power));
       }
 
       if (_power != value)
