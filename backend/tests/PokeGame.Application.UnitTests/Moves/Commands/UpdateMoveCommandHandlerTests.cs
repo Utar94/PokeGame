@@ -44,6 +44,7 @@ public class UpdateMoveCommandHandlerTests
   {
     UpdateMovePayload payload = new()
     {
+      Kind = new Change<MoveKind?>((MoveKind)(-1)),
       Accuracy = new Change<int?>(10000),
       Power = new Change<int?>(1000),
       PowerPoints = 100,
@@ -59,8 +60,9 @@ public class UpdateMoveCommandHandlerTests
     command.Contextualize();
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(8, exception.Errors.Count());
+    Assert.Equal(9, exception.Errors.Count());
 
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Kind.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "Accuracy.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "Power.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "PowerPoints");
@@ -86,6 +88,7 @@ public class UpdateMoveCommandHandlerTests
 
     UpdateMovePayload payload = new()
     {
+      Kind = new Change<MoveKind?>(MoveKind.Facade),
       Name = " Growl ",
       Accuracy = new Change<int?>(100),
       PowerPoints = 40,
@@ -111,7 +114,7 @@ public class UpdateMoveCommandHandlerTests
 
     Assert.NotNull(payload.Status.Value);
     _moveRepository.Verify(x => x.SaveAsync(
-      It.Is<Move>(y => Comparisons.AreEqual(y.Name, payload.Name) && y.Description == description
+      It.Is<Move>(y => y.Kind == payload.Kind.Value && Comparisons.AreEqual(y.Name, payload.Name) && y.Description == description
         && y.Accuracy == payload.Accuracy.Value && y.Power == null && y.PowerPoints == payload.PowerPoints
         && y.StatisticChanges.Count == 2 && y.StatisticChanges[BattleStatistic.Attack] == -1 && y.StatisticChanges[BattleStatistic.SpecialAttack] == -2
         && Comparisons.AreEqual(y.Status, payload.Status.Value)
