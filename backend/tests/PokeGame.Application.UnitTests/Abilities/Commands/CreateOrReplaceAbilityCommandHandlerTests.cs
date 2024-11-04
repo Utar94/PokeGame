@@ -48,7 +48,7 @@ public class CreateOrReplaceAbilityCommandHandlerTests
     Assert.True(result.Created);
 
     _abilityRepository.Verify(x => x.SaveAsync(
-      It.Is<Ability>(y => y.Kind == payload.Kind
+      It.Is<Ability>(y => y.Id.ToGuid() == command.Id && y.Kind == payload.Kind
         && Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description)
         && Comparisons.AreEqual(y.Link, payload.Link) && Comparisons.AreEqual(y.Notes, payload.Notes)),
       _cancellationToken), Times.Once);

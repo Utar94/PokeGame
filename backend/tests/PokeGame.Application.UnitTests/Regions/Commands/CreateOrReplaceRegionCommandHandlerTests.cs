@@ -47,7 +47,8 @@ public class CreateOrReplaceRegionCommandHandlerTests
     Assert.True(result.Created);
 
     _regionRepository.Verify(x => x.SaveAsync(
-      It.Is<Region>(y => Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description)
+      It.Is<Region>(y => y.Id.ToGuid() == command.Id
+        && Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description)
         && Comparisons.AreEqual(y.Link, payload.Link) && Comparisons.AreEqual(y.Notes, payload.Notes)),
       _cancellationToken), Times.Once);
   }

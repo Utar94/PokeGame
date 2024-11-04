@@ -105,4 +105,9 @@ public static class ValidationExtensions
   {
     return ruleBuilder.NotEmpty().MaximumLength(Domain.Url.MaximumLength).SetValidator(new UrlValidator<T>());
   }
+
+  public static IRuleBuilderOptions<T, string> VolatileCondition<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty().MaximumLength(Moves.VolatileCondition.MaximumLength);
+  }
 }

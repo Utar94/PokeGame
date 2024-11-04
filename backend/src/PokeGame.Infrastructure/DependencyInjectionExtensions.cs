@@ -50,9 +50,11 @@ public static class DependencyInjectionExtensions
   [
     new AbilityIdConverter(),
     new DescriptionConverter(),
+    new MoveIdConverter(),
     new NameConverter(),
     new NotesConverter(),
     new RegionIdConverter(),
-    new UrlConverter()
+    new UrlConverter(),
+    new VolatileConditionConverter()
   ];
 }
