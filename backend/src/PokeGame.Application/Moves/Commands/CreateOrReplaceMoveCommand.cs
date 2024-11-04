@@ -52,6 +52,11 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
       ? await _moveRepository.LoadAsync(move.Id, command.Version.Value, cancellationToken)
       : null) ?? move;
 
+    if (payload.Kind != reference.Kind)
+    {
+      move.Kind = payload.Kind;
+    }
+
     Name name = new(payload.Name);
     if (reference.Name != name)
     {
@@ -129,7 +134,7 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
     {
       VolatileCondition volatileCondition = new(value);
       volatileConditions.Add(volatileCondition);
-      if (!reference.VolatileConditions.Contains(volatileCondition))
+      if (!reference.HasVolatileCondition(volatileCondition))
       {
         move.AddVolatileCondition(volatileCondition);
       }
