@@ -13,4 +13,14 @@ internal class VolatileConditionConverter : JsonConverter<VolatileCondition>
   {
     writer.WriteStringValue(volatileCondition.Value);
   }
+
+  public override VolatileCondition ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  {
+    return new VolatileCondition(reader.GetString() ?? string.Empty);
+  }
+
+  public override void WriteAsPropertyName(Utf8JsonWriter writer, VolatileCondition volatileCondition, JsonSerializerOptions options)
+  {
+    writer.WritePropertyName(volatileCondition.Value);
+  }
 }
