@@ -21,6 +21,10 @@ internal class RegionRepository : Logitar.EventSourcing.EntityFrameworkCore.Rela
     return await LoadAsync<Region>(id.AggregateId, version, cancellationToken);
   }
 
+  public async Task<IReadOnlyCollection<Region>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<Region>(cancellationToken)).ToArray().AsReadOnly();
+  }
   public async Task<IReadOnlyCollection<Region>> LoadAsync(IEnumerable<RegionId> ids, CancellationToken cancellationToken)
   {
     IEnumerable<AggregateId> aggregateIds = ids.Select(id => id.AggregateId);

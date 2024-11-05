@@ -5,6 +5,7 @@ public interface IRegionRepository
   Task<Region?> LoadAsync(RegionId id, CancellationToken cancellationToken = default);
   Task<Region?> LoadAsync(RegionId id, long? version, CancellationToken cancellationToken = default);
 
+  Task<IReadOnlyCollection<Region>> LoadAsync(CancellationToken cancellationToken = default);
   Task<IReadOnlyCollection<Region>> LoadAsync(IEnumerable<RegionId> ids, CancellationToken cancellationToken = default);
 
   Task SaveAsync(Region region, CancellationToken cancellationToken = default);

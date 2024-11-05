@@ -7,6 +7,7 @@ using PokeGame.Authentication;
 using PokeGame.Authorization;
 using PokeGame.Constants;
 using PokeGame.EntityFrameworkCore;
+using PokeGame.EntityFrameworkCore.PostgreSQL;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Extensions;
 using PokeGame.Filters;
@@ -92,6 +93,11 @@ internal class Startup : StartupBase
     DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
     switch (databaseProvider)
     {
+      case DatabaseProvider.EntityFrameworkCorePostgreSQL:
+        services.AddPokeGameWithEntityFrameworkCorePostgreSQL(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<PokeGameContext>();
+        break;
       case DatabaseProvider.EntityFrameworkCoreSqlServer:
         services.AddPokeGameWithEntityFrameworkCoreSqlServer(_configuration);
         healthChecks.AddDbContextCheck<EventContext>();

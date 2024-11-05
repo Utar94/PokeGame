@@ -21,6 +21,10 @@ internal class AbilityRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
     return await LoadAsync<Ability>(id.AggregateId, version, cancellationToken);
   }
 
+  public async Task<IReadOnlyCollection<Ability>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<Ability>(cancellationToken)).ToArray().AsReadOnly();
+  }
   public async Task<IReadOnlyCollection<Ability>> LoadAsync(IEnumerable<AbilityId> ids, CancellationToken cancellationToken)
   {
     IEnumerable<AggregateId> aggregateIds = ids.Select(id => id.AggregateId);
