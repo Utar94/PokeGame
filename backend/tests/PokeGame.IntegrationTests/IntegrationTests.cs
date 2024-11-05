@@ -17,7 +17,6 @@ using PokeGame.Domain;
 using PokeGame.EntityFrameworkCore;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Infrastructure;
-using System.Text;
 using Locale = Logitar.Portal.Contracts.Locale;
 using PokeGameDb = PokeGame.EntityFrameworkCore.PokeGameDb;
 
@@ -121,7 +120,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     TableId[] tables =
     [
       PokeGameDb.Regions.Table,
-      //PokeGameDb.Moves.Table, // TODO(fpion): complete
+      PokeGameDb.Moves.Table,
       PokeGameDb.Abilities.Table,
       PokeGameDb.Users.Table,
       EventDb.Events.Table

@@ -13,8 +13,8 @@ namespace PokeGame.EntityFrameworkCore.Queriers;
 
 internal class RegionQuerier : IRegionQuerier
 {
-  private readonly DbSet<RegionEntity> _regions;
   private readonly IActorService _actorService;
+  private readonly DbSet<RegionEntity> _regions;
   private readonly ISqlHelper _sqlHelper;
 
   public RegionQuerier(IActorService actorService, PokeGameContext context, ISqlHelper sqlHelper)
