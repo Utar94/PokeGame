@@ -121,6 +121,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     TableId[] tables =
     [
       PokeGameDb.Regions.Table,
+      //PokeGameDb.Moves.Table, // TODO(fpion): complete
       PokeGameDb.Abilities.Table,
       PokeGameDb.Users.Table,
       EventDb.Events.Table
