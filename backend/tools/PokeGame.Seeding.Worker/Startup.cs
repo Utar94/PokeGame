@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Client;
 using PokeGame.Application;
 using PokeGame.Application.Logging;
+using PokeGame.EntityFrameworkCore.PostgreSQL;
 using PokeGame.EntityFrameworkCore.SqlServer;
 using PokeGame.Infrastructure;
 using PokeGame.Seeding.Worker.Portal;
@@ -28,6 +29,9 @@ internal class Startup
     DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
     switch (databaseProvider)
     {
+      case DatabaseProvider.EntityFrameworkCorePostgreSQL:
+        services.AddPokeGameWithEntityFrameworkCorePostgreSQL(_configuration);
+        break;
       case DatabaseProvider.EntityFrameworkCoreSqlServer:
         services.AddPokeGameWithEntityFrameworkCoreSqlServer(_configuration);
         break;

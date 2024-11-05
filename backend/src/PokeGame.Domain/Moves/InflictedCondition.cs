@@ -13,6 +13,7 @@ public record InflictedCondition : IInflictedCondition
   {
   }
 
+  [JsonConstructor]
   public InflictedCondition(StatusCondition condition, int chance)
   {
     Condition = condition;

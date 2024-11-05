@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using PokeGame.Domain;
-using PokeGame.Domain.Regions;
+using PokeGame.Application;
+using PokeGame.Application.Regions.Commands;
+using PokeGame.Contracts.Regions;
 
 namespace PokeGame.Seeding.Worker.Backend.Tasks;
 
@@ -17,55 +18,29 @@ internal class SeedRegionsTaskHandler : INotificationHandler<SeedRegionsTask>
     _serializerOptions.Converters.Add(new JsonStringEnumConverter());
   }
 
-  private const string UserIdKey = "UserId";
-
-  private readonly UserId _userId;
   private readonly ILogger<SeedRegionsTaskHandler> _logger;
-  private readonly IRegionRepository _regionRepository;
+  private readonly IRequestPipeline _pipeline;
 
-  public SeedRegionsTaskHandler(IConfiguration configuration, ILogger<SeedRegionsTaskHandler> logger, IRegionRepository regionRepository)
+  public SeedRegionsTaskHandler(ILogger<SeedRegionsTaskHandler> logger, IRequestPipeline pipeline)
   {
-    string userId = configuration.GetValue<string>(UserIdKey) ?? throw new InvalidOperationException($"The configuration '{UserIdKey}' is required.");
-    _userId = new(userId);
-
     _logger = logger;
-    _regionRepository = regionRepository;
+    _pipeline = pipeline;
   }
 
   public async Task Handle(SeedRegionsTask _, CancellationToken cancellationToken)
   {
     string json = await File.ReadAllTextAsync("Backend/regions.json", Encoding.UTF8, cancellationToken);
-    IEnumerable<RegionSummary>? summaries = JsonSerializer.Deserialize<IEnumerable<RegionSummary>>(json, _serializerOptions);
-    if (summaries != null)
+    IEnumerable<RegionPayload>? payloads = JsonSerializer.Deserialize<IEnumerable<RegionPayload>>(json, _serializerOptions);
+    if (payloads != null)
     {
-      IEnumerable<RegionId> ids = summaries.Select(x => new RegionId(x.Id)).Distinct();
-      Dictionary<RegionId, Region> regions = (await _regionRepository.LoadAsync(ids, cancellationToken))
-        .ToDictionary(x => x.Id, x => x);
-
-      foreach (RegionSummary summary in summaries)
+      foreach (RegionPayload payload in payloads)
       {
-        string status = "created";
-        RegionId id = new(summary.Id);
-        if (regions.TryGetValue(id, out Region? region))
-        {
-          status = "updated";
-        }
-        else
-        {
-          region = new(new Name(summary.Name), _userId, id);
-          regions[id] = region;
-        }
-
-        region.Name = new Name(summary.Name);
-        region.Description = Description.TryCreate(summary.Description);
-        region.Link = Url.TryCreate(summary.Link);
-        region.Notes = Notes.TryCreate(summary.Notes);
-
-        region.Update(_userId);
-        _logger.LogInformation("The region '{Name}' has been {Status} (Id={Id}).", region.Name, status, region.Id.ToGuid());
+        CreateOrReplaceRegionCommand command = new(payload.Id, payload, Version: null);
+        CreateOrReplaceRegionResult result = await _pipeline.ExecuteAsync(command, cancellationToken);
+        RegionModel region = result.Region ?? throw new InvalidOperationException("The region model should not be null.");
+        string status = result.Created ? "created" : "updated";
+        _logger.LogInformation("The region '{Name}' has been {Status} (Id={Id}).", region.Name, status, region.Id);
       }
-
-      await _regionRepository.SaveAsync(regions.Values, cancellationToken);
     }
   }
 }
