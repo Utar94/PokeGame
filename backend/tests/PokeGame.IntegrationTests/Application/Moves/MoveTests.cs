@@ -1,5 +1,6 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Search;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PokeGame.Application.Moves.Commands;
 using PokeGame.Application.Moves.Queries;
@@ -76,7 +77,7 @@ public class MoveTests : IntegrationTests
     Assert.Equal(payload.Link, move.Link);
     Assert.Equal(payload.Notes.CleanTrim(), move.Notes);
 
-    //Assert.NotNull(await PokeGameContext.Moves.AsNoTracking().SingleOrDefaultAsync(x => x.Id == move.Id)); // TODO(fpion): complete
+    Assert.NotNull(await PokeGameContext.Moves.AsNoTracking().SingleOrDefaultAsync(x => x.Id == move.Id));
   }
 
   [Fact(DisplayName = "It should delete an existing move.")]
@@ -87,7 +88,7 @@ public class MoveTests : IntegrationTests
     Assert.NotNull(move);
     Assert.Equal(command.Id, move.Id);
 
-    //Assert.Null(await PokeGameContext.Moves.AsNoTracking().SingleOrDefaultAsync(x => x.Id == move.Id)); // TODO(fpion): complete
+    Assert.Null(await PokeGameContext.Moves.AsNoTracking().SingleOrDefaultAsync(x => x.Id == move.Id));
   }
 
   [Fact(DisplayName = "It should replace an existing move.")]

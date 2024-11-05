@@ -10,6 +10,7 @@ public class PokeGameContext : DbContext
   }
 
   internal DbSet<AbilityEntity> Abilities { get; private set; }
+  internal DbSet<MoveEntity> Moves { get; private set; }
   internal DbSet<RegionEntity> Regions { get; private set; }
   internal DbSet<UserEntity> Users { get; private set; }
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokeGame.EntityFrameworkCore;
 
@@ -10,9 +11,11 @@ using PokeGame.EntityFrameworkCore;
 namespace PokeGame.EntityFrameworkCore.SqlServer.Migrations
 {
     [DbContext(typeof(PokeGameContext))]
-    partial class PokeGameContextModelSnapshot : ModelSnapshot
+    [Migration("20241105020156_CreateMoveTable")]
+    partial class CreateMoveTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
