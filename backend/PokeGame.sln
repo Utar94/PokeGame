@@ -30,15 +30,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Tests", "tests\Pok
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame", "src\PokeGame\PokeGame.csproj", "{2835C3D7-E864-417D-AC86-8CF7E03A46F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Domain.UnitTests", "tests\PokeGame.Domain.UnitTests\PokeGame.Domain.UnitTests.csproj", "{3B24418A-CA22-4F55-A865-77722D4FE8C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Domain.UnitTests", "tests\PokeGame.Domain.UnitTests\PokeGame.Domain.UnitTests.csproj", "{3B24418A-CA22-4F55-A865-77722D4FE8C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Application.UnitTests", "tests\PokeGame.Application.UnitTests\PokeGame.Application.UnitTests.csproj", "{06991054-8A52-4667-B6FA-3C33C24E67E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Application.UnitTests", "tests\PokeGame.Application.UnitTests\PokeGame.Application.UnitTests.csproj", "{06991054-8A52-4667-B6FA-3C33C24E67E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.MongoDB", "src\PokeGame.MongoDB\PokeGame.MongoDB.csproj", "{555CBA69-7433-4183-BCFC-A848E5E83EBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.MongoDB", "src\PokeGame.MongoDB\PokeGame.MongoDB.csproj", "{555CBA69-7433-4183-BCFC-A848E5E83EBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C7A5FC21-CD1E-47E7-95F2-924BF1FA78BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Seeding.Worker", "tools\PokeGame.Seeding.Worker\PokeGame.Seeding.Worker.csproj", "{5E95A456-AF88-4F6F-B512-DE68D8DEF021}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeGame.Seeding.Worker", "tools\PokeGame.Seeding.Worker\PokeGame.Seeding.Worker.csproj", "{5E95A456-AF88-4F6F-B512-DE68D8DEF021}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.IntegrationTests", "tests\PokeGame.IntegrationTests\PokeGame.IntegrationTests.csproj", "{2793E287-C9CA-4294-BDDB-78615A160784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore.PostgreSQL", "src\PokeGame.EntityFrameworkCore.PostgreSQL\PokeGame.EntityFrameworkCore.PostgreSQL.csproj", "{28314719-E618-4FE4-9017-911DC9799E28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +98,14 @@ Global
 		{5E95A456-AF88-4F6F-B512-DE68D8DEF021}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E95A456-AF88-4F6F-B512-DE68D8DEF021}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E95A456-AF88-4F6F-B512-DE68D8DEF021}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2793E287-C9CA-4294-BDDB-78615A160784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2793E287-C9CA-4294-BDDB-78615A160784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2793E287-C9CA-4294-BDDB-78615A160784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2793E287-C9CA-4294-BDDB-78615A160784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28314719-E618-4FE4-9017-911DC9799E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28314719-E618-4FE4-9017-911DC9799E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28314719-E618-4FE4-9017-911DC9799E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28314719-E618-4FE4-9017-911DC9799E28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +115,7 @@ Global
 		{3B24418A-CA22-4F55-A865-77722D4FE8C9} = {D969315E-3F21-42E8-B406-B8C2D0AD035D}
 		{06991054-8A52-4667-B6FA-3C33C24E67E2} = {D969315E-3F21-42E8-B406-B8C2D0AD035D}
 		{5E95A456-AF88-4F6F-B512-DE68D8DEF021} = {C7A5FC21-CD1E-47E7-95F2-924BF1FA78BF}
+		{2793E287-C9CA-4294-BDDB-78615A160784} = {D969315E-3F21-42E8-B406-B8C2D0AD035D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76F1CBCD-0263-4043-B3CA-2D97E1E3F1ED}

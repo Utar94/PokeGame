@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PokeGame.EntityFrameworkCore.PostgreSQL\PokeGame.EntityFrameworkCore.PostgreSQL.csproj" />
     <ProjectReference Include="..\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj" />
     <ProjectReference Include="..\PokeGame.MongoDB\PokeGame.MongoDB.csproj" />
   </ItemGroup>
