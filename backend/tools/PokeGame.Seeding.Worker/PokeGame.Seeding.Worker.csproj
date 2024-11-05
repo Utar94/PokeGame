@@ -59,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\PokeGame.EntityFrameworkCore.PostgreSQL\PokeGame.EntityFrameworkCore.PostgreSQL.csproj" />
     <ProjectReference Include="..\..\src\PokeGame.EntityFrameworkCore.SqlServer\PokeGame.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
