@@ -15,9 +15,11 @@ internal static class Regions
   public static ColumnId Version = new(nameof(RegionEntity.Version), Table);
 
   public static ColumnId Description = new(nameof(RegionEntity.Description), Table);
+  public static ColumnId DisplayName = new(nameof(RegionEntity.DisplayName), Table);
   public static ColumnId Id = new(nameof(RegionEntity.Id), Table);
   public static ColumnId Link = new(nameof(RegionEntity.Link), Table);
-  public static ColumnId Name = new(nameof(RegionEntity.Name), Table);
   public static ColumnId Notes = new(nameof(RegionEntity.Notes), Table);
   public static ColumnId RegionId = new(nameof(RegionEntity.RegionId), Table);
+  public static ColumnId UniqueName = new(nameof(RegionEntity.UniqueName), Table);
+  public static ColumnId UniqueNameNormalized = new(nameof(RegionEntity.UniqueNameNormalized), Table);
 }

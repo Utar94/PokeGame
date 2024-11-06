@@ -15,9 +15,13 @@ internal class RegionConfiguration : AggregateConfiguration<RegionEntity>, IEnti
     builder.HasKey(x => x.RegionId);
 
     builder.HasIndex(x => x.Id).IsUnique();
-    builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => x.UniqueName);
+    builder.HasIndex(x => x.UniqueNameNormalized).IsUnique();
+    builder.HasIndex(x => x.DisplayName);
 
-    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
+    builder.Property(x => x.UniqueName).HasMaxLength(UniqueName.MaximumLength);
+    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueName.MaximumLength);
+    builder.Property(x => x.DisplayName).HasMaxLength(DisplayName.MaximumLength);
     builder.Property(x => x.Link).HasMaxLength(Url.MaximumLength);
   }
 }

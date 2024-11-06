@@ -7,7 +7,13 @@ internal class RegionEntity : AggregateEntity
   public int RegionId { get; private set; }
   public Guid Id { get; private set; }
 
-  public string Name { get; private set; } = string.Empty;
+  public string UniqueName { get; private set; } = string.Empty;
+  public string UniqueNameNormalized
+  {
+    get => PokeGameDb.Helper.Normalize(UniqueName);
+    private set { }
+  }
+  public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
   public string? Link { get; private set; }
@@ -17,7 +23,7 @@ internal class RegionEntity : AggregateEntity
   {
     Id = @event.AggregateId.ToGuid();
 
-    Name = @event.Name.Value;
+    UniqueName = @event.UniqueName.Value;
   }
 
   private RegionEntity() : base()
@@ -28,9 +34,13 @@ internal class RegionEntity : AggregateEntity
   {
     base.Update(@event);
 
-    if (@event.Name != null)
+    if (@event.UniqueName != null)
     {
-      Name = @event.Name.Value;
+      UniqueName = @event.UniqueName.Value;
+    }
+    if (@event.DisplayName != null)
+    {
+      DisplayName = @event.DisplayName.Value?.Value;
     }
     if (@event.Description != null)
     {
@@ -47,5 +57,5 @@ internal class RegionEntity : AggregateEntity
     }
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }
