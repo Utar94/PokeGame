@@ -45,6 +45,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
       context.Result = new BadRequestObjectResult(badRequest.Error);
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is ConflictException conflict)
+    {
+      context.Result = new ConflictObjectResult(conflict.Error);
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is NotImplementedException)
     {
       context.Result = new StatusCodeResult(StatusCodes.Status501NotImplemented);

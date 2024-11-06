@@ -15,11 +15,13 @@ internal class CreateOrReplaceRegionCommandHandler : IRequestHandler<CreateOrRep
 {
   private readonly IRegionQuerier _regionQuerier;
   private readonly IRegionRepository _regionRepository;
+  private readonly ISender _sender;
 
-  public CreateOrReplaceRegionCommandHandler(IRegionQuerier regionQuerier, IRegionRepository regionRepository)
+  public CreateOrReplaceRegionCommandHandler(IRegionQuerier regionQuerier, IRegionRepository regionRepository, ISender sender)
   {
     _regionQuerier = regionQuerier;
     _regionRepository = regionRepository;
+    _sender = sender;
   }
 
   public async Task<CreateOrReplaceRegionResult> Handle(CreateOrReplaceRegionCommand command, CancellationToken cancellationToken)
@@ -79,7 +81,7 @@ internal class CreateOrReplaceRegionCommandHandler : IRequestHandler<CreateOrRep
     }
 
     region.Update(userId);
-    await _regionRepository.SaveAsync(region, cancellationToken);
+    await _sender.Send(new SaveRegionCommand(region), cancellationToken);
 
     RegionModel model = await _regionQuerier.ReadAsync(region, cancellationToken);
     return new CreateOrReplaceRegionResult(model, created);

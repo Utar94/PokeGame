@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Actors;
 using PokeGame.Application.Regions;
 using PokeGame.Contracts.Regions;
+using PokeGame.Domain;
 using PokeGame.Domain.Regions;
 using PokeGame.EntityFrameworkCore.Entities;
 
@@ -22,6 +23,18 @@ internal class RegionQuerier : IRegionQuerier
     _actorService = actorService;
     _regions = context.Regions;
     _sqlHelper = sqlHelper;
+  }
+
+  public async Task<RegionId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName.Value);
+
+    string? aggregateId = await _regions.AsNoTracking()
+      .Where(x => x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => x.AggregateId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return aggregateId == null ? null : new RegionId(aggregateId);
   }
 
   public async Task<RegionModel> ReadAsync(Region region, CancellationToken cancellationToken)

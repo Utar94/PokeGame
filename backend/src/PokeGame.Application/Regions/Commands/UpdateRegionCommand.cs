@@ -13,11 +13,13 @@ internal class UpdateRegionCommandHandler : IRequestHandler<UpdateRegionCommand,
 {
   private readonly IRegionQuerier _regionQuerier;
   private readonly IRegionRepository _regionRepository;
+  private readonly ISender _sender;
 
-  public UpdateRegionCommandHandler(IRegionQuerier regionQuerier, IRegionRepository regionRepository)
+  public UpdateRegionCommandHandler(IRegionQuerier regionQuerier, IRegionRepository regionRepository, ISender sender)
   {
     _regionQuerier = regionQuerier;
     _regionRepository = regionRepository;
+    _sender = sender;
   }
 
   public async Task<RegionModel?> Handle(UpdateRegionCommand command, CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ internal class UpdateRegionCommandHandler : IRequestHandler<UpdateRegionCommand,
     }
 
     region.Update(command.GetUserId());
-    await _regionRepository.SaveAsync(region, cancellationToken);
+    await _sender.Send(new SaveRegionCommand(region), cancellationToken);
 
     return await _regionQuerier.ReadAsync(region, cancellationToken);
   }
