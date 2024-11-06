@@ -3,27 +3,27 @@ using PokeGame.Domain.Validators;
 
 namespace PokeGame.Domain;
 
-public record Name // TODO(fpion): remove this class
+public record DisplayName
 {
   public const int MaximumLength = byte.MaxValue;
 
   public string Value { get; }
 
-  public Name(string value)
+  public DisplayName(string value)
   {
     Value = value.Trim();
     new Validator().ValidateAndThrow(this);
   }
 
-  public static Name? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
+  public static DisplayName? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
 
   public override string ToString() => Value;
 
-  private class Validator : AbstractValidator<Name>
+  private class Validator : AbstractValidator<DisplayName>
   {
     public Validator()
     {
-      RuleFor(x => x.Value).Name();
+      RuleFor(x => x.Value).DisplayName();
     }
   }
 }
