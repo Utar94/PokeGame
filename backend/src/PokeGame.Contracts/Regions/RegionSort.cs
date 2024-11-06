@@ -3,6 +3,7 @@
 public enum RegionSort
 {
   CreatedOn,
-  Name,
+  DisplayName,
+  UniqueName,
   UpdatedOn
 }
