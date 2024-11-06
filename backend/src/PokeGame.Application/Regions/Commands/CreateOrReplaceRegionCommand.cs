@@ -43,7 +43,7 @@ internal class CreateOrReplaceRegionCommandHandler : IRequestHandler<CreateOrRep
         return new CreateOrReplaceRegionResult();
       }
 
-      region = new Region(new Name(payload.Name), userId, id);
+      region = new Region(new UniqueName(payload.UniqueName), userId, id);
       created = true;
     }
 
@@ -51,10 +51,15 @@ internal class CreateOrReplaceRegionCommandHandler : IRequestHandler<CreateOrRep
       ? await _regionRepository.LoadAsync(region.Id, command.Version.Value, cancellationToken)
       : null) ?? region;
 
-    Name name = new(payload.Name);
-    if (reference.Name != name)
+    UniqueName uniqueName = new(payload.UniqueName);
+    if (reference.UniqueName != uniqueName)
     {
-      region.Name = name;
+      region.UniqueName = uniqueName;
+    }
+    DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
+    if (reference.DisplayName != displayName)
+    {
+      region.DisplayName = displayName;
     }
     Description? description = Description.TryCreate(payload.Description);
     if (reference.Description != description)

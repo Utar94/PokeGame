@@ -3,7 +3,7 @@ using PokeGame.Contracts.Regions;
 
 namespace PokeGame.Application.Regions.Queries;
 
-public record ReadRegionQuery(Guid Id) : Activity, IRequest<RegionModel?>;
+public record ReadRegionQuery(Guid? Id, string? UniqueName) : Activity, IRequest<RegionModel?>;
 
 internal class ReadRegionQueryHandler : IRequestHandler<ReadRegionQuery, RegionModel?>
 {
@@ -16,6 +16,30 @@ internal class ReadRegionQueryHandler : IRequestHandler<ReadRegionQuery, RegionM
 
   public async Task<RegionModel?> Handle(ReadRegionQuery query, CancellationToken cancellationToken)
   {
-    return await _regionQuerier.ReadAsync(query.Id, cancellationToken);
+    Dictionary<Guid, RegionModel> regions = new(capacity: 2);
+
+    if (query.Id.HasValue)
+    {
+      RegionModel? region = await _regionQuerier.ReadAsync(query.Id.Value, cancellationToken);
+      if (region != null)
+      {
+        regions[region.Id] = region;
+      }
+    }
+    if (!string.IsNullOrWhiteSpace(query.UniqueName))
+    {
+      RegionModel? region = await _regionQuerier.ReadAsync(query.UniqueName, cancellationToken);
+      if (region != null)
+      {
+        regions[region.Id] = region;
+      }
+    }
+
+    if (regions.Count > 1)
+    {
+      throw TooManyResultsException<RegionModel>.ExpectedSingle(regions.Count);
+    }
+
+    return regions.SingleOrDefault().Value;
   }
 }

@@ -32,10 +32,14 @@ internal class UpdateRegionCommandHandler : IRequestHandler<UpdateRegionCommand,
       return null;
     }
 
-    Name? name = Name.TryCreate(payload.Name);
-    if (name != null)
+    UniqueName? uniqueName = UniqueName.TryCreate(payload.UniqueName);
+    if (uniqueName != null)
     {
-      region.Name = name;
+      region.UniqueName = uniqueName;
+    }
+    if (payload.DisplayName != null)
+    {
+      region.DisplayName = DisplayName.TryCreate(payload.DisplayName.Value);
     }
     if (payload.Description != null)
     {
