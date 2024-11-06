@@ -40,7 +40,14 @@ public class RegionController : ControllerBase
   [HttpGet("{id}")]
   public async Task<ActionResult<RegionModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    RegionModel? region = await _pipeline.ExecuteAsync(new ReadRegionQuery(id), cancellationToken);
+    RegionModel? region = await _pipeline.ExecuteAsync(new ReadRegionQuery(id, UniqueName: null), cancellationToken);
+    return GetActionResult(region);
+  }
+
+  [HttpGet("unique-name:{uniqueName}")]
+  public async Task<ActionResult<RegionModel>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    RegionModel? region = await _pipeline.ExecuteAsync(new ReadRegionQuery(Id: null, uniqueName), cancellationToken);
     return GetActionResult(region);
   }
 
