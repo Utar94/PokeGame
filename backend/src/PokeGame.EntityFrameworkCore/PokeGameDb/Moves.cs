@@ -20,14 +20,13 @@ internal static class Moves
   public static ColumnId Category = new(nameof(MoveEntity.Category), Table);
   public static ColumnId DefenseStages = new(nameof(MoveEntity.DefenseStages), Table);
   public static ColumnId Description = new(nameof(MoveEntity.Description), Table);
+  public static ColumnId DisplayName = new(nameof(MoveEntity.DisplayName), Table);
   public static ColumnId EvasionStages = new(nameof(MoveEntity.EvasionStages), Table);
   public static ColumnId Id = new(nameof(MoveEntity.Id), Table);
   public static ColumnId InflictedStatusChance = new(nameof(MoveEntity.InflictedStatusChance), Table);
   public static ColumnId InflictedStatusCondition = new(nameof(MoveEntity.InflictedStatusCondition), Table);
-  public static ColumnId Kind = new(nameof(MoveEntity.Kind), Table);
   public static ColumnId Link = new(nameof(MoveEntity.Link), Table);
   public static ColumnId MoveId = new(nameof(MoveEntity.MoveId), Table);
-  public static ColumnId Name = new(nameof(MoveEntity.Name), Table);
   public static ColumnId Notes = new(nameof(MoveEntity.Notes), Table);
   public static ColumnId Power = new(nameof(MoveEntity.Power), Table);
   public static ColumnId PowerPoints = new(nameof(MoveEntity.PowerPoints), Table);
@@ -35,5 +34,7 @@ internal static class Moves
   public static ColumnId SpecialDefenseStages = new(nameof(MoveEntity.SpecialDefenseStages), Table);
   public static ColumnId SpeedStages = new(nameof(MoveEntity.SpeedStages), Table);
   public static ColumnId Type = new(nameof(MoveEntity.Type), Table);
+  public static ColumnId UniqueName = new(nameof(MoveEntity.UniqueName), Table);
+  public static ColumnId UniqueNameNormalized = new(nameof(MoveEntity.UniqueNameNormalized), Table);
   public static ColumnId VolatileConditions = new(nameof(MoveEntity.VolatileConditions), Table);
 }
