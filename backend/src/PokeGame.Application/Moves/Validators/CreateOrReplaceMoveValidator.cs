@@ -13,7 +13,7 @@ internal class CreateOrReplaceMoveValidator : AbstractValidator<CreateOrReplaceM
     RuleFor(x => x.Category).IsInEnum();
 
     RuleFor(x => x.UniqueName).UniqueName();
-    When(x => !string.IsNullOrWhiteSpace(x.DisplayName), () => RuleFor(x => x.DisplayName!).Description());
+    When(x => !string.IsNullOrWhiteSpace(x.DisplayName), () => RuleFor(x => x.DisplayName!).DisplayName());
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());
 
     When(x => x.Accuracy != null, () => RuleFor(x => x.Accuracy).GreaterThan(0).LessThanOrEqualTo(100));

@@ -35,7 +35,7 @@ internal class ReadMoveQueryHandler : IRequestHandler<ReadMoveQuery, MoveModel?>
       }
     }
 
-    if (moves.Count > 0)
+    if (moves.Count > 1)
     {
       throw TooManyResultsException<MoveModel>.ExpectedSingle(moves.Count);
     }

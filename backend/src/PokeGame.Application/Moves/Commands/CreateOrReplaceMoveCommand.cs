@@ -16,11 +16,13 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
 {
   private readonly IMoveQuerier _moveQuerier;
   private readonly IMoveRepository _moveRepository;
+  private readonly ISender _sender;
 
-  public CreateOrReplaceMoveCommandHandler(IMoveQuerier moveQuerier, IMoveRepository moveRepository)
+  public CreateOrReplaceMoveCommandHandler(IMoveQuerier moveQuerier, IMoveRepository moveRepository, ISender sender)
   {
     _moveQuerier = moveQuerier;
     _moveRepository = moveRepository;
+    _sender = sender;
   }
 
   public async Task<CreateOrReplaceMoveResult> Handle(CreateOrReplaceMoveCommand command, CancellationToken cancellationToken)
@@ -101,7 +103,7 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
     }
 
     move.Update(userId);
-    await _moveRepository.SaveAsync(move, cancellationToken);
+    await _sender.Send(new SaveMoveCommand(move), cancellationToken);
 
     MoveModel model = await _moveQuerier.ReadAsync(move, cancellationToken);
     return new CreateOrReplaceMoveResult(model, created);

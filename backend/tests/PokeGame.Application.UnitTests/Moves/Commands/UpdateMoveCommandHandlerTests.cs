@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Moves;
@@ -15,6 +16,7 @@ public class UpdateMoveCommandHandlerTests
 
   private readonly Mock<IMoveQuerier> _moveQuerier = new();
   private readonly Mock<IMoveRepository> _moveRepository = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateMoveCommandHandler _handler;
 
@@ -23,9 +25,9 @@ public class UpdateMoveCommandHandlerTests
 
   public UpdateMoveCommandHandlerTests()
   {
-    _handler = new(_moveQuerier.Object, _moveRepository.Object);
+    _handler = new(_moveQuerier.Object, _moveRepository.Object, _sender.Object);
 
-    _move = new(PokemonType.Normal, MoveCategory.Status, new Name("growl"), _userId);
+    _move = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("growl"), _userId);
     _moveRepository.Setup(x => x.LoadAsync(_move.Id, _cancellationToken)).ReturnsAsync(_move);
   }
 
@@ -44,7 +46,8 @@ public class UpdateMoveCommandHandlerTests
   {
     UpdateMovePayload payload = new()
     {
-      Kind = new Change<MoveKind?>((MoveKind)(-1)),
+      UniqueName = " Growl ",
+      DisplayName = new Change<string>(RandomStringGenerator.GetString(1000)),
       Accuracy = new Change<int?>(10000),
       Power = new Change<int?>(1000),
       PowerPoints = 100,
@@ -60,9 +63,10 @@ public class UpdateMoveCommandHandlerTests
     command.Contextualize();
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(9, exception.Errors.Count());
+    Assert.Equal(10, exception.Errors.Count());
 
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Kind.Value");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "Accuracy.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "Power.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "PowerPoints");
@@ -88,8 +92,8 @@ public class UpdateMoveCommandHandlerTests
 
     UpdateMovePayload payload = new()
     {
-      Kind = new Change<MoveKind?>(MoveKind.Facade),
-      Name = " Growl ",
+      UniqueName = "Growl",
+      DisplayName = new Change<string>(" Growl "),
       Accuracy = new Change<int?>(100),
       PowerPoints = 40,
       StatisticChanges = [new StatisticChangeModel(BattleStatistic.Attack, stages: -1)],
@@ -112,14 +116,14 @@ public class UpdateMoveCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    Assert.NotNull(payload.Status.Value);
-    _moveRepository.Verify(x => x.SaveAsync(
-      It.Is<Move>(y => y.Kind == payload.Kind.Value && Comparisons.AreEqual(y.Name, payload.Name) && y.Description == description
-        && y.Accuracy == payload.Accuracy.Value && y.Power == null && y.PowerPoints == payload.PowerPoints
-        && y.StatisticChanges.Count == 2 && y.StatisticChanges[BattleStatistic.Attack] == -1 && y.StatisticChanges[BattleStatistic.SpecialAttack] == -2
-        && Comparisons.AreEqual(y.Status, payload.Status.Value)
-        && y.VolatileConditions.Count == 2 && y.VolatileConditions.Any(y => y.Value == "Attack -1") && y.VolatileConditions.Any(y => y.Value == "Growl")
-        && Comparisons.AreEqual(y.Link, payload.Link.Value) && Comparisons.AreEqual(y.Notes, payload.Notes.Value)),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveMoveCommand>(y => y.Move.Equals(_move) && Comparisons.AreEqual(y.Move.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Move.DisplayName, payload.DisplayName.Value) && y.Move.Description == description
+        && y.Move.Accuracy == payload.Accuracy.Value && y.Move.Power == null && y.Move.PowerPoints == payload.PowerPoints
+        && y.Move.StatisticChanges.Count == 2 && y.Move.StatisticChanges[BattleStatistic.Attack] == -1 && y.Move.StatisticChanges[BattleStatistic.SpecialAttack] == -2
+        && Comparisons.AreEqual(y.Move.Status, payload.Status.Value)
+        && y.Move.VolatileConditions.Count == 2 && y.Move.VolatileConditions.Any(y => y.Value == "Attack -1") && y.Move.VolatileConditions.Any(y => y.Value == "Growl")
+        && Comparisons.AreEqual(y.Move.Link, payload.Link.Value) && Comparisons.AreEqual(y.Move.Notes, payload.Notes.Value)),
       _cancellationToken), Times.Once);
   }
 }
