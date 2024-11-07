@@ -8,7 +8,7 @@ public class MoveTests
 {
   private static readonly UserId _userId = UserId.NewId();
 
-  private readonly Move _move = new(PokemonType.Normal, MoveCategory.Physical, new Name("Tackle"), _userId);
+  private readonly Move _move = new(PokemonType.Normal, MoveCategory.Physical, new UniqueName("tackle"), _userId);
 
   [Fact(DisplayName = "AddVolatileCondition: it should add a new volatile condition.")]
   public void AddVolatileCondition_it_should_add_a_new_volatile_condition()
@@ -41,14 +41,14 @@ public class MoveTests
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when constructing with an undefined category.")]
   public void It_should_throw_ArgumentOutOfRangeException_when_constructing_with_an_undefined_category()
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Move(PokemonType.Normal, (MoveCategory)(-1), new Name("Growl"), _userId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Move(PokemonType.Normal, (MoveCategory)(-1), new UniqueName("growl"), _userId));
     Assert.Equal("category", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when constructing with an undefined type.")]
   public void It_should_throw_ArgumentOutOfRangeException_when_constructing_with_an_undefined_type()
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Move((PokemonType)(-1), MoveCategory.Status, new Name("Growl"), _userId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Move((PokemonType)(-1), MoveCategory.Status, new UniqueName("growl"), _userId));
     Assert.Equal("type", exception.ParamName);
   }
 
@@ -72,13 +72,6 @@ public class MoveTests
     Assert.Equal("Power", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting an undefined kind.")]
-  public void It_should_throw_ArgumentOutOfRangeException_when_setting_an_undefined_kind()
-  {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _move.Kind = (MoveKind)(-1));
-    Assert.Equal("Kind", exception.ParamName);
-  }
-
   [Theory(DisplayName = "It should throw ArgumentOutOfRangeException when setting invalid power points.")]
   [InlineData(-20)]
   [InlineData(0)]
@@ -92,7 +85,7 @@ public class MoveTests
   [Fact(DisplayName = "It should throw StatusMoveCannotHavePowerException when setting power to a status move.")]
   public void It_should_throw_StatusMoveCannotHavePowerException_when_setting_power_to_a_status_move()
   {
-    Move move = new(PokemonType.Normal, MoveCategory.Status, new Name("Growl"), _userId);
+    Move move = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("growl"), _userId);
     int power = 100;
     var exception = Assert.Throws<StatusMoveCannotHavePowerException>(() => move.Power = power);
     Assert.Equal(move.Id.ToGuid(), exception.MoveId);
