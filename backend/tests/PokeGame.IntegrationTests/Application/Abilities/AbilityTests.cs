@@ -22,7 +22,7 @@ public class AbilityTests : IntegrationTests
   {
     _abilityRepository = ServiceProvider.GetRequiredService<IAbilityRepository>();
 
-    _static = new Ability(new Name("Static"), UserId);
+    _static = new Ability(new UniqueName("static"), UserId);
   }
 
   public override async Task InitializeAsync()
@@ -35,8 +35,9 @@ public class AbilityTests : IntegrationTests
   [Fact(DisplayName = "It should create a new ability.")]
   public async Task It_should_create_a_new_ability()
   {
-    CreateOrReplaceAbilityPayload payload = new(" Overgrow ")
+    CreateOrReplaceAbilityPayload payload = new("overgrow")
     {
+      DisplayName = " Overgrow ",
       Description = "  Powers up Grass-type moves when the Pokémon's HP is low.  ",
       Link = "https://bulbapedia.bulbagarden.net/wiki/Overgrow_(Ability)",
       Notes = "  When a Pokémon with Overgrow uses a Grass-type move, the move's power will be increased by 50% if the user has less than or equal to ⅓ of its maximum HP remaining.\n\nInstead of boosting Grass-type moves' power, Overgrow now technically boosts the Pokémon's Attack or Special Attack by 50% during damage calculation if a Grass-type move is being used, resulting in effectively the same effect.  "
@@ -54,7 +55,8 @@ public class AbilityTests : IntegrationTests
     Assert.Equal(Actor, ability.CreatedBy);
     Assert.Equal(Actor, ability.UpdatedBy);
 
-    Assert.Equal(payload.Name.Trim(), ability.Name);
+    Assert.Equal(payload.UniqueName.Trim(), ability.UniqueName);
+    Assert.Equal(payload.DisplayName.CleanTrim(), ability.DisplayName);
     Assert.Equal(payload.Description.CleanTrim(), ability.Description);
     Assert.Equal(payload.Link, ability.Link);
     Assert.Equal(payload.Notes.CleanTrim(), ability.Notes);
@@ -83,8 +85,9 @@ public class AbilityTests : IntegrationTests
     _static.Update(UserId);
     await _abilityRepository.SaveAsync(_static);
 
-    CreateOrReplaceAbilityPayload payload = new(" Static ")
+    CreateOrReplaceAbilityPayload payload = new("Static")
     {
+      DisplayName = " Static ",
       Description = "  The Pokémon is charged with static electricity and may paralyze attackers that make direct contact with it.  ",
       Link = "https://bulbapedia.bulbagarden.net/wiki/Static_(Ability)",
       Notes = "    "
@@ -100,7 +103,8 @@ public class AbilityTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, ability.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.Equal(Actor, ability.UpdatedBy);
 
-    Assert.Equal(payload.Name.Trim(), ability.Name);
+    Assert.Equal(payload.UniqueName.Trim(), ability.UniqueName);
+    Assert.Equal(payload.DisplayName?.CleanTrim(), ability.DisplayName);
     Assert.Equal(payload.Description?.CleanTrim(), ability.Description);
     Assert.Equal(payload.Link, ability.Link);
     Assert.Equal(notes.Value, ability.Notes);
@@ -119,38 +123,18 @@ public class AbilityTests : IntegrationTests
     Assert.Equal(0, results.Total);
   }
 
-  [Fact(DisplayName = "It should return the correct search results (Kind).")]
-  public async Task It_should_return_the_correct_search_results_Kind()
-  {
-    Ability adaptability = new(new Name("Adaptability"), UserId)
-    {
-      Kind = AbilityKind.Adaptability
-    };
-    adaptability.Update(UserId);
-    await _abilityRepository.SaveAsync(adaptability);
-
-    SearchAbilitiesPayload payload = new()
-    {
-      Kind = AbilityKind.Adaptability
-    };
-    SearchAbilitiesQuery query = new(payload);
-    SearchResults<AbilityModel> results = await Pipeline.ExecuteAsync(query);
-    Assert.Equal(1, results.Total);
-    Assert.Equal(adaptability.Id.ToGuid(), Assert.Single(results.Items).Id);
-  }
-
   [Fact(DisplayName = "It should return the correct search results.")]
   public async Task It_should_return_the_correct_search_results()
   {
-    Ability overgrow = new(new Name("Overgrow"), UserId);
-    Ability blaze = new(new Name("Blaze"), UserId);
-    Ability torrent = new(new Name("Torrent"), UserId);
+    Ability overgrow = new(new UniqueName("Overgrow"), UserId);
+    Ability blaze = new(new UniqueName("Blaze"), UserId);
+    Ability torrent = new(new UniqueName("Torrent"), UserId);
     await _abilityRepository.SaveAsync([overgrow, blaze, torrent]);
 
     SearchAbilitiesPayload payload = new()
     {
       Search = new TextSearch([new SearchTerm("%o%"), new SearchTerm("%z%")], SearchOperator.Or),
-      Sort = [new AbilitySortOption(AbilitySort.Name, isDescending: true)],
+      Sort = [new AbilitySortOption(AbilitySort.UniqueName, isDescending: true)],
       Skip = 1,
       Limit = 1
     };
@@ -169,10 +153,19 @@ public class AbilityTests : IntegrationTests
   [Fact(DisplayName = "It should return the ability found by ID.")]
   public async Task It_should_return_the_ability_found_by_Id()
   {
-    ReadAbilityQuery query = new(_static.Id.ToGuid());
+    ReadAbilityQuery query = new(_static.Id.ToGuid(), UniqueName: null);
     AbilityModel? ability = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(ability);
-    Assert.Equal(query.Id, ability.Id);
+    Assert.Equal(_static.Id.ToGuid(), ability.Id);
+  }
+
+  [Fact(DisplayName = "It should return the ability found by unique name.")]
+  public async Task It_should_return_the_ability_found_by_unique_name()
+  {
+    ReadAbilityQuery query = new(Id: null, _static.UniqueName.Value);
+    AbilityModel? ability = await Pipeline.ExecuteAsync(query);
+    Assert.NotNull(ability);
+    Assert.Equal(_static.Id.ToGuid(), ability.Id);
   }
 
   [Fact(DisplayName = "It should update an existing ability.")]
@@ -185,6 +178,7 @@ public class AbilityTests : IntegrationTests
 
     UpdateAbilityPayload payload = new()
     {
+      DisplayName = new Change<string>(" Static "),
       Description = new Change<string>("  The Pokémon is charged with static electricity and may paralyze attackers that make direct contact with it.  "),
       Link = new Change<string>("https://bulbapedia.bulbagarden.net/wiki/Static_(Ability)")
     };
@@ -197,7 +191,8 @@ public class AbilityTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, ability.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.Equal(Actor, ability.UpdatedBy);
 
-    Assert.Equal(_static.Name.Value, ability.Name);
+    Assert.Equal(_static.UniqueName.Value, ability.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.CleanTrim(), ability.DisplayName);
     Assert.Equal(payload.Description.Value?.CleanTrim(), ability.Description);
     Assert.Equal(payload.Link.Value, ability.Link);
     Assert.Equal(notes.Value, ability.Notes);

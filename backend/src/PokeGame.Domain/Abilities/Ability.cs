@@ -1,7 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
 using PokeGame.Contracts;
-using PokeGame.Contracts.Abilities;
 
 namespace PokeGame.Domain.Abilities;
 
@@ -11,35 +10,29 @@ public class Ability : AggregateRoot
 
   public new AbilityId Id => new(base.Id);
 
-  private AbilityKind? _kind = null;
-  public AbilityKind? Kind
+  private UniqueName? _uniqueName = null;
+  public UniqueName UniqueName
   {
-    get => _kind;
+    get => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
     set
     {
-      if (_kind != value)
+      if (_uniqueName != value)
       {
-        if (value.HasValue && !Enum.IsDefined(value.Value))
-        {
-          throw new ArgumentOutOfRangeException(nameof(Kind));
-        }
-
-        _kind = value;
-        _updatedEvent.Kind = new Change<AbilityKind?>(value);
+        _uniqueName = value;
+        _updatedEvent.UniqueName = value;
       }
     }
   }
-
-  private Name? _name = null;
-  public Name Name
+  private DisplayName? _displayName = null;
+  public DisplayName? DisplayName
   {
-    get => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
+    get => _displayName;
     set
     {
-      if (_name != value)
+      if (_displayName != value)
       {
-        _name = value;
-        _updatedEvent.Name = value;
+        _displayName = value;
+        _updatedEvent.DisplayName = new Change<DisplayName>(value);
       }
     }
   }
@@ -88,13 +81,13 @@ public class Ability : AggregateRoot
   {
   }
 
-  public Ability(Name name, UserId userId, AbilityId? id = null) : base((id ?? AbilityId.NewId()).AggregateId)
+  public Ability(UniqueName uniqueName, UserId userId, AbilityId? id = null) : base((id ?? AbilityId.NewId()).AggregateId)
   {
-    Raise(new CreatedEvent(name), userId.ActorId);
+    Raise(new CreatedEvent(uniqueName), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    _name = @event.Name;
+    _uniqueName = @event.UniqueName;
   }
 
   public void Delete(UserId userId)
@@ -115,14 +108,13 @@ public class Ability : AggregateRoot
   }
   protected virtual void Apply(UpdatedEvent @event)
   {
-    if (@event.Kind != null)
+    if (@event.UniqueName != null)
     {
-      _kind = @event.Kind.Value;
+      _uniqueName = @event.UniqueName;
     }
-
-    if (@event.Name != null)
+    if (@event.DisplayName != null)
     {
-      _name = @event.Name;
+      _displayName = @event.DisplayName.Value;
     }
     if (@event.Description != null)
     {
@@ -139,15 +131,15 @@ public class Ability : AggregateRoot
     }
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public Name Name { get; }
+    public UniqueName UniqueName { get; }
 
-    public CreatedEvent(Name name)
+    public CreatedEvent(UniqueName uniqueName)
     {
-      Name = name;
+      UniqueName = uniqueName;
     }
   }
 
@@ -161,14 +153,13 @@ public class Ability : AggregateRoot
 
   public class UpdatedEvent : DomainEvent, INotification
   {
-    public Change<AbilityKind?>? Kind { get; set; }
-
-    public Name? Name { get; set; }
+    public UniqueName? UniqueName { get; set; }
+    public Change<DisplayName>? DisplayName { get; set; }
     public Change<Description>? Description { get; set; }
 
     public Change<Url>? Link { get; set; }
     public Change<Notes>? Notes { get; set; }
 
-    public bool HasChanges => Kind != null || Name != null || Description != null || Link != null || Notes != null;
+    public bool HasChanges => UniqueName != null || DisplayName != null || Description != null || Link != null || Notes != null;
   }
 }

@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Abilities;
@@ -14,6 +16,7 @@ public class UpdateAbilityCommandHandlerTests
 
   private readonly Mock<IAbilityQuerier> _abilityQuerier = new();
   private readonly Mock<IAbilityRepository> _abilityRepository = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateAbilityCommandHandler _handler;
 
@@ -22,9 +25,9 @@ public class UpdateAbilityCommandHandlerTests
 
   public UpdateAbilityCommandHandlerTests()
   {
-    _handler = new(_abilityQuerier.Object, _abilityRepository.Object);
+    _handler = new(_abilityQuerier.Object, _abilityRepository.Object, _sender.Object);
 
-    _ability = new(new Name("Adaptability"), _userId);
+    _ability = new(new UniqueName("adaptability"), _userId);
     _abilityRepository.Setup(x => x.LoadAsync(_ability.Id, _cancellationToken)).ReturnsAsync(_ability);
   }
 
@@ -43,15 +46,17 @@ public class UpdateAbilityCommandHandlerTests
   {
     UpdateAbilityPayload payload = new()
     {
-      Kind = new Change<AbilityKind?>((AbilityKind)(-1)),
+      UniqueName = " Adaptability ",
+      DisplayName = new Change<string>(RandomStringGenerator.GetString(1000)),
       Link = new Change<string>("test")
     };
     UpdateAbilityCommand command = new(_ability.Id.ToGuid(), payload);
     command.Contextualize();
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(2, exception.Errors.Count());
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Kind.Value");
+    Assert.Equal(3, exception.Errors.Count());
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "UrlValidator" && e.PropertyName == "Link.Value");
   }
 
@@ -64,8 +69,8 @@ public class UpdateAbilityCommandHandlerTests
 
     UpdateAbilityPayload payload = new()
     {
-      Name = " Adaptability ",
-      Kind = new Change<AbilityKind?>(AbilityKind.Adaptability),
+      UniqueName = "Adaptability",
+      DisplayName = new Change<string>(" Adaptability "),
       Description = new Change<string>("  Powers up moves of the same type as the Pokémon.  "),
       Link = new Change<string>("https://bulbapedia.bulbagarden.net/wiki/Adaptability_(Ability)")
     };
@@ -79,10 +84,10 @@ public class UpdateAbilityCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    _abilityRepository.Verify(x => x.SaveAsync(
-      It.Is<Ability>(y => y.Kind == payload.Kind.Value
-        && Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description.Value)
-        && Comparisons.AreEqual(y.Link, payload.Link.Value) && y.Notes == notes),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveAbilityCommand>(y => y.Ability.Equals(_ability) && Comparisons.AreEqual(y.Ability.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Ability.DisplayName, payload.DisplayName.Value) && Comparisons.AreEqual(y.Ability.Description, payload.Description.Value)
+        && Comparisons.AreEqual(y.Ability.Link, payload.Link.Value) && y.Ability.Notes == notes),
       _cancellationToken), Times.Once);
   }
 }

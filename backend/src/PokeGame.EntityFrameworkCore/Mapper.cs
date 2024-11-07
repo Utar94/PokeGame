@@ -41,8 +41,8 @@ internal class Mapper
     AbilityModel destination = new()
     {
       Id = source.Id,
-      Kind = source.Kind,
-      Name = source.Name,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
       Description = source.Description,
       Link = source.Link,
       Notes = source.Notes
@@ -81,9 +81,10 @@ internal class Mapper
 
   public RegionModel ToRegion(RegionEntity source)
   {
-    RegionModel destination = new(source.UniqueName)
+    RegionModel destination = new()
     {
       Id = source.Id,
+      UniqueName = source.UniqueName,
       DisplayName = source.DisplayName,
       Description = source.Description,
       Link = source.Link,

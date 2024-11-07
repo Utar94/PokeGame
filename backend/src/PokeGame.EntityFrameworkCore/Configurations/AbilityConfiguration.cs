@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PokeGame.Contracts.Abilities;
 using PokeGame.Domain;
 using PokeGame.EntityFrameworkCore.Entities;
 
@@ -17,11 +15,13 @@ internal class AbilityConfiguration : AggregateConfiguration<AbilityEntity>, IEn
     builder.HasKey(x => x.AbilityId);
 
     builder.HasIndex(x => x.Id).IsUnique();
-    builder.HasIndex(x => x.Kind);
-    builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => x.UniqueName);
+    builder.HasIndex(x => x.UniqueNameNormalized).IsUnique();
+    builder.HasIndex(x => x.DisplayName);
 
-    builder.Property(x => x.Kind).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<AbilityKind>());
-    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
+    builder.Property(x => x.UniqueName).HasMaxLength(UniqueName.MaximumLength);
+    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueName.MaximumLength);
+    builder.Property(x => x.DisplayName).HasMaxLength(DisplayName.MaximumLength);
     builder.Property(x => x.Link).HasMaxLength(Url.MaximumLength);
   }
 }

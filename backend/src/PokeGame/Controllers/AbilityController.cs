@@ -40,7 +40,14 @@ public class AbilityController : ControllerBase
   [HttpGet("{id}")]
   public async Task<ActionResult<AbilityModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    AbilityModel? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(id), cancellationToken);
+    AbilityModel? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(id, UniqueName: null), cancellationToken);
+    return GetActionResult(ability);
+  }
+
+  [HttpGet("unique-name:{uniqueName}")]
+  public async Task<ActionResult<AbilityModel>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    AbilityModel? ability = await _pipeline.ExecuteAsync(new ReadAbilityQuery(Id: null, uniqueName), cancellationToken);
     return GetActionResult(ability);
   }
 

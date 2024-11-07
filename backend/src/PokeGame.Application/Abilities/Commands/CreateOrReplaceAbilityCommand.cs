@@ -15,11 +15,13 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
 {
   private readonly IAbilityQuerier _abilityQuerier;
   private readonly IAbilityRepository _abilityRepository;
+  private readonly ISender _sender;
 
-  public CreateOrReplaceAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository)
+  public CreateOrReplaceAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository, ISender sender)
   {
     _abilityQuerier = abilityQuerier;
     _abilityRepository = abilityRepository;
+    _sender = sender;
   }
 
   public async Task<CreateOrReplaceAbilityResult> Handle(CreateOrReplaceAbilityCommand command, CancellationToken cancellationToken)
@@ -43,7 +45,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
         return new CreateOrReplaceAbilityResult();
       }
 
-      ability = new Ability(new Name(payload.Name), userId, id);
+      ability = new Ability(new UniqueName(payload.UniqueName), userId, id);
       created = true;
     }
 
@@ -51,15 +53,15 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
       ? await _abilityRepository.LoadAsync(ability.Id, command.Version.Value, cancellationToken)
       : null) ?? ability;
 
-    if (reference.Kind != payload.Kind)
+    UniqueName uniqueName = new(payload.UniqueName);
+    if (reference.UniqueName != uniqueName)
     {
-      ability.Kind = payload.Kind;
+      ability.UniqueName = uniqueName;
     }
-
-    Name name = new(payload.Name);
-    if (reference.Name != name)
+    DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
+    if (reference.DisplayName != displayName)
     {
-      ability.Name = name;
+      ability.DisplayName = displayName;
     }
     Description? description = Description.TryCreate(payload.Description);
     if (reference.Description != description)
@@ -79,7 +81,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
     }
 
     ability.Update(userId);
-    await _abilityRepository.SaveAsync(ability, cancellationToken);
+    await _sender.Send(new SaveAbilityCommand(ability), cancellationToken);
 
     AbilityModel model = await _abilityQuerier.ReadAsync(ability, cancellationToken);
     return new CreateOrReplaceAbilityResult(model, created);

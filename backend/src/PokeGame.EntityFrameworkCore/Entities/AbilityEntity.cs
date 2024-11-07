@@ -1,5 +1,4 @@
-﻿using PokeGame.Contracts.Abilities;
-using PokeGame.Domain.Abilities;
+﻿using PokeGame.Domain.Abilities;
 
 namespace PokeGame.EntityFrameworkCore.Entities;
 
@@ -8,9 +7,13 @@ internal class AbilityEntity : AggregateEntity
   public int AbilityId { get; private set; }
   public Guid Id { get; private set; }
 
-  public AbilityKind? Kind { get; private set; }
-
-  public string Name { get; private set; } = string.Empty;
+  public string UniqueName { get; private set; } = string.Empty;
+  public string UniqueNameNormalized
+  {
+    get => PokeGameDb.Helper.Normalize(UniqueName);
+    private set { }
+  }
+  public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
   public string? Link { get; private set; }
@@ -20,7 +23,7 @@ internal class AbilityEntity : AggregateEntity
   {
     Id = @event.AggregateId.ToGuid();
 
-    Name = @event.Name.Value;
+    UniqueName = @event.UniqueName.Value;
   }
 
   private AbilityEntity() : base()
@@ -31,14 +34,13 @@ internal class AbilityEntity : AggregateEntity
   {
     base.Update(@event);
 
-    if (@event.Kind != null)
+    if (@event.UniqueName != null)
     {
-      Kind = @event.Kind.Value;
+      UniqueName = @event.UniqueName.Value;
     }
-
-    if (@event.Name != null)
+    if (@event.DisplayName != null)
     {
-      Name = @event.Name.Value;
+      DisplayName = @event.DisplayName.Value?.Value;
     }
     if (@event.Description != null)
     {
@@ -55,5 +57,5 @@ internal class AbilityEntity : AggregateEntity
     }
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }
