@@ -16,9 +16,10 @@ internal static class Abilities
 
   public static ColumnId AbilityId = new(nameof(AbilityEntity.AbilityId), Table);
   public static ColumnId Description = new(nameof(AbilityEntity.Description), Table);
+  public static ColumnId DisplayName = new(nameof(AbilityEntity.DisplayName), Table);
   public static ColumnId Id = new(nameof(AbilityEntity.Id), Table);
-  public static ColumnId Kind = new(nameof(AbilityEntity.Kind), Table);
   public static ColumnId Link = new(nameof(AbilityEntity.Link), Table);
-  public static ColumnId Name = new(nameof(AbilityEntity.Name), Table);
   public static ColumnId Notes = new(nameof(AbilityEntity.Notes), Table);
+  public static ColumnId UniqueName = new(nameof(AbilityEntity.UniqueName), Table);
+  public static ColumnId UniqueNameNormalized = new(nameof(AbilityEntity.UniqueNameNormalized), Table);
 }

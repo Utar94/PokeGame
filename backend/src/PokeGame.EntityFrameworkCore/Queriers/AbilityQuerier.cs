@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Actors;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
 using PokeGame.EntityFrameworkCore.Entities;
 
@@ -24,6 +25,18 @@ internal class AbilityQuerier : IAbilityQuerier
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<AbilityId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName.Value);
+
+    string? aggregateId = await _abilities.AsNoTracking()
+      .Where(x => x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => x.AggregateId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return aggregateId == null ? null : new AbilityId(aggregateId);
+  }
+
   public async Task<AbilityModel> ReadAsync(Ability ability, CancellationToken cancellationToken)
   {
     return await ReadAsync(ability.Id, cancellationToken)
@@ -40,17 +53,21 @@ internal class AbilityQuerier : IAbilityQuerier
 
     return ability == null ? null : await MapAsync(ability, cancellationToken);
   }
+  public async Task<AbilityModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName);
+
+    AbilityEntity? ability = await _abilities.AsNoTracking()
+      .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
+
+    return ability == null ? null : await MapAsync(ability, cancellationToken);
+  }
 
   public async Task<SearchResults<AbilityModel>> SearchAsync(SearchAbilitiesPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(PokeGameDb.Abilities.Table).SelectAll(PokeGameDb.Abilities.Table)
       .ApplyIdFilter(payload, PokeGameDb.Abilities.Id);
-    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Abilities.Name);
-
-    if (payload.Kind.HasValue)
-    {
-      builder.Where(PokeGameDb.Abilities.Kind, Operators.IsEqualTo(payload.Kind.Value.ToString()));
-    }
+    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Abilities.UniqueName, PokeGameDb.Abilities.DisplayName);
 
     IQueryable<AbilityEntity> query = _abilities.FromQuery(builder).AsNoTracking();
 
@@ -66,10 +83,15 @@ internal class AbilityQuerier : IAbilityQuerier
             ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
           break;
-        case AbilitySort.Name:
+        case AbilitySort.DisplayName:
           ordered = (ordered == null)
-            ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
-            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Name) : ordered.ThenBy(x => x.Name));
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
+          break;
+        case AbilitySort.UniqueName:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UniqueName) : query.OrderBy(x => x.UniqueName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UniqueName) : ordered.ThenBy(x => x.UniqueName));
           break;
         case AbilitySort.UpdatedOn:
           ordered = (ordered == null)
