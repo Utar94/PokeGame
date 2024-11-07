@@ -39,7 +39,7 @@ internal class SeedRegionsTaskHandler : INotificationHandler<SeedRegionsTask>
         CreateOrReplaceRegionResult result = await _pipeline.ExecuteAsync(command, cancellationToken);
         RegionModel region = result.Region ?? throw new InvalidOperationException("The region model should not be null.");
         string status = result.Created ? "created" : "updated";
-        _logger.LogInformation("The region '{Name}' has been {Status} (Id={Id}).", region.UniqueName, status, region.Id);
+        _logger.LogInformation("The region '{UniqueName}' has been {Status} (Id={Id}).", region.UniqueName, status, region.Id);
       }
     }
   }

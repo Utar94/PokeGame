@@ -39,7 +39,7 @@ internal class SeedAbilitiesTaskHandler : INotificationHandler<SeedAbilitiesTask
         CreateOrReplaceAbilityResult result = await _pipeline.ExecuteAsync(command, cancellationToken);
         AbilityModel ability = result.Ability ?? throw new InvalidOperationException("The ability model should not be null.");
         string status = result.Created ? "created" : "updated";
-        _logger.LogInformation("The ability '{Name}' has been {Status} (Id={Id}).", ability.Name, status, ability.Id);
+        _logger.LogInformation("The ability '{UniqueName}' has been {Status} (Id={Id}).", ability.UniqueName, status, ability.Id);
       }
     }
   }
