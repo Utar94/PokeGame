@@ -33,15 +33,14 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
       return null;
     }
 
-    if (payload.Kind != null)
+    UniqueName? uniqueName = UniqueName.TryCreate(payload.UniqueName);
+    if (uniqueName != null)
     {
-      move.Kind = payload.Kind.Value;
+      move.UniqueName = uniqueName;
     }
-
-    Name? name = Name.TryCreate(payload.Name);
-    if (name != null)
+    if (payload.DisplayName != null)
     {
-      move.Name = name;
+      move.DisplayName = DisplayName.TryCreate(payload.DisplayName.Value);
     }
     if (payload.Description != null)
     {

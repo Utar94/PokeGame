@@ -3,7 +3,7 @@ using PokeGame.Contracts.Moves;
 
 namespace PokeGame.Application.Moves.Queries;
 
-public record ReadMoveQuery(Guid Id) : Activity, IRequest<MoveModel?>;
+public record ReadMoveQuery(Guid? Id, string? UniqueName) : Activity, IRequest<MoveModel?>;
 
 internal class ReadMoveQueryHandler : IRequestHandler<ReadMoveQuery, MoveModel?>
 {
@@ -16,6 +16,30 @@ internal class ReadMoveQueryHandler : IRequestHandler<ReadMoveQuery, MoveModel?>
 
   public async Task<MoveModel?> Handle(ReadMoveQuery query, CancellationToken cancellationToken)
   {
-    return await _moveQuerier.ReadAsync(query.Id, cancellationToken);
+    Dictionary<Guid, MoveModel> moves = new(capacity: 2);
+
+    if (query.Id.HasValue)
+    {
+      MoveModel? move = await _moveQuerier.ReadAsync(query.Id.Value, cancellationToken);
+      if (move != null)
+      {
+        moves[move.Id] = move;
+      }
+    }
+    if (!string.IsNullOrWhiteSpace(query.UniqueName))
+    {
+      MoveModel? move = await _moveQuerier.ReadAsync(query.UniqueName, cancellationToken);
+      if (move != null)
+      {
+        moves[move.Id] = move;
+      }
+    }
+
+    if (moves.Count > 0)
+    {
+      throw TooManyResultsException<MoveModel>.ExpectedSingle(moves.Count);
+    }
+
+    return moves.SingleOrDefault().Value;
   }
 }

@@ -44,7 +44,7 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
         return new CreateOrReplaceMoveResult();
       }
 
-      move = new Move(payload.Type, payload.Category, new Name(payload.Name), userId, id);
+      move = new Move(payload.Type, payload.Category, new UniqueName(payload.UniqueName), userId, id);
       created = true;
     }
 
@@ -52,15 +52,15 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
       ? await _moveRepository.LoadAsync(move.Id, command.Version.Value, cancellationToken)
       : null) ?? move;
 
-    if (payload.Kind != reference.Kind)
+    UniqueName uniqueName = new(payload.UniqueName);
+    if (reference.UniqueName != uniqueName)
     {
-      move.Kind = payload.Kind;
+      move.UniqueName = uniqueName;
     }
-
-    Name name = new(payload.Name);
-    if (reference.Name != name)
+    DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
+    if (reference.DisplayName != displayName)
     {
-      move.Name = name;
+      move.DisplayName = displayName;
     }
     Description? description = Description.TryCreate(payload.Description);
     if (reference.Description != description)
