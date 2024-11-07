@@ -3,6 +3,7 @@
 public enum AbilitySort
 {
   CreatedOn,
-  Name,
+  DisplayName,
+  UniqueName,
   UpdatedOn
 }

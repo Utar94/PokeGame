@@ -4,9 +4,8 @@ namespace PokeGame.Contracts.Abilities;
 
 public class AbilityModel : Aggregate
 {
-  public AbilityKind? Kind { get; set; }
-
-  public string Name { get; set; }
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
   public string? Link { get; set; }
@@ -16,10 +15,10 @@ public class AbilityModel : Aggregate
   {
   }
 
-  public AbilityModel(string name)
+  public AbilityModel(string uniqueName)
   {
-    Name = name;
+    UniqueName = uniqueName;
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }
