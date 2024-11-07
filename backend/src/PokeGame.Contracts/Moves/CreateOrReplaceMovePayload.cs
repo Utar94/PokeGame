@@ -4,9 +4,9 @@ public record CreateOrReplaceMovePayload
 {
   public PokemonType Type { get; set; }
   public MoveCategory Category { get; set; }
-  public MoveKind? Kind { get; set; }
 
-  public string Name { get; set; }
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
   public int? Accuracy { get; set; }
@@ -24,9 +24,9 @@ public record CreateOrReplaceMovePayload
   {
   }
 
-  public CreateOrReplaceMovePayload(string name)
+  public CreateOrReplaceMovePayload(string uniqueName)
   {
-    Name = name;
+    UniqueName = uniqueName;
 
     StatisticChanges = [];
     VolatileConditions = [];

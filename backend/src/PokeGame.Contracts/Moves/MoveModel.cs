@@ -6,9 +6,9 @@ public class MoveModel : Aggregate
 {
   public PokemonType Type { get; set; }
   public MoveCategory Category { get; set; }
-  public MoveKind? Kind { get; set; }
 
-  public string Name { get; set; }
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
   public int? Accuracy { get; set; }
@@ -26,13 +26,13 @@ public class MoveModel : Aggregate
   {
   }
 
-  public MoveModel(string name)
+  public MoveModel(string uniqueName)
   {
-    Name = name;
+    UniqueName = uniqueName;
 
     StatisticChanges = [];
     VolatileConditions = [];
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }

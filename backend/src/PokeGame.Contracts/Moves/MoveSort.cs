@@ -7,5 +7,6 @@ public enum MoveSort
   Name,
   Power,
   PowerPoints,
+  UniqueName,
   UpdatedOn
 }

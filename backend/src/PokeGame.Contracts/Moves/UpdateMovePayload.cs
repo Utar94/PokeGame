@@ -2,9 +2,8 @@
 
 public record UpdateMovePayload
 {
-  public Change<MoveKind?>? Kind { get; set; }
-
-  public string? Name { get; set; }
+  public string? UniqueName { get; set; }
+  public Change<string>? DisplayName { get; set; }
   public Change<string>? Description { get; set; }
 
   public Change<int?>? Accuracy { get; set; }
