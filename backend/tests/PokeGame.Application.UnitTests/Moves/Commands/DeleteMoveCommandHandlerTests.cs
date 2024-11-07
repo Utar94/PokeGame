@@ -23,7 +23,7 @@ public class DeleteMoveCommandHandlerTests
   {
     _handler = new(_moveQuerier.Object, _moveRepository.Object);
 
-    _move = new(PokemonType.Normal, MoveCategory.Status, new Name("Growl"), _userId);
+    _move = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("growl"), _userId);
     _moveRepository.Setup(x => x.LoadAsync(_move.Id, _cancellationToken)).ReturnsAsync(_move);
   }
 

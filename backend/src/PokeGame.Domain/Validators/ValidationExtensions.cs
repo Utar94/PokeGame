@@ -39,11 +39,6 @@ public static class ValidationExtensions
     return ruleBuilder.NotEmpty().MaximumLength(Domain.Locale.MaximumLength).SetValidator(new LocaleValidator<T>());
   }
 
-  public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder)
-  {
-    return ruleBuilder.NotEmpty().MaximumLength(Domain.Name.MaximumLength);
-  }
-
   public static IRuleBuilderOptions<T, string> Notes<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty();

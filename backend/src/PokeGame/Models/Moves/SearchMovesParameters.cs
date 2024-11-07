@@ -14,16 +14,12 @@ public record SearchMovesParameters : SearchParameters
   [FromQuery(Name = "category")]
   public MoveCategory? Category { get; set; }
 
-  [FromQuery(Name = "kind")]
-  public MoveKind? Kind { get; set; }
-
   public SearchMovesPayload ToPayload()
   {
     SearchMovesPayload payload = new()
     {
       Type = Type,
-      Category = Category,
-      Kind = Kind
+      Category = Category
     };
     Fill(payload);
 

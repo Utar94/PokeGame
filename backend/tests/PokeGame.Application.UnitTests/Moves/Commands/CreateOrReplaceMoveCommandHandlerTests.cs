@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Moves;
@@ -15,6 +16,7 @@ public class CreateOrReplaceMoveCommandHandlerTests
 
   private readonly Mock<IMoveQuerier> _moveQuerier = new();
   private readonly Mock<IMoveRepository> _moveRepository = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly CreateOrReplaceMoveCommandHandler _handler;
 
@@ -23,20 +25,20 @@ public class CreateOrReplaceMoveCommandHandlerTests
 
   public CreateOrReplaceMoveCommandHandlerTests()
   {
-    _handler = new(_moveQuerier.Object, _moveRepository.Object);
+    _handler = new(_moveQuerier.Object, _moveRepository.Object, _sender.Object);
 
-    _move = new(PokemonType.Normal, MoveCategory.Status, new Name("growl"), _userId);
+    _move = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("growl"), _userId);
     _moveRepository.Setup(x => x.LoadAsync(_move.Id, _cancellationToken)).ReturnsAsync(_move);
   }
 
   [Fact(DisplayName = "It should create a new move.")]
   public async Task It_should_create_a_new_move()
   {
-    CreateOrReplaceMovePayload payload = new(" Thunder Shock ")
+    CreateOrReplaceMovePayload payload = new("thunder-shock")
     {
       Type = PokemonType.Electric,
       Category = MoveCategory.Special,
-      Kind = MoveKind.Facade,
+      DisplayName = " Thunder Shock ",
       Description = "  The user attacks the target with a jolt of electricity. This may also leave the target with paralysis.  ",
       Accuracy = 95,
       Power = 40,
@@ -56,14 +58,15 @@ public class CreateOrReplaceMoveCommandHandlerTests
     Assert.Same(model, result.Move);
     Assert.True(result.Created);
 
-    _moveRepository.Verify(x => x.SaveAsync(
-      It.Is<Move>(y => y.Id.ToGuid() == command.Id && y.Type == payload.Type && y.Category == payload.Category && y.Kind == payload.Kind
-        && Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description)
-        && y.Accuracy == payload.Accuracy && y.Power == payload.Power && y.PowerPoints == payload.PowerPoints
-        && y.StatisticChanges.Count == 0
-        && Comparisons.AreEqual(y.Status, payload.Status)
-        && y.VolatileConditions.Single().Value == payload.VolatileConditions.Single()
-        && Comparisons.AreEqual(y.Link, payload.Link) && Comparisons.AreEqual(y.Notes, payload.Notes)),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveMoveCommand>(y => y.Move.Id.ToGuid() == command.Id && Comparisons.AreEqual(y.Move.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Move.DisplayName, payload.DisplayName) && Comparisons.AreEqual(y.Move.Description, payload.Description)
+        && y.Move.Type == payload.Type && y.Move.Category == payload.Category
+        && y.Move.Accuracy == payload.Accuracy && y.Move.Power == payload.Power && y.Move.PowerPoints == payload.PowerPoints
+        && y.Move.StatisticChanges.Count == 0
+        && Comparisons.AreEqual(y.Move.Status, payload.Status)
+        && y.Move.VolatileConditions.Single().Value == payload.VolatileConditions.Single()
+        && Comparisons.AreEqual(y.Move.Link, payload.Link) && Comparisons.AreEqual(y.Move.Notes, payload.Notes)),
       _cancellationToken), Times.Once);
   }
 
@@ -75,10 +78,11 @@ public class CreateOrReplaceMoveCommandHandlerTests
     _move.SetStatisticChange(BattleStatistic.Speed, stages: -2);
     _move.Update(_userId);
 
-    CreateOrReplaceMovePayload payload = new(" Growl ")
+    CreateOrReplaceMovePayload payload = new("Growl")
     {
       Type = PokemonType.Dragon,
       Category = MoveCategory.Special,
+      DisplayName = " Growl ",
       Description = "  The user growls in an endearing way, making opposing Pokémon less wary. This lowers their Attack stats.  ",
       Accuracy = 100,
       PowerPoints = 40,
@@ -96,13 +100,14 @@ public class CreateOrReplaceMoveCommandHandlerTests
     Assert.Same(model, result.Move);
     Assert.False(result.Created);
 
-    _moveRepository.Verify(x => x.SaveAsync(
-      It.Is<Move>(y => y.Type == _move.Type && y.Category == _move.Category && y.Kind == payload.Kind
-        && Comparisons.AreEqual(y.Name, payload.Name) && Comparisons.AreEqual(y.Description, payload.Description)
-        && y.Accuracy == payload.Accuracy && y.Power == payload.Power && y.PowerPoints == payload.PowerPoints
-        && y.StatisticChanges.Count == 1 && y.StatisticChanges.Single().Key == BattleStatistic.Attack && y.StatisticChanges.Single().Value == -1
-        && y.Status == null && y.VolatileConditions.Count == 0
-        && Comparisons.AreEqual(y.Link, payload.Link) && Comparisons.AreEqual(y.Notes, payload.Notes)),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveMoveCommand>(y => y.Move.Equals(_move) && Comparisons.AreEqual(y.Move.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Move.DisplayName, payload.DisplayName) && Comparisons.AreEqual(y.Move.Description, payload.Description)
+        && y.Move.Type == _move.Type && y.Move.Category == _move.Category
+        && y.Move.Accuracy == payload.Accuracy && y.Move.Power == payload.Power && y.Move.PowerPoints == payload.PowerPoints
+        && y.Move.StatisticChanges.Count == 1 && y.Move.StatisticChanges.Single().Key == BattleStatistic.Attack && y.Move.StatisticChanges.Single().Value == -1
+        && y.Move.Status == null && y.Move.VolatileConditions.Count == 0
+        && Comparisons.AreEqual(y.Move.Link, payload.Link) && Comparisons.AreEqual(y.Move.Notes, payload.Notes)),
       _cancellationToken), Times.Once);
   }
 
@@ -130,7 +135,8 @@ public class CreateOrReplaceMoveCommandHandlerTests
     {
       Type = (PokemonType)(-1),
       Category = (MoveCategory)(-1),
-      Kind = (MoveKind)(-1),
+      UniqueName = " Growl ",
+      DisplayName = RandomStringGenerator.GetString(1000),
       Accuracy = 0,
       Power = 0,
       PowerPoints = 100,
@@ -144,10 +150,10 @@ public class CreateOrReplaceMoveCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(13, exception.Errors.Count());
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "Name");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Type");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Category");
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Kind");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanValidator" && e.PropertyName == "Accuracy");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanValidator" && e.PropertyName == "Power");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "LessThanOrEqualValidator" && e.PropertyName == "PowerPoints");
@@ -162,7 +168,7 @@ public class CreateOrReplaceMoveCommandHandlerTests
   [Fact(DisplayName = "It should update an existing move.")]
   public async Task It_should_update_an_existing_move()
   {
-    Move reference = new(_move.Type, _move.Category, _move.Name, _userId, _move.Id);
+    Move reference = new(_move.Type, _move.Category, _move.UniqueName, _userId, _move.Id);
     reference.AddVolatileCondition(new VolatileCondition("VC1"));
     reference.AddVolatileCondition(new VolatileCondition("VC2"));
     reference.SetStatisticChange(BattleStatistic.Attack, stages: -2);
@@ -180,10 +186,11 @@ public class CreateOrReplaceMoveCommandHandlerTests
     _move.SetStatisticChange(BattleStatistic.Evasion, stages: -3);
     _move.Update(_userId);
 
-    CreateOrReplaceMovePayload payload = new(" Growl ")
+    CreateOrReplaceMovePayload payload = new("Growl")
     {
       Type = PokemonType.Dark,
       Category = MoveCategory.Physical,
+      DisplayName = " Growl ",
       Description = "    ",
       Accuracy = 100,
       PowerPoints = 40,
@@ -207,15 +214,16 @@ public class CreateOrReplaceMoveCommandHandlerTests
     Assert.Same(model, result.Move);
     Assert.False(result.Created);
 
-    _moveRepository.Verify(x => x.SaveAsync(
-      It.Is<Move>(y => y.Type == _move.Type && y.Category == _move.Category && y.Kind == payload.Kind
-        && Comparisons.AreEqual(y.Name, payload.Name) && y.Description == description
-        && y.StatisticChanges.Count == 3 && y.StatisticChanges[BattleStatistic.Attack] == -1
-        && y.StatisticChanges[BattleStatistic.Evasion] == -3 && y.StatisticChanges[BattleStatistic.Accuracy] == 3
-        && Comparisons.AreEqual(y.Status, payload.Status)
-        && y.VolatileConditions.Count == 3 && y.VolatileConditions.Any(x => x.Value == "VC2")
-        && y.VolatileConditions.Any(x => x.Value == "VC3") && y.VolatileConditions.Any(x => x.Value == "VC4")
-        && Comparisons.AreEqual(y.Link, payload.Link) && Comparisons.AreEqual(y.Notes, payload.Notes)),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveMoveCommand>(y => y.Move.Equals(_move) && Comparisons.AreEqual(y.Move.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Move.DisplayName, payload.DisplayName) && y.Move.Description == description
+        && y.Move.Type == _move.Type && y.Move.Category == _move.Category
+        && y.Move.StatisticChanges.Count == 3 && y.Move.StatisticChanges[BattleStatistic.Attack] == -1
+        && y.Move.StatisticChanges[BattleStatistic.Evasion] == -3 && y.Move.StatisticChanges[BattleStatistic.Accuracy] == 3
+        && Comparisons.AreEqual(y.Move.Status, payload.Status)
+        && y.Move.VolatileConditions.Count == 3 && y.Move.VolatileConditions.Any(x => x.Value == "VC2")
+        && y.Move.VolatileConditions.Any(x => x.Value == "VC3") && y.Move.VolatileConditions.Any(x => x.Value == "VC4")
+        && Comparisons.AreEqual(y.Move.Link, payload.Link) && Comparisons.AreEqual(y.Move.Notes, payload.Notes)),
       _cancellationToken), Times.Once);
   }
 }

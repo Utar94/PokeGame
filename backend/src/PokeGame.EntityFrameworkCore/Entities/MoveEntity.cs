@@ -12,9 +12,14 @@ internal class MoveEntity : AggregateEntity
 
   public PokemonType Type { get; private set; }
   public MoveCategory Category { get; private set; }
-  public MoveKind? Kind { get; private set; }
 
-  public string Name { get; private set; } = string.Empty;
+  public string UniqueName { get; private set; } = string.Empty;
+  public string UniqueNameNormalized
+  {
+    get => PokeGameDb.Helper.Normalize(UniqueName);
+    private set { }
+  }
+  public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
   public int? Accuracy { get; private set; }
@@ -42,7 +47,7 @@ internal class MoveEntity : AggregateEntity
     Type = @event.Type;
     Category = @event.Category;
 
-    Name = @event.Name.Value;
+    UniqueName = @event.UniqueName.Value;
   }
 
   private MoveEntity() : base()
@@ -53,14 +58,13 @@ internal class MoveEntity : AggregateEntity
   {
     base.Update(@event);
 
-    if (@event.Kind != null)
+    if (@event.UniqueName != null)
     {
-      Kind = @event.Kind.Value;
+      UniqueName = @event.UniqueName.Value;
     }
-
-    if (@event.Name != null)
+    if (@event.DisplayName != null)
     {
-      Name = @event.Name.Value;
+      DisplayName = @event.DisplayName.Value?.Value;
     }
     if (@event.Description != null)
     {
@@ -202,5 +206,5 @@ internal class MoveEntity : AggregateEntity
     return volatileConditions.Any() ? JsonSerializer.Serialize(volatileConditions) : null;
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }

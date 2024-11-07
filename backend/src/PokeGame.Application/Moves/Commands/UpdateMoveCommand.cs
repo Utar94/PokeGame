@@ -14,11 +14,13 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
 {
   private readonly IMoveQuerier _moveQuerier;
   private readonly IMoveRepository _moveRepository;
+  private readonly ISender _sender;
 
-  public UpdateMoveCommandHandler(IMoveQuerier moveQuerier, IMoveRepository moveRepository)
+  public UpdateMoveCommandHandler(IMoveQuerier moveQuerier, IMoveRepository moveRepository, ISender sender)
   {
     _moveQuerier = moveQuerier;
     _moveRepository = moveRepository;
+    _sender = sender;
   }
 
   public async Task<MoveModel?> Handle(UpdateMoveCommand command, CancellationToken cancellationToken)
@@ -33,15 +35,14 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
       return null;
     }
 
-    if (payload.Kind != null)
+    UniqueName? uniqueName = UniqueName.TryCreate(payload.UniqueName);
+    if (uniqueName != null)
     {
-      move.Kind = payload.Kind.Value;
+      move.UniqueName = uniqueName;
     }
-
-    Name? name = Name.TryCreate(payload.Name);
-    if (name != null)
+    if (payload.DisplayName != null)
     {
-      move.Name = name;
+      move.DisplayName = DisplayName.TryCreate(payload.DisplayName.Value);
     }
     if (payload.Description != null)
     {
@@ -78,7 +79,7 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
     }
 
     move.Update(command.GetUserId());
-    await _moveRepository.SaveAsync(move, cancellationToken);
+    await _sender.Send(new SaveMoveCommand(move), cancellationToken);
 
     return await _moveQuerier.ReadAsync(move, cancellationToken);
   }

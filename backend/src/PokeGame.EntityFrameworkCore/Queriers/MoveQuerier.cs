@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Actors;
 using PokeGame.Application.Moves;
 using PokeGame.Contracts.Moves;
+using PokeGame.Domain;
 using PokeGame.Domain.Moves;
 using PokeGame.EntityFrameworkCore.Entities;
 
@@ -24,6 +25,18 @@ internal class MoveQuerier : IMoveQuerier
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<MoveId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName.Value);
+
+    string? aggregateId = await _moves.AsNoTracking()
+      .Where(x => x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => x.AggregateId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return aggregateId == null ? null : new MoveId(aggregateId);
+  }
+
   public async Task<MoveModel> ReadAsync(Move move, CancellationToken cancellationToken)
   {
     return await ReadAsync(move.Id, cancellationToken)
@@ -40,12 +53,21 @@ internal class MoveQuerier : IMoveQuerier
 
     return move == null ? null : await MapAsync(move, cancellationToken);
   }
+  public async Task<MoveModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName);
+
+    MoveEntity? move = await _moves.AsNoTracking()
+      .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
+
+    return move == null ? null : await MapAsync(move, cancellationToken);
+  }
 
   public async Task<SearchResults<MoveModel>> SearchAsync(SearchMovesPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(PokeGameDb.Moves.Table).SelectAll(PokeGameDb.Moves.Table)
       .ApplyIdFilter(payload, PokeGameDb.Moves.Id);
-    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Moves.Name);
+    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Moves.UniqueName, PokeGameDb.Moves.DisplayName);
 
     if (payload.Type.HasValue)
     {
@@ -54,10 +76,6 @@ internal class MoveQuerier : IMoveQuerier
     if (payload.Category.HasValue)
     {
       builder.Where(PokeGameDb.Moves.Category, Operators.IsEqualTo(payload.Category.Value.ToString()));
-    }
-    if (payload.Kind.HasValue)
-    {
-      builder.Where(PokeGameDb.Moves.Kind, Operators.IsEqualTo(payload.Kind.Value.ToString()));
     }
 
     IQueryable<MoveEntity> query = _moves.FromQuery(builder).AsNoTracking();
@@ -79,10 +97,10 @@ internal class MoveQuerier : IMoveQuerier
             ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
           break;
-        case MoveSort.Name:
+        case MoveSort.DisplayName:
           ordered = (ordered == null)
-            ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
-            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Name) : ordered.ThenBy(x => x.Name));
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
           break;
         case MoveSort.Power:
           ordered = (ordered == null)
@@ -93,6 +111,11 @@ internal class MoveQuerier : IMoveQuerier
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.PowerPoints) : query.OrderBy(x => x.PowerPoints))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.PowerPoints) : ordered.ThenBy(x => x.PowerPoints));
+          break;
+        case MoveSort.UniqueName:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UniqueName) : query.OrderBy(x => x.UniqueName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UniqueName) : ordered.ThenBy(x => x.UniqueName));
           break;
         case MoveSort.UpdatedOn:
           ordered = (ordered == null)

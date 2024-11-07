@@ -40,7 +40,14 @@ public class MoveController : ControllerBase
   [HttpGet("{id}")]
   public async Task<ActionResult<MoveModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    MoveModel? move = await _pipeline.ExecuteAsync(new ReadMoveQuery(id), cancellationToken);
+    MoveModel? move = await _pipeline.ExecuteAsync(new ReadMoveQuery(id, UniqueName: null), cancellationToken);
+    return GetActionResult(move);
+  }
+
+  [HttpGet("unique-name:{uniqueName}")]
+  public async Task<ActionResult<MoveModel>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    MoveModel? move = await _pipeline.ExecuteAsync(new ReadMoveQuery(Id: null, uniqueName), cancellationToken);
     return GetActionResult(move);
   }
 

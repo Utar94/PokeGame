@@ -4,8 +4,9 @@ public enum MoveSort
 {
   Accuracy,
   CreatedOn,
-  Name,
+  DisplayName,
   Power,
   PowerPoints,
+  UniqueName,
   UpdatedOn
 }

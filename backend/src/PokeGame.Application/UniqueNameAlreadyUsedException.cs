@@ -3,6 +3,7 @@ using Logitar.Portal.Contracts.Errors;
 using PokeGame.Contracts.Errors;
 using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
+using PokeGame.Domain.Moves;
 using PokeGame.Domain.Regions;
 
 namespace PokeGame.Application;
@@ -44,6 +45,10 @@ public class UniqueNameAlreadyUsedException : ConflictException
 
   public UniqueNameAlreadyUsedException(Ability ability, AbilityId conflictId)
     : this(ability.GetType(), ability.UniqueName, nameof(ability.UniqueName), [ability.Id.ToGuid(), conflictId.ToGuid()])
+  {
+  }
+  public UniqueNameAlreadyUsedException(Move move, MoveId conflictId)
+    : this(move.GetType(), move.UniqueName, nameof(move.UniqueName), [move.Id.ToGuid(), conflictId.ToGuid()])
   {
   }
   public UniqueNameAlreadyUsedException(Region region, RegionId conflictId)

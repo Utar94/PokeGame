@@ -18,35 +18,30 @@ public class Move : AggregateRoot
 
   public PokemonType Type { get; private set; }
   public MoveCategory Category { get; private set; }
-  private MoveKind? _kind = null;
-  public MoveKind? Kind
+
+  private UniqueName? _uniqueName = null;
+  public UniqueName UniqueName
   {
-    get => _kind;
+    get => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
     set
     {
-      if (_kind != value)
+      if (_uniqueName != value)
       {
-        if (value.HasValue && !Enum.IsDefined(value.Value))
-        {
-          throw new ArgumentOutOfRangeException(nameof(Kind));
-        }
-
-        _kind = value;
-        _updatedEvent.Kind = new Change<MoveKind?>(value);
+        _uniqueName = value;
+        _updatedEvent.UniqueName = value;
       }
     }
   }
-
-  private Name? _name = null;
-  public Name Name
+  private DisplayName? _displayName = null;
+  public DisplayName? DisplayName
   {
-    get => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
+    get => _displayName;
     set
     {
-      if (_name != value)
+      if (_displayName != value)
       {
-        _name = value;
-        _updatedEvent.Name = value;
+        _displayName = value;
+        _updatedEvent.DisplayName = new Change<DisplayName>(value);
       }
     }
   }
@@ -173,7 +168,7 @@ public class Move : AggregateRoot
   {
   }
 
-  public Move(PokemonType type, MoveCategory category, Name name, UserId userId, MoveId? id = null) : base((id ?? MoveId.NewId()).AggregateId)
+  public Move(PokemonType type, MoveCategory category, UniqueName uniqueName, UserId userId, MoveId? id = null) : base((id ?? MoveId.NewId()).AggregateId)
   {
     if (!Enum.IsDefined(type))
     {
@@ -184,14 +179,14 @@ public class Move : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(category));
     }
 
-    Raise(new CreatedEvent(type, category, name), userId.ActorId);
+    Raise(new CreatedEvent(type, category, uniqueName), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     Type = @event.Type;
     Category = @event.Category;
 
-    _name = @event.Name;
+    _uniqueName = @event.UniqueName;
   }
 
   public void Delete(UserId userId)
@@ -252,14 +247,13 @@ public class Move : AggregateRoot
   }
   protected virtual void Apply(UpdatedEvent @event)
   {
-    if (@event.Kind != null)
+    if (@event.UniqueName != null)
     {
-      _kind = @event.Kind.Value;
+      _uniqueName = @event.UniqueName;
     }
-
-    if (@event.Name != null)
+    if (@event.DisplayName != null)
     {
-      _name = @event.Name;
+      _displayName = @event.DisplayName.Value;
     }
     if (@event.Description != null)
     {
@@ -319,21 +313,21 @@ public class Move : AggregateRoot
     }
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 
   public class CreatedEvent : DomainEvent, INotification
   {
     public PokemonType Type { get; }
     public MoveCategory Category { get; }
 
-    public Name Name { get; }
+    public UniqueName UniqueName { get; }
 
-    public CreatedEvent(PokemonType type, MoveCategory category, Name name)
+    public CreatedEvent(PokemonType type, MoveCategory category, UniqueName uniqueName)
     {
       Type = type;
       Category = category;
 
-      Name = name;
+      UniqueName = uniqueName;
     }
   }
 
@@ -347,9 +341,8 @@ public class Move : AggregateRoot
 
   public class UpdatedEvent : DomainEvent, INotification
   {
-    public Change<MoveKind?>? Kind { get; set; }
-
-    public Name? Name { get; set; }
+    public UniqueName? UniqueName { get; set; }
+    public Change<DisplayName>? DisplayName { get; set; }
     public Change<Description>? Description { get; set; }
 
     public Change<int?>? Accuracy { get; set; }
@@ -363,7 +356,7 @@ public class Move : AggregateRoot
     public Change<Url>? Link { get; set; }
     public Change<Notes>? Notes { get; set; }
 
-    public bool HasChanges => Kind != null || Name != null || Description != null
+    public bool HasChanges => UniqueName != null || DisplayName != null || Description != null
       || Accuracy != null || Power != null || PowerPoints != null
       || StatisticChanges.Count > 0 || Status != null || VolatileConditions.Count > 0
       || Link != null || Notes != null;
