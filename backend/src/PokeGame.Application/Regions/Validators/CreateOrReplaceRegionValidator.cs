@@ -8,7 +8,8 @@ internal class CreateOrReplaceRegionValidator : AbstractValidator<CreateOrReplac
 {
   public CreateOrReplaceRegionValidator()
   {
-    RuleFor(x => x.Name).Name();
+    RuleFor(x => x.UniqueName).UniqueName();
+    When(x => !string.IsNullOrWhiteSpace(x.DisplayName), () => RuleFor(x => x.DisplayName!).DisplayName());
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());
 
     When(x => !string.IsNullOrWhiteSpace(x.Link), () => RuleFor(x => x.Link!).Url());

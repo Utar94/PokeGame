@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Actors;
 using PokeGame.Application.Regions;
 using PokeGame.Contracts.Regions;
+using PokeGame.Domain;
 using PokeGame.Domain.Regions;
 using PokeGame.EntityFrameworkCore.Entities;
 
@@ -24,6 +25,18 @@ internal class RegionQuerier : IRegionQuerier
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<RegionId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName.Value);
+
+    string? aggregateId = await _regions.AsNoTracking()
+      .Where(x => x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => x.AggregateId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return aggregateId == null ? null : new RegionId(aggregateId);
+  }
+
   public async Task<RegionModel> ReadAsync(Region region, CancellationToken cancellationToken)
   {
     return await ReadAsync(region.Id, cancellationToken)
@@ -40,12 +53,21 @@ internal class RegionQuerier : IRegionQuerier
 
     return region == null ? null : await MapAsync(region, cancellationToken);
   }
+  public async Task<RegionModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = PokeGameDb.Helper.Normalize(uniqueName);
+
+    RegionEntity? region = await _regions.AsNoTracking()
+      .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
+
+    return region == null ? null : await MapAsync(region, cancellationToken);
+  }
 
   public async Task<SearchResults<RegionModel>> SearchAsync(SearchRegionsPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(PokeGameDb.Regions.Table).SelectAll(PokeGameDb.Regions.Table)
       .ApplyIdFilter(payload, PokeGameDb.Regions.Id);
-    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Regions.Name);
+    _sqlHelper.ApplyTextSearch(builder, payload.Search, PokeGameDb.Regions.UniqueName, PokeGameDb.Regions.DisplayName);
 
     IQueryable<RegionEntity> query = _regions.FromQuery(builder).AsNoTracking();
 
@@ -61,10 +83,15 @@ internal class RegionQuerier : IRegionQuerier
             ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
           break;
-        case RegionSort.Name:
+        case RegionSort.DisplayName:
           ordered = (ordered == null)
-            ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
-            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Name) : ordered.ThenBy(x => x.Name));
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
+          break;
+        case RegionSort.UniqueName:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UniqueName) : query.OrderBy(x => x.UniqueName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UniqueName) : ordered.ThenBy(x => x.UniqueName));
           break;
         case RegionSort.UpdatedOn:
           ordered = (ordered == null)

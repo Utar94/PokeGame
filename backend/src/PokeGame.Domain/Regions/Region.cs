@@ -10,16 +10,29 @@ public class Region : AggregateRoot
 
   public new RegionId Id => new(base.Id);
 
-  private Name? _name = null;
-  public Name Name
+  private UniqueName? _uniqueName = null;
+  public UniqueName UniqueName
   {
-    get => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
+    get => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
     set
     {
-      if (_name != value)
+      if (_uniqueName != value)
       {
-        _name = value;
-        _updatedEvent.Name = value;
+        _uniqueName = value;
+        _updatedEvent.UniqueName = value;
+      }
+    }
+  }
+  private DisplayName? _displayName = null;
+  public DisplayName? DisplayName
+  {
+    get => _displayName;
+    set
+    {
+      if (_displayName != value)
+      {
+        _displayName = value;
+        _updatedEvent.DisplayName = new Change<DisplayName>(value);
       }
     }
   }
@@ -68,13 +81,13 @@ public class Region : AggregateRoot
   {
   }
 
-  public Region(Name name, UserId userId, RegionId? id = null) : base((id ?? RegionId.NewId()).AggregateId)
+  public Region(UniqueName uniqueName, UserId userId, RegionId? id = null) : base((id ?? RegionId.NewId()).AggregateId)
   {
-    Raise(new CreatedEvent(name), userId.ActorId);
+    Raise(new CreatedEvent(uniqueName), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    _name = @event.Name;
+    _uniqueName = @event.UniqueName;
   }
 
   public void Delete(UserId userId)
@@ -95,9 +108,13 @@ public class Region : AggregateRoot
   }
   protected virtual void Apply(UpdatedEvent @event)
   {
-    if (@event.Name != null)
+    if (@event.UniqueName != null)
     {
-      _name = @event.Name;
+      _uniqueName = @event.UniqueName;
+    }
+    if (@event.DisplayName != null)
+    {
+      _displayName = @event.DisplayName.Value;
     }
     if (@event.Description != null)
     {
@@ -114,15 +131,15 @@ public class Region : AggregateRoot
     }
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public Name Name { get; }
+    public UniqueName UniqueName { get; }
 
-    public CreatedEvent(Name name)
+    public CreatedEvent(UniqueName uniqueName)
     {
-      Name = name;
+      UniqueName = uniqueName;
     }
   }
 
@@ -136,12 +153,13 @@ public class Region : AggregateRoot
 
   public class UpdatedEvent : DomainEvent, INotification
   {
-    public Name? Name { get; set; }
+    public UniqueName? UniqueName { get; set; }
+    public Change<DisplayName>? DisplayName { get; set; }
     public Change<Description>? Description { get; set; }
 
     public Change<Url>? Link { get; set; }
     public Change<Notes>? Notes { get; set; }
 
-    public bool HasChanges => Name != null || Description != null || Link != null || Notes != null;
+    public bool HasChanges => UniqueName != null || DisplayName != null || Description != null || Link != null || Notes != null;
   }
 }

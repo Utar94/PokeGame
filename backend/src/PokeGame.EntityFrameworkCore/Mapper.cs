@@ -81,10 +81,10 @@ internal class Mapper
 
   public RegionModel ToRegion(RegionEntity source)
   {
-    RegionModel destination = new()
+    RegionModel destination = new(source.UniqueName)
     {
       Id = source.Id,
-      Name = source.Name,
+      DisplayName = source.DisplayName,
       Description = source.Description,
       Link = source.Link,
       Notes = source.Notes

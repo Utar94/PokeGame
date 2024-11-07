@@ -22,7 +22,7 @@ public class DeleteRegionCommandHandlerTests
   {
     _handler = new(_regionQuerier.Object, _regionRepository.Object);
 
-    _region = new(new Name("Kanto"), _userId);
+    _region = new(new UniqueName("Kanto"), _userId);
     _regionRepository.Setup(x => x.LoadAsync(_region.Id, _cancellationToken)).ReturnsAsync(_region);
   }
 

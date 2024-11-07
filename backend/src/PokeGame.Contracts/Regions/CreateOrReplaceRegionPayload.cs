@@ -2,7 +2,8 @@
 
 public record CreateOrReplaceRegionPayload
 {
-  public string Name { get; set; }
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
   public string? Link { get; set; }
@@ -12,8 +13,8 @@ public record CreateOrReplaceRegionPayload
   {
   }
 
-  public CreateOrReplaceRegionPayload(string name)
+  public CreateOrReplaceRegionPayload(string uniqueName)
   {
-    Name = name;
+    UniqueName = uniqueName;
   }
 }

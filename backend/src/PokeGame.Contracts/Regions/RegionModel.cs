@@ -4,7 +4,8 @@ namespace PokeGame.Contracts.Regions;
 
 public class RegionModel : Aggregate
 {
-  public string Name { get; set; }
+  public string UniqueName { get; set; }
+  public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
   public string? Link { get; set; }
@@ -14,10 +15,10 @@ public class RegionModel : Aggregate
   {
   }
 
-  public RegionModel(string name)
+  public RegionModel(string uniqueName)
   {
-    Name = name;
+    UniqueName = uniqueName;
   }
 
-  public override string ToString() => $"{Name} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }

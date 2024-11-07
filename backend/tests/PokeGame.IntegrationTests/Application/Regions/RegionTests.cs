@@ -22,7 +22,7 @@ public class RegionTests : IntegrationTests
   {
     _regionRepository = ServiceProvider.GetRequiredService<IRegionRepository>();
 
-    _kanto = new Region(new Name("Kanto"), UserId);
+    _kanto = new Region(new UniqueName("kanto"), UserId);
   }
 
   public override async Task InitializeAsync()
@@ -35,8 +35,9 @@ public class RegionTests : IntegrationTests
   [Fact(DisplayName = "It should create a new region.")]
   public async Task It_should_create_a_new_region()
   {
-    CreateOrReplaceRegionPayload payload = new(" Québec ")
+    CreateOrReplaceRegionPayload payload = new("Quebec")
     {
+      DisplayName = " Québec ",
       Description = "    ",
       Link = "https://fr.wikipedia.org/wiki/Qu%C3%A9bec",
       Notes = "    "
@@ -54,7 +55,8 @@ public class RegionTests : IntegrationTests
     Assert.Equal(Actor, region.CreatedBy);
     Assert.Equal(Actor, region.UpdatedBy);
 
-    Assert.Equal(payload.Name.Trim(), region.Name);
+    Assert.Equal(payload.UniqueName.Trim(), region.UniqueName);
+    Assert.Equal(payload.DisplayName.CleanTrim(), region.DisplayName);
     Assert.Equal(payload.Description.CleanTrim(), region.Description);
     Assert.Equal(payload.Link, region.Link);
     Assert.Equal(payload.Notes.CleanTrim(), region.Notes);
@@ -83,8 +85,9 @@ public class RegionTests : IntegrationTests
     _kanto.Update(UserId);
     await _regionRepository.SaveAsync(_kanto);
 
-    CreateOrReplaceRegionPayload payload = new(" Kanto ")
+    CreateOrReplaceRegionPayload payload = new("Kanto")
     {
+      DisplayName = " Kanto ",
       Link = "https://bulbapedia.bulbagarden.net/wiki/Kanto",
       Notes = "    "
     };
@@ -99,7 +102,8 @@ public class RegionTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, region.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.Equal(Actor, region.UpdatedBy);
 
-    Assert.Equal(payload.Name.Trim(), region.Name);
+    Assert.Equal(payload.UniqueName.Trim(), region.UniqueName);
+    Assert.Equal(payload.DisplayName.CleanTrim(), region.DisplayName);
     Assert.Equal(description.Value, region.Description);
     Assert.Equal(payload.Link, region.Link);
     Assert.Equal(payload.Notes.CleanTrim(), region.Notes);
@@ -121,15 +125,15 @@ public class RegionTests : IntegrationTests
   [Fact(DisplayName = "It should return the correct search results.")]
   public async Task It_should_return_the_correct_search_results()
   {
-    Region johto = new(new Name("Johto"), UserId);
-    Region hoenn = new(new Name("Hoenn"), UserId);
-    Region sinnoh = new(new Name("Sinnoh"), UserId);
+    Region johto = new(new UniqueName("Johto"), UserId);
+    Region hoenn = new(new UniqueName("Hoenn"), UserId);
+    Region sinnoh = new(new UniqueName("Sinnoh"), UserId);
     await _regionRepository.SaveAsync([johto, hoenn, sinnoh]);
 
     SearchRegionsPayload payload = new()
     {
       Search = new TextSearch([new SearchTerm("%to"), new SearchTerm("ho%")], SearchOperator.Or),
-      Sort = [new RegionSortOption(RegionSort.Name, isDescending: true)],
+      Sort = [new RegionSortOption(RegionSort.UniqueName, isDescending: true)],
       Skip = 1,
       Limit = 1
     };
@@ -148,10 +152,19 @@ public class RegionTests : IntegrationTests
   [Fact(DisplayName = "It should return the region found by ID.")]
   public async Task It_should_return_the_region_found_by_Id()
   {
-    ReadRegionQuery query = new(_kanto.Id.ToGuid());
+    ReadRegionQuery query = new(_kanto.Id.ToGuid(), UniqueName: null);
     RegionModel? region = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(region);
-    Assert.Equal(query.Id, region.Id);
+    Assert.Equal(_kanto.Id.ToGuid(), region.Id);
+  }
+
+  [Fact(DisplayName = "It should return the region found by unique name.")]
+  public async Task It_should_return_the_region_found_by_unique_name()
+  {
+    ReadRegionQuery query = new(Id: null, _kanto.UniqueName.Value);
+    RegionModel? region = await Pipeline.ExecuteAsync(query);
+    Assert.NotNull(region);
+    Assert.Equal(_kanto.Id.ToGuid(), region.Id);
   }
 
   [Fact(DisplayName = "It should update an existing region.")]
@@ -159,6 +172,7 @@ public class RegionTests : IntegrationTests
   {
     UpdateRegionPayload payload = new()
     {
+      DisplayName = new Change<string>(" Kanto "),
       Description = new Change<string>("  The Kanto region (Japanese: カントー地方 Kanto region) is a region of the Pokémon world. Kanto is located east of Johto, which together form a joint landmass that is south of Sinnoh.\n\nKanto is the setting of the first generation of games and can be explored in Generations II, III, IV, and VII.  "),
       Link = new Change<string>("https://bulbapedia.bulbagarden.net/wiki/Kanto")
     };
@@ -171,7 +185,8 @@ public class RegionTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, region.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.Equal(Actor, region.UpdatedBy);
 
-    Assert.Equal(_kanto.Name.Value, region.Name);
+    Assert.Equal(_kanto.UniqueName.Value, region.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.CleanTrim(), region.DisplayName);
     Assert.Equal(payload.Description.Value?.CleanTrim(), region.Description);
     Assert.Equal(payload.Link.Value, region.Link);
     Assert.Equal(payload.Notes?.Value?.CleanTrim(), region.Notes);

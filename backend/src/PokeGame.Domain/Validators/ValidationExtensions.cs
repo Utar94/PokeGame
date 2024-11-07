@@ -19,6 +19,11 @@ public static class ValidationExtensions
     return ruleBuilder.NotEmpty();
   }
 
+  public static IRuleBuilderOptions<T, string> DisplayName<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty().MaximumLength(Domain.DisplayName.MaximumLength);
+  }
+
   public static IRuleBuilderOptions<T, DateTime> Future<T>(this IRuleBuilder<T, DateTime> ruleBuilder, DateTime? now = null)
   {
     return ruleBuilder.SetValidator(new FutureValidator<T>(now));
@@ -99,6 +104,12 @@ public static class ValidationExtensions
   public static IRuleBuilderOptions<T, string> TimeZone<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty().MaximumLength(TimeZoneMaximumLength).SetValidator(new TimeZoneValidator<T>());
+  }
+
+  public static IRuleBuilderOptions<T, string> UniqueName<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty().MaximumLength(Domain.UniqueName.MaximumLength)
+      .SetValidator(new AllowedCharactersValidator<T>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"));
   }
 
   public static IRuleBuilderOptions<T, string> Url<T>(this IRuleBuilder<T, string> ruleBuilder)
