@@ -32,15 +32,14 @@ internal class UpdateAbilityCommandHandler : IRequestHandler<UpdateAbilityComman
       return null;
     }
 
-    if (payload.Kind != null)
+    UniqueName? uniqueName = UniqueName.TryCreate(payload.UniqueName);
+    if (uniqueName != null)
     {
-      ability.Kind = payload.Kind.Value;
+      ability.UniqueName = uniqueName;
     }
-
-    Name? name = Name.TryCreate(payload.Name);
-    if (name != null)
+    if (payload.DisplayName != null)
     {
-      ability.Name = name;
+      ability.DisplayName = DisplayName.TryCreate(payload.DisplayName.Value);
     }
     if (payload.Description != null)
     {

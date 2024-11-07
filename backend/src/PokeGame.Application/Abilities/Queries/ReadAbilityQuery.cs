@@ -3,7 +3,7 @@ using PokeGame.Contracts.Abilities;
 
 namespace PokeGame.Application.Abilities.Queries;
 
-public record ReadAbilityQuery(Guid Id) : Activity, IRequest<AbilityModel?>;
+public record ReadAbilityQuery(Guid? Id, string? UniqueName) : Activity, IRequest<AbilityModel?>;
 
 internal class ReadAbilityQueryHandler : IRequestHandler<ReadAbilityQuery, AbilityModel?>
 {
@@ -16,6 +16,30 @@ internal class ReadAbilityQueryHandler : IRequestHandler<ReadAbilityQuery, Abili
 
   public async Task<AbilityModel?> Handle(ReadAbilityQuery query, CancellationToken cancellationToken)
   {
-    return await _abilityQuerier.ReadAsync(query.Id, cancellationToken);
+    Dictionary<Guid, AbilityModel> abilities = new(capacity: 2);
+
+    if (query.Id.HasValue)
+    {
+      AbilityModel? ability = await _abilityQuerier.ReadAsync(query.Id.Value, cancellationToken);
+      if (ability != null)
+      {
+        abilities[ability.Id] = ability;
+      }
+    }
+    if (!string.IsNullOrWhiteSpace(query.UniqueName))
+    {
+      AbilityModel? ability = await _abilityQuerier.ReadAsync(query.UniqueName, cancellationToken);
+      if (ability != null)
+      {
+        abilities[ability.Id] = ability;
+      }
+    }
+
+    if (abilities.Count > 1)
+    {
+      throw TooManyResultsException<AbilityModel>.ExpectedSingle(abilities.Count);
+    }
+
+    return abilities.SingleOrDefault().Value;
   }
 }

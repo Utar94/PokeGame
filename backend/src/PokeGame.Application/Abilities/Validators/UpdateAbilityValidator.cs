@@ -8,9 +8,8 @@ internal class UpdateAbilityValidator : AbstractValidator<UpdateAbilityPayload>
 {
   public UpdateAbilityValidator()
   {
-    When(x => x.Kind?.Value != null, () => RuleFor(x => x.Kind!.Value).IsInEnum());
-
-    When(x => !string.IsNullOrWhiteSpace(x.Name), () => RuleFor(x => x.Name!).Name());
+    When(x => !string.IsNullOrWhiteSpace(x.UniqueName), () => RuleFor(x => x.UniqueName!).UniqueName());
+    When(x => !string.IsNullOrWhiteSpace(x.DisplayName?.Value), () => RuleFor(x => x.DisplayName!.Value!).DisplayName());
     When(x => !string.IsNullOrWhiteSpace(x.Description?.Value), () => RuleFor(x => x.Description!.Value!).Description());
 
     When(x => !string.IsNullOrWhiteSpace(x.Link?.Value), () => RuleFor(x => x.Link!.Value!).Url());
