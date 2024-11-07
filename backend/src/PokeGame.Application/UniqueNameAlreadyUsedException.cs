@@ -1,6 +1,8 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
 using PokeGame.Contracts.Errors;
+using PokeGame.Domain;
+using PokeGame.Domain.Abilities;
 using PokeGame.Domain.Regions;
 
 namespace PokeGame.Application;
@@ -40,26 +42,37 @@ public class UniqueNameAlreadyUsedException : ConflictException
     }
   }
 
-  public UniqueNameAlreadyUsedException(Region region, RegionId conflictId) : base(BuildMessage(region, conflictId))
+  public UniqueNameAlreadyUsedException(Ability ability, AbilityId conflictId)
+    : this(ability.GetType(), ability.UniqueName, nameof(ability.UniqueName), [ability.Id.ToGuid(), conflictId.ToGuid()])
   {
-    TypeName = region.GetType().GetNamespaceQualifiedName();
-    UniqueName = region.UniqueName.Value;
-    PropertyName = nameof(region.UniqueName);
-    ConflictingIds = [region.Id.ToGuid(), conflictId.ToGuid()];
+  }
+  public UniqueNameAlreadyUsedException(Region region, RegionId conflictId)
+    : this(region.GetType(), region.UniqueName, nameof(region.UniqueName), [region.Id.ToGuid(), conflictId.ToGuid()])
+  {
+  }
+  private UniqueNameAlreadyUsedException(Type type, UniqueName uniqueName, string propertyName, IEnumerable<Guid> conflictingIds)
+    : base(BuildMessage(type, uniqueName, propertyName, conflictingIds))
+  {
+    TypeName = type.GetNamespaceQualifiedName();
+    UniqueName = uniqueName.Value;
+    PropertyName = propertyName;
+    ConflictingIds = conflictingIds.ToArray().AsReadOnly();
   }
 
-  private static string BuildMessage(Region region, RegionId conflictId)
+  private static string BuildMessage(Type type, UniqueName uniqueName, string propertyName, IEnumerable<Guid> conflictingIds)
   {
     StringBuilder message = new();
 
     message.AppendLine(ErrorMessage);
-    message.Append(nameof(TypeName)).Append(": ").AppendLine(region.GetType().GetNamespaceQualifiedName());
-    message.Append(nameof(UniqueName)).Append(": ").Append(region.UniqueName).AppendLine();
-    message.Append(nameof(PropertyName)).Append(": ").Append(nameof(region.UniqueName)).AppendLine();
+    message.Append(nameof(TypeName)).Append(": ").AppendLine(type.GetNamespaceQualifiedName());
+    message.Append(nameof(UniqueName)).Append(": ").Append(uniqueName).AppendLine();
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
 
     message.Append(nameof(ConflictingIds)).Append(':').AppendLine();
-    message.Append(" - ").Append(region.Id.ToGuid()).AppendLine();
-    message.Append(" - ").Append(conflictId.ToGuid()).AppendLine();
+    foreach (Guid conflictingId in conflictingIds)
+    {
+      message.Append(" - ").Append(conflictingId).AppendLine();
+    }
 
     return message.ToString();
   }

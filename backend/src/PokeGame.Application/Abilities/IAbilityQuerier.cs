@@ -1,12 +1,13 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using PokeGame.Contracts.Abilities;
+using PokeGame.Domain;
 using PokeGame.Domain.Abilities;
 
 namespace PokeGame.Application.Abilities;
 
 public interface IAbilityQuerier
 {
-  Task<AbilityId?> FindIdAsync(string uniqueName, CancellationToken cancellationToken = default);
+  Task<AbilityId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken = default);
 
   Task<AbilityModel> ReadAsync(Ability ability, CancellationToken cancellationToken = default);
   Task<AbilityModel?> ReadAsync(AbilityId id, CancellationToken cancellationToken = default);

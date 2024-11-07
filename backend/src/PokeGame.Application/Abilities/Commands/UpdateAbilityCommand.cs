@@ -13,11 +13,13 @@ internal class UpdateAbilityCommandHandler : IRequestHandler<UpdateAbilityComman
 {
   private readonly IAbilityQuerier _abilityQuerier;
   private readonly IAbilityRepository _abilityRepository;
+  private readonly ISender _sender;
 
-  public UpdateAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository)
+  public UpdateAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository, ISender sender)
   {
     _abilityQuerier = abilityQuerier;
     _abilityRepository = abilityRepository;
+    _sender = sender;
   }
 
   public async Task<AbilityModel?> Handle(UpdateAbilityCommand command, CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ internal class UpdateAbilityCommandHandler : IRequestHandler<UpdateAbilityComman
     }
 
     ability.Update(command.GetUserId());
-    await _abilityRepository.SaveAsync(ability, cancellationToken);
+    await _sender.Send(new SaveAbilityCommand(ability), cancellationToken);
 
     return await _abilityQuerier.ReadAsync(ability, cancellationToken);
   }

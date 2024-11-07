@@ -15,11 +15,13 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
 {
   private readonly IAbilityQuerier _abilityQuerier;
   private readonly IAbilityRepository _abilityRepository;
+  private readonly ISender _sender;
 
-  public CreateOrReplaceAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository)
+  public CreateOrReplaceAbilityCommandHandler(IAbilityQuerier abilityQuerier, IAbilityRepository abilityRepository, ISender sender)
   {
     _abilityQuerier = abilityQuerier;
     _abilityRepository = abilityRepository;
+    _sender = sender;
   }
 
   public async Task<CreateOrReplaceAbilityResult> Handle(CreateOrReplaceAbilityCommand command, CancellationToken cancellationToken)
@@ -79,7 +81,7 @@ internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrRe
     }
 
     ability.Update(userId);
-    await _abilityRepository.SaveAsync(ability, cancellationToken);
+    await _sender.Send(new SaveAbilityCommand(ability), cancellationToken);
 
     AbilityModel model = await _abilityQuerier.ReadAsync(ability, cancellationToken);
     return new CreateOrReplaceAbilityResult(model, created);
