@@ -20,7 +20,7 @@ internal class AbilityEntity : AggregateEntity
   {
     Id = @event.AggregateId.ToGuid();
 
-    Name = @event.Name.Value;
+    Name = @event.UniqueName.Value;
   }
 
   private AbilityEntity() : base()
