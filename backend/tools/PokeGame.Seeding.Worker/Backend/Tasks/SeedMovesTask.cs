@@ -39,7 +39,7 @@ internal class SeedMovesTaskHandler : INotificationHandler<SeedMovesTask>
         CreateOrReplaceMoveResult result = await _pipeline.ExecuteAsync(command, cancellationToken);
         MoveModel move = result.Move ?? throw new InvalidOperationException("The move model should not be null.");
         string status = result.Created ? "created" : "updated";
-        _logger.LogInformation("The move '{Name}' has been {Status} (Id={Id}).", move.Name, status, move.Id);
+        _logger.LogInformation("The move '{UniqueName}' has been {Status} (Id={Id}).", move.UniqueName, status, move.Id);
       }
     }
   }
