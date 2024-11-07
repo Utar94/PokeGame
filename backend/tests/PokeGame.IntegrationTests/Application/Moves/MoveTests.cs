@@ -22,7 +22,7 @@ public class MoveTests : IntegrationTests
   {
     _moveRepository = ServiceProvider.GetRequiredService<IMoveRepository>();
 
-    _thunderShock = new Move(PokemonType.Electric, MoveCategory.Special, new Name("Thunder Shock"), UserId);
+    _thunderShock = new Move(PokemonType.Electric, MoveCategory.Special, new UniqueName("thunder-shock"), UserId);
   }
 
   public override async Task InitializeAsync()
@@ -35,11 +35,11 @@ public class MoveTests : IntegrationTests
   [Fact(DisplayName = "It should create a new move.")]
   public async Task It_should_create_a_new_move()
   {
-    CreateOrReplaceMovePayload payload = new(" Facade ")
+    CreateOrReplaceMovePayload payload = new("facade")
     {
       Type = PokemonType.Normal,
       Category = MoveCategory.Physical,
-      Kind = MoveKind.Facade,
+      DisplayName = " Facade ",
       Description = "  This move's power is doubled if the user is poisoned, burned, or paralyzed.  ",
       Accuracy = 100,
       Power = 70,
@@ -65,8 +65,8 @@ public class MoveTests : IntegrationTests
 
     Assert.Equal(payload.Type, move.Type);
     Assert.Equal(payload.Category, move.Category);
-    Assert.Equal(payload.Kind, move.Kind);
-    Assert.Equal(payload.Name.Trim(), move.Name);
+    Assert.Equal(payload.UniqueName.Trim(), move.UniqueName);
+    Assert.Equal(payload.DisplayName.CleanTrim(), move.DisplayName);
     Assert.Equal(payload.Description.CleanTrim(), move.Description);
     Assert.Equal(payload.Accuracy, move.Accuracy);
     Assert.Equal(payload.Power, move.Power);
@@ -101,10 +101,11 @@ public class MoveTests : IntegrationTests
     _thunderShock.Update(UserId);
     await _moveRepository.SaveAsync(_thunderShock);
 
-    CreateOrReplaceMovePayload payload = new(" Thunder Shock ")
+    CreateOrReplaceMovePayload payload = new("thunder-shock")
     {
       Type = PokemonType.Water,
       Category = MoveCategory.Status,
+      DisplayName = " Thunder Shock ",
       Description = "    ",
       Accuracy = 100,
       Power = 40,
@@ -128,8 +129,8 @@ public class MoveTests : IntegrationTests
 
     Assert.Equal(_thunderShock.Type, move.Type);
     Assert.Equal(_thunderShock.Category, move.Category);
-    Assert.Equal(payload.Kind, move.Kind);
-    Assert.Equal(payload.Name.Trim(), move.Name);
+    Assert.Equal(payload.UniqueName.Trim(), move.UniqueName);
+    Assert.Equal(payload.DisplayName.CleanTrim(), move.DisplayName);
     Assert.Equal(description.Value, move.Description);
     Assert.Equal(payload.Accuracy, move.Accuracy);
     Assert.Equal(payload.Power, move.Power);
@@ -154,59 +155,39 @@ public class MoveTests : IntegrationTests
     Assert.Equal(0, results.Total);
   }
 
-  [Fact(DisplayName = "It should return the correct search results (Kind).")]
-  public async Task It_should_return_the_correct_search_results_Kind()
-  {
-    Move facade = new(PokemonType.Normal, MoveCategory.Physical, new Name("Facade"), UserId)
-    {
-      Kind = MoveKind.Facade
-    };
-    facade.Update(UserId);
-    await _moveRepository.SaveAsync(facade);
-
-    SearchMovesPayload payload = new()
-    {
-      Kind = MoveKind.Facade
-    };
-    SearchMovesQuery query = new(payload);
-    SearchResults<MoveModel> results = await Pipeline.ExecuteAsync(query);
-    Assert.Equal(1, results.Total);
-    Assert.Equal(facade.Id.ToGuid(), Assert.Single(results.Items).Id);
-  }
-
   [Fact(DisplayName = "It should return the correct search results.")]
   public async Task It_should_return_the_correct_search_results()
   {
-    Move focusEnergy = new(PokemonType.Normal, MoveCategory.Status, new Name("Focus Energy"), UserId)
+    Move focusEnergy = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("focus-energy"), UserId)
     {
       PowerPoints = 30
     };
     focusEnergy.Update(UserId);
-    Move growl = new(PokemonType.Normal, MoveCategory.Status, new Name("Growl"), UserId)
+    Move growl = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("growl"), UserId)
     {
       Accuracy = 100,
       PowerPoints = 40
     };
     growl.Update(UserId);
-    Move playNice = new(PokemonType.Normal, MoveCategory.Status, new Name("Play Nice"), UserId)
+    Move playNice = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("play-nice"), UserId)
     {
       PowerPoints = 20
     };
     playNice.Update(UserId);
-    Move sweetKiss = new(PokemonType.Fairy, MoveCategory.Status, new Name("Sweet Kiss"), UserId)
+    Move sweetKiss = new(PokemonType.Fairy, MoveCategory.Status, new UniqueName("sweet-kiss"), UserId)
     {
       Accuracy = 75,
       PowerPoints = 10
     };
     sweetKiss.Update(UserId);
-    Move tackle = new(PokemonType.Normal, MoveCategory.Physical, new Name("Tackle"), UserId)
+    Move tackle = new(PokemonType.Normal, MoveCategory.Physical, new UniqueName("tackle"), UserId)
     {
       Accuracy = 100,
       Power = 40,
       PowerPoints = 35
     };
     tackle.Update(UserId);
-    Move tailWhip = new(PokemonType.Normal, MoveCategory.Status, new Name("Tail Whip"), UserId)
+    Move tailWhip = new(PokemonType.Normal, MoveCategory.Status, new UniqueName("tail-whip"), UserId)
     {
       Accuracy = 100,
       PowerPoints = 30
@@ -239,10 +220,19 @@ public class MoveTests : IntegrationTests
   [Fact(DisplayName = "It should return the move found by ID.")]
   public async Task It_should_return_the_move_found_by_Id()
   {
-    ReadMoveQuery query = new(_thunderShock.Id.ToGuid());
+    ReadMoveQuery query = new(_thunderShock.Id.ToGuid(), UniqueName: null);
     MoveModel? move = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(move);
-    Assert.Equal(query.Id, move.Id);
+    Assert.Equal(_thunderShock.Id.ToGuid(), move.Id);
+  }
+
+  [Fact(DisplayName = "It should return the move found by unique name.")]
+  public async Task It_should_return_the_move_found_by_unique_name()
+  {
+    ReadMoveQuery query = new(Id: null, _thunderShock.UniqueName.Value);
+    MoveModel? move = await Pipeline.ExecuteAsync(query);
+    Assert.NotNull(move);
+    Assert.Equal(_thunderShock.Id.ToGuid(), move.Id);
   }
 
   [Fact(DisplayName = "It should update an existing move.")]
@@ -257,6 +247,7 @@ public class MoveTests : IntegrationTests
 
     UpdateMovePayload payload = new()
     {
+      DisplayName = new Change<string>(" Thunder Shock "),
       Accuracy = new Change<int?>(100),
       Power = new Change<int?>(40),
       PowerPoints = 30,
@@ -281,8 +272,8 @@ public class MoveTests : IntegrationTests
 
     Assert.Equal(_thunderShock.Type, move.Type);
     Assert.Equal(_thunderShock.Category, move.Category);
-    Assert.Equal(payload.Kind?.Value, move.Kind);
-    Assert.Equal(_thunderShock.Name.Value, move.Name);
+    Assert.Equal(_thunderShock.UniqueName.Value, move.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.Trim(), move.DisplayName);
     Assert.Equal(description.Value, move.Description);
     Assert.Equal(payload.Accuracy.Value, move.Accuracy);
     Assert.Equal(payload.Power.Value, move.Power);
