@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using MediatR;
 using Moq;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Regions;
@@ -15,6 +16,7 @@ public class UpdateRegionCommandHandlerTests
 
   private readonly Mock<IRegionQuerier> _regionQuerier = new();
   private readonly Mock<IRegionRepository> _regionRepository = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateRegionCommandHandler _handler;
 
@@ -23,9 +25,9 @@ public class UpdateRegionCommandHandlerTests
 
   public UpdateRegionCommandHandlerTests()
   {
-    _handler = new(_regionQuerier.Object, _regionRepository.Object);
+    _handler = new(_regionQuerier.Object, _regionRepository.Object, _sender.Object);
 
-    _region = new(new Name("kanto"), _userId);
+    _region = new(new UniqueName("kanto"), _userId);
     _regionRepository.Setup(x => x.LoadAsync(_region.Id, _cancellationToken)).ReturnsAsync(_region);
   }
 
@@ -64,7 +66,8 @@ public class UpdateRegionCommandHandlerTests
 
     UpdateRegionPayload payload = new()
     {
-      Name = " Kanto ",
+      UniqueName = "Kanto",
+      DisplayName = new Change<string>(" Kanto "),
       Link = new Change<string>("https://bulbapedia.bulbagarden.net/wiki/Kanto")
     };
     UpdateRegionCommand command = new(_region.Id.ToGuid(), payload);
@@ -77,9 +80,10 @@ public class UpdateRegionCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    _regionRepository.Verify(x => x.SaveAsync(
-      It.Is<Region>(y => Comparisons.AreEqual(y.Name, payload.Name) && y.Description == description
-        && Comparisons.AreEqual(y.Link, payload.Link.Value) && y.Notes == null),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveRegionCommand>(y => Comparisons.AreEqual(y.Region.UniqueName, payload.UniqueName)
+        && Comparisons.AreEqual(y.Region.DisplayName, payload.DisplayName.Value) && y.Region.Description == description
+        && Comparisons.AreEqual(y.Region.Link, payload.Link.Value) && y.Region.Notes == null),
       _cancellationToken), Times.Once);
   }
 }

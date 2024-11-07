@@ -108,8 +108,8 @@ public static class ValidationExtensions
 
   public static IRuleBuilderOptions<T, string> UniqueName<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
-    // TODO(fpion): "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    return ruleBuilder.NotEmpty().MaximumLength(Domain.UniqueName.MaximumLength);
+    return ruleBuilder.NotEmpty().MaximumLength(Domain.UniqueName.MaximumLength)
+      .SetValidator(new AllowedCharactersValidator<T>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"));
   }
 
   public static IRuleBuilderOptions<T, string> Url<T>(this IRuleBuilder<T, string> ruleBuilder)
