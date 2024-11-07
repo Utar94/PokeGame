@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
+using Logitar.Security.Cryptography;
 using MediatR;
 using Moq;
 using PokeGame.Contracts;
@@ -46,15 +46,18 @@ public class UpdateRegionCommandHandlerTests
   {
     UpdateRegionPayload payload = new()
     {
+      UniqueName = " kanto ",
+      DisplayName = new Change<string>(RandomStringGenerator.GetString(1000)),
       Link = new Change<string>("test")
     };
     UpdateRegionCommand command = new(_region.Id.ToGuid(), payload);
     command.Contextualize();
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("UrlValidator", error.ErrorCode);
-    Assert.Equal("Link.Value", error.PropertyName);
+    Assert.Equal(3, exception.Errors.Count());
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName.Value");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "UrlValidator" && e.PropertyName == "Link.Value");
   }
 
   [Fact(DisplayName = "It should update an existing region.")]
@@ -81,7 +84,7 @@ public class UpdateRegionCommandHandlerTests
     Assert.Same(model, result);
 
     _sender.Verify(x => x.Send(
-      It.Is<SaveRegionCommand>(y => Comparisons.AreEqual(y.Region.UniqueName, payload.UniqueName)
+      It.Is<SaveRegionCommand>(y => y.Region.Equals(_region) && Comparisons.AreEqual(y.Region.UniqueName, payload.UniqueName)
         && Comparisons.AreEqual(y.Region.DisplayName, payload.DisplayName.Value) && y.Region.Description == description
         && Comparisons.AreEqual(y.Region.Link, payload.Link.Value) && y.Region.Notes == null),
       _cancellationToken), Times.Once);

@@ -22,7 +22,7 @@ public class DeleteAbilityCommandHandlerTests
   {
     _handler = new(_abilityQuerier.Object, _abilityRepository.Object);
 
-    _ability = new(new Name("Adaptability"), _userId);
+    _ability = new(new UniqueName("Adaptability"), _userId);
     _abilityRepository.Setup(x => x.LoadAsync(_ability.Id, _cancellationToken)).ReturnsAsync(_ability);
   }
 
