@@ -7,10 +7,7 @@ public class SpeciesModel : Aggregate
   public int Number { get; set; }
   public string UniqueName { get; set; }
   public string? DisplayName { get; set; }
-
-  public bool IsBaby { get; set; }
-  public bool IsLegendary { get; set; }
-  public bool IsMythical { get; set; }
+  public PokemonCategory? Category { get; set; }
 
   public int BaseHappiness { get; set; }
   public int CaptureRate { get; set; }
