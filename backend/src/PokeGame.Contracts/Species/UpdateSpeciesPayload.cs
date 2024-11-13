@@ -14,5 +14,5 @@ public record UpdateSpeciesPayload
   public Change<string>? Link { get; set; }
   public Change<string>? Notes { get; set; }
 
-  //public List<PokedexNumberModel> PokedexNumbers { get; set; } // TODO(fpion): implement
+  public List<UpdatePokedexNumberPayload> PokedexNumbers { get; set; } = [];
 }

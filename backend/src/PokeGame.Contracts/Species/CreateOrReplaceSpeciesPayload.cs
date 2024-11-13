@@ -14,7 +14,7 @@ public record CreateOrReplaceSpeciesPayload
   public string? Link { get; set; }
   public string? Notes { get; set; }
 
-  public List<PokedexNumberModel> PokedexNumbers { get; set; }
+  public List<PokedexNumberPayload> PokedexNumbers { get; set; }
 
   public CreateOrReplaceSpeciesPayload() : this(number: 0, string.Empty)
   {
