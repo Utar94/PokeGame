@@ -4,6 +4,8 @@ namespace PokeGame.Contracts.Species;
 
 public class SpeciesModel : Aggregate
 {
+  // TODO(fpion): remove dependency to System.Text.Json
+
   public int Number { get; set; }
   public string UniqueName { get; set; }
   public string? DisplayName { get; set; }

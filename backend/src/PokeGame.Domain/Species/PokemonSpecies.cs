@@ -2,7 +2,6 @@
 using MediatR;
 using PokeGame.Contracts;
 using PokeGame.Contracts.Species;
-using PokeGame.Domain.Regions;
 
 namespace PokeGame.Domain.Species;
 
@@ -12,7 +11,7 @@ public class PokemonSpecies : AggregateRoot
 
   public new SpeciesId Id => new(base.Id);
 
-  public int Number { get; private set; }
+  public int Number { get; private set; } // TODO(fpion): can we change Number?
   private UniqueName? _uniqueName = null;
   public UniqueName UniqueName
   {
@@ -94,7 +93,7 @@ public class PokemonSpecies : AggregateRoot
       }
     }
   }
-  public LevelingRate LevelingRate { get; private set; }
+  public LevelingRate LevelingRate { get; private set; } // TODO(fpion): can we change LevelingRate?
 
   private Url? _link = null;
   public Url? Link
@@ -123,8 +122,7 @@ public class PokemonSpecies : AggregateRoot
     }
   }
 
-  private readonly Dictionary<RegionId, int> _pokedexNumbers = [];
-  public IReadOnlyDictionary<RegionId, int> PokedexNumbers => _pokedexNumbers.AsReadOnly();
+  // TODO(fpion): PokedexNumbers
 
   public PokemonSpecies() : base()
   {
@@ -155,24 +153,6 @@ public class PokemonSpecies : AggregateRoot
     if (!IsDeleted)
     {
       Raise(new DeletedEvent(), userId.ActorId);
-    }
-  }
-
-  public void RemovePokedexNumber(RegionId regionId)
-  {
-    if (_pokedexNumbers.Remove(regionId))
-    {
-      _updatedEvent.PokedexNumbers[regionId] = null;
-    }
-  }
-  public void SetPokedexNumber(RegionId regionId, int number)
-  {
-    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(number, nameof(number));
-
-    if (!_pokedexNumbers.TryGetValue(regionId, out int existingNumber) || existingNumber != number)
-    {
-      _pokedexNumbers[regionId] = number;
-      _updatedEvent.PokedexNumbers[regionId] = number;
     }
   }
 
@@ -216,18 +196,6 @@ public class PokemonSpecies : AggregateRoot
     {
       _notes = @event.Notes.Value;
     }
-
-    foreach (KeyValuePair<RegionId, int?> pokedexNumber in @event.PokedexNumbers)
-    {
-      if (pokedexNumber.Value.HasValue)
-      {
-        _pokedexNumbers[pokedexNumber.Key] = pokedexNumber.Value.Value;
-      }
-      else
-      {
-        _pokedexNumbers.Remove(pokedexNumber.Key);
-      }
-    }
   }
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
@@ -268,11 +236,8 @@ public class PokemonSpecies : AggregateRoot
     public Change<Url>? Link { get; set; }
     public Change<Notes>? Notes { get; set; }
 
-    public Dictionary<RegionId, int?> PokedexNumbers { get; set; } = [];
-
     public bool HasChanges => UniqueName != null || DisplayName != null || Category != null
       || BaseHappiness.HasValue || CaptureRate.HasValue
-      || Link != null || Notes != null
-      || PokedexNumbers.Count > 0;
+      || Link != null || Notes != null;
   }
 }
