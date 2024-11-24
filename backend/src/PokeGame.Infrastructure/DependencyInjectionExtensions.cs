@@ -54,6 +54,7 @@ public static class DependencyInjectionExtensions
     new MoveIdConverter(),
     new NotesConverter(),
     new RegionIdConverter(),
+    new SpeciesIdConverter(),
     new UniqueNameConverter(),
     new UrlConverter(),
     new VolatileConditionConverter()
