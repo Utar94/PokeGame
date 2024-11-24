@@ -5,6 +5,7 @@ using Logitar.Portal.Contracts.Actors;
 using PokeGame.Contracts.Abilities;
 using PokeGame.Contracts.Moves;
 using PokeGame.Contracts.Regions;
+using PokeGame.Contracts.Species;
 using PokeGame.EntityFrameworkCore.Entities;
 
 namespace PokeGame.EntityFrameworkCore;
@@ -73,6 +74,29 @@ internal class Mapper
 
     destination.StatisticChanges.AddRange(source.GetStatisticChanges());
     destination.VolatileConditions.AddRange(source.GetVolatileConditions());
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public SpeciesModel ToPokemonSpecies(PokemonSpeciesEntity source)
+  {
+    SpeciesModel destination = new()
+    {
+      Id = source.Id,
+      Number = source.Number,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Category = source.Category,
+      BaseHappiness = source.BaseHappiness,
+      CaptureRate = source.CaptureRate,
+      LevelingRate = source.LevelingRate,
+      Link = source.Link,
+      Notes = source.Notes
+    };
+
+    // TODO(fpion): PokedexNumbers
 
     MapAggregate(source, destination);
 

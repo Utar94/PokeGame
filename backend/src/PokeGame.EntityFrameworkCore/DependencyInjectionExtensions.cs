@@ -6,6 +6,7 @@ using PokeGame.Application.Regions;
 using PokeGame.Domain.Abilities;
 using PokeGame.Domain.Moves;
 using PokeGame.Domain.Regions;
+using PokeGame.Domain.Species;
 using PokeGame.EntityFrameworkCore.Actors;
 using PokeGame.EntityFrameworkCore.Queriers;
 using PokeGame.EntityFrameworkCore.Repositories;
@@ -38,6 +39,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddScoped<IAbilityRepository, AbilityRepository>()
       .AddScoped<IMoveRepository, MoveRepository>()
+      .AddScoped<IPokemonSpeciesRepository, PokemonSpeciesRepository>()
       .AddScoped<IRegionRepository, RegionRepository>();
   }
 }

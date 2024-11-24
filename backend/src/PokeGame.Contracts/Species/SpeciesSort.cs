@@ -2,6 +2,8 @@
 
 public enum SpeciesSort
 {
+  BaseHappiness,
+  CaptureRate,
   CreatedOn,
   DisplayName,
   Number,
