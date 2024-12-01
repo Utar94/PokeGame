@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Tests", "tests\Pok
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.Infrastructure.UnitTests", "tests\PokeGame.Infrastructure.UnitTests\PokeGame.Infrastructure.UnitTests.csproj", "{10E69381-D5C3-4DF4-9292-2ECB04258351}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeGame.EntityFrameworkCore", "src\PokeGame.EntityFrameworkCore\PokeGame.EntityFrameworkCore.csproj", "{81F81C2C-BDA8-4B64-8F1B-3B665C6A2576}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{10E69381-D5C3-4DF4-9292-2ECB04258351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10E69381-D5C3-4DF4-9292-2ECB04258351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10E69381-D5C3-4DF4-9292-2ECB04258351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81F81C2C-BDA8-4B64-8F1B-3B665C6A2576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81F81C2C-BDA8-4B64-8F1B-3B665C6A2576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81F81C2C-BDA8-4B64-8F1B-3B665C6A2576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81F81C2C-BDA8-4B64-8F1B-3B665C6A2576}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
