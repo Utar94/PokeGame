@@ -3,11 +3,13 @@ name: Build PokeGame Web Application Backend
 on:
   push:
     branches:
+      - architecture
       - main
     paths:
       - 'backend/**'
   pull_request:
     branches:
+      - architecture
       - main
     paths:
       - 'backend/**'
@@ -25,5 +27,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: docker build . -t francispion.azurecr.io/pokegame:${{ github.sha }} -f src/PokeGame/Dockerfile
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build Solution
+        run: dotnet build --no-restore
+
+      - name: Test Solution
+        run: dotnet test --no-build --verbosity normal --filter Category=Unit
