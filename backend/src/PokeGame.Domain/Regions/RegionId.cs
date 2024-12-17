@@ -18,6 +18,8 @@ public readonly struct RegionId
 
   public static RegionId NewId() => new(StreamId.NewId());
 
+  public Guid ToGuid() => StreamId.ToGuid();
+
   public static bool operator ==(RegionId left, RegionId right) => left.Equals(right);
   public static bool operator !=(RegionId left, RegionId right) => !left.Equals(right);
 
