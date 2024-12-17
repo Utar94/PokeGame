@@ -9,6 +9,7 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddPokeGameInfrastructure(this IServiceCollection services)
   {
     return services
+      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
       .AddPokeGameApplication()
       .AddSingleton<IEventSerializer, EventSerializer>()
       .AddScoped<IEventBus, EventBus>();
