@@ -75,15 +75,15 @@ internal class MoveEntity : AggregateEntity
 
     if (@event.Accuracy != null)
     {
-      Accuracy = @event.Accuracy.Value?.Value;
+      Accuracy = (byte?)@event.Accuracy.Value?.Value;
     }
     if (@event.Power != null)
     {
-      Power = @event.Power.Value?.Value;
+      Power = (byte?)@event.Power.Value?.Value;
     }
     if (@event.PowerPoints != null)
     {
-      PowerPoints = @event.PowerPoints.Value;
+      PowerPoints = (byte)@event.PowerPoints.Value;
     }
 
     if (@event.InflictedStatus != null)
