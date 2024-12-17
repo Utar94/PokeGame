@@ -30,9 +30,9 @@ internal class MoveEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
-  public int? Accuracy { get; private set; }
-  public int? Power { get; private set; }
-  public int PowerPoints { get; private set; }
+  public byte? Accuracy { get; private set; }
+  public byte? Power { get; private set; }
+  public byte PowerPoints { get; private set; }
 
   public StatusCondition? StatusCondition { get; private set; }
   public int? StatusChance { get; private set; }
