@@ -15,18 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokeGame.Application\PokeGame.Application.csproj" />
+    <PackageReference Include="Logitar.EventSourcing.EntityFrameworkCore.SqlServer" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="System.Reflection" />
-    <Using Include="System.Text.Json" />
-    <Using Include="System.Text.Json.Serialization" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Logitar.EventSourcing.EntityFrameworkCore.Relational" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+    <ProjectReference Include="..\PokeGame.Infrastructure\PokeGame.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
