@@ -1,2 +1,21 @@
 name: pokegame
-# services:
+services:
+  pokegame_mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: PokeGame_mssql
+    restart: unless-stopped
+    user: root
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: qQMHwru4jSd8KpaC
+    ports:
+      - 1442:1433
+    volumes:
+      - mssql_backup:/var/opt/mssql/backup
+      - mssql_data:/var/opt/mssql/data
+      - mssql_log:/var/opt/mssql/log
+
+volumes:
+  mssql_backup:
+  mssql_data:
+  mssql_log:
