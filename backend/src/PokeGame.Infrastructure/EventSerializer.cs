@@ -9,11 +9,16 @@ internal class EventSerializer : Logitar.EventSourcing.Infrastructure.EventSeria
     base.RegisterConverters();
 
     SerializerOptions.Converters.Add(new AbilityIdConverter());
+    SerializerOptions.Converters.Add(new AccuracyConverter());
     SerializerOptions.Converters.Add(new DescriptionConverter());
     SerializerOptions.Converters.Add(new DisplayNameConverter());
+    SerializerOptions.Converters.Add(new MoveIdConverter());
     SerializerOptions.Converters.Add(new NotesConverter());
+    SerializerOptions.Converters.Add(new PowerConverter());
+    SerializerOptions.Converters.Add(new PowerPointsConverter());
     SerializerOptions.Converters.Add(new RegionIdConverter());
     SerializerOptions.Converters.Add(new UniqueNameConverter());
     SerializerOptions.Converters.Add(new UrlConverter());
+    SerializerOptions.Converters.Add(new VolatileConditionConverter());
   }
 }

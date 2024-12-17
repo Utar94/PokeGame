@@ -18,6 +18,8 @@ public readonly struct AbilityId
 
   public static AbilityId NewId() => new(StreamId.NewId());
 
+  public Guid ToGuid() => StreamId.ToGuid();
+
   public static bool operator ==(AbilityId left, AbilityId right) => left.Equals(right);
   public static bool operator !=(AbilityId left, AbilityId right) => !left.Equals(right);
 
