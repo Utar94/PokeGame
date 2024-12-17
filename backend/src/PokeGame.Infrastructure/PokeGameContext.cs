@@ -9,6 +9,7 @@ public class PokeGameContext : DbContext
   {
   }
 
+  internal DbSet<AbilityEntity> Abilities => Set<AbilityEntity>();
   internal DbSet<RegionEntity> Regions => Set<RegionEntity>();
   internal DbSet<UserEntity> Users => Set<UserEntity>();
 
