@@ -4,6 +4,8 @@ namespace PokeGame.Domain;
 
 public record UniqueName
 {
+  public const int MaximumLength = byte.MaxValue;
+
   public string Value { get; }
 
   public UniqueName(string value)
