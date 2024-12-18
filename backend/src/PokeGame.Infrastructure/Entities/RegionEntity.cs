@@ -20,6 +20,8 @@ internal class RegionEntity : AggregateEntity
   public string? Link { get; private set; }
   public string? Notes { get; private set; }
 
+  public List<RegionalSpeciesEntity> RegionalSpecies { get; private set; } = [];
+
   public RegionEntity(RegionCreated @event) : base(@event)
   {
     Id = @event.StreamId.ToGuid();

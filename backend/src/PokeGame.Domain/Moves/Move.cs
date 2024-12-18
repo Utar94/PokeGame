@@ -205,7 +205,7 @@ public class Move : AggregateRoot
   public void SetVolatileConditions(IEnumerable<VolatileCondition> volatileConditions)
   {
     IEnumerable<VolatileCondition> distinct = volatileConditions.Distinct();
-    if (!_volatileConditions.SequenceEqual(volatileConditions))
+    if (!_volatileConditions.SequenceEqual(distinct))
     {
       _volatileConditions.Clear();
       _volatileConditions.AddRange(distinct);

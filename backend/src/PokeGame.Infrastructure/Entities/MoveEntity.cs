@@ -30,9 +30,9 @@ internal class MoveEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
-  public int? Accuracy { get; private set; }
-  public int? Power { get; private set; }
-  public int PowerPoints { get; private set; }
+  public byte? Accuracy { get; private set; }
+  public byte? Power { get; private set; }
+  public byte PowerPoints { get; private set; }
 
   public StatusCondition? StatusCondition { get; private set; }
   public int? StatusChance { get; private set; }
@@ -75,15 +75,15 @@ internal class MoveEntity : AggregateEntity
 
     if (@event.Accuracy != null)
     {
-      Accuracy = @event.Accuracy.Value?.Value;
+      Accuracy = (byte?)@event.Accuracy.Value?.Value;
     }
     if (@event.Power != null)
     {
-      Power = @event.Power.Value?.Value;
+      Power = (byte?)@event.Power.Value?.Value;
     }
     if (@event.PowerPoints != null)
     {
-      PowerPoints = @event.PowerPoints.Value;
+      PowerPoints = (byte)@event.PowerPoints.Value;
     }
 
     if (@event.InflictedStatus != null)
