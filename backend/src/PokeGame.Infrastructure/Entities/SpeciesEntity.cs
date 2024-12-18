@@ -38,6 +38,10 @@ internal class SpeciesEntity : AggregateEntity
     Category = @event.Category;
 
     UniqueName = @event.UniqueName.Value;
+
+    GrowthRate = @event.GrowthRate;
+    BaseFriendship = @event.BaseFriendship.Value;
+    CatchRate = (byte)@event.CatchRate.Value;
   }
 
   private SpeciesEntity() : base()
