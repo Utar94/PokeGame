@@ -40,7 +40,7 @@ internal class SpeciesEntity : AggregateEntity
     UniqueName = @event.UniqueName.Value;
 
     GrowthRate = @event.GrowthRate;
-    BaseFriendship = @event.BaseFriendship.Value;
+    BaseFriendship = (byte)@event.BaseFriendship.Value;
     CatchRate = (byte)@event.CatchRate.Value;
   }
 
@@ -90,7 +90,7 @@ internal class SpeciesEntity : AggregateEntity
     }
     if (@event.BaseFriendship != null)
     {
-      BaseFriendship = @event.BaseFriendship.Value;
+      BaseFriendship = (byte)@event.BaseFriendship.Value;
     }
     if (@event.CatchRate != null)
     {

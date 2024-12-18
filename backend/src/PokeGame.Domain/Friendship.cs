@@ -1,17 +1,28 @@
-﻿namespace PokeGame.Domain;
+﻿using FluentValidation;
+
+namespace PokeGame.Domain;
 
 public record Friendship
 {
-  public byte Value { get; }
+  public int Value { get; }
 
   public Friendship()
   {
   }
 
-  public Friendship(byte value)
+  public Friendship(int value)
   {
     Value = value;
+    new Validator().ValidateAndThrow(this);
   }
 
   public override string ToString() => Value.ToString();
+
+  private class Validator : AbstractValidator<Friendship>
+  {
+    public Validator()
+    {
+      RuleFor(x => x.Value).InclusiveBetween(0, 255);
+    }
+  }
 }
