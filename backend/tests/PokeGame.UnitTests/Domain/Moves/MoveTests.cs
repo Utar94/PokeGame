@@ -3,7 +3,7 @@ using PokeGame.Domain.Moves.Events;
 
 namespace PokeGame.Domain.Moves;
 
-[Trait("Category", "Unit")]
+[Trait(Traits.Category, Categories.Unit)]
 public class MoveTests
 {
   private readonly UserId _userId = new(ActorId.NewId());
