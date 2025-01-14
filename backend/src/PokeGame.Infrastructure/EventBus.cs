@@ -6,15 +6,15 @@ namespace PokeGame.Infrastructure;
 
 internal class EventBus : IEventBus
 {
-  private readonly IPublisher _publisher;
+  private readonly IMediator _mediator;
 
-  public EventBus(IPublisher publisher)
+  public EventBus(IMediator mediator)
   {
-    _publisher = publisher;
+    _mediator = mediator;
   }
 
   public async Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
   {
-    await _publisher.Publish(@event, cancellationToken);
+    await _mediator.Publish(@event, cancellationToken);
   }
 }
