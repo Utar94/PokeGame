@@ -4,20 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PokeGame.Infrastructure.Commands;
 
-public record InitializeDatabaseCommand : INotification;
+public record MigrateDatabaseCommand : INotification;
 
-internal class InitializeDatabaseCommandHandler : INotificationHandler<InitializeDatabaseCommand>
+internal class MigrateDatabaseCommandHandler : INotificationHandler<MigrateDatabaseCommand>
 {
   private readonly EventContext _eventContext;
   private readonly PokeGameContext _pokeGameContext;
 
-  public InitializeDatabaseCommandHandler(EventContext eventContext, PokeGameContext pokeGameContext)
+  public MigrateDatabaseCommandHandler(EventContext eventContext, PokeGameContext pokeGameContext)
   {
     _eventContext = eventContext;
     _pokeGameContext = pokeGameContext;
   }
 
-  public async Task Handle(InitializeDatabaseCommand _, CancellationToken cancellationToken)
+  public async Task Handle(MigrateDatabaseCommand _, CancellationToken cancellationToken)
   {
     await _eventContext.Database.MigrateAsync(cancellationToken);
     await _pokeGameContext.Database.MigrateAsync(cancellationToken);

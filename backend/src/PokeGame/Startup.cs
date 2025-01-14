@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.FeatureManagement;
+using PokeGame.Application;
 using PokeGame.Constants;
+using PokeGame.Infrastructure;
 using PokeGame.Infrastructure.Commands;
 using PokeGame.Infrastructure.SqlServer;
+using Scalar.AspNetCore;
 
 namespace PokeGame;
 
@@ -28,6 +31,8 @@ internal class Startup : StartupBase
 
     services.AddOpenApi();
 
+    services.AddPokeGameApplication();
+    services.AddPokeGameInfrastructure();
     services.AddPokeGameInfrastructureWithSqlServer(_configuration);
   }
 
@@ -42,9 +47,10 @@ internal class Startup : StartupBase
   {
     IFeatureManager featureManager = application.Services.GetRequiredService<IFeatureManager>();
 
-    if (await featureManager.IsEnabledAsync(Features.UseOpenApi))
+    if (await featureManager.IsEnabledAsync(Features.UseScalarUI))
     {
       application.MapOpenApi();
+      application.MapScalarApiReference();
     }
 
     application.UseHttpsRedirection();
@@ -56,7 +62,7 @@ internal class Startup : StartupBase
     {
       using IServiceScope scope = application.Services.CreateScope();
       IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-      await mediator.Publish(new InitializeDatabaseCommand());
+      await mediator.Publish(new MigrateDatabaseCommand());
     }
   }
 }
