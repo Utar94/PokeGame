@@ -2,22 +2,14 @@
 
 public record Error
 {
-  public string Code { get; init; } = string.Empty;
-  public string Message { get; init; } = string.Empty;
-  public IReadOnlyCollection<ErrorData> Data { get; init; } = [];
+  public string Code { get; }
+  public string Message { get; }
+  public IReadOnlyDictionary<string, object?> Data { get; }
 
-  public Error()
-  {
-  }
-
-  public Error(string code, string message, IEnumerable<ErrorData>? data = null)
+  public Error(string code, string message, IReadOnlyDictionary<string, object?>? data = null)
   {
     Code = code;
     Message = message;
-
-    if (data != null)
-    {
-      Data = data.ToArray();
-    }
+    Data = data ?? new Dictionary<string, object?>().AsReadOnly();
   }
 }
