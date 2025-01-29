@@ -62,13 +62,13 @@ public class MoveController : ControllerBase
     return Ok(moves);
   }
 
-  //[HttpPatch("{id}")]
-  //public async Task<ActionResult<MoveModel>> UpdateAsync(Guid id, [FromBody] UpdateMovePayload payload, CancellationToken cancellationToken)
-  //{
-  //  UpdateMoveCommand command = new(id, payload);
-  //  MoveModel? move = await _mediator.Send(command, cancellationToken);
-  //  return move == null ? NotFound() : Ok(move);
-  //} // TODO(fpion): implement
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<MoveModel>> UpdateAsync(Guid id, [FromBody] UpdateMovePayload payload, CancellationToken cancellationToken)
+  {
+    UpdateMoveCommand command = new(id, payload);
+    MoveModel? move = await _mediator.Send(command, cancellationToken);
+    return move == null ? NotFound() : Ok(move);
+  }
 
   private ActionResult ToActionResult(CreateOrReplaceMoveResult result)
   {

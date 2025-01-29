@@ -10,6 +10,6 @@ internal class StatisticChangeValidator : AbstractValidator<StatisticChangeModel
   public StatisticChangeValidator()
   {
     RuleFor(x => x.Statistic).IsInEnum().NotEqual(PokemonStatistic.HP);
-    RuleFor(x => x.Stages).InclusiveBetween(Move.MinimumStage, Move.MaximumStage).NotEqual(0);
+    RuleFor(x => x.Stages).InclusiveBetween(Move.MinimumStage, Move.MaximumStage);
   }
 }
