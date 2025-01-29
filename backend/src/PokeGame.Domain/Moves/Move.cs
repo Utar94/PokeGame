@@ -147,7 +147,7 @@ public class Move : AggregateRoot
   {
   }
 
-  public Move(PokemonType type, MoveCategory category, UniqueName uniqueName, PowerPoints powerPoints, UserId userId, MoveId? id = null)
+  public Move(PokemonType type, MoveCategory category, UniqueName uniqueName, PowerPoints powerPoints, ActorId? actorId = null, MoveId? id = null)
     : base((id ?? MoveId.NewId()).StreamId)
   {
     if (!Enum.IsDefined(type))
@@ -159,7 +159,7 @@ public class Move : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(category));
     }
 
-    Raise(new MoveCreated(type, category, uniqueName, powerPoints), userId.ActorId);
+    Raise(new MoveCreated(type, category, uniqueName, powerPoints), actorId);
   }
   protected virtual void Handle(MoveCreated @event)
   {
@@ -171,11 +171,11 @@ public class Move : AggregateRoot
     _powerPoints = @event.PowerPoints;
   }
 
-  public void Delete(UserId userId)
+  public void Delete(ActorId? actorId = null)
   {
     if (!IsDeleted)
     {
-      Raise(new MoveDeleted(), userId.ActorId);
+      Raise(new MoveDeleted(), actorId);
     }
   }
 
@@ -213,11 +213,11 @@ public class Move : AggregateRoot
     }
   }
 
-  public void Update(UserId userId)
+  public void Update(ActorId? actorId = null)
   {
     if (_updated.HasChanges)
     {
-      Raise(_updated, userId.ActorId, DateTime.Now);
+      Raise(_updated, actorId, DateTime.Now);
       _updated = new();
     }
   }

@@ -18,7 +18,7 @@ public record PowerPoints
   {
     public Validator()
     {
-      RuleFor(x => x.Value).InclusiveBetween(1, 40);
+      RuleFor(x => x.Value).PowerPoints();
     }
   }
 }

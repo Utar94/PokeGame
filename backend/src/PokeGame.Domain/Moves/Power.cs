@@ -18,7 +18,7 @@ public record Power
   {
     public Validator()
     {
-      RuleFor(x => x.Value).InclusiveBetween(1, 250);
+      RuleFor(x => x.Value).Power();
     }
   }
 }

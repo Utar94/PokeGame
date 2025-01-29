@@ -2,24 +2,20 @@
 
 namespace PokeGame.Domain.Moves;
 
-public record InflictedStatus
+public record InflictedStatus : IInflictedStatus
 {
   public StatusCondition Condition { get; }
   public int Chance { get; }
 
+  [JsonConstructor]
   public InflictedStatus(StatusCondition condition, int chance)
   {
     Condition = condition;
     Chance = chance;
-    new Validator().ValidateAndThrow(this);
+    new InflictedStatusValidator().ValidateAndThrow(this);
   }
 
-  private class Validator : AbstractValidator<InflictedStatus>
+  public InflictedStatus(IInflictedStatus status) : this(status.Condition, status.Chance)
   {
-    public Validator()
-    {
-      RuleFor(x => x.Condition).IsInEnum();
-      RuleFor(x => x.Chance).InclusiveBetween(1, 100);
-    }
   }
 }
