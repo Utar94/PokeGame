@@ -80,28 +80,28 @@ public class Region : AggregateRoot
   {
   }
 
-  public Region(UniqueName uniqueName, UserId userId, RegionId? id = null) : base((id ?? RegionId.NewId()).StreamId)
+  public Region(UniqueName uniqueName, ActorId? actorId = null, RegionId? id = null) : base((id ?? RegionId.NewId()).StreamId)
   {
-    Raise(new RegionCreated(uniqueName), userId.ActorId);
+    Raise(new RegionCreated(uniqueName), actorId);
   }
   protected virtual void Handle(RegionCreated @event)
   {
     _uniqueName = @event.UniqueName;
   }
 
-  public void Delete(UserId userId)
+  public void Delete(ActorId? actorId = null)
   {
     if (!IsDeleted)
     {
-      Raise(new RegionDeleted(), userId.ActorId);
+      Raise(new RegionDeleted(), actorId);
     }
   }
 
-  public void Update(UserId userId)
+  public void Update(ActorId? actorId = null)
   {
     if (_updated.HasChanges)
     {
-      Raise(_updated, userId.ActorId, DateTime.Now);
+      Raise(_updated, actorId, DateTime.Now);
       _updated = new();
     }
   }

@@ -34,6 +34,7 @@ internal class Startup : StartupBase
     services.AddPokeGameApplication();
     services.AddPokeGameInfrastructure();
     services.AddPokeGameInfrastructureWithSqlServer(_configuration);
+    services.AddSingleton<IApplicationContext, HttpApplicationContext>();
   }
 
   public override void Configure(IApplicationBuilder builder)

@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using Microsoft.Extensions.DependencyInjection;
+using PokeGame.Application.Regions;
 
 namespace PokeGame.Application;
 
@@ -9,6 +10,13 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddLogitarEventSourcing()
-      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
+      .AddManagers();
+  }
+
+  private static IServiceCollection AddManagers(this IServiceCollection services)
+  {
+    return services
+      .AddTransient<IRegionManager, RegionManager>();
   }
 }
