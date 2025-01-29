@@ -1,4 +1,5 @@
-﻿using PokeGame.Application.Moves.Models;
+﻿using Logitar.Portal.Contracts.Search;
+using PokeGame.Application.Moves.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves;
 
@@ -13,5 +14,5 @@ public interface IMoveQuerier
   Task<MoveModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
   Task<MoveModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken = default);
 
-  //Task<SearchResults<MoveModel>> SearchAsync(SearchMovesPayload payload, CancellationToken cancellationToken = default); // TODO(fpion): implement
+  Task<SearchResults<MoveModel>> SearchAsync(SearchMovesPayload payload, CancellationToken cancellationToken = default);
 }

@@ -6,6 +6,9 @@ namespace PokeGame.Domain.Moves;
 
 public class Move : AggregateRoot
 {
+  public const int MinimumStage = -6;
+  public const int MaximumStage = 6;
+
   private MoveUpdated _updated = new();
 
   public new MoveId Id => new(base.Id);
@@ -189,9 +192,9 @@ public class Move : AggregateRoot
     {
       throw new ArgumentException($"The statistic cannot be {nameof(PokemonStatistic.HP)}.", nameof(statistic));
     }
-    if (stages < -6 || stages > 6)
+    if (stages < MinimumStage || stages > MaximumStage)
     {
-      throw new ArgumentOutOfRangeException(nameof(stages), "The stages must range between -6 and 6.");
+      throw new ArgumentOutOfRangeException(nameof(stages), $"The stages must range between {MinimumStage} and {MaximumStage}.");
     }
 
     _ = _statisticChanges.TryGetValue(statistic, out int existingStages);

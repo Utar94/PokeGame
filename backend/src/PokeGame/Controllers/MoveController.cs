@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Logitar.Portal.Contracts.Search;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Moves.Commands;
 using PokeGame.Application.Moves.Models;
 using PokeGame.Application.Moves.Queries;
+using PokeGame.Models.Move;
 
 namespace PokeGame.Controllers;
 
@@ -51,14 +53,14 @@ public class MoveController : ControllerBase
     return ToActionResult(result);
   }
 
-  //[HttpGet]
-  //public async Task<ActionResult<SearchResults<MoveModel>>> SearchAsync([FromQuery] SearchMovesParameters parameters, CancellationToken cancellationToken)
-  //{
-  //  SearchMovesPayload payload = parameters.ToPayload();
-  //  SearchMovesQuery query = new(payload);
-  //  SearchResults<MoveModel> moves = await _mediator.Send(query, cancellationToken);
-  //  return Ok(moves);
-  //} // TODO(fpion): implement
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<MoveModel>>> SearchAsync([FromQuery] SearchMovesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchMovesPayload payload = parameters.ToPayload();
+    SearchMovesQuery query = new(payload);
+    SearchResults<MoveModel> moves = await _mediator.Send(query, cancellationToken);
+    return Ok(moves);
+  }
 
   //[HttpPatch("{id}")]
   //public async Task<ActionResult<MoveModel>> UpdateAsync(Guid id, [FromBody] UpdateMovePayload payload, CancellationToken cancellationToken)

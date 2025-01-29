@@ -1,4 +1,5 @@
-﻿using PokeGame.Domain;
+﻿using PokeGame.Application.Moves.Models;
+using PokeGame.Domain;
 using PokeGame.Domain.Moves;
 using PokeGame.Domain.Moves.Events;
 using PokeGame.Infrastructure.Converters;
@@ -121,7 +122,12 @@ internal class MoveEntity : AggregateEntity
     }
   }
 
-  private Dictionary<PokemonStatistic, int> GetStatisticChanges()
+  public InflictedStatusModel? GetInflictedStatus()
+  {
+    return StatusCondition.HasValue && StatusChance.HasValue ? new(StatusCondition.Value, StatusChance.Value) : null;
+  }
+
+  public Dictionary<PokemonStatistic, int> GetStatisticChanges()
   {
     return (StatisticChanges == null ? null : JsonSerializer.Deserialize<Dictionary<PokemonStatistic, int>>(StatisticChanges, _serializerOptions)) ?? [];
   }
@@ -130,6 +136,10 @@ internal class MoveEntity : AggregateEntity
     StatisticChanges = statisticChanges.Count < 1 ? null : JsonSerializer.Serialize(statisticChanges, _serializerOptions);
   }
 
+  public IReadOnlyCollection<VolatileCondition> GetVolatileConditions()
+  {
+    return (VolatileConditions == null ? null : JsonSerializer.Deserialize<IReadOnlyCollection<VolatileCondition>>(VolatileConditions, _serializerOptions)) ?? [];
+  }
   private void SetVolatileConditions(IReadOnlyCollection<VolatileCondition> volatileConditions)
   {
     VolatileConditions = volatileConditions.Count < 1 ? null : JsonSerializer.Serialize(volatileConditions, _serializerOptions);
