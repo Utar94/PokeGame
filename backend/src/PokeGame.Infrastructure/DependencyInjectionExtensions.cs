@@ -3,6 +3,7 @@ using Logitar.EventSourcing.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using PokeGame.Application.Abilities;
 using PokeGame.Application.Caching;
 using PokeGame.Application.Regions;
 using PokeGame.Infrastructure.Actors;
@@ -40,12 +41,14 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
+      .AddSingleton<IAbilityQuerier, AbilityQuerier>()
       .AddSingleton<IRegionQuerier, RegionQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
     return services
+      .AddSingleton<IAbilityRepository, AbilityRepository>()
       .AddSingleton<IRegionRepository, RegionRepository>();
   }
 }

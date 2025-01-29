@@ -2,6 +2,7 @@
 using Logitar.EventSourcing;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
+using PokeGame.Application.Abilities.Models;
 using PokeGame.Application.Regions.Models;
 using PokeGame.Infrastructure.Entities;
 
@@ -23,6 +24,22 @@ internal class Mapper
       ActorId id = new(actor.Id);
       _actors[id] = actor;
     }
+  }
+
+  public AbilityModel ToAbility(AbilityEntity source)
+  {
+    AbilityModel destination = new()
+    {
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Link = source.Link,
+      Notes = source.Notes
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
   }
 
   public RegionModel ToRegion(RegionEntity source)
