@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Logitar.Portal.Contracts.Search;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokeGame.Application.Regions.Commands;
 using PokeGame.Application.Regions.Models;
 using PokeGame.Application.Regions.Queries;
+using PokeGame.Models.Region;
 
 namespace PokeGame.Controllers;
 
@@ -49,6 +51,15 @@ public class RegionController : ControllerBase
     CreateOrReplaceRegionCommand command = new(id, payload, version);
     CreateOrReplaceRegionResult result = await _mediator.Send(command, cancellationToken);
     return ToActionResult(result);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<RegionModel>>> SearchAsync([FromQuery] SearchRegionsParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchRegionsPayload payload = parameters.ToPayload();
+    SearchRegionsQuery query = new(payload);
+    SearchResults<RegionModel> regions = await _mediator.Send(query, cancellationToken);
+    return Ok(regions);
   }
 
   [HttpPatch("{id}")]
