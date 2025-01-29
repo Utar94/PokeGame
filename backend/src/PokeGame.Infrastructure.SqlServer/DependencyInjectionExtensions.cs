@@ -17,6 +17,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarEventSourcingWithEntityFrameworkCoreSqlServer(connectionString)
       .AddDbContext<PokeGameContext>(options => options.UseSqlServer(connectionString,
-        builder => builder.MigrationsAssembly("PokeGame.Infrastructure.SqlServer")));
+        builder => builder.MigrationsAssembly("PokeGame.Infrastructure.SqlServer")))
+      .AddSingleton<ISqlHelper, SqlServerHelper>();
   }
 }

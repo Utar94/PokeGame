@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Logitar.Portal.Client;
+using MediatR;
 using Microsoft.FeatureManagement;
 using PokeGame.Application;
 using PokeGame.Constants;
@@ -34,6 +35,9 @@ internal class Startup : StartupBase
     services.AddPokeGameApplication();
     services.AddPokeGameInfrastructure();
     services.AddPokeGameInfrastructureWithSqlServer(_configuration);
+    services.AddSingleton<IApplicationContext, HttpApplicationContext>();
+
+    services.AddLogitarPortalClient(_configuration);
   }
 
   public override void Configure(IApplicationBuilder builder)

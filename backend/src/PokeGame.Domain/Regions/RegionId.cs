@@ -7,6 +7,10 @@ public readonly struct RegionId
   public StreamId StreamId { get; }
   public string Value => StreamId.Value;
 
+  public RegionId(Guid value)
+  {
+    StreamId = new(value);
+  }
   public RegionId(string value)
   {
     StreamId = new(value);

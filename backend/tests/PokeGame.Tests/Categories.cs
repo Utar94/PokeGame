@@ -1,6 +1,6 @@
 ﻿namespace PokeGame;
 
-internal static class Categories
+public static class Categories
 {
   public const string Unit = "Unit";
 }

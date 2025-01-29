@@ -14,7 +14,7 @@ public class SpeciesTests
 
   public SpeciesTests()
   {
-    _region = new(new UniqueName("Kanto"), _userId);
+    _region = new(new UniqueName("Kanto"), _userId.ActorId);
     _species = new(number: 25, SpeciesCategory.Standard, new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _userId);
   }
 

@@ -2,7 +2,7 @@
 
 namespace PokeGame.Domain;
 
-public readonly struct UserId
+public readonly struct UserId // TODO(fpion): remove this struct
 {
   public ActorId ActorId { get; }
   public string Value => ActorId.Value;
