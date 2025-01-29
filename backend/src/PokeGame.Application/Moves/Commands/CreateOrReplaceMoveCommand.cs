@@ -99,8 +99,8 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
     {
       move.InflictedStatus = inflictedStatus;
     }
-    // TODO(fpion): StatisticChanges
-    // TODO(fpion): VolatileConditions
+    SetStatisticChanges(payload, move, reference);
+    SetVolatileConditions(payload, move, reference);
 
     Url? link = Url.TryCreate(payload.Link);
     if (reference.Link != link)
@@ -118,5 +118,61 @@ internal class CreateOrReplaceMoveCommandHandler : IRequestHandler<CreateOrRepla
 
     MoveModel model = await _moveQuerier.ReadAsync(move, cancellationToken);
     return new CreateOrReplaceMoveResult(model, created);
+  }
+
+  private static void SetStatisticChanges(CreateOrReplaceMovePayload payload, Move move, Move reference)
+  {
+    Dictionary<PokemonStatistic, int> inputStatisticChanges = new(capacity: 7);
+    foreach (StatisticChangeModel statisticChange in payload.StatisticChanges)
+    {
+      if (statisticChange.Statistic != PokemonStatistic.HP && statisticChange.Stages != 0)
+      {
+        inputStatisticChanges[statisticChange.Statistic] = statisticChange.Stages;
+      }
+    }
+
+    foreach (KeyValuePair<PokemonStatistic, int> statisticChange in reference.StatisticChanges)
+    {
+      if (!inputStatisticChanges.ContainsKey(statisticChange.Key))
+      {
+        move.SetStatisticChange(statisticChange.Key, stages: 0);
+      }
+    }
+
+    foreach (KeyValuePair<PokemonStatistic, int> statisticChange in inputStatisticChanges)
+    {
+      if (!reference.StatisticChanges.TryGetValue(statisticChange.Key, out int stages) || stages != statisticChange.Value)
+      {
+        move.SetStatisticChange(statisticChange.Key, statisticChange.Value);
+      }
+    }
+  }
+
+  private static void SetVolatileConditions(CreateOrReplaceMovePayload payload, Move move, Move reference)
+  {
+    HashSet<VolatileCondition> inputVolatileConditions = payload.VolatileConditions
+      .Where(x => !string.IsNullOrWhiteSpace(x))
+      .Select(value => new VolatileCondition(value))
+      .ToHashSet();
+
+    HashSet<VolatileCondition> volatileConditions = [.. move.VolatileConditions];
+
+    foreach (VolatileCondition volatileCondition in reference.VolatileConditions)
+    {
+      if (!inputVolatileConditions.Contains(volatileCondition))
+      {
+        volatileConditions.Remove(volatileCondition);
+      }
+    }
+
+    foreach (VolatileCondition volatileCondition in inputVolatileConditions)
+    {
+      if (!reference.HasVolatileCondition(volatileCondition))
+      {
+        volatileConditions.Add(volatileCondition);
+      }
+    }
+
+    move.SetVolatileConditions(volatileConditions);
   }
 }
