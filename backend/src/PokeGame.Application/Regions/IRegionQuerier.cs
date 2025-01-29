@@ -1,4 +1,5 @@
-﻿using PokeGame.Application.Regions.Models;
+﻿using Logitar.Portal.Contracts.Search;
+using PokeGame.Application.Regions.Models;
 using PokeGame.Domain;
 using PokeGame.Domain.Regions;
 
@@ -12,4 +13,6 @@ public interface IRegionQuerier
   Task<RegionModel?> ReadAsync(RegionId id, CancellationToken cancellationToken = default);
   Task<RegionModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
   Task<RegionModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken = default);
+
+  Task<SearchResults<RegionModel>> SearchAsync(SearchRegionsPayload payload, CancellationToken cancellationToken = default);
 }

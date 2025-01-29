@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
+using Logitar.Portal.Contracts.Search;
 using Microsoft.EntityFrameworkCore;
 using PokeGame.Application.Regions;
 using PokeGame.Application.Regions.Models;
@@ -58,6 +59,11 @@ internal class RegionQuerier : IRegionQuerier
       .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
 
     return region == null ? null : await MapAsync(region, cancellationToken);
+  }
+
+  public Task<SearchResults<RegionModel>> SearchAsync(SearchRegionsPayload payload, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException(); // TODO(fpion): implement
   }
 
   private async Task<RegionModel> MapAsync(RegionEntity region, CancellationToken cancellationToken)
