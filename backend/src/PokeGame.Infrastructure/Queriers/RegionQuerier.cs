@@ -24,6 +24,14 @@ internal class RegionQuerier : IRegionQuerier
 
   public async Task<RegionId?> FindIdAsync(UniqueName uniqueName, CancellationToken cancellationToken)
   {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    string? streamId = await _regions.AsNoTracking()
+      .Where(x => x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => x.StreamId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return streamId == null ? null : new RegionId(streamId);
   }
 
   public async Task<RegionModel> ReadAsync(Region region, CancellationToken cancellationToken)
