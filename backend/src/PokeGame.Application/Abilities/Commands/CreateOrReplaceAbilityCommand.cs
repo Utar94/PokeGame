@@ -14,21 +14,21 @@ public record CreateOrReplaceAbilityCommand(Guid? Id, CreateOrReplaceAbilityPayl
 
 internal class CreateOrReplaceAbilityCommandHandler : IRequestHandler<CreateOrReplaceAbilityCommand, CreateOrReplaceAbilityResult>
 {
-  private readonly IApplicationContext _applicationContext;
   private readonly IAbilityManager _abilityManager;
   private readonly IAbilityQuerier _abilityQuerier;
   private readonly IAbilityRepository _abilityRepository;
+  private readonly IApplicationContext _applicationContext;
 
   public CreateOrReplaceAbilityCommandHandler(
-    IApplicationContext applicationContext,
     IAbilityManager abilityManager,
     IAbilityQuerier abilityQuerier,
-    IAbilityRepository abilityRepository)
+    IAbilityRepository abilityRepository,
+    IApplicationContext applicationContext)
   {
-    _applicationContext = applicationContext;
     _abilityManager = abilityManager;
     _abilityQuerier = abilityQuerier;
     _abilityRepository = abilityRepository;
+    _applicationContext = applicationContext;
   }
 
   public async Task<CreateOrReplaceAbilityResult> Handle(CreateOrReplaceAbilityCommand command, CancellationToken cancellationToken)

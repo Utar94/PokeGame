@@ -11,21 +11,21 @@ public record UpdateAbilityCommand(Guid Id, UpdateAbilityPayload Payload) : IReq
 
 internal class UpdateAbilityCommandHandler : IRequestHandler<UpdateAbilityCommand, AbilityModel?>
 {
-  private readonly IApplicationContext _applicationContext;
   private readonly IAbilityManager _abilityManager;
   private readonly IAbilityQuerier _abilityQuerier;
   private readonly IAbilityRepository _abilityRepository;
+  private readonly IApplicationContext _applicationContext;
 
   public UpdateAbilityCommandHandler(
-    IApplicationContext applicationContext,
     IAbilityManager abilityManager,
     IAbilityQuerier abilityQuerier,
-    IAbilityRepository abilityRepository)
+    IAbilityRepository abilityRepository,
+    IApplicationContext applicationContext)
   {
-    _applicationContext = applicationContext;
     _abilityManager = abilityManager;
     _abilityQuerier = abilityQuerier;
     _abilityRepository = abilityRepository;
+    _applicationContext = applicationContext;
   }
 
   public async Task<AbilityModel?> Handle(UpdateAbilityCommand command, CancellationToken cancellationToken)
