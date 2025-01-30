@@ -7,6 +7,10 @@ public readonly struct MoveId
   public StreamId StreamId { get; }
   public string Value => StreamId.Value;
 
+  public MoveId(Guid value)
+  {
+    StreamId = new(value);
+  }
   public MoveId(string value)
   {
     StreamId = new(value);

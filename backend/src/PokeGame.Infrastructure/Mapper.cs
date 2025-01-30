@@ -3,7 +3,10 @@ using Logitar.EventSourcing;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using PokeGame.Application.Abilities.Models;
+using PokeGame.Application.Moves.Models;
 using PokeGame.Application.Regions.Models;
+using PokeGame.Domain;
+using PokeGame.Domain.Moves;
 using PokeGame.Infrastructure.Entities;
 
 namespace PokeGame.Infrastructure;
@@ -36,6 +39,37 @@ internal class Mapper
       Link = source.Link,
       Notes = source.Notes
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public MoveModel ToMove(MoveEntity source)
+  {
+    MoveModel destination = new()
+    {
+      Type = source.Type,
+      Category = source.Category,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Accuracy = source.Accuracy,
+      Power = source.Power,
+      PowerPoints = source.PowerPoints,
+      InflictedStatus = source.GetInflictedStatus(),
+      Link = source.Link,
+      Notes = source.Notes
+    };
+
+    foreach (KeyValuePair<PokemonStatistic, int> statisticChange in source.GetStatisticChanges())
+    {
+      destination.StatisticChanges.Add(new StatisticChangeModel(statisticChange));
+    }
+    foreach (VolatileCondition volatileCondition in source.GetVolatileConditions())
+    {
+      destination.VolatileConditions.Add(volatileCondition.Value);
+    }
 
     MapAggregate(source, destination);
 

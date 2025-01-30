@@ -6,6 +6,9 @@ namespace PokeGame.Domain.Moves;
 
 public class Move : AggregateRoot
 {
+  public const int MinimumStage = -6;
+  public const int MaximumStage = 6;
+
   private MoveUpdated _updated = new();
 
   public new MoveId Id => new(base.Id);
@@ -147,7 +150,7 @@ public class Move : AggregateRoot
   {
   }
 
-  public Move(PokemonType type, MoveCategory category, UniqueName uniqueName, PowerPoints powerPoints, UserId userId, MoveId? id = null)
+  public Move(PokemonType type, MoveCategory category, UniqueName uniqueName, PowerPoints powerPoints, ActorId? actorId = null, MoveId? id = null)
     : base((id ?? MoveId.NewId()).StreamId)
   {
     if (!Enum.IsDefined(type))
@@ -159,7 +162,7 @@ public class Move : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(category));
     }
 
-    Raise(new MoveCreated(type, category, uniqueName, powerPoints), userId.ActorId);
+    Raise(new MoveCreated(type, category, uniqueName, powerPoints), actorId);
   }
   protected virtual void Handle(MoveCreated @event)
   {
@@ -171,11 +174,11 @@ public class Move : AggregateRoot
     _powerPoints = @event.PowerPoints;
   }
 
-  public void Delete(UserId userId)
+  public void Delete(ActorId? actorId = null)
   {
     if (!IsDeleted)
     {
-      Raise(new MoveDeleted(), userId.ActorId);
+      Raise(new MoveDeleted(), actorId);
     }
   }
 
@@ -189,9 +192,9 @@ public class Move : AggregateRoot
     {
       throw new ArgumentException($"The statistic cannot be {nameof(PokemonStatistic.HP)}.", nameof(statistic));
     }
-    if (stages < -6 || stages > 6)
+    if (stages < MinimumStage || stages > MaximumStage)
     {
-      throw new ArgumentOutOfRangeException(nameof(stages), "The stages must range between -6 and 6.");
+      throw new ArgumentOutOfRangeException(nameof(stages), $"The stages must range between {MinimumStage} and {MaximumStage}.");
     }
 
     _ = _statisticChanges.TryGetValue(statistic, out int existingStages);
@@ -213,11 +216,11 @@ public class Move : AggregateRoot
     }
   }
 
-  public void Update(UserId userId)
+  public void Update(ActorId? actorId = null)
   {
     if (_updated.HasChanges)
     {
-      Raise(_updated, userId.ActorId, DateTime.Now);
+      Raise(_updated, actorId, DateTime.Now);
       _updated = new();
     }
   }

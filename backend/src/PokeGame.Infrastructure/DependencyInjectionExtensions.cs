@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PokeGame.Application.Abilities;
 using PokeGame.Application.Caching;
+using PokeGame.Application.Moves;
 using PokeGame.Application.Regions;
 using PokeGame.Infrastructure.Actors;
 using PokeGame.Infrastructure.Caching;
@@ -41,14 +42,16 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
-      .AddSingleton<IAbilityQuerier, AbilityQuerier>()
-      .AddSingleton<IRegionQuerier, RegionQuerier>();
+      .AddScoped<IAbilityQuerier, AbilityQuerier>()
+      .AddScoped<IMoveQuerier, MoveQuerier>()
+      .AddScoped<IRegionQuerier, RegionQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
     return services
-      .AddSingleton<IAbilityRepository, AbilityRepository>()
-      .AddSingleton<IRegionRepository, RegionRepository>();
+      .AddScoped<IAbilityRepository, AbilityRepository>()
+      .AddScoped<IMoveRepository, MoveRepository>()
+      .AddScoped<IRegionRepository, RegionRepository>();
   }
 }

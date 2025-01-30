@@ -18,7 +18,7 @@ public record Accuracy
   {
     public Validator()
     {
-      RuleFor(x => x.Value).InclusiveBetween(1, 100);
+      RuleFor(x => x.Value).Accuracy();
     }
   }
 }
