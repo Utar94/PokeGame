@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using PokeGame.Application.Moves.Models;
+using PokeGame.Application.Moves.Validators;
 using PokeGame.Domain;
 using PokeGame.Domain.Moves;
 
@@ -29,7 +31,7 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
   public async Task<MoveModel?> Handle(UpdateMoveCommand command, CancellationToken cancellationToken)
   {
     UpdateMovePayload payload = command.Payload;
-    //new UpdateMoveValidator().ValidateAndThrow(payload); // TODO(fpion): implement
+    new UpdateMoveValidator().ValidateAndThrow(payload);
 
     MoveId moveId = new(command.Id);
     Move? move = await _moveRepository.LoadAsync(moveId, cancellationToken);
