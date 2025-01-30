@@ -77,7 +77,22 @@ internal class UpdateMoveCommandHandler : IRequestHandler<UpdateMoveCommand, Mov
     {
       move.SetStatisticChange(change.Statistic, change.Stages);
     }
-    // TODO(fpion): VolatileConditions
+
+    HashSet<VolatileCondition> volatileConditions = [.. move.VolatileConditions];
+    foreach (VolatileConditionAction value in payload.VolatileConditions)
+    {
+      VolatileCondition volatileCondition = new(value.Value);
+      switch (value.Action)
+      {
+        case CollectionAction.Add:
+          volatileConditions.Add(volatileCondition);
+          break;
+        case CollectionAction.Remove:
+          volatileConditions.Remove(volatileCondition);
+          break;
+      }
+    }
+    move.SetVolatileConditions(volatileConditions);
 
     if (payload.Link != null)
     {

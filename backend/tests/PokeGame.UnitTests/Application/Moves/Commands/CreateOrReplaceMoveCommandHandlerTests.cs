@@ -179,43 +179,100 @@ public class CreateOrReplaceMoveCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "UrlValidator" && e.PropertyName == "Link");
   }
 
-  //[Fact(DisplayName = "It should update an existing move.")]
-  //public async Task Given_Exists_When_Handle_Then_Updated()
-  //{
-  //  Move move = new(new UniqueName("Kanto"));
-  //  _moveRepository.Setup(x => x.LoadAsync(move.Id, _cancellationToken)).ReturnsAsync(move);
+  [Fact(DisplayName = "It should update an existing move.")]
+  public async Task Given_Exists_When_Handle_Then_Updated()
+  {
+    Move move = new(PokemonType.Water, MoveCategory.Special, new UniqueName("WaterGun"), new PowerPoints(5))
+    {
+      InflictedStatus = new InflictedStatus(StatusCondition.Freeze, chance: 10),
+      Notes = new Notes("Water Gun inflicts damage and has no secondary effect.")
+    };
+    VolatileCondition cold = new("Cold");
+    move.SetStatisticChange(PokemonStatistic.Attack, stages: 1);
+    move.SetStatisticChange(PokemonStatistic.Defense, stages: 2);
+    move.SetStatisticChange(PokemonStatistic.Speed, stages: 3);
+    move.SetStatisticChange(PokemonStatistic.Evasion, stages: 4);
+    move.SetVolatileConditions([cold]);
+    move.Update();
+    _moveRepository.Setup(x => x.LoadAsync(move.Id, _cancellationToken)).ReturnsAsync(move);
 
-  //  Move reference = new(move.UniqueName, move.CreatedBy, move.Id);
-  //  _moveRepository.Setup(x => x.LoadAsync(reference.Id, reference.Version, _cancellationToken)).ReturnsAsync(reference);
+    Move reference = new(move.Type, move.Category, move.UniqueName, move.PowerPoints, move.CreatedBy, move.Id)
+    {
+      InflictedStatus = move.InflictedStatus,
+      Notes = move.Notes
+    };
+    foreach (KeyValuePair<PokemonStatistic, int> statisticChange in move.StatisticChanges)
+    {
+      reference.SetStatisticChange(statisticChange.Key, statisticChange.Value);
+    }
+    reference.SetVolatileConditions(move.VolatileConditions);
+    reference.Update();
+    _moveRepository.Setup(x => x.LoadAsync(reference.Id, reference.Version, _cancellationToken)).ReturnsAsync(reference);
 
-  //  DisplayName displayName = new("Johto");
-  //  move.DisplayName = displayName;
-  //  move.Update();
+    DisplayName displayName = new("Water Gun");
+    move.DisplayName = displayName;
+    PowerPoints powerPoints = new(25);
+    move.PowerPoints = powerPoints;
+    move.SetStatisticChange(PokemonStatistic.Accuracy, stages: -1);
+    move.SetStatisticChange(PokemonStatistic.Defense, stages: 1);
+    move.SetStatisticChange(PokemonStatistic.Speed, stages: 0);
+    VolatileCondition water = new("Water");
+    move.SetVolatileConditions([cold, water]);
+    move.Update();
 
-  //  MoveModel model = new();
-  //  _moveQuerier.Setup(x => x.ReadAsync(move, _cancellationToken)).ReturnsAsync(model);
+    MoveModel model = new();
+    _moveQuerier.Setup(x => x.ReadAsync(move, _cancellationToken)).ReturnsAsync(model);
 
-  //  CreateOrReplaceMovePayload payload = new()
-  //  {
-  //    UniqueName = "Johto",
-  //    DisplayName = "    ",
-  //    Description = "    ",
-  //    Link = "https://bulbapedia.bulbagarden.net/wiki/Johto",
-  //    Notes = "  The Johto move (Japanese: ジョウト地方 Johto move) is a move of the Pokémon world. Johto is located west of Kanto, which together form a joint landmass that is south of Sinnoh and Sinjoh Ruins.  "
-  //  };
-  //  CreateOrReplaceMoveCommand command = new(move.Id.ToGuid(), payload, reference.Version);
-  //  CreateOrReplaceMoveResult result = await _handler.Handle(command, _cancellationToken);
-  //  Assert.False(result.Created);
-  //  Assert.NotNull(result.Move);
-  //  Assert.Same(model, result.Move);
+    CreateOrReplaceMovePayload payload = new()
+    {
+      Type = PokemonType.Normal,
+      Category = MoveCategory.Physical,
+      UniqueName = "WaterGun",
+      Accuracy = 100,
+      Power = 40,
+      PowerPoints = 5,
+      StatisticChanges =
+      [
+        new StatisticChangeModel(PokemonStatistic.Defense, stages: 2),
+        new StatisticChangeModel(PokemonStatistic.Speed, stages: 3),
+        new StatisticChangeModel(PokemonStatistic.SpecialAttack, stages: -1),
+        new StatisticChangeModel(PokemonStatistic.Evasion, stages: -2)
+      ],
+      VolatileConditions = ["Gun", "Gun"],
+      DisplayName = "    ",
+      Description = "  The target is blasted with a forceful shot of water.  ",
+      Link = "https://bulbapedia.bulbagarden.net/wiki/Water_Gun_(move)",
+      Notes = "    "
+    };
+    CreateOrReplaceMoveCommand command = new(move.Id.ToGuid(), payload, reference.Version);
+    CreateOrReplaceMoveResult result = await _handler.Handle(command, _cancellationToken);
+    Assert.False(result.Created);
+    Assert.NotNull(result.Move);
+    Assert.Same(model, result.Move);
 
-  //  _moveManager.Verify(x => x.SaveAsync(move, _cancellationToken), Times.Once());
+    _moveManager.Verify(x => x.SaveAsync(move, _cancellationToken), Times.Once());
 
-  //  Assert.Equal(_actorId, move.UpdatedBy);
-  //  Assertions.Equal(payload.UniqueName, move.UniqueName);
-  //  Assert.Equal(displayName, move.DisplayName);
-  //  Assertions.Equal(payload.Description, move.Description);
-  //  Assertions.Equal(payload.Link, move.Link);
-  //  Assertions.Equal(payload.Notes, move.Notes);
-  //} // TODO(fpion): implement
+    Assert.Equal(_actorId, move.UpdatedBy);
+    Assert.Equal(PokemonType.Water, move.Type);
+    Assert.Equal(MoveCategory.Special, move.Category);
+    Assertions.Equal(payload.UniqueName, move.UniqueName);
+    Assert.Equal(displayName, move.DisplayName);
+    Assertions.Equal(payload.Description, move.Description);
+    Assertions.Equal(payload.Accuracy, move.Accuracy);
+    Assertions.Equal(payload.Power, move.Power);
+    Assert.Equal(powerPoints, move.PowerPoints);
+    Assert.Null(move.InflictedStatus);
+    Assertions.Equal(payload.Link, move.Link);
+    Assertions.Equal(payload.Notes, move.Notes);
+
+    Assert.Equal(4, move.StatisticChanges.Count);
+    Assert.Equal(1, move.StatisticChanges[PokemonStatistic.Defense]);
+    Assert.Equal(-2, move.StatisticChanges[PokemonStatistic.Evasion]);
+    Assert.Equal(-1, move.StatisticChanges[PokemonStatistic.Accuracy]);
+    Assert.Equal(-1, move.StatisticChanges[PokemonStatistic.SpecialAttack]);
+
+    Assert.Equal(2, move.VolatileConditions.Count);
+    Assert.Contains(water, move.VolatileConditions);
+    Assert.Contains(move.VolatileConditions, volatileCondition => volatileCondition.Value == "Gun");
+  }
 }

@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts;
 using Moq;
 using PokeGame.Application.Moves.Models;
 using PokeGame.Domain;
+using PokeGame.Domain.Moves;
 
 namespace PokeGame.Application.Moves.Commands;
 
@@ -69,39 +70,56 @@ public class UpdateMoveCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "UrlValidator" && e.PropertyName == "Link.Value");
   }
 
-  //[Fact(DisplayName = "It should update an existing move.")]
-  //public async Task Given_Exists_When_Handle_Then_Updated()
-  //{
-  //  Move move = new(new UniqueName("Kanto"));
-  //  _moveRepository.Setup(x => x.LoadAsync(move.Id, _cancellationToken)).ReturnsAsync(move);
+  [Fact(DisplayName = "It should update an existing move.")]
+  public async Task Given_Exists_When_Handle_Then_Updated()
+  {
+    Move move = new(PokemonType.Fire, MoveCategory.Special, new UniqueName("ember"), new PowerPoints(5))
+    {
+      Notes = new Notes("Ember deals damage and has a 10% chance of burning the target.")
+    };
+    move.SetStatisticChange(PokemonStatistic.Attack, stages: -1);
+    move.SetVolatileConditions([new VolatileCondition("ember")]);
+    _moveRepository.Setup(x => x.LoadAsync(move.Id, _cancellationToken)).ReturnsAsync(move);
 
-  //  DisplayName displayName = new("Johto");
-  //  move.DisplayName = displayName;
-  //  move.Update();
+    DisplayName displayName = new("Ember");
+    move.DisplayName = displayName;
+    move.Update();
 
-  //  MoveModel model = new();
-  //  _moveQuerier.Setup(x => x.ReadAsync(move, _cancellationToken)).ReturnsAsync(model);
+    MoveModel model = new();
+    _moveQuerier.Setup(x => x.ReadAsync(move, _cancellationToken)).ReturnsAsync(model);
 
-  //  UpdateMovePayload payload = new()
-  //  {
-  //    UniqueName = "Johto",
-  //    DisplayName = null,
-  //    Description = new ChangeModel<string>("    "),
-  //    Link = new ChangeModel<string>("https://bulbapedia.bulbagarden.net/wiki/Johto"),
-  //    Notes = new ChangeModel<string>("  The Johto move (Japanese: ジョウト地方 Johto move) is a move of the Pokémon world. Johto is located west of Kanto, which together form a joint landmass that is south of Sinnoh and Sinjoh Ruins.  ")
-  //  };
-  //  UpdateMoveCommand command = new(move.Id.ToGuid(), payload);
-  //  MoveModel? result = await _handler.Handle(command, _cancellationToken);
-  //  Assert.NotNull(result);
-  //  Assert.Same(model, result);
+    UpdateMovePayload payload = new()
+    {
+      UniqueName = "Ember",
+      DisplayName = null,
+      Description = new ChangeModel<string>("  The target is attacked with small flames. This may also leave the target with a burn.  "),
+      Accuracy = new ChangeModel<int?>(100),
+      Power = new ChangeModel<int?>(40),
+      PowerPoints = 25,
+      InflictedStatus = new ChangeModel<InflictedStatusModel>(new InflictedStatusModel(StatusCondition.Burn, chance: 10)),
+      StatisticChanges = [new StatisticChangeModel(PokemonStatistic.Attack, stages: 0)],
+      VolatileConditions = [new VolatileConditionAction("ember", CollectionAction.Remove), new VolatileConditionAction("Ember", CollectionAction.Add)],
+      Link = new ChangeModel<string>("https://bulbapedia.bulbagarden.net/wiki/Ember_(move)"),
+      Notes = new ChangeModel<string>("    ")
+    };
+    UpdateMoveCommand command = new(move.Id.ToGuid(), payload);
+    MoveModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
 
-  //  _moveManager.Verify(x => x.SaveAsync(move, _cancellationToken), Times.Once());
+    _moveManager.Verify(x => x.SaveAsync(move, _cancellationToken), Times.Once());
 
-  //  Assert.Equal(_actorId, move.UpdatedBy);
-  //  Assertions.Equal(payload.UniqueName, move.UniqueName);
-  //  Assert.Equal(displayName, move.DisplayName);
-  //  Assertions.Equal(payload.Description.Value, move.Description);
-  //  Assertions.Equal(payload.Link.Value, move.Link);
-  //  Assertions.Equal(payload.Notes.Value, move.Notes);
-  //} // TODO(fpion): implement
+    Assert.Equal(_actorId, move.UpdatedBy);
+    Assertions.Equal(payload.UniqueName, move.UniqueName);
+    Assert.Equal(displayName, move.DisplayName);
+    Assertions.Equal(payload.Description.Value, move.Description);
+    Assertions.Equal(payload.Accuracy.Value, move.Accuracy);
+    Assertions.Equal(payload.Power.Value, move.Power);
+    Assertions.Equal(payload.PowerPoints.Value, move.PowerPoints);
+    Assertions.Equal(payload.InflictedStatus.Value, move.InflictedStatus);
+    Assert.Empty(move.StatisticChanges);
+    Assert.Equal("Ember", Assert.Single(move.VolatileConditions).Value);
+    Assertions.Equal(payload.Link.Value, move.Link);
+    Assertions.Equal(payload.Notes.Value, move.Notes);
+  }
 }
