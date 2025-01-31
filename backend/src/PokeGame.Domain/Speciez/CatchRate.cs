@@ -18,7 +18,7 @@ public record CatchRate
   {
     public Validator()
     {
-      RuleFor(x => x.Value).InclusiveBetween(1, 255);
+      RuleFor(x => x.Value).CatchRate();
     }
   }
 }

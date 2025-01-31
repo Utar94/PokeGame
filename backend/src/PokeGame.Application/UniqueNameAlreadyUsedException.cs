@@ -5,6 +5,7 @@ using PokeGame.Domain.Abilities;
 using PokeGame.Domain.Errors;
 using PokeGame.Domain.Moves;
 using PokeGame.Domain.Regions;
+using PokeGame.Domain.Speciez;
 
 namespace PokeGame.Application;
 
@@ -51,6 +52,10 @@ public class UniqueNameAlreadyUsedException : ConflictException
   }
   public UniqueNameAlreadyUsedException(Region region, RegionId conflictId)
     : this(region.Id.StreamId, conflictId.StreamId, region.UniqueName)
+  {
+  }
+  public UniqueNameAlreadyUsedException(Species species, SpeciesId conflictId)
+    : this(species.Id.StreamId, conflictId.StreamId, species.UniqueName)
   {
   }
 

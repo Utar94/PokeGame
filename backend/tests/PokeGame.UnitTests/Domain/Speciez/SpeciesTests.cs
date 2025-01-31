@@ -7,21 +7,21 @@ namespace PokeGame.Domain.Speciez;
 [Trait(Traits.Category, Categories.Unit)]
 public class SpeciesTests
 {
-  private readonly UserId _userId = new(ActorId.NewId());
+  private readonly ActorId _actorId = ActorId.NewId();
 
   private readonly Region _region;
   private readonly Species _species;
 
   public SpeciesTests()
   {
-    _region = new(new UniqueName("Kanto"), _userId.ActorId);
-    _species = new(number: 25, SpeciesCategory.Standard, new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _userId);
+    _region = new(new UniqueName("Kanto"), _actorId);
+    _species = new(number: 25, SpeciesCategory.Standard, new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _actorId);
   }
 
   [Fact(DisplayName = "ctor: it should throw ArgumentOutOfRangeException when the category is not defined.")]
   public void Given_CategoryIsNotDefined_When_ctor_Then_ArgumentOutOfRangeException()
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Species(number: 25, (SpeciesCategory)(-1), new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _userId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Species(number: 25, (SpeciesCategory)(-1), new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _actorId));
     Assert.Equal("category", exception.ParamName);
   }
 
@@ -30,7 +30,7 @@ public class SpeciesTests
   [InlineData(0)]
   public void Given_NumberIsNegativeOrZero_When_ctor_Then_ArgumentOutOfRangeException(int number)
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Species(number, SpeciesCategory.Standard, new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _userId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Species(number, SpeciesCategory.Standard, new UniqueName("Pikachu"), GrowthRate.MediumFast, new Friendship(70), new CatchRate(190), _actorId));
     Assert.Equal("number", exception.ParamName);
   }
 
@@ -41,11 +41,11 @@ public class SpeciesTests
   {
     if (number.HasValue)
     {
-      _species.SetRegionalNumber(_region, number.Value, _userId);
+      _species.SetRegionalNumber(_region, number.Value, _actorId);
     }
     _species.ClearChanges();
 
-    _species.SetRegionalNumber(_region, number, _userId);
+    _species.SetRegionalNumber(_region, number, _actorId);
 
     Assert.False(_species.HasChanges);
     Assert.Empty(_species.Changes);
@@ -58,10 +58,10 @@ public class SpeciesTests
   {
     if (!number.HasValue)
     {
-      _species.SetRegionalNumber(_region, number: 25, _userId);
+      _species.SetRegionalNumber(_region, number: 25, _actorId);
     }
 
-    _species.SetRegionalNumber(_region, number, _userId);
+    _species.SetRegionalNumber(_region, number, _actorId);
 
     if (number.HasValue)
     {
@@ -79,7 +79,7 @@ public class SpeciesTests
   [InlineData(0)]
   public void Given_NumberIsNegativeOrZero_When_SetRegionalNumber_Then_ArgumentOutOfRangeException(int number)
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _species.SetRegionalNumber(_region, number, _userId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _species.SetRegionalNumber(_region, number, _actorId));
     Assert.Equal("number", exception.ParamName);
     Assert.StartsWith("The number must be greater than 0.", exception.Message);
   }

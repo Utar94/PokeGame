@@ -4,7 +4,7 @@ using PokeGame.Domain.Speciez.Events;
 
 namespace PokeGame.Domain.Speciez;
 
-public class Species : AggregateRoot
+public class Species : AggregateRoot // TODO(fpion): Icon?
 {
   private SpeciesUpdated _updated = new();
 
@@ -114,7 +114,7 @@ public class Species : AggregateRoot
   {
   }
 
-  public Species(int number, SpeciesCategory category, UniqueName uniqueName, GrowthRate growthRate, Friendship baseFriendship, CatchRate catchRate, UserId userId, SpeciesId? id = null)
+  public Species(int number, SpeciesCategory category, UniqueName uniqueName, GrowthRate growthRate, Friendship baseFriendship, CatchRate catchRate, ActorId? actorId = null, SpeciesId? id = null)
     : base((id ?? SpeciesId.NewId()).StreamId)
   {
     ArgumentOutOfRangeException.ThrowIfNegativeOrZero(number, nameof(number));
@@ -123,7 +123,7 @@ public class Species : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(category));
     }
 
-    Raise(new SpeciesCreated(number, category, uniqueName, growthRate, baseFriendship, catchRate), userId.ActorId);
+    Raise(new SpeciesCreated(number, category, uniqueName, growthRate, baseFriendship, catchRate), actorId);
   }
   protected virtual void Handle(SpeciesCreated @event)
   {
@@ -137,15 +137,15 @@ public class Species : AggregateRoot
     _catchRate = @event.CatchRate;
   }
 
-  public void Delete(UserId userId)
+  public void Delete(ActorId? actorId = null)
   {
     if (!IsDeleted)
     {
-      Raise(new SpeciesDeleted(), userId.ActorId);
+      Raise(new SpeciesDeleted(), actorId);
     }
   }
 
-  public void SetRegionalNumber(Region region, int? number, UserId userId)
+  public void SetRegionalNumber(Region region, int? number, ActorId? actorId = null)
   {
     if (number < 1)
     {
@@ -155,7 +155,7 @@ public class Species : AggregateRoot
     int? existingNumber = _regionalNumbers.TryGetValue(region.Id, out int value) ? value : null;
     if (existingNumber != number)
     {
-      Raise(new SpeciesRegionalNumberChanged(region.Id, number), userId.ActorId);
+      Raise(new SpeciesRegionalNumberChanged(region.Id, number), actorId);
     }
   }
   protected virtual void Handle(SpeciesRegionalNumberChanged @event)
@@ -170,11 +170,11 @@ public class Species : AggregateRoot
     }
   }
 
-  public void Update(UserId userId)
+  public void Update(ActorId? actorId = null)
   {
     if (_updated.HasChanges)
     {
-      Raise(_updated, userId.ActorId, DateTime.Now);
+      Raise(_updated, actorId, DateTime.Now);
       _updated = new();
     }
   }
