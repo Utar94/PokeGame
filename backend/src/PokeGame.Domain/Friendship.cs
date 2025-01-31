@@ -22,7 +22,7 @@ public record Friendship
   {
     public Validator()
     {
-      RuleFor(x => x.Value).InclusiveBetween(0, 255);
+      RuleFor(x => x.Value).Friendship();
     }
   }
 }

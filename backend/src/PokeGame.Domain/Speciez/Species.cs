@@ -4,7 +4,7 @@ using PokeGame.Domain.Speciez.Events;
 
 namespace PokeGame.Domain.Speciez;
 
-public class Species : AggregateRoot
+public class Species : AggregateRoot // TODO(fpion): Icon?
 {
   private SpeciesUpdated _updated = new();
 

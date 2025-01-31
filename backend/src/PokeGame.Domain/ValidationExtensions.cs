@@ -10,6 +10,11 @@ public static class ValidationExtensions
     return ruleBuilder.InclusiveBetween(1, 100);
   }
 
+  public static IRuleBuilderOptions<T, int> CatchRate<T>(this IRuleBuilder<T, int> ruleBuilder)
+  {
+    return ruleBuilder.InclusiveBetween(1, 255);
+  }
+
   public static IRuleBuilderOptions<T, string> Description<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty();
@@ -18,6 +23,11 @@ public static class ValidationExtensions
   public static IRuleBuilderOptions<T, string> DisplayName<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty().MaximumLength(Domain.DisplayName.MaximumLength);
+  }
+
+  public static IRuleBuilderOptions<T, int> Friendship<T>(this IRuleBuilder<T, int> ruleBuilder)
+  {
+    return ruleBuilder.InclusiveBetween(0, 255);
   }
 
   public static IRuleBuilderOptions<T, string> Notes<T>(this IRuleBuilder<T, string> ruleBuilder)
